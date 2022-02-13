@@ -151,11 +151,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\AppWindow.h" />
     <ClInclude Include="src\Dx12GraphicsEngine.h" />
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

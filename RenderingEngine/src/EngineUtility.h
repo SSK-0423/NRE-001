@@ -11,12 +11,12 @@ enum class MYRESULT
 /// MYRESULT型の引数が成功を表しているか調べる
 /// </summary>
 /// <param name="result">関数の実行結果</param>
-/// <returns>成功：true 失敗：false</returns>
+/// <returns>true: MYRESULT::SUCCESS false: MYRESULT::FAILED</returns>
 inline bool IsResultSuccess(MYRESULT result) { return result == MYRESULT::SUCCESS; }
 
 /// <summary>
 /// MYRESULT型の引数が失敗を表しているか調べる
 /// </summary>
 /// <param name="result">関数の実行結果</param>
-/// <returns>失敗：true 成功：false</returns>
+/// <returns>true: MYRESULT::FAILED false: MYRESULT::SUCCESS</returns>
 inline bool IsResultFailed(MYRESULT result) { return result == MYRESULT::FAILED; }
