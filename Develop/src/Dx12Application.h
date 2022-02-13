@@ -6,6 +6,7 @@
 #include "EngineUtility.h"
 
 class Dx12GraphicsEngine;
+class AppWindow;
 
 /// <summary>
 /// レンダリング開発中のテスト用クラス
@@ -33,7 +34,8 @@ public:
 	void End();
 
 private:
-	Dx12GraphicsEngine* _graphicsEngine = nullptr;
+	Dx12GraphicsEngine& _graphicsEngine;			    // 描画の基礎部分を担当するエンジン
+	std::shared_ptr<AppWindow> _window = nullptr;		// アプリケーションのウィンドウ
 };
 
 /// メモ
