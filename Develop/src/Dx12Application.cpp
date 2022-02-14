@@ -17,11 +17,15 @@ Dx12Application::~Dx12Application()
 
 MYRESULT Dx12Application::Init()
 {
+	// ウィンドウ初期化
 	_window = std::make_shared<AppWindow>();
 	AppWindowInitData initData(TEXT("レンダリングエンジン開発"), WINDOW_WIDTH, WINDOW_HEIGHT);
 	_window->CreateAppWindow(initData);
-
-	return MYRESULT::SUCCESS;
+	
+	// グラフィクスエンジン初期化
+	SIZE wndSize = _window->GetWindowSize();
+	MYRESULT result = _graphicsEngine.Init(_window->GetHwnd(), wndSize.cx, wndSize.cy);
+	return result;
 }
 
 void Dx12Application::Run()

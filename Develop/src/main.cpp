@@ -4,7 +4,7 @@
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
 	Dx12Application app;
-	if (IsResultFailed(app.Init()))
+	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;
 	}
