@@ -1,8 +1,13 @@
 #include "AppWindow.h"
+#include <cassert>
 
-AppWindowInitData::AppWindowInitData(const TCHAR* name, LONG width, LONG heigh)
-	: _windowName(name), _windowWidth(width), _windowHeight(heigh)
-{}
+AppWindowInitData::AppWindowInitData(const TCHAR* name, LONG width, LONG height)
+	: _windowName(name)
+{
+	assert(width > 0 && height > 0);
+	_windowWidth = width;
+	_windowHeight = height;
+}
 
 /// <summary>
 /// ウィンドウプロシージャ
@@ -33,8 +38,8 @@ void AppWindow::CreateAppWindow(AppWindowInitData initData)
 
 	RECT rect = { 0,0,initData._windowWidth,initData._windowHeight };
 
-	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);	
-	
+	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
+
 	//ウィンドウオブジェクトの生成
 	_hwnd = CreateWindow(_wndClassEx.lpszClassName,
 		initData._windowName,	// タイトルバーの文字
@@ -70,7 +75,7 @@ SIZE AppWindow::GetWindowSize()
 		MessageBoxA(_hwnd, "ウィンドウサイズ取得失敗", "エラー", MB_OK | MB_ICONERROR);
 		return {};
 	}
-	
+
 	SIZE size;
 	size.cx = rect.right - rect.left;
 	size.cy = rect.bottom - rect.top;
