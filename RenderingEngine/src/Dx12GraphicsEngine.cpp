@@ -80,7 +80,8 @@ HRESULT Dx12GraphicsEngine::CreateDeviceAndDXGIFactory()
 	// アダプター列挙
 	std::vector<ComPtr<IDXGIAdapter>> adapters;
 	ComPtr<IDXGIAdapter> tmpAdapter = nullptr;
-	for (size_t i = 0; _dxgiFactory->EnumAdapters(i, &tmpAdapter) != DXGI_ERROR_NOT_FOUND; i++) {
+	// EnumAdaptersの第一引数がUINTなので合わせる
+	for (UINT i = 0; _dxgiFactory->EnumAdapters(i, &tmpAdapter) != DXGI_ERROR_NOT_FOUND; i++) {
 		adapters.push_back(tmpAdapter);
 	}
 
@@ -208,18 +209,19 @@ void Dx12GraphicsEngine::BeginDraw()
 	rtvHandle.ptr +=
 		bbIdx * _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
-	// レンダーターゲットセット
-	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
-	// 画面を指定色でクリア
-	float clearColor[] = { 0.f,1.f,1.f,1.f };
-	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-
 	// バリア処理
 	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 		_frameBuffer._frameBuffers[bbIdx].Get(),
 		D3D12_RESOURCE_STATE_PRESENT,
 		D3D12_RESOURCE_STATE_RENDER_TARGET);
 	_cmdList->ResourceBarrier(1, &barrier);
+
+	// レンダーターゲットセット
+	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+	// 画面を指定色でクリア
+	float clearColor[] = { 0.f,1.f,1.f,1.f };
+	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+
 }
 
 void Dx12GraphicsEngine::EndDraw()
@@ -287,7 +289,8 @@ HRESULT Dx12GraphicsEngine::CreateFrameRTV()
 	{
 		// スワップチェーンで生成したバッファーをID3D12Resourceに結びつける
 		auto& buffer = _frameBuffer._frameBuffers[idx];
-		result = _swapchain->GetBuffer(idx, IID_PPV_ARGS(buffer.ReleaseAndGetAddressOf()));
+		result = _swapchain->GetBuffer(
+			static_cast<UINT>(idx), IID_PPV_ARGS(buffer.ReleaseAndGetAddressOf()));
 		if (FAILED(result)) {
 			MessageBoxA(_hwnd, "フレームバッファ取得失敗", "エラー", MB_OK | MB_ICONERROR);
 			return result;

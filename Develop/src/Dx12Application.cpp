@@ -36,7 +36,7 @@ void Dx12Application::Run()
 	// ゲームループ
 	while(_window->DispatchWindowMessage())
 	{
-		// いずれエンジン(フレームワーク側)に吸収させる
+		// いずれエンジン(フレームワーク側)に吸収させる？？？？
 		Update();
 		Draw();
 	}
