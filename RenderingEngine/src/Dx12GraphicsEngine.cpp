@@ -6,8 +6,8 @@
 
 using namespace Microsoft::WRL;
 
-Dx12GraphicsEngine::Dx12GraphicsEngine() 
-	: _hwnd(0),_windowWidth(0),_windowHeight(0)
+Dx12GraphicsEngine::Dx12GraphicsEngine()
+	: _hwnd(0), _windowWidth(0), _windowHeight(0)
 {
 }
 
@@ -38,8 +38,11 @@ MYRESULT Dx12GraphicsEngine::Init(
 	// コマンドアロケータ、リスト、キュー生成
 	if (FAILED(CreateCommandX())) { return MYRESULT::FAILED; }
 
-	// スワップチェーン生成
-	if (FAILED(CreateSwapChain(hwnd,windowWidth,windowHeight,_dxgiFactory))) { return MYRESULT::FAILED; }
+	// スワップチェーン生成(ダブルバッファリング用のバッファー生成)
+	if (FAILED(CreateSwapChain(hwnd, windowWidth, windowHeight, _dxgiFactory))) { return MYRESULT::FAILED; }
+
+	// フレームバッファのビュー生成
+	if (FAILED(CreateFrameRTV())) { return MYRESULT::FAILED; }
 
 	return MYRESULT::SUCCESS;
 }
@@ -66,9 +69,9 @@ HRESULT Dx12GraphicsEngine::CreateDeviceAndDXGIFactory()
 	// ファクトリー生成
 	HRESULT result = CreateDXGIFactory2(
 		DXGI_CREATE_FACTORY_DEBUG, IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) { 
+	if (FAILED(result)) {
 		MessageBoxA(_hwnd, "ファクトリー生成失敗", "エラー", MB_OK | MB_ICONERROR);
-		return result; 
+		return result;
 	}
 
 	// アダプター列挙
@@ -109,16 +112,16 @@ HRESULT Dx12GraphicsEngine::CreateCommandX()
 		D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(_cmdAllocator.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) {
 		MessageBoxA(_hwnd, "コマンドアロケータ生成失敗", "エラー", MB_OK | MB_ICONERROR);
-		return result; 
+		return result;
 	}
 
 	// コマンドリスト生成
 	result = _device->CreateCommandList(
 		0, D3D12_COMMAND_LIST_TYPE_DIRECT, _cmdAllocator.Get(), nullptr,
 		IID_PPV_ARGS(_cmdList.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) { 
+	if (FAILED(result)) {
 		MessageBoxA(_hwnd, "コマンドリスト生成失敗", "エラー", MB_OK | MB_ICONERROR);
-		return result; 
+		return result;
 	}
 
 	// コマンドキュー生成
@@ -131,7 +134,7 @@ HRESULT Dx12GraphicsEngine::CreateCommandX()
 	if (FAILED(result)) {
 		MessageBoxA(_hwnd, "コマンドキュー生成失敗", "エラー", MB_OK | MB_ICONERROR);
 	}
-	
+
 	return result;
 }
 
@@ -148,7 +151,7 @@ HRESULT Dx12GraphicsEngine::CreateSwapChain(
 	swapchainDesc.SampleDesc.Quality = 0;
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
 	swapchainDesc.Scaling = DXGI_SCALING_STRETCH;
-	swapchainDesc.BufferCount = 2;
+	swapchainDesc.BufferCount = _frameBuffer.BUFFERCOUNT;
 	swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapchainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 	swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -163,6 +166,72 @@ HRESULT Dx12GraphicsEngine::CreateSwapChain(
 	if (FAILED(result)) {
 		MessageBoxA(_hwnd, "スワップチェーン生成失敗", "エラー", MB_OK | MB_ICONERROR);
 	}
-	
+
 	return result;
 }
+
+ID3D12Device& Dx12GraphicsEngine::Device()
+{
+	return *_device.Get();
+}
+
+ID3D12CommandList& Dx12GraphicsEngine::CmdList()
+{
+	return *_cmdList.Get();
+}
+
+IDXGISwapChain4& Dx12GraphicsEngine::SwapChain()
+{
+	return *_swapchain.Get();
+}
+
+HRESULT Dx12GraphicsEngine::CreateFrameRTV()
+{
+	// ディスクリプタヒープ生成
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
+	heapDesc.NodeMask = 0;
+	heapDesc.NumDescriptors = _frameBuffer.BUFFERCOUNT;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
+
+	HRESULT result = _device->CreateDescriptorHeap(
+		&heapDesc, IID_PPV_ARGS(_frameRtvHeap.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) {
+		MessageBoxA(_hwnd, "スワップチェーンディスクリプタ取得失敗", "エラー", MB_OK | MB_ICONERROR);
+		return result;
+	}
+
+	// レンダーターゲットビュー生成
+	UINT IncSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+	D3D12_CPU_DESCRIPTOR_HANDLE handle = _frameRtvHeap->GetCPUDescriptorHandleForHeapStart();
+
+	for (size_t idx = 0; idx < static_cast<size_t>(_frameBuffer.BUFFERCOUNT); idx++)
+	{
+		// スワップチェーンで生成したバッファーをID3D12Resourceに結びつける
+		auto& buffer = _frameBuffer._frameBuffers[idx];
+		result = _swapchain->GetBuffer(idx, IID_PPV_ARGS(buffer.ReleaseAndGetAddressOf()));
+		if (FAILED(result)) {
+			MessageBoxA(_hwnd, "フレームバッファ取得失敗", "エラー", MB_OK | MB_ICONERROR);
+			return result;
+		}
+
+		// ビュー生成
+		_device->CreateRenderTargetView(buffer.Get(), nullptr, handle);
+
+		// 次にビューを生成する位置へ移動
+		handle.ptr += IncSize;
+	}
+
+	return result;
+}
+
+/// メモ
+/// returnする場合としない場合がある→引数でリターンの有無を指定する？
+/// 無理にインライン化して可読性下がる可能性もある→この処理は生成処理以外呼ぶことが少ないので、
+/// インライン化するメリットが小さい
+//inline HRESULT CheckFailed(const HRESULT& result, const char* message, const HWND& hwnd) {
+//	if (FAILED(result)) {
+//		MessageBoxA(hwnd, message, "エラー", MB_OK | MB_ICONERROR);
+//		return result;
+//	}
+//}
