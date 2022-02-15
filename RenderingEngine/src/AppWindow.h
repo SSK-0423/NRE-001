@@ -11,7 +11,7 @@ struct AppWindowInitData
 	LONG _windowWidth;	        // ウィンドウ幅
 	LONG _windowHeight;	        // ウィンドウ高
 
-	AppWindowInitData(const TCHAR* name = L"DX12アプリケーション", LONG width = 1024, LONG heigh = 768);
+	AppWindowInitData(const TCHAR* name = L"DX12アプリケーション", LONG width = 1024, LONG height = 768);
 };
 
 /// <summary>
