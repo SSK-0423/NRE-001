@@ -36,6 +36,16 @@ public:
 private:
 	Dx12GraphicsEngine& _graphicsEngine;			    // 描画の基礎部分を担当するエンジン
 	std::shared_ptr<AppWindow> _window = nullptr;		// アプリケーションのウィンドウ
+// 仮
+	
+	/// <summary>
+	/// 更新処理
+	/// </summary>
+	void Update();
+	/// <summary>
+	/// 描画処理
+	/// </summary>
+	void Draw();
 };
 
 /// メモ
