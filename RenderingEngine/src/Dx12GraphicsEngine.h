@@ -4,11 +4,18 @@
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
+#include <d3dx12.h>
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"dxgi.lib")
 
 #include <wrl.h>
+
+struct FrameBuffer
+{
+	static constexpr UINT BUFFERCOUNT = 2;
+	Microsoft::WRL::ComPtr<ID3D12Resource> _frameBuffers[BUFFERCOUNT];
+};
 
 class Dx12GraphicsEngine
 {
@@ -77,9 +84,32 @@ private:
 	HRESULT CreateSwapChain(
 		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeightconst,
 		const Microsoft::WRL::ComPtr<IDXGIFactory6>& dxgiFactory);
+public:
+	/// <summary>
+	/// デバイス取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12Device& Device();
+	/// <summary>
+	/// コマンドリスト取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12CommandList& CmdList();
+	/// <summary>
+	/// スワップチェーン取得
+	/// </summary>
+	/// <returns></returns>
+	IDXGISwapChain4& SwapChain();
+
+// 開発用
+private:
+	FrameBuffer _frameBuffer;	                                            // フレームバッファ構造体
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _frameRtvHeap = nullptr;	// フレームバッファ用RTVヒープ
+	
+	// フレームバッファ用ディスクリプタヒープ生成
+	HRESULT CreateFrameRTV();
 
 public:
-
 };
 
 /// メモ

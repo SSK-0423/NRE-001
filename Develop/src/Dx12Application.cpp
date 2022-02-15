@@ -36,7 +36,6 @@ void Dx12Application::Run()
 	// ƒQ[ƒ€ƒ‹[ƒv
 	while(_window->DispatchWindowMessage())
 	{
-		;
 	}
 }
 
