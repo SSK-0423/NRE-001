@@ -36,9 +36,26 @@ void Dx12Application::Run()
 	// ゲームループ
 	while(_window->DispatchWindowMessage())
 	{
+		// いずれエンジン(フレームワーク側)に吸収させる
+		Update();
+		Draw();
 	}
 }
 
 void Dx12Application::End()
 {
+}
+
+void Dx12Application::Update()
+{
+}
+
+void Dx12Application::Draw()
+{
+	// 1フレームの描画処理
+	_graphicsEngine.BeginDraw();
+	{
+		// モデルなどの描画
+	}
+	_graphicsEngine.EndDraw();
 }

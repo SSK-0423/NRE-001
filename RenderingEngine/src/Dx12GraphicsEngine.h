@@ -52,6 +52,10 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12GraphicsCommandList> _cmdList = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12CommandQueue> _cmdQueue = nullptr;
 
+	// フェンス関連
+	Microsoft::WRL::ComPtr<ID3D12Fence> _fence = nullptr;
+	UINT _fenceVal = 0;
+
 	// ウィンドウ関連
 	HWND _hwnd;
 	UINT _windowWidth;
@@ -72,7 +76,6 @@ private:
 	/// </summary>
 	/// <returns></returns>
 	HRESULT CreateCommandX();
-	
 	/// <summary>
 	/// スワップチェーン生成
 	/// </summary>
@@ -84,6 +87,11 @@ private:
 	HRESULT CreateSwapChain(
 		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeightconst,
 		const Microsoft::WRL::ComPtr<IDXGIFactory6>& dxgiFactory);
+	/// <summary>
+	/// フェンス生成
+	/// </summary>
+	/// <returns></returns>
+	HRESULT CreateFence();
 public:
 	/// <summary>
 	/// デバイス取得
@@ -100,13 +108,25 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	IDXGISwapChain4& SwapChain();
+	
+	/// <summary>
+	/// 1フレームの描画開始
+	/// </summary>
+	void BeginDraw();
+	/// <summary>
+	/// 1フレームの描画終了
+	/// </summary>
+	void EndDraw();
 
 // 開発用
 private:
 	FrameBuffer _frameBuffer;	                                            // フレームバッファ構造体
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _frameRtvHeap = nullptr;	// フレームバッファ用RTVヒープ
 	
-	// フレームバッファ用ディスクリプタヒープ生成
+	/// <summary>
+	/// フレームバッファ用ディスクリプタヒープとRTV生成
+	/// </summary>
+	/// <returns></returns>
 	HRESULT CreateFrameRTV();
 
 public:
