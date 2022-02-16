@@ -1,6 +1,7 @@
 #pragma once
 #include "EngineUtility.h"
 #include "AppWindow.h"
+#include "RenderingContext.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -102,7 +103,7 @@ public:
 	/// コマンドリスト取得
 	/// </summary>
 	/// <returns></returns>
-	ID3D12CommandList& CmdList();
+	ID3D12GraphicsCommandList& CmdList();
 	/// <summary>
 	/// スワップチェーン取得
 	/// </summary>
@@ -120,6 +121,7 @@ public:
 
 // 開発用
 private:
+	RenderingContext _renderContext;										// レンダリングコンテキスト
 	FrameBuffer _frameBuffer;	                                            // フレームバッファ構造体
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _frameRtvHeap = nullptr;	// フレームバッファ用RTVヒープ
 	
