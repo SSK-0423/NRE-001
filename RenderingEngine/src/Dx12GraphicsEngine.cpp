@@ -47,6 +47,9 @@ MYRESULT Dx12GraphicsEngine::Init(
 	// フレームバッファのビュー生成
 	if (FAILED(CreateFrameRTV())) { return MYRESULT::FAILED; }
 
+	// レンダリングコンテキストの初期化
+	_renderContext.Init(*_cmdList.Get());
+
 	return MYRESULT::SUCCESS;
 }
 
@@ -190,7 +193,7 @@ ID3D12Device& Dx12GraphicsEngine::Device()
 	return *_device.Get();
 }
 
-ID3D12CommandList& Dx12GraphicsEngine::CmdList()
+ID3D12GraphicsCommandList& Dx12GraphicsEngine::CmdList()
 {
 	return *_cmdList.Get();
 }
@@ -204,6 +207,7 @@ void Dx12GraphicsEngine::BeginDraw()
 {
 	// 描画対象のバッファーを示すインデックス取得
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+
 	// 描画対象バッファーへ移動
 	auto rtvHandle = _frameRtvHeap->GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr +=
@@ -218,6 +222,7 @@ void Dx12GraphicsEngine::BeginDraw()
 
 	// レンダーターゲットセット
 	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+
 	// 画面を指定色でクリア
 	float clearColor[] = { 0.f,1.f,1.f,1.f };
 	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
