@@ -45,7 +45,13 @@ MYRESULT Dx12GraphicsEngine::Init(
 	if (FAILED(CreateFence())) { return MYRESULT::FAILED; }
 
 	// フレームバッファのビュー生成
-	if (FAILED(CreateFrameRTV())) { return MYRESULT::FAILED; }
+	RenderTargetInitData rtInitData;
+	rtInitData._width = windowWidth;
+	rtInitData._height = windowHeight;
+
+	if (_frameBuffer.Create(*_device.Get(), *_swapchain.Get(), rtInitData) == MYRESULT::FAILED) {
+		return MYRESULT::FAILED;
+	}
 
 	// レンダリングコンテキストの初期化
 	_renderContext.Init(*_cmdList.Get());
@@ -205,110 +211,71 @@ IDXGISwapChain4& Dx12GraphicsEngine::SwapChain()
 
 void Dx12GraphicsEngine::BeginDraw()
 {
-	// 描画対象のバッファーを示すインデックス取得
-	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
-
-	// 描画対象バッファーへ移動
-	auto rtvHandle = _frameRtvHeap->GetCPUDescriptorHandleForHeapStart();
-	rtvHandle.ptr +=
-		bbIdx * _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-
-	// バリア処理
-	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		_frameBuffer._frameBuffers[bbIdx].Get(),
-		D3D12_RESOURCE_STATE_PRESENT,
-		D3D12_RESOURCE_STATE_RENDER_TARGET);
-	_cmdList->ResourceBarrier(1, &barrier);
-
-	// レンダーターゲットセット
-	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
-
-	// 画面を指定色でクリア
-	float clearColor[] = { 0.f,1.f,1.f,1.f };
-	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
-
+//	// 描画対象のバッファーを示すインデックス取得
+//	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+//
+//	// 描画対象バッファーへ移動
+//	auto rtvHandle = _frameRtvHeap->GetCPUDescriptorHandleForHeapStart();
+//	rtvHandle.ptr +=
+//		bbIdx * _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+//
+//	// バリア処理
+//	_renderContext.TransitionResourceState(
+//		*_frameBuffer._frameBuffers[bbIdx].Get(),
+//		D3D12_RESOURCE_STATE_PRESENT,
+//		D3D12_RESOURCE_STATE_RENDER_TARGET);
+//
+//	// レンダーターゲットセット
+//	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+//
+//	// 画面を指定色でクリア
+//	float clearColor[] = { 0.f,1.f,1.f,1.f };
+//	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 }
 
 void Dx12GraphicsEngine::EndDraw()
 {
-	// 描画対象のバッファーを示すインデックス取得
-	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	//// 描画対象のバッファーを示すインデックス取得
+	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
-	// バリア処理
-	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
-		_frameBuffer._frameBuffers[bbIdx].Get(),
-		D3D12_RESOURCE_STATE_RENDER_TARGET,
-		D3D12_RESOURCE_STATE_PRESENT);
-	_cmdList->ResourceBarrier(1, &barrier);
+	//// バリア処理
+	//_renderContext.TransitionResourceState(
+	//	*_frameBuffer._frameBuffers[bbIdx].Get(),
+	//	D3D12_RESOURCE_STATE_RENDER_TARGET,
+	//	D3D12_RESOURCE_STATE_PRESENT);
 
-	// 命令の受付終了
-	_cmdList->Close();
+	//// 命令の受付終了
+	//_renderContext.Close();
 
-	// コマンドリストの実行
-	ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
-	_cmdQueue->ExecuteCommandLists(1, cmdlists);
+	//// コマンドリストの実行
+	//ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
+	//_cmdQueue->ExecuteCommandLists(1, cmdlists);
 
-	// CPUとGPUの同期
-	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
-	if (_fence->GetCompletedValue() != _fenceVal) {
-		// イベントハンドル取得
-		auto event = CreateEvent(nullptr, false, false, nullptr);
+	//// CPUとGPUの同期
+	//_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
+	//if (_fence->GetCompletedValue() != _fenceVal) {
+	//	// イベントハンドル取得
+	//	auto event = CreateEvent(nullptr, false, false, nullptr);
 
-		_fence->SetEventOnCompletion(_fenceVal, event);
+	//	_fence->SetEventOnCompletion(_fenceVal, event);
 
-		// イベントが発生するまで待ち続ける
-		WaitForSingleObject(event, INFINITE);
+	//	// イベントが発生するまで待ち続ける
+	//	WaitForSingleObject(event, INFINITE);
 
-		// イベントハンドルを閉じる
-		CloseHandle(event);
-	}
+	//	// イベントハンドルを閉じる
+	//	CloseHandle(event);
+	//}
 
-	_cmdAllocator->Reset();	                        // キューをクリア
-	_cmdList->Reset(_cmdAllocator.Get(), nullptr);	// コマンドを受け付けられる状態にする
+	//_cmdAllocator->Reset();	                        // キューをクリア
+	//_renderContext.Reset(*_cmdAllocator.Get());	    // コマンドを受け付けられる状態にする
 
-	// フリップ
-	_swapchain->Present(1, 0);
+	//// フリップ
+	//_swapchain->Present(1, 0);
 }
 
-HRESULT Dx12GraphicsEngine::CreateFrameRTV()
+RenderingContext& Dx12GraphicsEngine::GetRenderingContext()
 {
-	// ディスクリプタヒープ生成
-	D3D12_DESCRIPTOR_HEAP_DESC heapDesc = {};
-	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
-	heapDesc.NodeMask = 0;
-	heapDesc.NumDescriptors = _frameBuffer.BUFFERCOUNT;
-	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
-
-	HRESULT result = _device->CreateDescriptorHeap(
-		&heapDesc, IID_PPV_ARGS(_frameRtvHeap.ReleaseAndGetAddressOf()));
-	if (FAILED(result)) {
-		MessageBoxA(_hwnd, "スワップチェーンディスクリプタ取得失敗", "エラー", MB_OK | MB_ICONERROR);
-		return result;
-	}
-
-	// レンダーターゲットビュー生成
-	UINT IncSize = _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-	D3D12_CPU_DESCRIPTOR_HANDLE handle = _frameRtvHeap->GetCPUDescriptorHandleForHeapStart();
-
-	for (size_t idx = 0; idx < static_cast<size_t>(_frameBuffer.BUFFERCOUNT); idx++)
-	{
-		// スワップチェーンで生成したバッファーをID3D12Resourceに結びつける
-		auto& buffer = _frameBuffer._frameBuffers[idx];
-		result = _swapchain->GetBuffer(
-			static_cast<UINT>(idx), IID_PPV_ARGS(buffer.ReleaseAndGetAddressOf()));
-		if (FAILED(result)) {
-			MessageBoxA(_hwnd, "フレームバッファ取得失敗", "エラー", MB_OK | MB_ICONERROR);
-			return result;
-		}
-
-		// ビュー生成
-		_device->CreateRenderTargetView(buffer.Get(), nullptr, handle);
-
-		// 次にビューを生成する位置へ移動
-		handle.ptr += IncSize;
-	}
-
-	return result;
+	return _renderContext;
 }
 
 /// メモ
