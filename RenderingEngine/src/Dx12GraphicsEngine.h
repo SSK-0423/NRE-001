@@ -2,6 +2,7 @@
 #include "EngineUtility.h"
 #include "AppWindow.h"
 #include "RenderingContext.h"
+#include "FrameBuffer.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -11,12 +12,6 @@
 #pragma comment(lib,"dxgi.lib")
 
 #include <wrl.h>
-
-struct FrameBuffer
-{
-	static constexpr UINT BUFFERCOUNT = 2;
-	Microsoft::WRL::ComPtr<ID3D12Resource> _frameBuffers[BUFFERCOUNT];
-};
 
 class Dx12GraphicsEngine
 {
@@ -42,6 +37,7 @@ public:
 	/// <param name="dxgiFactory">ファクトリー</param>
 	/// <returns>MYRESULT::SUCCESS: 成功 MYRESULT::FAILED: 失敗</returns>
 	MYRESULT Init(const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight);
+
 private:
 	// DXGI関連
 	Microsoft::WRL::ComPtr<IDXGIFactory6> _dxgiFactory = nullptr;
@@ -86,13 +82,14 @@ private:
 	/// <param name="dxgiFactory">ファクトリー</param>
 	/// <returns></returns>
 	HRESULT CreateSwapChain(
-		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeightconst,
+		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight,
 		const Microsoft::WRL::ComPtr<IDXGIFactory6>& dxgiFactory);
 	/// <summary>
 	/// フェンス生成
 	/// </summary>
 	/// <returns></returns>
 	HRESULT CreateFence();
+
 public:
 	/// <summary>
 	/// デバイス取得
@@ -121,17 +118,15 @@ public:
 
 // 開発用
 private:
-	RenderingContext _renderContext;										// レンダリングコンテキスト
-	FrameBuffer _frameBuffer;	                                            // フレームバッファ構造体
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _frameRtvHeap = nullptr;	// フレームバッファ用RTVヒープ
+	RenderingContext _renderContext;	// レンダリングコンテキスト
+	FrameBuffer _frameBuffer;	        // フレームバッファ構造体
 	
+public:
 	/// <summary>
-	/// フレームバッファ用ディスクリプタヒープとRTV生成
+	/// レンダリングコンテキスト取得
 	/// </summary>
 	/// <returns></returns>
-	HRESULT CreateFrameRTV();
-
-public:
+	RenderingContext& GetRenderingContext();
 };
 
 /// メモ
