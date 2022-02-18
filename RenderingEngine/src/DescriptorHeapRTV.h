@@ -38,8 +38,8 @@ public:
 	/// CPUのディスクリプタヒープの先頭ハンドルを取得
 	/// </summary>
 	/// <returns></returns>
-	D3D12_CPU_DESCRIPTOR_HANDLE* GetCPUDescriptorHandleForHeapStart() {
-		return &_rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandleForHeapStart() {
+		return _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 	}
 
 	/// <summary>
