@@ -211,26 +211,26 @@ IDXGISwapChain4& Dx12GraphicsEngine::SwapChain()
 
 void Dx12GraphicsEngine::BeginDraw()
 {
-//	// 描画対象のバッファーを示すインデックス取得
-//	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
-//
-//	// 描画対象バッファーへ移動
-//	auto rtvHandle = _frameRtvHeap->GetCPUDescriptorHandleForHeapStart();
-//	rtvHandle.ptr +=
-//		bbIdx * _device->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
-//
-//	// バリア処理
-//	_renderContext.TransitionResourceState(
-//		*_frameBuffer._frameBuffers[bbIdx].Get(),
-//		D3D12_RESOURCE_STATE_PRESENT,
-//		D3D12_RESOURCE_STATE_RENDER_TARGET);
-//
-//	// レンダーターゲットセット
-//	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
-//
-//	// 画面を指定色でクリア
-//	float clearColor[] = { 0.f,1.f,1.f,1.f };
-//	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	//// 描画対象のバッファーを示すインデックス取得
+	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+
+	//// 描画対象バッファーへ移動
+	//auto rtvHandle = _frameBuffer.GetCPUDescriptorHandleForHeapStart();
+	//rtvHandle.ptr += bbIdx * _frameBuffer.GetHandleIncrimentSize();
+
+	//auto depthHandle = 
+	//// バリア処理
+	//_renderContext.TransitionResourceState(
+	//	_frameBuffer.GetRengerTargetBuffer(bbIdx),
+	//	D3D12_RESOURCE_STATE_PRESENT,
+	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	//// レンダーターゲットセット
+	//_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+
+	//// 画面を指定色でクリア
+	//float clearColor[] = { 0.f,1.f,1.f,1.f };
+	//_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 }
 
 void Dx12GraphicsEngine::EndDraw()

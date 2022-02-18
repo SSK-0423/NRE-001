@@ -36,7 +36,7 @@ MYRESULT RenderTarget::Create(ID3D12Device& device, const RenderTargetInitData& 
 	}
 
 	// デプスステンシル生成
-	if (FAILED(CreateDepthBuffer(
+	if (FAILED(CreateDepthStencilBuffer(
 		device, initData._depthFormat, initData._width, initData._height, initData._clearDepth)))
 	{
 		return MYRESULT::FAILED;
@@ -60,7 +60,7 @@ MYRESULT RenderTarget::Create(
 	}
 
 	// デプスステンシル生成
-	if (FAILED(CreateDepthBuffer(
+	if (FAILED(CreateDepthStencilBuffer(
 		device, initData._depthFormat, initData._width, initData._height, initData._clearDepth)))
 	{
 		return MYRESULT::FAILED;
@@ -99,7 +99,7 @@ HRESULT RenderTarget::CreateRenderTargetBuffer(ID3D12Device& device, IDXGISwapCh
 	return result;
 }
 
-HRESULT RenderTarget::CreateDepthBuffer(
+HRESULT RenderTarget::CreateDepthStencilBuffer(
 	ID3D12Device& device, const DXGI_FORMAT& format, const UINT& width, const UINT& height,
 	const float& clearDepth)
 {
@@ -116,9 +116,19 @@ HRESULT RenderTarget::CreateDepthBuffer(
 		&resDesc,
 		D3D12_RESOURCE_STATE_PRESENT,
 		&clearValue,
-		IID_PPV_ARGS(_depthBuffer.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(_depthStencilBuffer.ReleaseAndGetAddressOf()));
 
 	if (FAILED(result)) { return result; }
 
 	return result;
+}
+
+ID3D12Resource& RenderTarget::GetRenderTargetBuffer()
+{
+	return *_renderTargetBuffer.Get();
+}
+
+ID3D12Resource& RenderTarget::GetDepthBuffer()
+{
+	return *_depthStencilBuffer.Get();
 }

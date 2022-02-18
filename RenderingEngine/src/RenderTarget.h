@@ -54,7 +54,7 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _renderTargetBuffer = nullptr;	    // レンダーターゲットのバッファー
-	Microsoft::WRL::ComPtr<ID3D12Resource> _depthBuffer = nullptr;				// デプスステンシルのバッファー
+	Microsoft::WRL::ComPtr<ID3D12Resource> _depthStencilBuffer = nullptr;				// デプスステンシルのバッファー
 
 	/// <summary>
 	/// レンダーターゲットのバッファー生成
@@ -86,9 +86,21 @@ private:
 	/// <param name="width">デプスステンシル幅</param>
 	/// <param name="height">デプスステンシル高</param>
 	/// <returns></returns>
-	HRESULT CreateDepthBuffer(
+	HRESULT CreateDepthStencilBuffer(
 		ID3D12Device& device, const DXGI_FORMAT& format, const UINT& width, const UINT& height,
 		const float& clearDepth);
+
+public:
+	/// <summary>
+	/// レンダーターゲットバッファー取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12Resource& GetRenderTargetBuffer();
+	/// <summary>
+	/// デプスステンシルバッファー取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12Resource& GetDepthBuffer();
 };
 
 /// メモ
@@ -96,7 +108,7 @@ private:
 /// バッファー、ディスクリプタヒープ、ビューを所持
 /// メリット
 ///		レンダーターゲット
-/// ディスクリプタヒープとビューを別クラスにしてレンダーターゲットクラス：レンダーターゲット = 1:1にした方が分かりやすいのでは
+///		ディスクリプタヒープとビューを別クラスにしてレンダーターゲットクラス：レンダーターゲット = 1:1にした方が分かりやすいのでは
 /// メリット
 ///		MRTの際に、法線用、色情報用など個別に変数名を付けることができる→可読性向上
 ///		マルチパスレンダリングの際には、バッファーをSRVとしても生成する必要があるので、RenderTargetクラスでRTV

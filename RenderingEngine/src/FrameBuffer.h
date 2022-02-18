@@ -1,6 +1,7 @@
 #pragma once
 #include "RenderTarget.h"
 #include "DescriptorHeapRTV.h"
+#include <cassert>
 
 /// <summary>
 /// フレームバッファクラス
@@ -25,10 +26,28 @@ public:
 	MYRESULT Create(ID3D12Device& device, IDXGISwapChain4& swapchain, const RenderTargetInitData& initData);
 
 	/// <summary>
-	/// フレームバッファ用ヒープ取得
+	/// ディスクリプターヒープの先頭ハンドル取得
 	/// </summary>
 	/// <returns></returns>
-	DescriptorHeapRTV& GetDescriptorHeap() {
-		return _frameRTVHeap;
+	D3D12_CPU_DESCRIPTOR_HANDLE GetRtvCpuDescriptorHandleForHeapStart() {
+		return _frameRTVHeap.GetCPUDescriptorHandleForHeapStart();
+	}
+
+	/// <summary>
+	/// ディスクリプタヒープハンドルのインクリメントサイズ取得
+	/// </summary>
+	/// <returns></returns>
+	UINT GetHandleIncrimentSize() {
+		return _frameRTVHeap.GetHandleIncrimentSize();
+	}
+	
+	ID3D12Resource& GetRengerTargetBuffer(size_t index) {
+		assert(index < BUFFERCOUNT);
+		return _frameBuffers[index].GetRenderTargetBuffer();
+	}
+
+	ID3D12Resource& GetDepthBuffer(size_t index) {
+		assert(index < BUFFERCOUNT);
+		return _frameBuffers[index].GetDepthBuffer();
 	}
 };
