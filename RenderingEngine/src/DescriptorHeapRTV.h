@@ -20,9 +20,10 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _rtvHeap = nullptr;	// ディスクリプタヒープ
-	UINT _handleIncrimentSize = 0;                                      // ハンドルのインクリメントサイズ
+	UINT _handleIncrimentSize = 0;										// ハンドルのインクリメントサイズ
 	UINT _registedDescriptorNum = 0;									// ヒープに登録されたディスクリプタ数
-	
+	UINT _nextHandleLocation = 1;
+
 	/// <summary>
 	/// ディスクリプタヒープ生成
 	/// </summary>
@@ -40,11 +41,21 @@ public:
 
 	/// <summary>
 	/// CPUのディスクリプタヒープの先頭ハンドルを取得
+	/// この関数を実行するとGetNextCPUDescriptorHandleで取得できるハンドルが2番目に初期化される
 	/// </summary>
 	/// <returns></returns>
 	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandleForHeapStart() {
+		_nextHandleLocation = 1;
 		return _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 	}
+
+	/// <summary>
+	/// 次のディスクリプタのハンドル取得
+	/// 初期は2番目のハンドルが取得できる
+	/// 登録された数を超えたハンドルを取得しようとすると登録された中の最後のハンドルを返す
+	/// </summary>
+	/// <returns></returns>
+	D3D12_CPU_DESCRIPTOR_HANDLE GetNextCPUDescriptorHandle();
 
 	/// <summary>
 	/// ディスクリプタヒープハンドルのインクリメントサイズ取得
@@ -52,6 +63,14 @@ public:
 	/// <returns></returns>
 	UINT GetHandleIncrimentSize() {
 		return _handleIncrimentSize;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	UINT GetRegistedDescriptorNum() {
+		return _registedDescriptorNum;
 	}
 
 	/// <summary>

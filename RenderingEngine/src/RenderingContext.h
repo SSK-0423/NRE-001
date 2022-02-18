@@ -1,7 +1,9 @@
 #pragma once
 #include <d3d12.h>
 
-class RenderTarget;
+class DescriptorHeapRTV;
+class DescriptorHeapDSV;
+struct ColorRGBA;
 
 /// <summary>
 /// レンダリングコンテキストクラス このクラスを介して描画命令を発行する
@@ -40,10 +42,40 @@ public:
 		ID3D12Resource& resource, D3D12_RESOURCE_STATES presentState, D3D12_RESOURCE_STATES afterState);
 
 	/// <summary>
-	/// レンダーターゲットセット
+	/// レンダーターゲットを１つセットする
 	/// </summary>
-	/// <param name="renderTarget"></param>
-	/// <param name="descriptorContinuous"></param>
-	void SetRenderTargets(RenderTarget& renderTarget,BOOL descriptorContinuous);
+	/// <param name="_rtvHandle">レンダーターゲットビューのハンドル</param>
+	/// <param name="_dsvHandle">デプスステンシルビューのハンドル</param>
+	void SetRenderTarget(
+		const D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandle, const D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle);
 
+	/// <summary>
+	/// 複数のレンダーターゲットをセットする
+	/// </summary>
+	/// <param name="rtvNum">セットするレンダーターゲット数</param>
+	/// <param name="rtvHandles">レンダーターゲットビューのハンドルの配列</param>
+	/// <param name="dsvHandle">デプスステンシルビューのハンドル</param>
+	void SetRenderTargets(
+		UINT rtvNum, const D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[],
+		const D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle);
+
+	/// <summary>
+	/// 指定色でレンダーターゲット初期化
+	/// </summary>
+	/// <param name="rtvHandle">レンダーターゲットビューのハンドル</param>
+	/// <param name="color">初期化色</param>
+	/// <param name="numRects">rectsの要素数</param>
+	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
+	void ClearRenderTarget(
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color, UINT numRects, const D3D12_RECT* rects);
+
+	/// <summary>
+	/// 指定色でレンダーターゲット初期化
+	/// </summary>
+	/// <param name="rtvHandle">レンダーターゲットビューのハンドル</param>
+	/// <param name="color">初期化色</param>
+	/// <param name="numRects">rectsの要素数</param>
+	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
+	void ClearRenderTarget(
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color, UINT numRects, const D3D12_RECT* rects);
 };

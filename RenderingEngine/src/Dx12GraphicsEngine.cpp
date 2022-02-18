@@ -218,11 +218,11 @@ void Dx12GraphicsEngine::BeginDraw()
 		D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// レンダーターゲットセット
-	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
 
 	// 画面を指定色でクリア
-	float clearColor[] = { 0.f,1.f,1.f,1.f };
-	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
+	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
 }
 
 void Dx12GraphicsEngine::EndDraw()
