@@ -1,4 +1,5 @@
 #include "DescriptorHeapRTV.h"
+#include <cassert>
 
 HRESULT DescriptorHeapRTV::CreateDescriptorHeap(ID3D12Device& device)
 {
@@ -26,6 +27,21 @@ MYRESULT DescriptorHeapRTV::Create(ID3D12Device& device)
 	}
 
 	return MYRESULT::SUCCESS;
+}
+
+D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapRTV::GetNextCPUDescriptorHandle()
+{
+	// 範囲外参照を防ぐ
+	assert(_nextHandleLocation <= _registedDescriptorNum);
+
+	// 次のハンドルへ
+	auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
+	handle.ptr += _nextHandleLocation * _handleIncrimentSize;
+
+	// 次のハンドル位置を指す
+	_nextHandleLocation++;
+
+	return handle;
 }
 
 void DescriptorHeapRTV::RegistDescriptor(ID3D12Device& device, RenderTargetBuffer& buffer)
