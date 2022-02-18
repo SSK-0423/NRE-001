@@ -1,6 +1,9 @@
 #pragma once
 #include "EngineUtility.h"
 #include "AppWindow.h"
+#include "RenderingContext.h"
+#include "RenderTargetBuffer.h"
+#include "DescriptorHeapRTV.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -11,12 +14,6 @@
 
 #include <wrl.h>
 
-struct FrameBuffer
-{
-	static constexpr UINT BUFFERCOUNT = 2;
-	Microsoft::WRL::ComPtr<ID3D12Resource> _frameBuffers[BUFFERCOUNT];
-};
-
 class Dx12GraphicsEngine
 {
 private:
@@ -24,6 +21,8 @@ private:
 	~Dx12GraphicsEngine() = default;
 	Dx12GraphicsEngine(const Dx12GraphicsEngine& inst) = delete;
 	void operator=(const Dx12GraphicsEngine& inst) = delete;
+
+	static constexpr UINT DOUBLE_BUFFER = 2;	// ダブルバッファリング
 
 public:
 	/// <summary>
@@ -41,6 +40,7 @@ public:
 	/// <param name="dxgiFactory">ファクトリー</param>
 	/// <returns>MYRESULT::SUCCESS: 成功 MYRESULT::FAILED: 失敗</returns>
 	MYRESULT Init(const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight);
+
 private:
 	// DXGI関連
 	Microsoft::WRL::ComPtr<IDXGIFactory6> _dxgiFactory = nullptr;
@@ -85,13 +85,14 @@ private:
 	/// <param name="dxgiFactory">ファクトリー</param>
 	/// <returns></returns>
 	HRESULT CreateSwapChain(
-		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeightconst,
+		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight,
 		const Microsoft::WRL::ComPtr<IDXGIFactory6>& dxgiFactory);
 	/// <summary>
 	/// フェンス生成
 	/// </summary>
 	/// <returns></returns>
 	HRESULT CreateFence();
+
 public:
 	/// <summary>
 	/// デバイス取得
@@ -102,13 +103,13 @@ public:
 	/// コマンドリスト取得
 	/// </summary>
 	/// <returns></returns>
-	ID3D12CommandList& CmdList();
+	ID3D12GraphicsCommandList& CmdList();
 	/// <summary>
 	/// スワップチェーン取得
 	/// </summary>
 	/// <returns></returns>
 	IDXGISwapChain4& SwapChain();
-	
+
 	/// <summary>
 	/// 1フレームの描画開始
 	/// </summary>
@@ -118,18 +119,24 @@ public:
 	/// </summary>
 	void EndDraw();
 
-// 開発用
+	// 開発用
 private:
-	FrameBuffer _frameBuffer;	                                            // フレームバッファ構造体
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _frameRtvHeap = nullptr;	// フレームバッファ用RTVヒープ
-	
+	RenderingContext _renderContext;	    // レンダリングコンテキスト
+	RenderTargetBuffer _frameBuffers[2];	// フレームバッファ
+	DescriptorHeapRTV _frameHeap;	        // フレームバッファ用ディスクリプタヒープ
+
 	/// <summary>
-	/// フレームバッファ用ディスクリプタヒープとRTV生成
+	/// フレームバッファ用のレンダーターゲット生成
 	/// </summary>
 	/// <returns></returns>
-	HRESULT CreateFrameRTV();
+	MYRESULT CreateFrameRenderTarget();
 
 public:
+	/// <summary>
+	/// レンダリングコンテキスト取得
+	/// </summary>
+	/// <returns></returns>
+	RenderingContext& GetRenderingContext();
 };
 
 /// メモ

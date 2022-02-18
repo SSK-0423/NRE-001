@@ -47,3 +47,26 @@ template <class T>
 inline void ReleaseComObj(Microsoft::WRL::ComPtr<T> obj) {
 	if (obj.Get() != nullptr) {}
 }
+
+/// <summary>
+/// 
+/// </summary>
+struct ColorRGBA
+{
+	float _color[4];
+
+	/// <summary>
+	/// コンストラクタ デフォルト：黒
+	/// </summary>
+	/// <param name="r">赤</param>
+	/// <param name="g">緑</param>
+	/// <param name="b">青</param>
+	/// <param name="a">透明度</param>
+	ColorRGBA(float r = 0.f, float g = 0.f, float b = 0.f, float a = 1.f)
+	{
+		_color[0] = r;
+		_color[1] = g;
+		_color[2] = b;
+		_color[3] = a;
+	}
+};
