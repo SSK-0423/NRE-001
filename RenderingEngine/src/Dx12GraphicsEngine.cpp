@@ -44,14 +44,7 @@ MYRESULT Dx12GraphicsEngine::Init(
 	// フェンス生成
 	if (FAILED(CreateFence())) { return MYRESULT::FAILED; }
 
-	// フレームバッファのビュー生成
-	RenderTargetInitData rtInitData;
-	rtInitData._width = windowWidth;
-	rtInitData._height = windowHeight;
-
-	if (_frameBuffer.Create(*_device.Get(), *_swapchain.Get(), rtInitData) == MYRESULT::FAILED) {
-		return MYRESULT::FAILED;
-	}
+	if (CreateFrameRenderTarget() == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
 	// レンダリングコンテキストの初期化
 	_renderContext.Init(*_cmdList.Get());
@@ -164,7 +157,7 @@ HRESULT Dx12GraphicsEngine::CreateSwapChain(
 	swapchainDesc.SampleDesc.Quality = 0;
 	swapchainDesc.BufferUsage = DXGI_USAGE_BACK_BUFFER;
 	swapchainDesc.Scaling = DXGI_SCALING_STRETCH;
-	swapchainDesc.BufferCount = _frameBuffer.BUFFERCOUNT;
+	swapchainDesc.BufferCount = DOUBLE_BUFFER;
 	swapchainDesc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 	swapchainDesc.AlphaMode = DXGI_ALPHA_MODE_UNSPECIFIED;
 	swapchainDesc.Flags = DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH;
@@ -211,66 +204,84 @@ IDXGISwapChain4& Dx12GraphicsEngine::SwapChain()
 
 void Dx12GraphicsEngine::BeginDraw()
 {
-	//// 描画対象のバッファーを示すインデックス取得
-	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	// 描画対象のバッファーを示すインデックス取得
+	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
-	//// 描画対象バッファーへ移動
-	//auto rtvHandle = _frameBuffer.GetCPUDescriptorHandleForHeapStart();
-	//rtvHandle.ptr += bbIdx * _frameBuffer.GetHandleIncrimentSize();
+	// 描画対象バッファーへ移動
+	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
 
-	//auto depthHandle = 
-	//// バリア処理
-	//_renderContext.TransitionResourceState(
-	//	_frameBuffer.GetRengerTargetBuffer(bbIdx),
-	//	D3D12_RESOURCE_STATE_PRESENT,
-	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
+	// バリア処理
+	_renderContext.TransitionResourceState(
+		_frameBuffers[bbIdx].GetBuffer(),
+		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
 
-	//// レンダーターゲットセット
-	//_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
+	// レンダーターゲットセット
+	_cmdList->OMSetRenderTargets(1, &rtvHandle, false, nullptr);
 
-	//// 画面を指定色でクリア
-	//float clearColor[] = { 0.f,1.f,1.f,1.f };
-	//_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+	// 画面を指定色でクリア
+	float clearColor[] = { 0.f,1.f,1.f,1.f };
+	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
 }
 
 void Dx12GraphicsEngine::EndDraw()
 {
-	//// 描画対象のバッファーを示すインデックス取得
-	//auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+	// 描画対象のバッファーを示すインデックス取得
+	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
-	//// バリア処理
-	//_renderContext.TransitionResourceState(
-	//	*_frameBuffer._frameBuffers[bbIdx].Get(),
-	//	D3D12_RESOURCE_STATE_RENDER_TARGET,
-	//	D3D12_RESOURCE_STATE_PRESENT);
+	// バリア処理
+	_renderContext.TransitionResourceState(
+		_frameBuffers[bbIdx].GetBuffer(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PRESENT);
 
-	//// 命令の受付終了
-	//_renderContext.Close();
+	// 命令の受付終了
+	_renderContext.Close();
 
-	//// コマンドリストの実行
-	//ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
-	//_cmdQueue->ExecuteCommandLists(1, cmdlists);
+	// コマンドリストの実行
+	ID3D12CommandList* cmdlists[] = { _cmdList.Get() };
+	_cmdQueue->ExecuteCommandLists(1, cmdlists);
 
-	//// CPUとGPUの同期
-	//_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
-	//if (_fence->GetCompletedValue() != _fenceVal) {
-	//	// イベントハンドル取得
-	//	auto event = CreateEvent(nullptr, false, false, nullptr);
+	// CPUとGPUの同期
+	_cmdQueue->Signal(_fence.Get(), ++_fenceVal);
+	if (_fence->GetCompletedValue() != _fenceVal) {
+		// イベントハンドル取得
+		auto event = CreateEvent(nullptr, false, false, nullptr);
 
-	//	_fence->SetEventOnCompletion(_fenceVal, event);
+		_fence->SetEventOnCompletion(_fenceVal, event);
 
-	//	// イベントが発生するまで待ち続ける
-	//	WaitForSingleObject(event, INFINITE);
+		// イベントが発生するまで待ち続ける
+		WaitForSingleObject(event, INFINITE);
 
-	//	// イベントハンドルを閉じる
-	//	CloseHandle(event);
-	//}
+		// イベントハンドルを閉じる
+		CloseHandle(event);
+	}
 
-	//_cmdAllocator->Reset();	                        // キューをクリア
-	//_renderContext.Reset(*_cmdAllocator.Get());	    // コマンドを受け付けられる状態にする
+	_cmdAllocator->Reset();	                        // キューをクリア
+	_renderContext.Reset(*_cmdAllocator.Get());	    // コマンドを受け付けられる状態にする
 
-	//// フリップ
-	//_swapchain->Present(1, 0);
+	// フリップ
+	_swapchain->Present(1, 0);
+}
+
+MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
+{
+	MYRESULT result;
+
+	// ディスクリプタヒープ生成
+	_frameHeap.Create(*_device.Get());
+
+	// バッファー生成してディスクリプタヒープに登録
+	for (size_t idx = 0; idx < DOUBLE_BUFFER; idx++) {
+		// 生成
+		result = _frameBuffers[idx].Create(*_device.Get(), *_swapchain.Get(), idx);
+		if (result == MYRESULT::FAILED) { return result; }
+		// 登録
+		_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx]);
+	}
+
+	return MYRESULT::SUCCESS;
 }
 
 RenderingContext& Dx12GraphicsEngine::GetRenderingContext()

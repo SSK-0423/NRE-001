@@ -33,11 +33,10 @@ struct RenderTargetBufferData
 /// </summary>
 class RenderTargetBuffer
 {
-private:
+public:
 	RenderTargetBuffer() = default;
 	~RenderTargetBuffer() = default;
 
-public:
 	/// <summary>
 	/// レンダーターゲットバッファー生成
 	/// </summary>

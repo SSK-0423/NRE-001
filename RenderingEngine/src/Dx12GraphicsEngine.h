@@ -2,7 +2,8 @@
 #include "EngineUtility.h"
 #include "AppWindow.h"
 #include "RenderingContext.h"
-#include "FrameBuffer.h"
+#include "RenderTargetBuffer.h"
+#include "DescriptorHeapRTV.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -20,6 +21,8 @@ private:
 	~Dx12GraphicsEngine() = default;
 	Dx12GraphicsEngine(const Dx12GraphicsEngine& inst) = delete;
 	void operator=(const Dx12GraphicsEngine& inst) = delete;
+
+	static constexpr UINT DOUBLE_BUFFER = 2;	// ダブルバッファリング
 
 public:
 	/// <summary>
@@ -106,7 +109,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	IDXGISwapChain4& SwapChain();
-	
+
 	/// <summary>
 	/// 1フレームの描画開始
 	/// </summary>
@@ -116,11 +119,18 @@ public:
 	/// </summary>
 	void EndDraw();
 
-// 開発用
+	// 開発用
 private:
-	RenderingContext _renderContext;	// レンダリングコンテキスト
-	FrameBuffer _frameBuffer;	        // フレームバッファ構造体
-	
+	RenderingContext _renderContext;	    // レンダリングコンテキスト
+	RenderTargetBuffer _frameBuffers[2];	// フレームバッファ
+	DescriptorHeapRTV _frameHeap;	        // フレームバッファ用ディスクリプタヒープ
+
+	/// <summary>
+	/// フレームバッファ用のレンダーターゲット生成
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT CreateFrameRenderTarget();
+
 public:
 	/// <summary>
 	/// レンダリングコンテキスト取得

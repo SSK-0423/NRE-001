@@ -5,6 +5,7 @@
 #pragma comment(lib,"d3d12.lib")
 
 #include "EngineUtility.h"
+#include "RenderTargetBuffer.h"
 
 /// <summary>
 /// レンダーターゲットビュー用のディスクリプタヒープ
@@ -15,10 +16,13 @@ public:
 	DescriptorHeapRTV() = default;
 	~DescriptorHeapRTV() = default;
 
+	static constexpr UINT MAXDESCRIPTORNUM = 8;							// 登録可能なディスクリプタ数
+
 private:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _rtvHeap = nullptr;	// ディスクリプタヒープ
-	UINT _handleIncrimentSize = 0;	                                    // ハンドルのインクリメントサイズ
-
+	UINT _handleIncrimentSize = 0;                                      // ハンドルのインクリメントサイズ
+	UINT _registedDescriptorNum = 0;									// ヒープに登録されたディスクリプタ数
+	
 	/// <summary>
 	/// ディスクリプタヒープ生成
 	/// </summary>
@@ -49,4 +53,11 @@ public:
 	UINT GetHandleIncrimentSize() {
 		return _handleIncrimentSize;
 	}
+
+	/// <summary>
+	/// ディスクリプタ登録
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="buffer">レンダーターゲットバッファー</param>
+	void RegistDescriptor(ID3D12Device& device, RenderTargetBuffer& buffer);
 };
