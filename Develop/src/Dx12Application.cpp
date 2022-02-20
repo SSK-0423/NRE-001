@@ -21,10 +21,19 @@ MYRESULT Dx12Application::Init()
 	_window = std::make_shared<AppWindow>();
 	AppWindowInitData initData(TEXT("レンダリングエンジン開発"), WINDOW_WIDTH, WINDOW_HEIGHT);
 	_window->CreateAppWindow(initData);
-	
+
 	// グラフィクスエンジン初期化
 	SIZE wndSize = _window->GetWindowSize();
 	MYRESULT result = _graphicsEngine.Init(_window->GetHwnd(), wndSize.cx, wndSize.cy);
+
+	// ポリゴン関連初期化(テスト用)
+	std::vector<DirectX::XMFLOAT3> vertex;
+	vertex.push_back({ -0.5f,-0.7f,0.f });	// 左下
+	vertex.push_back({ 0.f,0.7f,0.f });	    // 真ん中
+	vertex.push_back({ 0.5f,-0.7f,0.f });	// 右下
+
+	result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+
 	return result;
 }
 
@@ -34,7 +43,7 @@ void Dx12Application::Run()
 	if (_window == nullptr) { return; }
 
 	// ゲームループ
-	while(_window->DispatchWindowMessage())
+	while (_window->DispatchWindowMessage())
 	{
 		// いずれエンジン(フレームワーク側)に吸収させる？？？？
 		Update();

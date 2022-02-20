@@ -4,6 +4,7 @@
 #include <memory>
 
 #include "EngineUtility.h"
+#include "VertexBuffer.h"
 
 class Dx12GraphicsEngine;
 class AppWindow;
@@ -46,6 +47,11 @@ private:
 	/// •`‰æˆ—
 	/// </summary>
 	void Draw();
+
+// ŠJ”­—p
+private:
+	VertexBuffer _vertexBuffer;
+
 };
 
 /// ƒƒ‚

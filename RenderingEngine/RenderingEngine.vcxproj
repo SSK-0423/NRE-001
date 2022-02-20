@@ -163,9 +163,11 @@
     <ClInclude Include="src\DescriptorHeapRTV.h" />
     <ClInclude Include="src\Dx12GraphicsEngine.h" />
     <ClInclude Include="src\EngineUtility.h" />
+    <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\RenderingContext.h" />
     <ClInclude Include="src\RenderTargetBuffer.h" />
     <ClInclude Include="src\Singleton.h" />
+    <ClInclude Include="src\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp" />
@@ -173,6 +175,7 @@
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
     <ClCompile Include="src\RenderingContext.cpp" />
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
+    <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
