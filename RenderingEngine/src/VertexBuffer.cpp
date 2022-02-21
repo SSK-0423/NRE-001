@@ -15,12 +15,12 @@ HRESULT VertexBuffer::CreateVertexBufferAndView(
 		&resDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(_vertBuff.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(_vertexBuffer.ReleaseAndGetAddressOf()));
 
 	if (FAILED(result)) { return result; }
 
 	// ビュー生成
-	_vbView.BufferLocation = _vertBuff->GetGPUVirtualAddress();	// バッファのGPU側の仮想アドレス
+	_vbView.BufferLocation = _vertexBuffer->GetGPUVirtualAddress();	// バッファのGPU側の仮想アドレス
 	_vbView.SizeInBytes = bufferSize;	                        // 頂点の全サイズ
 	_vbView.StrideInBytes = sizeof(vertex[0]);	                // 1頂点当たりのサイズ
 
@@ -29,12 +29,12 @@ HRESULT VertexBuffer::CreateVertexBufferAndView(
 
 HRESULT VertexBuffer::VertexBufferMap(const std::vector<DirectX::XMFLOAT3>& vertex)
 {
-	HRESULT result = _vertBuff->Map(0, nullptr, (void**)&_vertMap);
+	HRESULT result = _vertexBuffer->Map(0, nullptr, (void**)&_vertMap);
 	if (FAILED(result)) { return result; }
 
 	std::copy(std::begin(vertex), std::end(vertex), _vertMap);
 
-	_vertBuff->Unmap(0, nullptr);
+	_vertexBuffer->Unmap(0, nullptr);
 
 	return result;
 }

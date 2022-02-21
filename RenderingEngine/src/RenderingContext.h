@@ -3,6 +3,7 @@
 
 class DescriptorHeapRTV;
 class DescriptorHeapDSV;
+class VertexBuffer;
 struct ColorRGBA;
 
 /// <summary>
@@ -78,4 +79,12 @@ public:
 	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
 	void ClearRenderTarget(
 		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color, UINT numRects, const D3D12_RECT* rects);
+
+	/// <summary>
+	/// 頂点バッファーをセット
+	/// </summary>
+	/// <param name="startSlot">スロットの開始位置</param>
+	/// <param name="vertexBuffer">頂点バッファー</param>
+	void SetVertexBuffer(UINT startSlot, const VertexBuffer& vertexBuffer);
+
 };

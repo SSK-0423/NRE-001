@@ -34,6 +34,9 @@ MYRESULT Dx12Application::Init()
 
 	result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
 
+	RootSignatureData data;
+	result = _rootSignature.Create(_graphicsEngine.Device(), data);
+
 	return result;
 }
 
