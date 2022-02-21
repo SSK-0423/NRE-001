@@ -175,6 +175,7 @@
     <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
+    <ClCompile Include="src\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\RenderingContext.cpp" />
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
