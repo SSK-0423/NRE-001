@@ -18,9 +18,9 @@ public:
 	~VertexBuffer() = default;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12Resource> _vertBuff = nullptr;	// 頂点バッファー
-	D3D12_VERTEX_BUFFER_VIEW _vbView;	                        // 頂点バッファービュー
-	DirectX::XMFLOAT3* _vertMap = nullptr;	                    // マップ先
+	Microsoft::WRL::ComPtr<ID3D12Resource> _vertexBuffer = nullptr;	// 頂点バッファー
+	D3D12_VERTEX_BUFFER_VIEW _vbView;	                            // 頂点バッファービュー
+	DirectX::XMFLOAT3* _vertMap = nullptr;	                        // マップ先
 
 	/// <summary>
 	/// 頂点バッファー生成とビュー生成
@@ -44,4 +44,12 @@ public:
 	/// <param name="vertex">頂点リスト</param>
 	/// <returns></returns>
 	MYRESULT Create(ID3D12Device& device, const std::vector<DirectX::XMFLOAT3>& vertex);
+
+	/// <summary>
+	/// 頂点バッファービュー取得
+	/// </summary>
+	/// <returns></returns>
+	const D3D12_VERTEX_BUFFER_VIEW& GetView() const {
+		return _vbView;
+	}
 };

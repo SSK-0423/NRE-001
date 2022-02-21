@@ -5,6 +5,7 @@
 
 #include "EngineUtility.h"
 #include "VertexBuffer.h"
+#include "RootSignature.h"
 
 class Dx12GraphicsEngine;
 class AppWindow;
@@ -51,7 +52,7 @@ private:
 // äJî≠óp
 private:
 	VertexBuffer _vertexBuffer;
-
+	RootSignature _rootSignature;
 };
 
 /// ÉÅÉÇ

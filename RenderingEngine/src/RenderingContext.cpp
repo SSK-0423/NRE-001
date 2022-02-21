@@ -1,6 +1,7 @@
 #include "d3dx12.h"
 #include "RenderingContext.h"
 #include "DescriptorHeapRTV.h"
+#include "VertexBuffer.h"
 
 RenderingContext::RenderingContext()
 {
@@ -55,4 +56,9 @@ void RenderingContext::ClearRenderTarget(
 void RenderingContext::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color, UINT numRects, const D3D12_RECT* rects)
 {
 	_cmdList->ClearRenderTargetView(rtvHandle, color, numRects, rects);
+}
+
+void RenderingContext::SetVertexBuffer(UINT startSlot, const VertexBuffer& vertexBuffer)
+{
+	_cmdList->IASetVertexBuffers(startSlot, 1, &vertexBuffer.GetView());
 }
