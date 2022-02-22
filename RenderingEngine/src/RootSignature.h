@@ -57,8 +57,8 @@ struct DescriptorRangeData
 /// </summary>
 struct RootSignatureData
 {
-	SamplerData _samplerData;
-	DescriptorRangeData _descRangeData;
+	SamplerData _samplerData;				// サンプラーの設定
+	DescriptorRangeData _descRangeData;		// ディスクリプタレンジの設定
 
 	/// <summary>
 	/// コンストラクタ
@@ -92,6 +92,14 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> _rootSignature = nullptr;	// ルートシグネチャ
 
+	/// <summary>
+	/// ルートシグネチャ生成
+	/// </summary>
+	/// <param name="device">デバイス</param>
+	/// <param name="descRangeData">ディスクリプタレンジの設定</param>
+	/// <param name="samplerDescs">サンプラー</param>
+	/// <param name="samplerNum">サンプラー数</param>
+	/// <returns></returns>
 	HRESULT CreateRootSignature(
 		ID3D12Device& device, const DescriptorRangeData& descRangeData,
 		const D3D12_STATIC_SAMPLER_DESC& samplerDescs, UINT samplerNum);
