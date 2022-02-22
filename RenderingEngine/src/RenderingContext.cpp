@@ -2,6 +2,7 @@
 #include "RenderingContext.h"
 #include "DescriptorHeapRTV.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "GraphicsPipelineState.h"
 #include "RootSignature.h"
 
@@ -60,9 +61,34 @@ void RenderingContext::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, 
 	_cmdList->ClearRenderTargetView(rtvHandle, color, numRects, rects);
 }
 
+void RenderingContext::SetViewport(const D3D12_VIEWPORT& viewport)
+{
+	_cmdList->RSSetViewports(1, &viewport);
+}
+
+void RenderingContext::SetViewports(UINT viewportNum, const D3D12_VIEWPORT& viewports)
+{
+	_cmdList->RSSetViewports(viewportNum, &viewports);
+}
+
+void RenderingContext::SetScissorRect(const D3D12_RECT& scissorRect)
+{
+	_cmdList->RSSetScissorRects(1, &scissorRect);
+}
+
+void RenderingContext::SetScissorRects(UINT scissorRectNum, const D3D12_RECT& scissorRect)
+{
+	_cmdList->RSSetScissorRects(scissorRectNum, &scissorRect);
+}
+
 void RenderingContext::SetVertexBuffer(UINT startSlot, const VertexBuffer& vertexBuffer)
 {
 	_cmdList->IASetVertexBuffers(startSlot, 1, &vertexBuffer.GetView());
+}
+
+void RenderingContext::SetIndexBuffer(const IndexBuffer& indexBuffer)
+{
+	_cmdList->IASetIndexBuffer(&indexBuffer.GetView());
 }
 
 void RenderingContext::SetPipelineState(GraphicsPipelineState& pipelineState)
@@ -73,4 +99,22 @@ void RenderingContext::SetPipelineState(GraphicsPipelineState& pipelineState)
 void RenderingContext::SetGraphicsRootSignature(RootSignature& rootSignature)
 {
 	_cmdList->SetGraphicsRootSignature(&rootSignature.GetRootSignature());
+}
+
+void RenderingContext::SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology)
+{
+	_cmdList->IASetPrimitiveTopology(primitiveTopology);
+}
+
+void RenderingContext::DrawInstanced(
+	UINT vertexNumPerInstance, UINT instanceNum,
+	UINT startVertexLocation, UINT startInstanceLocation)
+{
+	_cmdList->DrawInstanced(vertexNumPerInstance, instanceNum, startVertexLocation, startInstanceLocation);
+}
+
+void RenderingContext::DrawIndexedInstanced(UINT indexNumPerInstance, UINT instanceNum, UINT startIndexLocation, INT baseVertexLocation, UINT startInstanceLocation)
+{
+	_cmdList->DrawIndexedInstanced(
+		indexNumPerInstance, instanceNum, startIndexLocation, baseVertexLocation, startInstanceLocation);
 }
