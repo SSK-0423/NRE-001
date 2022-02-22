@@ -7,6 +7,9 @@
 
 #include "EngineUtility.h"
 
+/// <summary>
+/// グラフィックスパイプラインステートクラス
+/// </summary>
 class GraphicsPipelineState {
 public:
 	GraphicsPipelineState() = default;
@@ -32,5 +35,4 @@ public:
 	/// <param name="piplineStateDesc">グラフィックスパイプラインステート構造体</param>
 	/// <returns></returns>
 	MYRESULT Create(ID3D12Device& device, const D3D12_GRAPHICS_PIPELINE_STATE_DESC& piplineStateDesc);
-
 };
