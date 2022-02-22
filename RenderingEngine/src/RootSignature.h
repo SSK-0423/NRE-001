@@ -126,4 +126,12 @@ public:
 		ID3D12Device& device, const DescriptorRangeData& descRangeData,
 		const D3D12_STATIC_SAMPLER_DESC& samplerDescs, UINT samplerNum);
 
+	/// <summary>
+	/// ルートシグネチャ取得
+	/// </summary>
+	/// <returns>ルートシグネチャ</returns>
+	ID3D12RootSignature& GetRootSignature() {
+		return *_rootSignature.Get();
+	}
+
 };

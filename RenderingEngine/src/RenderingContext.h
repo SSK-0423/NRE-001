@@ -4,6 +4,8 @@
 class DescriptorHeapRTV;
 class DescriptorHeapDSV;
 class VertexBuffer;
+class RootSignature;
+class GraphicsPipelineState;
 struct ColorRGBA;
 
 /// <summary>
@@ -87,4 +89,15 @@ public:
 	/// <param name="vertexBuffer">頂点バッファー</param>
 	void SetVertexBuffer(UINT startSlot, const VertexBuffer& vertexBuffer);
 
+	/// <summary>
+	/// パイプラインステートセット
+	/// </summary>
+	/// <param name="pipelineState">グラフィックスパイプラインステート</param>
+	void SetPipelineState(GraphicsPipelineState& pipelineState);
+
+	/// <summary>
+	/// ルートシグネチャセット
+	/// </summary>
+	/// <param name="rootSignature">ルートシグネチャ</param>
+	void SetGraphicsRootSignature(RootSignature& rootSignature);
 };
