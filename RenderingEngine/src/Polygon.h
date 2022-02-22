@@ -16,6 +16,13 @@ public:
 private:
 	VertexBuffer _vertexBuffer;
 	IndexBuffer _indexBuffer;
+	GraphicsPipelineState _graphicsPipelineState;
+
+	/// <summary>
+	/// ポリゴン表示用のパイプラインステート生成
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT CreateGraphicsPipelineState();
 
 public:
 	MYRESULT Create();
@@ -28,4 +35,3 @@ public:
 /// 2.GraphicsPipelineState
 /// 3.頂点バッファー
 /// 4.インデックスバッファー()
-/// 

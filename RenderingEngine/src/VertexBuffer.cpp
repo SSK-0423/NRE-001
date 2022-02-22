@@ -41,6 +41,9 @@ HRESULT VertexBuffer::VertexBufferMap(const std::vector<DirectX::XMFLOAT3>& vert
 
 MYRESULT VertexBuffer::Create(ID3D12Device& device, const std::vector<DirectX::XMFLOAT3>& vertex)
 {
+	// 頂点数記録
+	_vertexNum = vertex.size();
+
 	// バッファーとビュー生成
 	if (FAILED(CreateVertexBufferAndView(device, vertex))) { return MYRESULT::FAILED; }
 	// マップ処理

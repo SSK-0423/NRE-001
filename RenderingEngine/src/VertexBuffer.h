@@ -21,6 +21,7 @@ private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _vertexBuffer = nullptr;	// 頂点バッファー
 	D3D12_VERTEX_BUFFER_VIEW _vbView;	                            // 頂点バッファービュー
 	DirectX::XMFLOAT3* _vertMap = nullptr;	                        // マップ先
+	UINT _vertexNum = 0;
 
 	/// <summary>
 	/// 頂点バッファー生成とビュー生成
@@ -48,8 +49,12 @@ public:
 	/// <summary>
 	/// 頂点バッファービュー取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>頂点バッファービュー</returns>
 	const D3D12_VERTEX_BUFFER_VIEW& GetView() const {
 		return _vbView;
+	}
+
+	UINT GetVertexNum() const {
+		return _vertexNum;
 	}
 };
