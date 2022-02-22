@@ -35,4 +35,12 @@ public:
 	/// <param name="piplineStateDesc">グラフィックスパイプラインステート構造体</param>
 	/// <returns></returns>
 	MYRESULT Create(ID3D12Device& device, const D3D12_GRAPHICS_PIPELINE_STATE_DESC& piplineStateDesc);
+
+	/// <summary>
+	/// パイプラインステート取得
+	/// </summary>
+	/// <returns>パイプラインステート</returns>
+	ID3D12PipelineState& GetPipelineState() {
+		return *_pipelineState.Get();
+	}
 };

@@ -2,6 +2,8 @@
 #include "RenderingContext.h"
 #include "DescriptorHeapRTV.h"
 #include "VertexBuffer.h"
+#include "GraphicsPipelineState.h"
+#include "RootSignature.h"
 
 RenderingContext::RenderingContext()
 {
@@ -61,4 +63,14 @@ void RenderingContext::ClearRenderTarget(D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, 
 void RenderingContext::SetVertexBuffer(UINT startSlot, const VertexBuffer& vertexBuffer)
 {
 	_cmdList->IASetVertexBuffers(startSlot, 1, &vertexBuffer.GetView());
+}
+
+void RenderingContext::SetPipelineState(GraphicsPipelineState& pipelineState)
+{
+	_cmdList->SetPipelineState(&pipelineState.GetPipelineState());
+}
+
+void RenderingContext::SetGraphicsRootSignature(RootSignature& rootSignature)
+{
+	_cmdList->SetGraphicsRootSignature(&rootSignature.GetRootSignature());
 }

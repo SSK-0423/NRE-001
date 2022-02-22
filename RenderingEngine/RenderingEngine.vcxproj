@@ -165,6 +165,7 @@
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\Polygon.h" />
     <ClInclude Include="src\RenderingContext.h" />
     <ClInclude Include="src\RenderTargetBuffer.h" />
     <ClInclude Include="src\RootSignature.h" />
@@ -176,6 +177,7 @@
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
     <ClCompile Include="src\GraphicsPipelineState.cpp" />
+    <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RenderingContext.cpp" />
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
