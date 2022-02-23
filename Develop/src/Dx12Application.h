@@ -5,6 +5,7 @@
 
 #include "EngineUtility.h"
 #include "VertexBuffer.h"
+#include "IndexBuffer.h"
 #include "RootSignature.h"
 
 class Dx12GraphicsEngine;
@@ -52,6 +53,7 @@ private:
 // ŠJ”­—p
 private:
 	VertexBuffer _vertexBuffer;
+	IndexBuffer _indexBuffer;
 	RootSignature _rootSignature;
 };
 

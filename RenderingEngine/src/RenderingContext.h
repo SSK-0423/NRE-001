@@ -162,6 +162,6 @@ public:
 	///									デフォルト:0</param>
 	/// <param name="startInstanceLocation">インスタンスのオフセット デフォルト:0</param>
 	void DrawIndexedInstanced(
-		UINT indexNumPerInstance, UINT instanceNum, UINT startIndexLocation = 0, INT baseVertexLocation = 0,
-		UINT startInstanceLocation = 0);
+		UINT indexNumPerInstance, UINT instanceNum,
+		UINT startIndexLocation = 0, INT baseVertexLocation = 0, UINT startInstanceLocation = 0);
 };

@@ -34,6 +34,12 @@ MYRESULT Dx12Application::Init()
 
 	result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
 
+	std::vector<UINT> index;
+	index.push_back(0); index.push_back(1); index.push_back(2);
+	index.push_back(2); index.push_back(1); index.push_back(3);
+
+	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
+
 	RootSignatureData data;
 	result = _rootSignature.Create(_graphicsEngine.Device(), data);
 
