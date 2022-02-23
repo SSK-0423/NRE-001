@@ -37,6 +37,10 @@ public:
 	RenderTargetBuffer() = default;
 	~RenderTargetBuffer() = default;
 
+private:
+	Microsoft::WRL::ComPtr<ID3D12Resource> _rtvBuffer = nullptr;
+
+public:
 	/// <summary>
 	/// レンダーターゲットバッファー生成
 	/// </summary>
@@ -54,10 +58,6 @@ public:
 	/// <returns>MYRESULT::SUCCESS: 成功 MYRESULT::FAILED: 失敗</returns>
 	MYRESULT Create(ID3D12Device& device, IDXGISwapChain4& swapchain, const size_t& index);
 
-private:
-	Microsoft::WRL::ComPtr<ID3D12Resource> _rtvBuffer = nullptr;
-
-public:
 	/// <summary>
 	/// バッファー取得
 	/// </summary>

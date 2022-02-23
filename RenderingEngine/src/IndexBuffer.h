@@ -15,7 +15,7 @@ public:
 	~IndexBuffer() = default;
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _indexBuffer = nullptr;	// インデックスバッファー
-	D3D12_INDEX_BUFFER_VIEW _indexBufferView;	                            // インデックスバッファービュー
+	D3D12_INDEX_BUFFER_VIEW _indexBufferView;	                    // インデックスバッファービュー
 	UINT* _indexMap = nullptr;	                                    // マップ先
 	UINT _indexNum = 0;	                                            // インデックス数
 
@@ -54,7 +54,7 @@ public:
 	/// <summary>
 	/// インデックス数取得
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>インデックス数</returns>
 	UINT GetIndexNum() const {
 		return _indexNum;
 	}

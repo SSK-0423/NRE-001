@@ -58,7 +58,7 @@ public:
 	/// <summary>
 	/// ’¸“_”æ“¾
 	/// </summary>
-	/// <returns></returns>
+	/// <returns>’¸“_”</returns>
 	UINT GetVertexNum() const {
 		return _vertexNum;
 	}
