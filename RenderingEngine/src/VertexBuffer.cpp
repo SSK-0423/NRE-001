@@ -1,4 +1,3 @@
-#include <iterator>
 #include "VertexBuffer.h"
 
 HRESULT VertexBuffer::CreateVertexBufferAndView(
@@ -20,14 +19,14 @@ HRESULT VertexBuffer::CreateVertexBufferAndView(
 	if (FAILED(result)) { return result; }
 
 	// ビュー生成
-	_vbView.BufferLocation = _vertexBuffer->GetGPUVirtualAddress();	// バッファのGPU側の仮想アドレス
-	_vbView.SizeInBytes = bufferSize;	                        // 頂点の全サイズ
-	_vbView.StrideInBytes = sizeof(vertex[0]);	                // 1頂点当たりのサイズ
+	_vertexBufferView.BufferLocation = _vertexBuffer->GetGPUVirtualAddress();	// バッファのGPU側の仮想アドレス
+	_vertexBufferView.SizeInBytes = bufferSize;	                                // 頂点の全サイズ
+	_vertexBufferView.StrideInBytes = sizeof(vertex[0]);	                    // 1頂点当たりのサイズ
 
 	return result;
 }
 
-HRESULT VertexBuffer::VertexBufferMap(const std::vector<DirectX::XMFLOAT3>& vertex)
+HRESULT VertexBuffer::MapVertexBuffer(const std::vector<DirectX::XMFLOAT3>& vertex)
 {
 	HRESULT result = _vertexBuffer->Map(0, nullptr, (void**)&_vertMap);
 	if (FAILED(result)) { return result; }
@@ -47,7 +46,7 @@ MYRESULT VertexBuffer::Create(ID3D12Device& device, const std::vector<DirectX::X
 	// バッファーとビュー生成
 	if (FAILED(CreateVertexBufferAndView(device, vertex))) { return MYRESULT::FAILED; }
 	// マップ処理
-	if (FAILED(VertexBufferMap(vertex))) { return MYRESULT::FAILED; }
+	if (FAILED(MapVertexBuffer(vertex))) { return MYRESULT::FAILED; }
 
 	return MYRESULT::SUCCESS;
 }
