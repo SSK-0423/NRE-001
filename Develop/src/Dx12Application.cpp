@@ -43,6 +43,31 @@ MYRESULT Dx12Application::Init()
 	RootSignatureData data;
 	result = _rootSignature.Create(_graphicsEngine.Device(), data);
 
+	// シェーダー
+	result = _vertexShader.Create(L"../Develop/src/PolygonVertexShader.hlsl", "PolygonVS", "vs_5_0");
+	result = _pixelShader.Create(L"../Develop/src/PolygonPixelShader.hlsl", "PolygonPS", "ps_5_0");
+
+	PolygonData polygonData;
+	polygonData._vertexBuffer = _vertexBuffer;
+	polygonData._indexBuffer = _indexBuffer;
+	polygonData._vertexShader = _vertexShader;
+	polygonData._pixelShader = _pixelShader;
+	polygonData._rootSignature = _rootSignature;
+	polygonData._inputLayout.push_back
+	(
+		{
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32_FLOAT,
+			0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
+		}
+	);
+
+	result = _triangle.Create(_graphicsEngine.Device(), polygonData);
+
 	return result;
 }
 

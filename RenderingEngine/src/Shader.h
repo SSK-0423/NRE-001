@@ -42,7 +42,7 @@ public:
 	/// シェーダー取得
 	/// </summary>
 	/// <returns>シェーダー</returns>
-	const ID3DBlob& GetShader() const {
+	ID3DBlob& GetShader() const {
 		return *_shaderBlob.Get();
 	}
 };

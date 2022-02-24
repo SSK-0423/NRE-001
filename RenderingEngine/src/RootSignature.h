@@ -89,6 +89,7 @@ class RootSignature {
 public:
 	RootSignature() = default;
 	~RootSignature() = default;
+
 private:
 	Microsoft::WRL::ComPtr<ID3D12RootSignature> _rootSignature = nullptr;	// ルートシグネチャ
 
@@ -130,7 +131,7 @@ public:
 	/// ルートシグネチャ取得
 	/// </summary>
 	/// <returns>ルートシグネチャ</returns>
-	ID3D12RootSignature& GetRootSignature() {
+	ID3D12RootSignature& GetRootSignature() const {
 		return *_rootSignature.Get();
 	}
 
