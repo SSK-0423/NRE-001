@@ -51,8 +51,9 @@ MYRESULT Polygon::Create(ID3D12Device& device, const PolygonData& data)
 
 void Polygon::Draw(RenderingContext& renderContext)
 {
+	renderContext.SetPipelineState(_graphicsPipelineState);
 	renderContext.SetVertexBuffer(0, _vertexBuffer);
 	renderContext.SetIndexBuffer(_indexBuffer);
-	renderContext.SetPipelineState(_graphicsPipelineState);
+	renderContext.SetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
 }

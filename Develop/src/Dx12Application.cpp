@@ -36,7 +36,6 @@ MYRESULT Dx12Application::Init()
 
 	std::vector<UINT> index;
 	index.push_back(0); index.push_back(1); index.push_back(2);
-	index.push_back(2); index.push_back(1); index.push_back(3);
 
 	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
 
@@ -67,6 +66,16 @@ MYRESULT Dx12Application::Init()
 	);
 
 	result = _triangle.Create(_graphicsEngine.Device(), polygonData);
+
+	_viewport.TopLeftX = 0.f;
+	_viewport.TopLeftY = 0.f;
+	_viewport.Width = _window->GetWindowSize().cx;
+	_viewport.Height = _window->GetWindowSize().cy;
+
+	_scissorRect.top = _viewport.TopLeftY;
+	_scissorRect.left = _viewport.TopLeftX;
+	_scissorRect.bottom = _viewport.Height;
+	_scissorRect.right = _viewport.Width;
 
 	return result;
 }
@@ -99,6 +108,10 @@ void Dx12Application::Draw()
 	_graphicsEngine.BeginDraw();
 	{
 		// ƒ‚ƒfƒ‹‚È‚Ç‚Ì•`‰æ
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootSignature(_rootSignature);
+		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
+		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
+		_triangle.Draw(_graphicsEngine.GetRenderingContext());
 	}
 	_graphicsEngine.EndDraw();
 }

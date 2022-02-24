@@ -59,6 +59,8 @@ private:
 	Shader _pixelShader;
 	RootSignature _rootSignature;
 	MyFrameWork::Polygon _triangle;
+	CD3DX12_VIEWPORT _viewport;
+	CD3DX12_RECT _scissorRect;
 };
 
 /// ÉÅÉÇ

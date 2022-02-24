@@ -19,7 +19,7 @@ HRESULT IndexBuffer::CreateIndexBufferAndView(ID3D12Device& device, const std::v
 	// ƒrƒ…[¶¬
 	_indexBufferView.BufferLocation = _indexBuffer->GetGPUVirtualAddress();
 	_indexBufferView.SizeInBytes = bufferSize;
-	_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+	_indexBufferView.Format = DXGI_FORMAT_R32_UINT;
 
 	return result;
 }
