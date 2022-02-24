@@ -32,7 +32,8 @@ HRESULT VertexBuffer::MapVertexBuffer(const std::vector<DirectX::XMFLOAT3>& vert
 	if (FAILED(result)) { return result; }
 
 	std::copy(std::begin(vertex), std::end(vertex), _vertMap);
-
+	//std::memcpy((void*)_vertMap, (void*)&vertex[0],_vertexBufferView.SizeInBytes);
+	
 	_vertexBuffer->Unmap(0, nullptr);
 
 	return result;
