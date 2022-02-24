@@ -4,6 +4,10 @@
 #include <memory>
 
 #include "EngineUtility.h"
+#include "VertexBuffer.h"
+#include "IndexBuffer.h"
+#include "RootSignature.h"
+#include "Polygon.h"
 
 class Dx12GraphicsEngine;
 class AppWindow;
@@ -46,6 +50,18 @@ private:
 	/// ï`âÊèàóù
 	/// </summary>
 	void Draw();
+
+// äJî≠óp
+private:
+	VertexBuffer _vertexBuffer;
+	IndexBuffer _indexBuffer;
+	Shader _vertexShader;
+	Shader _pixelShader;
+	RootSignature _rootSignature;
+	MyFrameWork::Polygon _triangle;
+	MyFrameWork::Polygon _square;
+	CD3DX12_VIEWPORT _viewport;
+	CD3DX12_RECT _scissorRect;
 };
 
 /// ÉÅÉÇ
