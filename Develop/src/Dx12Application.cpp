@@ -46,6 +46,7 @@ MYRESULT Dx12Application::Init()
 	result = _vertexShader.Create(L"../Develop/src/PolygonVertexShader.hlsl", "PolygonVS", "vs_5_0");
 	result = _pixelShader.Create(L"../Develop/src/PolygonPixelShader.hlsl", "PolygonPS", "ps_5_0");
 
+	// É|ÉäÉSÉìê∂ê¨
 	PolygonData polygonData;
 	polygonData._vertexBuffer = _vertexBuffer;
 	polygonData._indexBuffer = _indexBuffer;
@@ -66,6 +67,21 @@ MYRESULT Dx12Application::Init()
 	);
 
 	result = _triangle.Create(_graphicsEngine.Device(), polygonData);
+
+	vertex.resize(4);
+	vertex[0] = { -1.f,-1.f,0.f };
+	vertex[1] = { -1.f,1.f,0.f };
+	vertex[2] = { 0.f,-1.f,0.f };
+	vertex[3] = { 0.f,1.f,0.f };
+	result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+
+	index.push_back(2);	index.push_back(1); index.push_back(3);
+	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
+
+	polygonData._vertexBuffer = _vertexBuffer;
+	polygonData._indexBuffer = _indexBuffer;
+
+	result = _square.Create(_graphicsEngine.Device(), polygonData);
 
 	_viewport.TopLeftX = 0.f;
 	_viewport.TopLeftY = 0.f;
@@ -112,6 +128,7 @@ void Dx12Application::Draw()
 		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
 		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
 		_triangle.Draw(_graphicsEngine.GetRenderingContext());
+		_square.Draw(_graphicsEngine.GetRenderingContext());
 	}
 	_graphicsEngine.EndDraw();
 }
