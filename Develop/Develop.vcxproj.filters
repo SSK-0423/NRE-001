@@ -31,7 +31,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="VertexShader.hlsl">
+    <FxCompile Include="src\PolygonVertexShader.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="src\PolygonPixelShader.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

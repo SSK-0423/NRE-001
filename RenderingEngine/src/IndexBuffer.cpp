@@ -3,7 +3,7 @@
 HRESULT IndexBuffer::CreateIndexBufferAndView(ID3D12Device& device, const std::vector<UINT>& index)
 {
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);
-	UINT bufferSize = sizeof(index[0]) * index.size();
+	UINT bufferSize = static_cast<UINT>(sizeof(index[0]) * index.size());
 	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
 
 	HRESULT result = device.CreateCommittedResource(
@@ -20,6 +20,8 @@ HRESULT IndexBuffer::CreateIndexBufferAndView(ID3D12Device& device, const std::v
 	_indexBufferView.BufferLocation = _indexBuffer->GetGPUVirtualAddress();
 	_indexBufferView.SizeInBytes = bufferSize;
 	_indexBufferView.Format = DXGI_FORMAT_R16_UINT;
+
+	return result;
 }
 
 HRESULT IndexBuffer::MapIndexBuffer(const std::vector<UINT>& index)
@@ -37,7 +39,7 @@ HRESULT IndexBuffer::MapIndexBuffer(const std::vector<UINT>& index)
 MYRESULT IndexBuffer::Create(ID3D12Device& device, const std::vector<UINT>& index)
 {
 	// インデックス数記録
-	_indexNum = index.size();
+	_indexNum = static_cast<UINT>(index.size());
 
 	// インデックスバッファーとビュー生成
 	if (FAILED(CreateIndexBufferAndView(device, index))) { return MYRESULT::FAILED; }
