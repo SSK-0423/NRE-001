@@ -9,6 +9,10 @@
 #include "RootSignature.h"
 #include "Polygon.h"
 
+#include <DirectXTex.h>
+
+#pragma comment(lib,"DirectXTex.lib")
+
 class Dx12GraphicsEngine;
 class AppWindow;
 
@@ -62,6 +66,21 @@ private:
 	MyFrameWork::Polygon _square;
 	CD3DX12_VIEWPORT _viewport;
 	CD3DX12_RECT _scissorRect;
+
+	// テクスチャマッピング実装用
+private:
+	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _textureHeap = nullptr;
+
+	const DirectX::Image* _image = nullptr;
+	DirectX::TexMetadata _metaData;
+	DirectX::ScratchImage _scratchImage;
+
+	MYRESULT InitTexture();
+	HRESULT LoadTextureFile(const wchar_t* path);
+	HRESULT CreateTextureResource(ID3D12Device& device);
+
 };
 
 /// メモ

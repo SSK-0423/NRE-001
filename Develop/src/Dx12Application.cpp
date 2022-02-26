@@ -85,13 +85,15 @@ MYRESULT Dx12Application::Init()
 
 	_viewport.TopLeftX = 0.f;
 	_viewport.TopLeftY = 0.f;
-	_viewport.Width = _window->GetWindowSize().cx;
-	_viewport.Height = _window->GetWindowSize().cy;
+	_viewport.Width = static_cast<FLOAT>(_window->GetWindowSize().cx);
+	_viewport.Height = static_cast<FLOAT>(_window->GetWindowSize().cy);
 
-	_scissorRect.top = _viewport.TopLeftY;
-	_scissorRect.left = _viewport.TopLeftX;
-	_scissorRect.bottom = _viewport.Height;
-	_scissorRect.right = _viewport.Width;
+	_scissorRect.left = 0;
+	_scissorRect.top = 0;
+	_scissorRect.right = _window->GetWindowSize().cx;
+	_scissorRect.bottom = _window->GetWindowSize().cy;
+
+	result = InitTexture();
 
 	return result;
 }
@@ -131,4 +133,35 @@ void Dx12Application::Draw()
 		_square.Draw(_graphicsEngine.GetRenderingContext());
 	}
 	_graphicsEngine.EndDraw();
+}
+
+MYRESULT Dx12Application::InitTexture()
+{
+	ID3D12Device& device = _graphicsEngine.Device();
+	// ファイル読み込み
+	if (FAILED(LoadTextureFile(L"Ramen.JPG"))) { return MYRESULT::FAILED; }
+	// リソース生成
+	if (FAILED(CreateTextureResource(device))) { return MYRESULT::FAILED; }
+
+	return MYRESULT::FAILED;
+}
+
+HRESULT Dx12Application::LoadTextureFile(const wchar_t* path)
+{
+	HRESULT result = DirectX::LoadFromWICFile(
+		path, DirectX::WIC_FLAGS_NONE, &_metaData, _scratchImage);
+	// テクスチャの生データ取得
+	_image = _scratchImage.GetImage(0, 0, 0);
+
+	return result;
+}
+
+HRESULT Dx12Application::CreateTextureResource(ID3D12Device& device)
+{
+	// バッファー生成
+	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);
+	// ディスクリプタヒープ生成
+	// ビュー生成
+
+	return S_OK;
 }
