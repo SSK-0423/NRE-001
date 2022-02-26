@@ -43,8 +43,8 @@ MYRESULT Dx12Application::Init()
 	result = _rootSignature.Create(_graphicsEngine.Device(), data);
 
 	// シェーダー
-	result = _vertexShader.Create(L"../Develop/src/PolygonVertexShader.hlsl", "PolygonVS", "vs_5_0");
-	result = _pixelShader.Create(L"../Develop/src/PolygonPixelShader.hlsl", "PolygonPS", "ps_5_0");
+	result = _vertexShader.Create(L"src/PolygonVertexShader.hlsl", "PolygonVS", "vs_5_0");
+	result = _pixelShader.Create(L"src/PolygonPixelShader.hlsl", "PolygonPS", "ps_5_0");
 
 	// ポリゴン生成
 	PolygonData polygonData;
@@ -158,8 +158,45 @@ HRESULT Dx12Application::LoadTextureFile(const wchar_t* path)
 
 HRESULT Dx12Application::CreateTextureResource(ID3D12Device& device)
 {
-	// バッファー生成
-	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);
+	// アップロード用の中間バッファー生成
+	CD3DX12_HEAP_PROPERTIES uploadHeapProp(D3D12_HEAP_TYPE_UPLOAD);
+	CD3DX12_RESOURCE_DESC uploadResDesc = CD3DX12_RESOURCE_DESC::Buffer(
+		AlignmentedSize(_image->rowPitch,D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * _image->height);
+	Microsoft::WRL::ComPtr<ID3D12Resource> uploadBuffer = nullptr;
+	
+	HRESULT result = device.CreateCommittedResource(
+		&uploadHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&uploadResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(uploadBuffer.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
+	// アップロード先のバッファー生成
+	CD3DX12_HEAP_PROPERTIES texHeapProp(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC texResDesc;
+	texResDesc.Dimension = static_cast<D3D12_RESOURCE_DIMENSION>(_metaData.dimension);
+	texResDesc.Alignment = 0;
+	texResDesc.Width = _metaData.width;
+	texResDesc.Height = _metaData.height;
+	texResDesc.DepthOrArraySize = _metaData.arraySize;
+	texResDesc.MipLevels = _metaData.mipLevels;
+	texResDesc.Format = _metaData.format;
+	texResDesc.SampleDesc.Count = 1;
+	texResDesc.SampleDesc.Quality = 0;
+	texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	texResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	result = device.CreateCommittedResource(
+		&texHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&texResDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
 	// ディスクリプタヒープ生成
 	// ビュー生成
 

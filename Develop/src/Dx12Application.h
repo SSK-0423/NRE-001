@@ -69,7 +69,6 @@ private:
 
 	// テクスチャマッピング実装用
 private:
-	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _textureHeap = nullptr;
 

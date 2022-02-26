@@ -70,3 +70,11 @@ struct ColorRGBA
 		_color[3] = a;
 	}
 };
+
+/// <summary>
+/// 指定サイズにアライメントする
+/// </summary>
+/// <param name="size">データサイズ</param>
+/// <param name="alignment">アライメント数</param>
+/// <returns></returns>
+size_t AlignmentedSize(size_t size, size_t alignment);
