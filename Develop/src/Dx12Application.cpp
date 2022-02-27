@@ -303,7 +303,8 @@ HRESULT Dx12Application::CreateTextureHeap(ID3D12Device& device)
 	heapDesc.NodeMask = 0;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-	HRESULT result =  device.CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+	HRESULT result =  device.CreateDescriptorHeap(
+		&heapDesc, IID_PPV_ARGS(_textureHeap.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return result; }
 
 	return result;
@@ -311,11 +312,11 @@ HRESULT Dx12Application::CreateTextureHeap(ID3D12Device& device)
 
 void Dx12Application::CreateTextureSRV(ID3D12Device& device)
 {
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
-	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	srvDesc.Format = _image->format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = 1;
+	srvDesc.Texture2D.MipLevels = _metaData.mipLevels;
 	device.CreateShaderResourceView(
 		_textureBuffer.Get(), &srvDesc, _textureHeap->GetCPUDescriptorHandleForHeapStart());
 }
