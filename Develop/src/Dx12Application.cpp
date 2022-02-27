@@ -129,11 +129,30 @@ void Dx12Application::Draw()
 		_graphicsEngine.GetRenderingContext().SetGraphicsRootSignature(_rootSignature);
 		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
 		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
+
+		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_textureHeap.GetAddressOf());
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
+			0, _textureHeap->GetGPUDescriptorHandleForHeapStart());
+
 		_triangle.Draw(_graphicsEngine.GetRenderingContext());
 		_square.Draw(_graphicsEngine.GetRenderingContext());
 	}
 	_graphicsEngine.EndDraw();
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 MYRESULT Dx12Application::InitTexture()
 {
