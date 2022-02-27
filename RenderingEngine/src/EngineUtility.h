@@ -77,4 +77,6 @@ struct ColorRGBA
 /// <param name="size">データサイズ</param>
 /// <param name="alignment">アライメント数</param>
 /// <returns></returns>
-size_t AlignmentedSize(size_t size, size_t alignment);
+inline size_t AlignmentedSize(size_t size, size_t alignment) {
+	return size + alignment - size % alignment;
+}

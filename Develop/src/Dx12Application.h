@@ -45,7 +45,7 @@ private:
 	Dx12GraphicsEngine& _graphicsEngine;			    // 描画の基礎部分を担当するエンジン
 	std::shared_ptr<AppWindow> _window = nullptr;		// アプリケーションのウィンドウ
 // 仮
-	
+
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -55,7 +55,7 @@ private:
 	/// </summary>
 	void Draw();
 
-// 開発用
+	// 開発用
 private:
 	VertexBuffer _vertexBuffer;
 	IndexBuffer _indexBuffer;
@@ -69,6 +69,7 @@ private:
 
 	// テクスチャマッピング実装用
 private:
+	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _textureHeap = nullptr;
 
@@ -79,6 +80,8 @@ private:
 	MYRESULT InitTexture();
 	HRESULT LoadTextureFile(const wchar_t* path);
 	HRESULT CreateTextureResource(ID3D12Device& device);
+	HRESULT MapTexture();
+	HRESULT CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine);
 
 };
 
