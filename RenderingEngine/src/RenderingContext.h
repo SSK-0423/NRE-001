@@ -62,7 +62,7 @@ public:
 	/// <param name="rtvHandles">レンダーターゲットビューのハンドルの配列</param>
 	/// <param name="dsvHandle">デプスステンシルビューのハンドル</param>
 	void SetRenderTargets(
-		UINT rtvNum, const D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[],
+		const UINT& rtvNum, const D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[],
 		const D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle);
 
 	/// <summary>
@@ -73,7 +73,8 @@ public:
 	/// <param name="numRects">rectsの要素数</param>
 	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
 	void ClearRenderTarget(
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color, UINT numRects, const D3D12_RECT* rects);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color, 
+		const UINT& numRects, const D3D12_RECT* rects);
 
 	/// <summary>
 	/// 指定色でレンダーターゲット初期化
@@ -83,7 +84,8 @@ public:
 	/// <param name="numRects">rectsの要素数</param>
 	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
 	void ClearRenderTarget(
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color, UINT numRects, const D3D12_RECT* rects);
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color, 
+		const UINT& numRects, const D3D12_RECT* rects);
 
 	/// <summary>
 	/// ビューポートセット
@@ -96,7 +98,7 @@ public:
 	/// </summary>
 	/// <param name="viewportNum">ビューポート数</param>
 	/// <param name="viewports">ビューポート配列の先頭</param>
-	void SetViewports(UINT viewportNum, const D3D12_VIEWPORT& viewports);
+	void SetViewports(const UINT& viewportNum, const D3D12_VIEWPORT& viewports);
 
 	/// <summary>
 	/// シザー矩形セット
@@ -108,14 +110,14 @@ public:
 	/// </summary>
 	/// <param name="scissorRectNum">シザー矩形数</param>
 	/// <param name="scissorRect">シザー矩形配列の先頭</param>
-	void SetScissorRects(UINT scissorRectNum, const D3D12_RECT& scissorRect);
+	void SetScissorRects(const UINT& scissorRectNum, const D3D12_RECT& scissorRect);
 
 	/// <summary>
 	/// 頂点バッファーをセット
 	/// </summary>
 	/// <param name="startSlot">スロットの開始位置</param>
 	/// <param name="vertexBuffer">頂点バッファー</param>
-	void SetVertexBuffer(UINT startSlot, const VertexBuffer& vertexBuffer);
+	void SetVertexBuffer(const UINT& startSlot, const VertexBuffer& vertexBuffer);
 
 	/// <summary>
 	/// インデックスバッファーセット
@@ -139,8 +141,28 @@ public:
 	/// プリミティブトポロジー設定
 	/// </summary>
 	/// <param name="primitiveTopology"></param>
-	void SetPrimitiveTopology(D3D12_PRIMITIVE_TOPOLOGY primitiveTopology);
+	void SetPrimitiveTopology(const D3D12_PRIMITIVE_TOPOLOGY& primitiveTopology);
 
+	/// <summary>
+	/// ディスクリプタヒープをセットする
+	/// </summary>
+	/// <param name="descriptorHeap">ディスクリプタヒープのダブルポインタ</param>
+	void SetDescriptorHeap(ID3D12DescriptorHeap* const* descriptorHeap);
+	
+	/// <summary>
+	/// 複数のディスクリプタヒープをセットする
+	/// </summary>
+	/// <param name="descriptorHeapNum">セットするディスクリプタヒープ数</param>
+	/// <param name="descriptorHeaps">ディスクリプタヒープのダブルポインタ</param>
+	void SetDescriptorHeaps(const UINT& descriptorHeapNum, ID3D12DescriptorHeap* const* descriptorHeaps);
+
+	/// <summary>
+	/// ディスクリプタテーブルセット
+	/// </summary>
+	/// <param name="rootPrameterIndex">セットするルートパラメータのインデックス</param>
+	/// <param name="handle">セット済みのディスクリプタヒープのGPUハンドル</param>
+	void SetGraphicsRootDescriptorTable(const UINT& rootPrameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
+	
 	/// <summary>
 	/// インスタンス描画
 	/// </summary>
@@ -149,8 +171,8 @@ public:
 	/// <param name="startVertexLocation">頂点データのオフセット デフォルト:0</param>
 	/// <param name="startInstanceLocation">インスタンスのオフセット デフォルト:0</param>
 	void DrawInstanced(
-		UINT vertexNumPerInstance, UINT instanceNum,
-		UINT startVertexLocation = 0, UINT startInstanceLocation = 0);
+		const UINT& vertexNumPerInstance, const UINT& instanceNum,
+		const UINT& startVertexLocation = 0, const UINT& startInstanceLocation = 0);
 
 	/// <summary>
 	/// インスタンス描画
@@ -162,8 +184,9 @@ public:
 	///									デフォルト:0</param>
 	/// <param name="startInstanceLocation">インスタンスのオフセット デフォルト:0</param>
 	void DrawIndexedInstanced(
-		UINT indexNumPerInstance, UINT instanceNum,
-		UINT startIndexLocation = 0, INT baseVertexLocation = 0, UINT startInstanceLocation = 0);
+		const UINT& indexNumPerInstance, const UINT& instanceNum,
+		const UINT startIndexLocation = 0, const INT& baseVertexLocation = 0, 
+		const UINT& startInstanceLocation = 0);
 
 	/// <summary>
 	/// テクスチャ領域のコピー
@@ -176,5 +199,5 @@ public:
 	/// <param name="srcBox">コピー元領域ボックス デフォルト値:nullptr</param>
 	void CopyTextureRegion(
 		const D3D12_TEXTURE_COPY_LOCATION& src, const D3D12_TEXTURE_COPY_LOCATION& dst,
-		UINT dstX = 0, UINT dstY = 0, UINT dstZ = 0, D3D12_BOX* srcBox = nullptr);
+		const UINT& dstX = 0, const UINT& dstY = 0, const UINT& dstZ = 0, D3D12_BOX* srcBox = nullptr);
 };
