@@ -147,6 +147,10 @@ MYRESULT Dx12Application::InitTexture()
 	if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
 	// 中間バッファーの内容をテクスチャバッファーにコピー
 	if (FAILED(CopyTexture(device, _graphicsEngine))) { return MYRESULT::FAILED; }
+	// ディスクリプタヒープ生成
+	if (FAILED(CreateTextureHeap(device))) { return MYRESULT::FAILED; }
+	// ビュー生成
+	CreateTextureSRV(device);
 
 	return MYRESULT::SUCCESS;
 }
@@ -263,7 +267,7 @@ HRESULT Dx12Application::CopyTexture(
 		renderContext.TransitionResourceState(
 			*_textureBuffer.Get(),
 			D3D12_RESOURCE_STATE_COPY_DEST,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+			D3D12_RESOURCE_STATE_PRESENT);
 
 		renderContext.Close();
 
@@ -289,4 +293,29 @@ HRESULT Dx12Application::CopyTexture(
 	}
 
 	return result;
+}
+
+HRESULT Dx12Application::CreateTextureHeap(ID3D12Device& device)
+{
+	D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
+	heapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+	heapDesc.NumDescriptors = 1;
+	heapDesc.NodeMask = 0;
+	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+
+	HRESULT result =  device.CreateDescriptorHeap(&heapDesc, IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
+	return result;
+}
+
+void Dx12Application::CreateTextureSRV(ID3D12Device& device)
+{
+	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc;
+	srvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	srvDesc.Texture2D.MipLevels = 1;
+	device.CreateShaderResourceView(
+		_textureBuffer.Get(), &srvDesc, _textureHeap->GetCPUDescriptorHandleForHeapStart());
 }

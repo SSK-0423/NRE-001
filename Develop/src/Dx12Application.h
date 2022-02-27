@@ -82,6 +82,9 @@ private:
 	HRESULT CreateTextureResource(ID3D12Device& device);
 	HRESULT MapTexture();
 	HRESULT CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine);
+	
+	HRESULT CreateTextureHeap(ID3D12Device& device);
+	void CreateTextureSRV(ID3D12Device& device);
 
 };
 
