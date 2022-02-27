@@ -105,6 +105,16 @@ public:
 	/// <returns></returns>
 	ID3D12GraphicsCommandList& CmdList();
 	/// <summary>
+	/// コマンドアロケータ取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12CommandAllocator& CmdAllocator();
+	/// <summary>
+	/// コマンドキュー取得
+	/// </summary>
+	/// <returns></returns>
+	ID3D12CommandQueue& CmdQueue();
+	/// <summary>
 	/// スワップチェーン取得
 	/// </summary>
 	/// <returns></returns>

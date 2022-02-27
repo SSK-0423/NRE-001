@@ -138,12 +138,17 @@ void Dx12Application::Draw()
 MYRESULT Dx12Application::InitTexture()
 {
 	ID3D12Device& device = _graphicsEngine.Device();
+
 	// ファイル読み込み
 	if (FAILED(LoadTextureFile(L"Ramen.JPG"))) { return MYRESULT::FAILED; }
 	// リソース生成
 	if (FAILED(CreateTextureResource(device))) { return MYRESULT::FAILED; }
+	// マップ
+	if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
+	// 中間バッファーの内容をテクスチャバッファーにコピー
+	if (FAILED(CopyTexture(device, _graphicsEngine))) { return MYRESULT::FAILED; }
 
-	return MYRESULT::FAILED;
+	return MYRESULT::SUCCESS;
 }
 
 HRESULT Dx12Application::LoadTextureFile(const wchar_t* path)
@@ -161,16 +166,15 @@ HRESULT Dx12Application::CreateTextureResource(ID3D12Device& device)
 	// アップロード用の中間バッファー生成
 	CD3DX12_HEAP_PROPERTIES uploadHeapProp(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC uploadResDesc = CD3DX12_RESOURCE_DESC::Buffer(
-		AlignmentedSize(_image->rowPitch,D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * _image->height);
-	Microsoft::WRL::ComPtr<ID3D12Resource> uploadBuffer = nullptr;
-	
+		AlignmentedSize(_image->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT) * _image->height);
+
 	HRESULT result = device.CreateCommittedResource(
 		&uploadHeapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&uploadResDesc,
 		D3D12_RESOURCE_STATE_GENERIC_READ,
 		nullptr,
-		IID_PPV_ARGS(uploadBuffer.ReleaseAndGetAddressOf()));
+		IID_PPV_ARGS(_uploadBuffer.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return result; }
 
 	// アップロード先のバッファー生成
@@ -197,8 +201,92 @@ HRESULT Dx12Application::CreateTextureResource(ID3D12Device& device)
 		IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return result; }
 
-	// ディスクリプタヒープ生成
-	// ビュー生成
+	return result;
+}
 
-	return S_OK;
+HRESULT Dx12Application::MapTexture()
+{
+	// マップ
+	uint8_t* texMap = nullptr;
+	HRESULT result = _uploadBuffer->Map(0, nullptr, (void**)&texMap);
+	if (FAILED(result)) { return result; }
+
+	// データコピー
+	uint8_t* srcAddress = _image->pixels;;
+	size_t alignRowPitch = AlignmentedSize(_image->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+
+	for (size_t y = 0; y < _image->height; y++) {
+		std::copy_n(srcAddress, alignRowPitch, texMap);
+		srcAddress += _image->rowPitch;
+		texMap += alignRowPitch;
+	}
+	_uploadBuffer->Unmap(0, nullptr);
+
+	return result;
+}
+
+HRESULT Dx12Application::CopyTexture(
+	ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine)
+{
+	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
+	ID3D12CommandAllocator& cmdAllocator = graphicsEngine.CmdAllocator();
+	ID3D12CommandQueue& cmdQueue = graphicsEngine.CmdQueue();
+
+	// コピー元
+	D3D12_TEXTURE_COPY_LOCATION src = {};
+	src.pResource = _uploadBuffer.Get();
+	src.Type = D3D12_TEXTURE_COPY_TYPE_PLACED_FOOTPRINT;
+	src.PlacedFootprint.Offset = 0;
+	src.PlacedFootprint.Footprint.Width = _metaData.width;
+	src.PlacedFootprint.Footprint.Height = _metaData.height;
+	src.PlacedFootprint.Footprint.Depth = _metaData.depth;
+	src.PlacedFootprint.Footprint.RowPitch =
+		AlignmentedSize(_image->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+	src.PlacedFootprint.Footprint.Format = _image->format;
+
+	// コピー先
+	D3D12_TEXTURE_COPY_LOCATION dst = {};
+	dst.pResource = _textureBuffer.Get();
+	dst.Type = D3D12_TEXTURE_COPY_TYPE_SUBRESOURCE_INDEX;
+	dst.SubresourceIndex = 0;
+
+	// フェンス生成
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence = nullptr;
+	UINT fenceVal = 0;
+	HRESULT result = device.CreateFence(
+		fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
+	// 中間バッファーの内容をコピー先バッファーへコピー
+	{
+		renderContext.CopyTextureRegion(src, dst);
+		renderContext.TransitionResourceState(
+			*_textureBuffer.Get(),
+			D3D12_RESOURCE_STATE_COPY_DEST,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+		renderContext.Close();
+
+		// コマンドリスト実行
+		ID3D12CommandList* cmdLists[] = { &graphicsEngine.CmdList() };
+		cmdQueue.ExecuteCommandLists(_countof(cmdLists), cmdLists);
+		cmdQueue.Signal(fence.Get(), ++fenceVal);
+		if (fence->GetCompletedValue() != fenceVal) {
+			// イベントハンドル取得
+			auto event = CreateEvent(nullptr, false, false, nullptr);
+
+			fence->SetEventOnCompletion(fenceVal, event);
+
+			// イベントが発生するまで待ち続ける
+			WaitForSingleObject(event, INFINITE);
+
+			// イベントハンドルを閉じる
+			CloseHandle(event);
+		}
+
+		cmdAllocator.Reset();
+		renderContext.Reset(cmdAllocator);
+	}
+
+	return result;
 }

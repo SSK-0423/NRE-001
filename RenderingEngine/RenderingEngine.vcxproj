@@ -177,7 +177,6 @@
     <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
-    <ClCompile Include="src\EngineUtility.cpp" />
     <ClCompile Include="src\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\Polygon.cpp" />

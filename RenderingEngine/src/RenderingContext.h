@@ -164,4 +164,17 @@ public:
 	void DrawIndexedInstanced(
 		UINT indexNumPerInstance, UINT instanceNum,
 		UINT startIndexLocation = 0, INT baseVertexLocation = 0, UINT startInstanceLocation = 0);
+
+	/// <summary>
+	/// テクスチャ領域のコピー
+	/// </summary>
+	/// <param name="src">GPU上のコピー元アドレス</param>
+	/// <param name="dst">GPU上のコピー先アドレス</param>
+	/// <param name="dstX">コピー先領域のオフセット(X) デフォルト値:0</param>
+	/// <param name="dstY">コピー先領域のオフセット(Y) デフォルト値:0</param>
+	/// <param name="dstZ">コピー先領域のオフセット(Z) デフォルト値:0</param>
+	/// <param name="srcBox">コピー元領域ボックス デフォルト値:nullptr</param>
+	void CopyTextureRegion(
+		const D3D12_TEXTURE_COPY_LOCATION& src, const D3D12_TEXTURE_COPY_LOCATION& dst,
+		UINT dstX = 0, UINT dstY = 0, UINT dstZ = 0, D3D12_BOX* srcBox = nullptr);
 };

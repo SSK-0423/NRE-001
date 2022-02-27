@@ -30,7 +30,8 @@ void RenderingContext::Reset(ID3D12CommandAllocator& cmdAlloc)
 	_cmdList->Reset(&cmdAlloc, nullptr);
 }
 
-void RenderingContext::TransitionResourceState(ID3D12Resource& resource, D3D12_RESOURCE_STATES presentState, D3D12_RESOURCE_STATES afterState)
+void RenderingContext::TransitionResourceState(
+	ID3D12Resource& resource, D3D12_RESOURCE_STATES presentState, D3D12_RESOURCE_STATES afterState)
 {
 	CD3DX12_RESOURCE_BARRIER barrier = CD3DX12_RESOURCE_BARRIER::Transition(
 		&resource, presentState, afterState);
@@ -117,4 +118,11 @@ void RenderingContext::DrawIndexedInstanced(UINT indexNumPerInstance, UINT insta
 {
 	_cmdList->DrawIndexedInstanced(
 		indexNumPerInstance, instanceNum, startIndexLocation, baseVertexLocation, startInstanceLocation);
+}
+
+void RenderingContext::CopyTextureRegion(
+	const D3D12_TEXTURE_COPY_LOCATION& src, const D3D12_TEXTURE_COPY_LOCATION& dst, 
+	UINT dstX, UINT dstY, UINT dstZ, D3D12_BOX* srcBox)
+{
+	_cmdList->CopyTextureRegion(&dst, dstX, dstY, dstZ, &src, srcBox);
 }
