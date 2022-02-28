@@ -49,8 +49,14 @@ void DescriptorHeapRTV::RegistDescriptor(ID3D12Device& device, RenderTargetBuffe
 	auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += _registedDescriptorNum * _handleIncrimentSize;
 
+	// SRGBレンダーターゲットビュー設定
+	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+
+	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+
 	// レンダーターゲットビュー生成
-	device.CreateRenderTargetView(&buffer.GetBuffer(), nullptr, handle);
+	device.CreateRenderTargetView(&buffer.GetBuffer(), &rtvDesc, handle);
 
 	// 登録済みのディスクリプタ数をインクリメント
 	_registedDescriptorNum++;
