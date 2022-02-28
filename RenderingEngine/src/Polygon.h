@@ -19,6 +19,11 @@ struct PolygonData
 	std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;	// 頂点レイアウト
 };
 
+struct PolygonVertex {
+	DirectX::XMFLOAT3 _vertex;
+	DirectX::XMFLOAT2 _uv;
+};
+
 namespace MyFrameWork
 {
 	class Polygon

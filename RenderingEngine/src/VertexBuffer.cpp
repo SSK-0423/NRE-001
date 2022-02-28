@@ -1,12 +1,10 @@
 #include "VertexBuffer.h"
 
-HRESULT VertexBuffer::CreateVertexBufferAndView(
-	ID3D12Device& device, const std::vector<DirectX::XMFLOAT3>& vertex)
+HRESULT VertexBuffer::CreateVertexBufferAndView(ID3D12Device& device, const UINT& sizeInBytes, const UINT& stribeInBytes)
 {
 	// バッファー生成
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);
-	UINT bufferSize = sizeof(vertex[0]) * vertex.size();
-	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(bufferSize);
+	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(sizeInBytes);
 
 	HRESULT result = device.CreateCommittedResource(
 		&heapProp,
@@ -20,34 +18,35 @@ HRESULT VertexBuffer::CreateVertexBufferAndView(
 
 	// ビュー生成
 	_vertexBufferView.BufferLocation = _vertexBuffer->GetGPUVirtualAddress();	// バッファのGPU側の仮想アドレス
-	_vertexBufferView.SizeInBytes = bufferSize;	                                // 頂点の全サイズ
-	_vertexBufferView.StrideInBytes = sizeof(vertex[0]);	                    // 1頂点当たりのサイズ
+	_vertexBufferView.SizeInBytes = sizeInBytes;	                                // 頂点の全サイズ
+	_vertexBufferView.StrideInBytes = stribeInBytes;	                    // 1頂点当たりのサイズ
 
 	return result;
 }
 
-HRESULT VertexBuffer::MapVertexBuffer(const std::vector<DirectX::XMFLOAT3>& vertex)
+HRESULT VertexBuffer::MapVertexBuffer(void* vertexData, const UINT& sizeInBytes)
 {
-	HRESULT result = _vertexBuffer->Map(0, nullptr, (void**)&_vertMap);
+	BYTE* mappedBuffer;
+	HRESULT result = _vertexBuffer->Map(0, nullptr, (void**)&mappedBuffer);
 	if (FAILED(result)) { return result; }
 
-	std::copy(std::begin(vertex), std::end(vertex), _vertMap);
-	//std::memcpy((void*)_vertMap, (void*)&vertex[0],_vertexBufferView.SizeInBytes);
+	std::memcpy((void*)mappedBuffer, vertexData, static_cast<size_t>(sizeInBytes));
 	
 	_vertexBuffer->Unmap(0, nullptr);
 
 	return result;
 }
 
-MYRESULT VertexBuffer::Create(ID3D12Device& device, const std::vector<DirectX::XMFLOAT3>& vertex)
+MYRESULT VertexBuffer::Create(
+	ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes)
 {
 	// 頂点数記録
-	_vertexNum = vertex.size();
+	_vertexNum = sizeInBytes / stribeInBytes;
 
 	// バッファーとビュー生成
-	if (FAILED(CreateVertexBufferAndView(device, vertex))) { return MYRESULT::FAILED; }
+	if (FAILED(CreateVertexBufferAndView(device, sizeInBytes, stribeInBytes))) { return MYRESULT::FAILED; }
 	// マップ処理
-	if (FAILED(MapVertexBuffer(vertex))) { return MYRESULT::FAILED; }
+	if (FAILED(MapVertexBuffer(vertexData, sizeInBytes))) { return MYRESULT::FAILED; }
 
 	return MYRESULT::SUCCESS;
 }

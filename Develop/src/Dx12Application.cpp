@@ -32,7 +32,15 @@ MYRESULT Dx12Application::Init()
 	vertex.push_back({ 0.f,0.7f,0.f });	    // 真ん中
 	vertex.push_back({ 0.5f,-0.7f,0.f });	// 右下
 
-	result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+	std::vector<PolygonVertex> polygonVertex;
+	polygonVertex.push_back({ { -0.5f,-0.7f	,0.f }	,{0.f,1.f} });
+	polygonVertex.push_back({ { 0.f  ,0.7f	,0.f }	,{0.5f,0.f} });
+	polygonVertex.push_back({ { 0.5f ,-0.7f	,0.f}	,{1.f,1.f} });
+
+	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+	result = _vertexBuffer.Create(
+		_graphicsEngine.Device(), (void*)&polygonVertex[0], 
+		SizeofVector<PolygonVertex>(polygonVertex), sizeof(PolygonVertex));
 
 	std::vector<UINT> index;
 	index.push_back(0); index.push_back(1); index.push_back(2);
@@ -65,23 +73,36 @@ MYRESULT Dx12Application::Init()
 			0
 		}
 	);
+	polygonData._inputLayout.push_back
+	(
+		{
+			"TEXCOORD",
+			0,
+			DXGI_FORMAT_R32G32_FLOAT,
+			0,
+			D3D12_APPEND_ALIGNED_ELEMENT,
+			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
+			0
+		}
+	);
 
 	result = _triangle.Create(_graphicsEngine.Device(), polygonData);
 
-	vertex.resize(4);
-	vertex[0] = { -1.f,-1.f,0.f };
-	vertex[1] = { -1.f,1.f,0.f };
-	vertex[2] = { 0.f,-1.f,0.f };
-	vertex[3] = { 0.f,1.f,0.f };
-	result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+	// 四角形ポリゴン
+	//vertex.resize(4);
+	//vertex[0] = { -1.f,-1.f,0.f };
+	//vertex[1] = { -1.f,1.f,0.f };
+	//vertex[2] = { 0.f,-1.f,0.f };
+	//vertex[3] = { 0.f,1.f,0.f };
+	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
 
-	index.push_back(2);	index.push_back(1); index.push_back(3);
-	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
+	//index.push_back(2);	index.push_back(1); index.push_back(3);
+	//result = _indexBuffer.Create(_graphicsEngine.Device(), index);
 
-	polygonData._vertexBuffer = _vertexBuffer;
-	polygonData._indexBuffer = _indexBuffer;
+	//polygonData._vertexBuffer = _vertexBuffer;
+	//polygonData._indexBuffer = _indexBuffer;
 
-	result = _square.Create(_graphicsEngine.Device(), polygonData);
+	//result = _square.Create(_graphicsEngine.Device(), polygonData);
 
 	_viewport.TopLeftX = 0.f;
 	_viewport.TopLeftY = 0.f;
@@ -130,12 +151,14 @@ void Dx12Application::Draw()
 		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
 		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
 
+		// テクスチャ用の設定
 		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_textureHeap.GetAddressOf());
 		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
 			0, _textureHeap->GetGPUDescriptorHandleForHeapStart());
 
+		// 描画
 		_triangle.Draw(_graphicsEngine.GetRenderingContext());
-		_square.Draw(_graphicsEngine.GetRenderingContext());
+		//_square.Draw(_graphicsEngine.GetRenderingContext());
 	}
 	_graphicsEngine.EndDraw();
 }
@@ -159,7 +182,7 @@ MYRESULT Dx12Application::InitTexture()
 	ID3D12Device& device = _graphicsEngine.Device();
 
 	// ファイル読み込み
-	if (FAILED(LoadTextureFile(L"Ramen.JPG"))) { return MYRESULT::FAILED; }
+	if (FAILED(LoadTextureFile(L"textest.png"))) { return MYRESULT::FAILED; }
 	// リソース生成
 	if (FAILED(CreateTextureResource(device))) { return MYRESULT::FAILED; }
 	// マップ
@@ -322,7 +345,7 @@ HRESULT Dx12Application::CreateTextureHeap(ID3D12Device& device)
 	heapDesc.NodeMask = 0;
 	heapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
 
-	HRESULT result =  device.CreateDescriptorHeap(
+	HRESULT result = device.CreateDescriptorHeap(
 		&heapDesc, IID_PPV_ARGS(_textureHeap.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return result; }
 
