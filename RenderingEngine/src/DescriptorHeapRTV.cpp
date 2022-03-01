@@ -32,7 +32,7 @@ MYRESULT DescriptorHeapRTV::Create(ID3D12Device& device)
 D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapRTV::GetNextCPUDescriptorHandle()
 {
 	// 範囲外参照を防ぐ
-	assert(_nextHandleLocation <= _registedDescriptorNum);
+	assert(_nextHandleLocation <= _registedRTVNum);
 
 	// 次のハンドルへ
 	auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
@@ -47,7 +47,7 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapRTV::GetNextCPUDescriptorHandle()
 void DescriptorHeapRTV::RegistDescriptor(ID3D12Device& device, RenderTargetBuffer& buffer)
 {
 	auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
-	handle.ptr += _registedDescriptorNum * _handleIncrimentSize;
+	handle.ptr += _registedRTVNum * _handleIncrimentSize;
 
 	// SRGBレンダーターゲットビュー設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
@@ -59,5 +59,5 @@ void DescriptorHeapRTV::RegistDescriptor(ID3D12Device& device, RenderTargetBuffe
 	device.CreateRenderTargetView(&buffer.GetBuffer(), &rtvDesc, handle);
 
 	// 登録済みのディスクリプタ数をインクリメント
-	_registedDescriptorNum++;
+	_registedRTVNum++;
 }

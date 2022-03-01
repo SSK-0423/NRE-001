@@ -9,6 +9,8 @@
 #include "RootSignature.h"
 #include "Polygon.h"
 
+#include "Texture.h"
+
 #include <DirectXTex.h>
 
 #pragma comment(lib,"DirectXTex.lib")
@@ -66,6 +68,8 @@ private:
 	MyFrameWork::Polygon _square;
 	CD3DX12_VIEWPORT _viewport;
 	CD3DX12_RECT _scissorRect;
+
+	Texture _texture;
 
 	// テクスチャマッピング実装用
 private:
