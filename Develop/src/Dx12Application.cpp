@@ -39,7 +39,7 @@ MYRESULT Dx12Application::Init()
 
 	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
 	result = _vertexBuffer.Create(
-		_graphicsEngine.Device(), (void*)&polygonVertex[0], 
+		_graphicsEngine.Device(), (void*)&polygonVertex[0],
 		SizeofVector<PolygonVertex>(polygonVertex), sizeof(PolygonVertex));
 
 	std::vector<UINT> index;
@@ -181,18 +181,23 @@ MYRESULT Dx12Application::InitTexture()
 {
 	ID3D12Device& device = _graphicsEngine.Device();
 
-	// ファイル読み込み
-	if (FAILED(LoadTextureFile(L"textest.png"))) { return MYRESULT::FAILED; }
-	// リソース生成
-	if (FAILED(CreateTextureResource(device))) { return MYRESULT::FAILED; }
-	// マップ
-	if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
-	// 中間バッファーの内容をテクスチャバッファーにコピー
-	if (FAILED(CopyTexture(device, _graphicsEngine))) { return MYRESULT::FAILED; }
-	// ディスクリプタヒープ生成
+	std::wstring path(L"textest.png");
+	_texture.CreateTextureFromWIC(_graphicsEngine, path);
 	if (FAILED(CreateTextureHeap(device))) { return MYRESULT::FAILED; }
-	// ビュー生成
 	CreateTextureSRV(device);
+
+	//// ファイル読み込み
+	//if (FAILED(LoadTextureFile(L"textest.png"))) { return MYRESULT::FAILED; }
+	//// リソース生成
+	//if (FAILED(CreateTextureResource(device))) { return MYRESULT::FAILED; }
+	//// マップ
+	//if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
+	//// 中間バッファーの内容をテクスチャバッファーにコピー
+	//if (FAILED(CopyTexture(device, _graphicsEngine))) { return MYRESULT::FAILED; }
+	//// ディスクリプタヒープ生成
+	//if (FAILED(CreateTextureHeap(device))) { return MYRESULT::FAILED; }
+	//// ビュー生成
+	//CreateTextureSRV(device);
 
 	return MYRESULT::SUCCESS;
 }
@@ -355,10 +360,14 @@ HRESULT Dx12Application::CreateTextureHeap(ID3D12Device& device)
 void Dx12Application::CreateTextureSRV(ID3D12Device& device)
 {
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = _image->format;
+	srvDesc.Format = _texture.GetImage().format;
 	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
 	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = _metaData.mipLevels;
+	srvDesc.Texture2D.MipLevels = _texture.GetTexMetadata().mipLevels;
+
 	device.CreateShaderResourceView(
-		_textureBuffer.Get(), &srvDesc, _textureHeap->GetCPUDescriptorHandleForHeapStart());
+		&_texture.GetBuffer(), &srvDesc, _textureHeap->GetCPUDescriptorHandleForHeapStart());
+
+	//device.CreateShaderResourceView(
+	//	_textureBuffer.Get(), &srvDesc, _textureHeap->GetCPUDescriptorHandleForHeapStart());
 }
