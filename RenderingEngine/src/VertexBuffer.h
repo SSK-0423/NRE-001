@@ -26,26 +26,29 @@ private:
 	/// <summary>
 	/// 頂点バッファーとビュー生成
 	/// </summary>
-	/// <param name="device">デバイス</param>
-	/// <param name="vertex">頂点データ</param>
+	/// <param name="device"></param>
+	/// <param name="sizeInBytes"></param>
+	/// <param name="stribeInBytes"></param>
 	/// <returns></returns>
-	HRESULT CreateVertexBufferAndView(ID3D12Device& device, const std::vector<DirectX::XMFLOAT3>& vertex);
+	HRESULT CreateVertexBufferAndView(ID3D12Device& device, const UINT& sizeInBytes, const UINT& stribeInBytes);
 
 	/// <summary>
 	/// マップ処理
 	/// </summary>
-	/// <param name="vertex">頂点データ</param>
+	/// <param name="vertexData">頂点データ</param>
+	/// <param name="sizeInBytes">頂点データのサイズ</param>
 	/// <returns></returns>
-	HRESULT MapVertexBuffer(const std::vector<DirectX::XMFLOAT3>& vertex);
+	HRESULT MapVertexBuffer(void* vertexData, const UINT& sizeInBytes);
 
 public:
 	/// <summary>
-	/// 頂点バッファーを生成する
+	/// 
 	/// </summary>
-	/// <param name="device">デバイス</param>
-	/// <param name="vertex">頂点データ</param>
+	/// <param name="device"></param>
+	/// <param name="sizeInBytes"></param>
+	/// <param name="stribeInBytes"></param>
 	/// <returns></returns>
-	MYRESULT Create(ID3D12Device& device, const std::vector<DirectX::XMFLOAT3>& vertex);
+	MYRESULT Create(ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes);
 
 	/// <summary>
 	/// 頂点バッファービュー取得

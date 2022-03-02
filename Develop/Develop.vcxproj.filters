@@ -38,4 +38,9 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\PolygonShaderHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+  </ItemGroup>
 </Project>
