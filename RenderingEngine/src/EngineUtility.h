@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <wrl.h>
+#include <vector>
 
 /// <summary>
 /// 関数の成功/失敗
@@ -70,3 +71,24 @@ struct ColorRGBA
 		_color[3] = a;
 	}
 };
+
+/// <summary>
+/// 指定サイズにアライメントする
+/// </summary>
+/// <param name="size">データサイズ</param>
+/// <param name="alignment">アライメント数</param>
+/// <returns></returns>
+inline size_t AlignmentedSize(size_t size, size_t alignment) {
+	return size + alignment - size % alignment;
+}
+
+/// <summary>
+/// vectorの総サイズを返す
+/// </summary>
+/// <typeparam name="T">要素の型</typeparam>
+/// <param name="vec">vector</param>
+/// <returns>vectorの総サイズ</returns>
+template <typename T>
+inline UINT SizeofVector(const std::vector<T>& vec) {
+	return static_cast<UINT>(sizeof(T) * vec.size());
+}

@@ -1,4 +1,10 @@
-float4 PolygonVS( float4 pos : POSITION ) : SV_POSITION
+#include "PolygonShaderHeader.hlsli"
+
+VSOut PolygonVS( float4 pos : POSITION, float2 uv : TEXCOORD )
 {
-	return pos;
+    VSOut data;
+    data.svpos = pos;
+    data.uv = uv;
+    
+    return data;
 }

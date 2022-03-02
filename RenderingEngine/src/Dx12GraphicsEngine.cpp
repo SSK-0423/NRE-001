@@ -197,6 +197,16 @@ ID3D12GraphicsCommandList& Dx12GraphicsEngine::CmdList()
 	return *_cmdList.Get();
 }
 
+ID3D12CommandAllocator& Dx12GraphicsEngine::CmdAllocator()
+{
+	return *_cmdAllocator.Get();
+}
+
+ID3D12CommandQueue& Dx12GraphicsEngine::CmdQueue()
+{
+	return *_cmdQueue.Get();
+}
+
 IDXGISwapChain4& Dx12GraphicsEngine::SwapChain()
 {
 	return *_swapchain.Get();

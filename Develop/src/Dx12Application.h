@@ -9,6 +9,13 @@
 #include "RootSignature.h"
 #include "Polygon.h"
 
+#include "Texture.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
+
+#include <DirectXTex.h>
+
+#pragma comment(lib,"DirectXTex.lib")
+
 class Dx12GraphicsEngine;
 class AppWindow;
 
@@ -41,7 +48,7 @@ private:
 	Dx12GraphicsEngine& _graphicsEngine;			    // 描画の基礎部分を担当するエンジン
 	std::shared_ptr<AppWindow> _window = nullptr;		// アプリケーションのウィンドウ
 // 仮
-	
+
 	/// <summary>
 	/// 更新処理
 	/// </summary>
@@ -51,7 +58,7 @@ private:
 	/// </summary>
 	void Draw();
 
-// 開発用
+	// 開発用
 private:
 	VertexBuffer _vertexBuffer;
 	IndexBuffer _indexBuffer;
@@ -62,6 +69,13 @@ private:
 	MyFrameWork::Polygon _square;
 	CD3DX12_VIEWPORT _viewport;
 	CD3DX12_RECT _scissorRect;
+
+	DescriptorHeapCBV_SRV_UAV _textureHeap;
+	Texture _texture;
+
+	// テクスチャマッピング実装用
+private:
+	MYRESULT InitTexture();
 };
 
 /// メモ

@@ -161,6 +161,7 @@
   <ItemGroup>
     <ClInclude Include="src\AppWindow.h" />
     <ClInclude Include="src\DescriptorHeapRTV.h" />
+    <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h" />
     <ClInclude Include="src\Dx12GraphicsEngine.h" />
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
@@ -171,11 +172,13 @@
     <ClInclude Include="src\RootSignature.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Singleton.h" />
+    <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\VertexBuffer.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
+    <ClCompile Include="src\DescriptorHeapSRV_CBV_UAV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
     <ClCompile Include="src\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
@@ -184,6 +187,7 @@
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

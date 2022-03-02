@@ -20,8 +20,8 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _rtvHeap = nullptr;	// ディスクリプタヒープ
-	UINT _handleIncrimentSize = 0;										// ハンドルのインクリメントサイズ
-	UINT _registedDescriptorNum = 0;									// ヒープに登録されたディスクリプタ数
+	SIZE_T _handleIncrimentSize = 0;										// ハンドルのインクリメントサイズ
+	UINT _registedRTVNum = 0;									// ヒープに登録されたディスクリプタ数
 	UINT _nextHandleLocation = 1;
 
 	/// <summary>
@@ -61,7 +61,7 @@ public:
 	/// ディスクリプタヒープハンドルのインクリメントサイズ取得
 	/// </summary>
 	/// <returns></returns>
-	UINT GetHandleIncrimentSize() {
+	SIZE_T GetHandleIncrimentSize() {
 		return _handleIncrimentSize;
 	}
 
@@ -70,7 +70,7 @@ public:
 	/// </summary>
 	/// <returns></returns>
 	UINT GetRegistedDescriptorNum() {
-		return _registedDescriptorNum;
+		return _registedRTVNum;
 	}
 
 	/// <summary>
