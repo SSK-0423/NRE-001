@@ -10,6 +10,7 @@
 #include "Polygon.h"
 
 #include "Texture.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
 
 #include <DirectXTex.h>
 
@@ -69,27 +70,12 @@ private:
 	CD3DX12_VIEWPORT _viewport;
 	CD3DX12_RECT _scissorRect;
 
+	DescriptorHeapCBV_SRV_UAV _textureHeap;
 	Texture _texture;
 
 	// テクスチャマッピング実装用
 private:
-	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _textureHeap = nullptr;
-
-	const DirectX::Image* _image = nullptr;
-	DirectX::TexMetadata _metaData;
-	DirectX::ScratchImage _scratchImage;
-
 	MYRESULT InitTexture();
-	HRESULT LoadTextureFile(const wchar_t* path);
-	HRESULT CreateTextureResource(ID3D12Device& device);
-	HRESULT MapTexture();
-	HRESULT CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine);
-	
-	HRESULT CreateTextureHeap(ID3D12Device& device);
-	void CreateTextureSRV(ID3D12Device& device);
-
 };
 
 /// メモ
