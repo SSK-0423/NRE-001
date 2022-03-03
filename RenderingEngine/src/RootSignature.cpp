@@ -49,7 +49,8 @@ HRESULT RootSignature::CreateRootSignature(
 	// ルートパラメータ
 	CD3DX12_ROOT_PARAMETER	rootPrams[DESCRIPTORTYPE_NUM] = {};
 	rootPrams[DESCRIPTORTYPE_SRV].InitAsDescriptorTable(1, &descTblRange[DESCRIPTORTYPE_SRV]);
-	rootPrams[DESCRIPTORTYPE_CBV].InitAsDescriptorTable(1, &descTblRange[DESCRIPTORTYPE_CBV]);
+	rootPrams[DESCRIPTORTYPE_CBV].InitAsDescriptorTable(
+		1, &descTblRange[DESCRIPTORTYPE_CBV],D3D12_SHADER_VISIBILITY_VERTEX);
 	rootPrams[DESCRIPTORTYPE_UAV].InitAsDescriptorTable(1, &descTblRange[DESCRIPTORTYPE_UAV]);
 
 	// ルートシグネチャ

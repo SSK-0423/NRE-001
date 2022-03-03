@@ -7,6 +7,8 @@
 const LONG WINDOW_WIDTH = 1280;
 const LONG WINDOW_HEIGHT = 720;
 
+using namespace DirectX;
+
 Dx12Application::Dx12Application() : _graphicsEngine(Dx12GraphicsEngine::Instance())
 {
 }
@@ -115,6 +117,7 @@ MYRESULT Dx12Application::Init()
 	_scissorRect.bottom = _window->GetWindowSize().cy;
 
 	result = InitTexture();
+	result = InitConstantBuffer();
 
 	return result;
 }
@@ -139,6 +142,9 @@ void Dx12Application::End()
 
 void Dx12Application::Update()
 {
+	_polygonConstantBuffer._matrix = XMMatrixRotationX(_angle);
+	_constantBuffer.UpdateData((void*)&_polygonConstantBuffer);
+	_angle += 0.01f;
 }
 
 void Dx12Application::Draw()
@@ -152,9 +158,11 @@ void Dx12Application::Draw()
 		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
 
 		// テクスチャ用の設定
-		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_textureHeap.GetDescriptorHeapAddress());
+		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
 		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
-			0, _textureHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
+			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
 
 		// 描画
 		_triangle.Draw(_graphicsEngine.GetRenderingContext());
@@ -170,9 +178,41 @@ MYRESULT Dx12Application::InitTexture()
 	std::wstring path(L"textest.png");
 	MYRESULT result = _texture.CreateTextureFromWIC(_graphicsEngine, path);
 	if (result == MYRESULT::FAILED) { return result; }
-	result = _textureHeap.Create(device);
+	result = _polygonHeap.Create(device);
 	if (result == MYRESULT::FAILED) { return result; }
-	_textureHeap.RegistShaderResource(device, _texture);
+	_polygonHeap.RegistShaderResource(device, _texture);
+
+	return MYRESULT::SUCCESS;
+}
+
+MYRESULT Dx12Application::InitConstantBuffer()
+{
+	ID3D12Device& device = _graphicsEngine.Device();
+
+	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 target(0, 0, 0);
+	XMFLOAT3 up(0, 1, 0);
+
+	// ワールド行列
+	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
+	// ビュー行列
+	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(
+		XMLoadFloat3(&eye),XMLoadFloat3(&target),XMLoadFloat3(&up));
+	// プロジェクション行列
+	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(
+		XM_PIDIV2, 
+		static_cast<FLOAT>(_window->GetWindowSize().cx) / static_cast<FLOAT>(_window->GetWindowSize().cy),
+		1.f, 10.f);
+	
+	_polygonConstantBuffer._worldViewProj = world * view * proj;
+	_polygonConstantBuffer._matrix = XMMatrixRotationY(0.f);
+
+	// コンスタントバッファ―生成
+	MYRESULT result = _constantBuffer.Create(
+		device, (void*)&_polygonConstantBuffer, sizeof(_polygonConstantBuffer));
+	if (result == MYRESULT::FAILED) { return result; }
+	// ディスクリプタヒープに追加
+	_polygonHeap.RegistConstantBuffer(device, _constantBuffer);
 
 	return MYRESULT::SUCCESS;
 }
