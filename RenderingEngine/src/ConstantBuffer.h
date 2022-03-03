@@ -16,6 +16,8 @@ public:
 
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _constantBuffer = nullptr;
+	BYTE* _mappedData = nullptr;
+	UINT _bufferSize = 0;
 
 	/// <summary>
 	/// コンスタントバッファ―生成
@@ -44,10 +46,34 @@ public:
 	MYRESULT Create(ID3D12Device& device, void* data, const UINT& bufferSize);
 
 	/// <summary>
+	/// バッファーのGPU上のバーチャルアドレス取得
+	/// </summary>
+	/// <returns>バッファーのGPU上のバーチャルアドレス</returns>
+	D3D12_GPU_VIRTUAL_ADDRESS GetGPUVirtualAddress() {
+		return _constantBuffer->GetGPUVirtualAddress();
+	}
+
+	/// <summary>
 	/// バッファー取得
 	/// </summary>
 	/// <returns>バッファ―</returns>
 	ID3D12Resource& GetBuffer() {
 		return *_constantBuffer.Get();
+	}
+
+	/// <summary>
+	/// バッファーサイズ取得
+	/// </summary>
+	/// <returns>バッファーサイズ</returns>
+	UINT& GetBufferSize() {
+		return _bufferSize;
+	}
+
+	/// <summary>
+	/// データ更新 バッファー生成時の指定サイズ分のデータをコピーする
+	/// </summary>
+	/// <param name="data">データ</param>
+	void UpdateData(void* data) {
+		std::memcpy((void*)_mappedData, data, static_cast<size_t>(_bufferSize));
 	}
 };
