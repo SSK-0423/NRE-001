@@ -26,11 +26,11 @@ HRESULT VertexBuffer::CreateVertexBufferAndView(ID3D12Device& device, const UINT
 
 HRESULT VertexBuffer::MapVertexBuffer(void* vertexData, const UINT& sizeInBytes)
 {
-	BYTE* mappedBuffer;
-	HRESULT result = _vertexBuffer->Map(0, nullptr, (void**)&mappedBuffer);
+	BYTE* mappedData;
+	HRESULT result = _vertexBuffer->Map(0, nullptr, (void**)&mappedData);
 	if (FAILED(result)) { return result; }
 
-	std::memcpy((void*)mappedBuffer, vertexData, static_cast<size_t>(sizeInBytes));
+	std::memcpy((void*)mappedData, vertexData, static_cast<size_t>(sizeInBytes));
 	
 	_vertexBuffer->Unmap(0, nullptr);
 

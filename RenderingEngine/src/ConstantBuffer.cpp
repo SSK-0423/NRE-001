@@ -6,7 +6,7 @@ HRESULT ConstantBuffer::CreateConstantBuffer(ID3D12Device& device, const UINT& b
 {
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);
 	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(
-		AlignmentedSize(0, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT));
+		AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT));
 
 	HRESULT result = device.CreateCommittedResource(
 		&heapProp,
@@ -22,18 +22,19 @@ HRESULT ConstantBuffer::CreateConstantBuffer(ID3D12Device& device, const UINT& b
 
 HRESULT ConstantBuffer::MapConstantBuffer(void* data, const UINT& bufferSize)
 {
-	BYTE* mappedBuffer = nullptr;
-
-	HRESULT result = _constantBuffer->Map(0, nullptr, (void**)&mappedBuffer);
+	HRESULT result = _constantBuffer->Map(0, nullptr, (void**)&_mappedData);
 	if (FAILED(result)) { return result; }
 
-	std::memcpy((void*)mappedBuffer, data, static_cast<size_t>(bufferSize));
+	std::memcpy((void*)_mappedData, data, static_cast<size_t>(bufferSize));
 
 	return result;
 }
 
 MYRESULT ConstantBuffer::Create(ID3D12Device& device, void* data, const UINT& bufferSize)
 {
+	// バッファーサイズ取得
+	_bufferSize = AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+	
 	// バッファー生成
 	if (FAILED(CreateConstantBuffer(device, bufferSize))) { return MYRESULT::FAILED; }
 	// マップ処理
