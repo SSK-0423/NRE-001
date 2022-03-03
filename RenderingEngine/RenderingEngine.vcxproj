@@ -160,6 +160,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\AppWindow.h" />
+    <ClInclude Include="src\ConstantBuffer.h" />
     <ClInclude Include="src\DescriptorHeapRTV.h" />
     <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h" />
     <ClInclude Include="src\Dx12GraphicsEngine.h" />
@@ -177,6 +178,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp" />
+    <ClCompile Include="src\ConstantBuffer.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\DescriptorHeapSRV_CBV_UAV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />

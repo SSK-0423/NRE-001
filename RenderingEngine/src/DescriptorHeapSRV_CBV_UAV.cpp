@@ -3,6 +3,7 @@
 #include "DescriptorHeapCBV_SRV_UAV.h"
 
 #include "Texture.h"
+#include "ConstantBuffer.h"
 
 HRESULT DescriptorHeapCBV_SRV_UAV::CreateDescriptorHeap(ID3D12Device& device)
 {
@@ -67,8 +68,8 @@ void DescriptorHeapCBV_SRV_UAV::RegistConstantBuffer(
 
 	// Todo:Œã‚ÅŽÀ‘•
 	D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
-	cbvDesc.BufferLocation;
-	cbvDesc.SizeInBytes;
+	cbvDesc.BufferLocation = constantBuffer.GetGPUVirtualAddress();
+	cbvDesc.SizeInBytes = constantBuffer.GetBufferSize();
 
 	device.CreateConstantBufferView(&cbvDesc, handle);
 

@@ -10,8 +10,10 @@
 #include "Polygon.h"
 
 #include "Texture.h"
+#include "ConstantBuffer.h"
 #include "DescriptorHeapCBV_SRV_UAV.h"
 
+#include <DirectXMath.h>
 #include <DirectXTex.h>
 
 #pragma comment(lib,"DirectXTex.lib")
@@ -70,12 +72,24 @@ private:
 	CD3DX12_VIEWPORT _viewport;
 	CD3DX12_RECT _scissorRect;
 
-	DescriptorHeapCBV_SRV_UAV _textureHeap;
+	DescriptorHeapCBV_SRV_UAV _polygonHeap;
 	Texture _texture;
+	ConstantBuffer _constantBuffer;
+
+	struct PolygonConstantBuffer {
+		DirectX::XMMATRIX _worldViewProj;
+		DirectX::XMMATRIX _matrix;
+	};
+
+	PolygonConstantBuffer _polygonConstantBuffer;
+
+	float _angle = 0.f;
+
 
 	// テクスチャマッピング実装用
 private:
 	MYRESULT InitTexture();
+	MYRESULT InitConstantBuffer();
 };
 
 /// メモ
