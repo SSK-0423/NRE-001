@@ -15,9 +15,9 @@ public:
 	~ConstantBuffer() = default;
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12Resource> _constantBuffer = nullptr;
-	BYTE* _mappedData = nullptr;
-	UINT _bufferSize = 0;
+	Microsoft::WRL::ComPtr<ID3D12Resource> _constantBuffer = nullptr;	// バッファー
+	BYTE* _mappedData = nullptr;	                                    // データのマップ先
+	UINT _bufferSize = 0;	                                            // バッファーサイズ
 
 	/// <summary>
 	/// コンスタントバッファ―生成

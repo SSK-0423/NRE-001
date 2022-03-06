@@ -13,6 +13,8 @@
 #include "ConstantBuffer.h"
 #include "DescriptorHeapCBV_SRV_UAV.h"
 
+#include "RenderTargetBuffer.h"
+
 #include <DirectXMath.h>
 #include <DirectXTex.h>
 
@@ -85,11 +87,21 @@ private:
 
 	float _angle = 0.f;
 
+	// マルチパスレンダリング
+	DescriptorHeapCBV_SRV_UAV _offscreenHeap;
+	Texture _offscreenTexture;
+	RenderTargetBuffer _offscreenRender;
+	
 
 	// テクスチャマッピング実装用
 private:
 	MYRESULT InitTexture();
 	MYRESULT InitConstantBuffer();
+
+	// マルチパスレンダリング実装用
+private:
+	MYRESULT InitOffscreenRender();
+
 };
 
 /// メモ
