@@ -28,21 +28,15 @@ MYRESULT Dx12Application::Init()
 	SIZE wndSize = _window->GetWindowSize();
 	MYRESULT result = _graphicsEngine.Init(_window->GetHwnd(), wndSize.cx, wndSize.cy);
 
-	// ポリゴン関連初期化(テスト用)
-	std::vector<DirectX::XMFLOAT3> vertex;
-	vertex.push_back({ -0.5f,-0.7f,0.f });	// 左下
-	vertex.push_back({ 0.f,0.7f,0.f });	    // 真ん中
-	vertex.push_back({ 0.5f,-0.7f,0.f });	// 右下
+	// 三角形ポリゴン
+	std::vector<PolygonVertex> triangleVertex;
+	triangleVertex.push_back({ { -0.5f,-0.7f	,0.f }	,{0.f,1.f} });
+	triangleVertex.push_back({ { 0.f  ,0.7f	,0.f }	,{0.5f,0.f} });
+	triangleVertex.push_back({ { 0.5f ,-0.7f	,0.f}	,{1.f,1.f} });
 
-	std::vector<PolygonVertex> polygonVertex;
-	polygonVertex.push_back({ { -0.5f,-0.7f	,0.f }	,{0.f,1.f} });
-	polygonVertex.push_back({ { 0.f  ,0.7f	,0.f }	,{0.5f,0.f} });
-	polygonVertex.push_back({ { 0.5f ,-0.7f	,0.f}	,{1.f,1.f} });
-
-	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
 	result = _vertexBuffer.Create(
-		_graphicsEngine.Device(), (void*)&polygonVertex[0],
-		SizeofVector<PolygonVertex>(polygonVertex), sizeof(PolygonVertex));
+		_graphicsEngine.Device(), (void*)&triangleVertex[0],
+		SizeofVector<PolygonVertex>(triangleVertex), sizeof(PolygonVertex));
 
 	std::vector<UINT> index;
 	index.push_back(0); index.push_back(1); index.push_back(2);
@@ -91,20 +85,22 @@ MYRESULT Dx12Application::Init()
 	result = _triangle.Create(_graphicsEngine.Device(), polygonData);
 
 	// 四角形ポリゴン
-	//vertex.resize(4);
-	//vertex[0] = { -1.f,-1.f,0.f };
-	//vertex[1] = { -1.f,1.f,0.f };
-	//vertex[2] = { 0.f,-1.f,0.f };
-	//vertex[3] = { 0.f,1.f,0.f };
-	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+	std::vector<PolygonVertex> squareVertex(4);
+	squareVertex[0] = { {-1.f,-1.f,0.f},{0.f,1.f} };
+	squareVertex[1] = { {-1.f,1.f,0.f},{0.f,0.f} };
+	squareVertex[2] = { {1.f,-1.f,0.f},{1.f,1.f} };
+	squareVertex[3] = { {1.f,1.f,0.f},{1.f,0.f} };
 
-	//index.push_back(2);	index.push_back(1); index.push_back(3);
-	//result = _indexBuffer.Create(_graphicsEngine.Device(), index);
+	result = _vertexBuffer.Create(_graphicsEngine.Device(), (void*)&squareVertex[0],
+		SizeofVector<PolygonVertex>(squareVertex), sizeof(PolygonVertex));
 
-	//polygonData._vertexBuffer = _vertexBuffer;
-	//polygonData._indexBuffer = _indexBuffer;
+	index.push_back(2);	index.push_back(1); index.push_back(3);
+	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
 
-	//result = _square.Create(_graphicsEngine.Device(), polygonData);
+	polygonData._vertexBuffer = _vertexBuffer;
+	polygonData._indexBuffer = _indexBuffer;
+
+	result = _square.Create(_graphicsEngine.Device(), polygonData);
 
 	_viewport.TopLeftX = 0.f;
 	_viewport.TopLeftY = 0.f;
@@ -115,9 +111,13 @@ MYRESULT Dx12Application::Init()
 	_scissorRect.top = 0;
 	_scissorRect.right = _window->GetWindowSize().cx;
 	_scissorRect.bottom = _window->GetWindowSize().cy;
-
+	
+	// テクスチャマッピング
 	result = InitTexture();
 	result = InitConstantBuffer();
+
+	// マルチパスレンダリング
+	result = InitOffscreenRender();
 
 	return result;
 }
@@ -166,7 +166,7 @@ void Dx12Application::Draw()
 
 		// 描画
 		_triangle.Draw(_graphicsEngine.GetRenderingContext());
-		//_square.Draw(_graphicsEngine.GetRenderingContext());
+		_square.Draw(_graphicsEngine.GetRenderingContext());
 	}
 	_graphicsEngine.EndDraw();
 }
@@ -189,7 +189,7 @@ MYRESULT Dx12Application::InitConstantBuffer()
 {
 	ID3D12Device& device = _graphicsEngine.Device();
 
-	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 eye(0, 0, -2);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 
@@ -213,6 +213,17 @@ MYRESULT Dx12Application::InitConstantBuffer()
 	if (result == MYRESULT::FAILED) { return result; }
 	// ディスクリプタヒープに追加
 	_polygonHeap.RegistConstantBuffer(device, _constantBuffer);
+
+	return MYRESULT::SUCCESS;
+}
+
+MYRESULT Dx12Application::InitOffscreenRender()
+{
+	RenderTargetBufferData renderData(
+		DXGI_FORMAT_R8G8B8A8_UNORM,_window->GetWindowSize().cx,_window->GetWindowSize().cy);
+	ID3D12Device& device = _graphicsEngine.Device();
+	
+	MYRESULT result = _offscreenRender.Create(device, renderData);
 
 	return MYRESULT::SUCCESS;
 }
