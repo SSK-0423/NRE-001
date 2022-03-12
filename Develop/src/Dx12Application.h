@@ -90,18 +90,23 @@ private:
 	// マルチパスレンダリング
 	DescriptorHeapCBV_SRV_UAV _offscreenHeap;
 	Texture _offscreenTexture;
+	
+	DescriptorHeapRTV _offscreenRTVHeap;
 	RenderTargetBuffer _offscreenRender;
 	
-
+	RootSignature _offscreenRootSignature;
+	GraphicsPipelineState _offscreenGraphicsPipeline;
+	
 	// テクスチャマッピング実装用
 private:
 	MYRESULT InitTexture();
 	MYRESULT InitConstantBuffer();
+	void TextureMappingDraw();		// テクスチャマッピング・定数バッファー確認用描画関数
 
 	// マルチパスレンダリング実装用
 private:
 	MYRESULT InitOffscreenRender();
-
+	void MultiPassRenderingDraw();
 };
 
 /// メモ

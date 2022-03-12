@@ -10,6 +10,7 @@
 
 #include "Dx12GraphicsEngine.h"
 #include "EngineUtility.h"
+#include "RenderTargetBuffer.h"
 
 class Texture {
 public:
@@ -75,6 +76,12 @@ public:
 	/// <param name="texturePath">テクスチャへのパス</param>
 	/// <returns>成功：MYRESULT::SUCCESS 失敗：MYRESULT::FAILED</returns>
 	MYRESULT CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+
+	/// <summary>
+	/// レンダーターゲットからテクスチャ生成
+	/// </summary>
+	/// <param name="renderTargetBuffer">レンダーターゲットバッファー</param>
+	void CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer);
 
 	/// <summary>
 	/// テクスチャバッファー取得

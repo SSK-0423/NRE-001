@@ -186,3 +186,16 @@ MYRESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const
 
 	return MYRESULT::SUCCESS;
 }
+
+void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer)
+{
+	auto textureBuffer = _textureBuffer.Get();
+	textureBuffer = &renderTargetBuffer.GetBuffer();
+
+	// シェーダーリソースとして登録する際に必要な情報を取得
+	DirectX::Image* img = new DirectX::Image();
+	img->format = renderTargetBuffer.GetBuffer().GetDesc().Format;
+	_image = img;
+
+	_metaData.mipLevels = renderTargetBuffer.GetBuffer().GetDesc().MipLevels;
+}
