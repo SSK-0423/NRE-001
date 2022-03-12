@@ -111,7 +111,7 @@ MYRESULT Dx12Application::Init()
 	_scissorRect.top = 0;
 	_scissorRect.right = _window->GetWindowSize().cx;
 	_scissorRect.bottom = _window->GetWindowSize().cy;
-	
+
 	// テクスチャマッピング
 	result = InitTexture();
 	result = InitConstantBuffer();
@@ -149,26 +149,7 @@ void Dx12Application::Update()
 
 void Dx12Application::Draw()
 {
-	// 1フレームの描画処理
-	_graphicsEngine.BeginDraw();
-	{
-		// モデルなどの描画
-		_graphicsEngine.GetRenderingContext().SetGraphicsRootSignature(_rootSignature);
-		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
-		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
-
-		// テクスチャ用の設定
-		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
-		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
-			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
-		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
-			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
-
-		// 描画
-		_triangle.Draw(_graphicsEngine.GetRenderingContext());
-		_square.Draw(_graphicsEngine.GetRenderingContext());
-	}
-	_graphicsEngine.EndDraw();
+	MultiPassRenderingDraw();
 }
 
 MYRESULT Dx12Application::InitTexture()
@@ -197,13 +178,13 @@ MYRESULT Dx12Application::InitConstantBuffer()
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 	// ビュー行列
 	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(
-		XMLoadFloat3(&eye),XMLoadFloat3(&target),XMLoadFloat3(&up));
+		XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 	// プロジェクション行列
 	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(
-		XM_PIDIV2, 
+		XM_PIDIV2,
 		static_cast<FLOAT>(_window->GetWindowSize().cx) / static_cast<FLOAT>(_window->GetWindowSize().cy),
 		1.f, 10.f);
-	
+
 	_polygonConstantBuffer._worldViewProj = world * view * proj;
 	_polygonConstantBuffer._matrix = XMMatrixRotationY(0.f);
 
@@ -217,13 +198,150 @@ MYRESULT Dx12Application::InitConstantBuffer()
 	return MYRESULT::SUCCESS;
 }
 
+void Dx12Application::TextureMappingDraw()
+{
+	// 1フレームの描画処理
+	_graphicsEngine.BeginDraw();
+	{
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootSignature(_rootSignature);
+		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
+		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
+
+		// テクスチャ用の設定
+		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
+			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
+			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
+
+		// 描画
+		_triangle.Draw(_graphicsEngine.GetRenderingContext());
+		_square.Draw(_graphicsEngine.GetRenderingContext());
+	}
+	_graphicsEngine.EndDraw();
+}
+
 MYRESULT Dx12Application::InitOffscreenRender()
 {
 	RenderTargetBufferData renderData(
-		DXGI_FORMAT_R8G8B8A8_UNORM,_window->GetWindowSize().cx,_window->GetWindowSize().cy);
+		DXGI_FORMAT_R8G8B8A8_UNORM, _window->GetWindowSize().cx, _window->GetWindowSize().cy);
 	ID3D12Device& device = _graphicsEngine.Device();
-	
+
+	// オフスクリーンレンダーターゲット生成
 	MYRESULT result = _offscreenRender.Create(device, renderData);
+	if (result == MYRESULT::FAILED) { return result; }
+	
+	// オフスクリーンレンダーターゲットヒープ生成
+	result = _offscreenRTVHeap.Create(device);
+	if (result == MYRESULT::FAILED) { return result; }
+	
+	// オフスクリーンレンダーターゲットビュー生成
+	_offscreenRTVHeap.RegistDescriptor(device, _offscreenRender);
+
+	// オフスクリーンテクスチャバッファー生成
+	_offscreenTexture.CreateTextureFromRenderTarget(_offscreenRender);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// オフスクリーンテクスチャヒープ生成
+	result = _offscreenHeap.Create(device);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// テクスチャとして登録
+	_offscreenHeap.RegistShaderResource(device, _offscreenTexture);
+
+	{
+		///// 必要なモノ
+		///// 頂点/ピクセルシェーダー
+		///// ルートシグネチャ
+		///// 頂点レイアウト
+		//D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
+		//pipelineState.pRootSignature = &_rootSignature.GetRootSignature();
+		//pipelineState.VS = CD3DX12_SHADER_BYTECODE();
+		//pipelineState.PS = CD3DX12_SHADER_BYTECODE();
+
+		//// サンプルマスク設定
+		//pipelineState.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
+
+		//// ブレンド
+		//pipelineState.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+
+		//// ラスタライズ設定
+		//pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+		//pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+
+		//// インプットレイアウトの設定
+		//pipelineState.InputLayout.pInputElementDescs = &data._inputLayout[0];
+		//pipelineState.InputLayout.NumElements = static_cast<UINT>(data._inputLayout.size());
+		//pipelineState.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
+		//pipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+
+		//// レンダーターゲットの設定
+		//pipelineState.NumRenderTargets = 1;
+		//pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+
+		//// アンチエイリアシングのためのサンプル数設定
+		//pipelineState.SampleDesc.Count = 1;	    // サンプリングは1ピクセルにつき1
+		//pipelineState.SampleDesc.Quality = 0;	// クオリティは最低
+	}
 
 	return MYRESULT::SUCCESS;
+}
+
+void Dx12Application::MultiPassRenderingDraw()
+{
+	// レンダリングコンテキスト容易
+	RenderingContext& renderContext = _graphicsEngine.GetRenderingContext();
+
+	// 1フレームの描画処理
+	_graphicsEngine.BeginDraw();
+	{
+		// オフスクリーンのレンダーターゲット設定
+		auto offRtvHandle = _offscreenRTVHeap.GetCPUDescriptorHandleForHeapStart();
+		renderContext.SetRenderTarget(&offRtvHandle, nullptr);
+
+		// バリア処理
+		renderContext.TransitionResourceState(
+			_offscreenRender.GetBuffer(),
+			D3D12_RESOURCE_STATE_PRESENT,
+			D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+		// 画面を指定色でクリア
+		ColorRGBA color(1.f, 1.f, 1.f, 1.f);
+		renderContext.ClearRenderTarget(offRtvHandle, color, 0, nullptr);
+
+		// ルートシグネチャセット
+		renderContext.SetGraphicsRootSignature(_rootSignature);
+
+		// ビューポートとシザー矩形セット
+		renderContext.SetViewport(_viewport);
+		renderContext.SetScissorRect(_scissorRect);
+
+		// テクスチャ用の設定
+		renderContext.SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
+		renderContext.SetGraphicsRootDescriptorTable(
+			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
+		renderContext.SetGraphicsRootDescriptorTable(
+			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
+
+		// 描画
+		_square.Draw(renderContext);
+
+		// レンダーターゲット→テクスチャへ
+		renderContext.TransitionResourceState(
+			_offscreenRender.GetBuffer(),
+			D3D12_RESOURCE_STATE_RENDER_TARGET,
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
+
+		renderContext.SetDescriptorHeap(_offscreenHeap.GetDescriptorHeapAddress());
+		renderContext.SetGraphicsRootDescriptorTable(
+			0, _offscreenHeap.GetGPUDescriptorHandleForHeapStartSRV());
+
+		// テクスチャ→待機状態
+		renderContext.TransitionResourceState(
+			_offscreenRender.GetBuffer(),
+			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+			D3D12_RESOURCE_STATE_PRESENT);
+
+	}
+	_graphicsEngine.EndDraw();
 }
