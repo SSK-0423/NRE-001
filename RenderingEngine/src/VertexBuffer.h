@@ -44,9 +44,9 @@ public:
 	/// <summary>
 	/// 
 	/// </summary>
-	/// <param name="device"></param>
-	/// <param name="sizeInBytes"></param>
-	/// <param name="stribeInBytes"></param>
+	/// <param name="device">デバイス</param>
+	/// <param name="sizeInBytes">バッファーの全サイズ</param>
+	/// <param name="stribeInBytes">１要素辺りのサイズ</param>
 	/// <returns></returns>
 	MYRESULT Create(ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes);
 

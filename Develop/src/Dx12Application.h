@@ -88,14 +88,22 @@ private:
 	float _angle = 0.f;
 
 	// マルチパスレンダリング
-	DescriptorHeapCBV_SRV_UAV _offscreenHeap;
-	Texture _offscreenTexture;
+	DescriptorHeapCBV_SRV_UAV _offscreenHeap;	        // オフスクリーンテクスチャ用ヒープ
+	Texture _offscreenTexture;	                        // オフスクリーンテクスチャ
 	
-	DescriptorHeapRTV _offscreenRTVHeap;
-	RenderTargetBuffer _offscreenRender;
+	DescriptorHeapRTV _offscreenRTVHeap;	            // オフスクリーンレンダー用ヒープ
+	RenderTargetBuffer _offscreenRender;	            // オフスクリーンレンダー
 	
-	RootSignature _offscreenRootSignature;
-	GraphicsPipelineState _offscreenGraphicsPipeline;
+	RootSignature _offscreenRootSignature;	            // オフスクリーン用ルートシグネチャ(今は未使用)
+	GraphicsPipelineState _offscreenGraphicsPipeline;	// オフスクリーン用パイプライン
+
+	VertexBuffer _offscreenPolygonVB;
+	IndexBuffer _offscreenPolygonIB;
+	MyFrameWork::Polygon _offscreenPolygon;
+	Shader _offscreenVS;
+	Shader _offscreenPS;
+
+	
 	
 	// テクスチャマッピング実装用
 private:
