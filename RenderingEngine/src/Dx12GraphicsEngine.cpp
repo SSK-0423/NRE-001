@@ -275,6 +275,29 @@ void Dx12GraphicsEngine::EndDraw()
 	_swapchain->Present(1, 0);
 }
 
+void Dx12GraphicsEngine::SetFrameRenderTarget()
+{
+	// 描画対象のバッファーを示すインデックス取得
+	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+
+	// 描画対象バッファーへ移動
+	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
+
+	// バリア処理
+	//_renderContext.TransitionResourceState(
+	//	_frameBuffers[bbIdx].GetBuffer(),
+	//	D3D12_RESOURCE_STATE_PRESENT,
+	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// レンダーターゲットセット
+	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
+
+	// 画面を指定色でクリア
+	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
+	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+}
+
 MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 {
 	MYRESULT result;

@@ -128,6 +128,10 @@ public:
 	/// 1フレームの描画終了
 	/// </summary>
 	void EndDraw();
+	/// <summary>
+	/// フレームレンダーターゲットセット
+	/// </summary>
+	void SetFrameRenderTarget();
 
 	// 開発用
 private:
