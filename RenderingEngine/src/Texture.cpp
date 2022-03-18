@@ -189,9 +189,8 @@ MYRESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const
 
 void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer)
 {
+	// レンダーターゲットバッファーとテクスチャバッファーを結びつける
 	_textureBuffer = &renderTargetBuffer.GetBuffer();
-	//ID3D12Resource* tex = _textureBuffer.Get();
-	//ID3D12Resource* renderTexture = &renderTargetBuffer.GetBuffer();
 
 	// シェーダーリソースとして登録する際に必要な情報を取得
 	DirectX::Image* img = new DirectX::Image();

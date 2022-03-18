@@ -60,25 +60,15 @@ MYRESULT Dx12Application::Init()
 	polygonData._inputLayout.push_back
 	(
 		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
+			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
 	polygonData._inputLayout.push_back
 	(
 		{
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
+			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
 
@@ -114,8 +104,8 @@ MYRESULT Dx12Application::Init()
 
 	// テクスチャマッピング
 	result = InitTexture();
+	// コンスタントバッファ―
 	result = InitConstantBuffer();
-
 	// マルチパスレンダリング
 	result = InitOffscreenRender();
 
@@ -142,13 +132,12 @@ void Dx12Application::End()
 
 void Dx12Application::Update()
 {
-	_polygonConstantBuffer._matrix = XMMatrixRotationX(_angle);
 	_constantBuffer.UpdateData((void*)&_polygonConstantBuffer);
-	_angle += 0.01f;
 }
 
 void Dx12Application::Draw()
 {
+	//TextureMappingDraw();
 	MultiPassRenderingDraw();
 }
 
@@ -284,7 +273,7 @@ MYRESULT Dx12Application::InitOffscreenRender()
 	polygonData._rootSignature = _rootSignature;
 	polygonData._inputLayout.push_back(
 		{
-			"POSITION",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,
+			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
@@ -320,7 +309,7 @@ void Dx12Application::MultiPassRenderingDraw()
 		renderContext.SetRenderTarget(&offRtvHandle, nullptr);
 
 		// 画面を指定色でクリア
-		ColorRGBA color(1.f, 1.f, 1.f, 1.f);
+		ColorRGBA color(0.f, 1.f, 0.f, 1.f);
 		renderContext.ClearRenderTarget(offRtvHandle, color, 0, nullptr);
 
 		// ルートシグネチャセット

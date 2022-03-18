@@ -284,12 +284,6 @@ void Dx12GraphicsEngine::SetFrameRenderTarget()
 	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
 
-	// バリア処理
-	//_renderContext.TransitionResourceState(
-	//	_frameBuffers[bbIdx].GetBuffer(),
-	//	D3D12_RESOURCE_STATE_PRESENT,
-	//	D3D12_RESOURCE_STATE_RENDER_TARGET);
-
 	// レンダーターゲットセット
 	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
 

@@ -11,6 +11,6 @@ Texture2D tex : register(t0);
 
 struct OffOut
 {
-    float4 pos : SV_POSITION;
+    float4 svpos : SV_POSITION;
     float2 uv : TEXCOORD;
 };
