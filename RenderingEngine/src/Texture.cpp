@@ -192,10 +192,10 @@ void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuff
 	// レンダーターゲットバッファーとテクスチャバッファーを結びつける
 	_textureBuffer = &renderTargetBuffer.GetBuffer();
 
-	// シェーダーリソースとして登録する際に必要な情報を取得
+	// シェーダーリソースとして登録する際に必要な情報をセット
 	DirectX::Image* img = new DirectX::Image();
 	img->format = renderTargetBuffer.GetBuffer().GetDesc().Format;
 	_image = img;
 
-	_metaData.mipLevels = renderTargetBuffer.GetBuffer().GetDesc().MipLevels;
+	_metaData.mipLevels = 1;
 }
