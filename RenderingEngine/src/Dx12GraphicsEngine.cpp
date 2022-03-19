@@ -305,7 +305,7 @@ MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 		result = _frameBuffers[idx].Create(*_device.Get(), *_swapchain.Get(), idx);
 		if (result == MYRESULT::FAILED) { return result; }
 		// “o˜^
-		_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx]);
+		_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx], DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 	}
 
 	return MYRESULT::SUCCESS;

@@ -36,5 +36,8 @@ MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, IDXGISwapChain4& swapc
 	HRESULT result = swapchain.GetBuffer(index, IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return MYRESULT::FAILED; }
 
+	// MipLevel = 1
+	auto resDesc = _rtvBuffer->GetDesc();
+
 	return MYRESULT::SUCCESS;
 }

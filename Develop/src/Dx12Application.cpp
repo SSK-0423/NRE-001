@@ -241,10 +241,10 @@ MYRESULT Dx12Application::InitOffscreenRender()
 
 	// 頂点バッファー
 	std::vector<PolygonVertex> squareVertex(4);
-	squareVertex[0] = { {-1.f,-1.f,0.f},{0.f,1.f} };
-	squareVertex[1] = { {-1.f,1.f,0.f},{0.f,0.f} };
-	squareVertex[2] = { {1.f,-1.f,0.f},{1.f,1.f} };
-	squareVertex[3] = { {1.f,1.f,0.f},{1.f,0.f} };
+	squareVertex[0] = { {-1.f,-1.f,0.f}	,{0.f,1.f} };
+	squareVertex[1] = { {-1.f,1.f,0.f}	,{0.f,0.f} };
+	squareVertex[2] = { {1.f,-1.f,0.f}	,{1.f,1.f} };
+	squareVertex[3] = { {1.f,1.f,0.f}	,{1.f,0.f} };
 	
 	result = _offscreenPolygonVB.Create(device, (void*)&squareVertex[0],
 		SizeofVector<PolygonVertex>(squareVertex), sizeof(PolygonVertex));

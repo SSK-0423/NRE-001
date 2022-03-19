@@ -97,14 +97,13 @@ private:
 	RootSignature _offscreenRootSignature;	            // オフスクリーン用ルートシグネチャ(今は未使用)
 	GraphicsPipelineState _offscreenGraphicsPipeline;	// オフスクリーン用パイプライン
 
-	VertexBuffer _offscreenPolygonVB;
-	IndexBuffer _offscreenPolygonIB;
-	MyFrameWork::Polygon _offscreenPolygon;
-	Shader _offscreenVS;
-	Shader _offscreenPS;
+	VertexBuffer _offscreenPolygonVB;					// オフスクリーン用頂点バッファー
+	IndexBuffer _offscreenPolygonIB;					// オフスクリーン用インデックスバッファー
+	MyFrameWork::Polygon _offscreenPolygon;				// オフスクリーンポリゴン
+														// これに前パスのレンダリング結果をテクスチャマップする
+	Shader _offscreenVS;	                            // オフスクリーンポリゴン用頂点シェーダー
+	Shader _offscreenPS;	                            // オフスクリーンポリゴン用ピクセルシェーダー
 
-	
-	
 	// テクスチャマッピング実装用
 private:
 	MYRESULT InitTexture();

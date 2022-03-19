@@ -78,5 +78,7 @@ public:
 	/// </summary>
 	/// <param name="device">デバイス</param>
 	/// <param name="buffer">レンダーターゲットバッファー</param>
-	void RegistDescriptor(ID3D12Device& device, RenderTargetBuffer& buffer);
+	/// <param name="format">レンダーターゲットのフォーマット デフォルト値: DXGI_FORMAT_R8G8B8A8_UNORM</param>
+	void RegistDescriptor(
+		ID3D12Device& device, RenderTargetBuffer& buffer, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
 };
