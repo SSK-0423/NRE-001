@@ -167,6 +167,7 @@
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\OffScreenRender.h" />
     <ClInclude Include="src\Polygon.h" />
     <ClInclude Include="src\RenderingContext.h" />
     <ClInclude Include="src\RenderTargetBuffer.h" />

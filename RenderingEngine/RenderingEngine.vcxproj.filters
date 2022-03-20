@@ -63,6 +63,9 @@
     <ClInclude Include="src\ConstantBuffer.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="src\OffScreenRender.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12GraphicsEngine.cpp">

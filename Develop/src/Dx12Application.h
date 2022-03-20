@@ -64,16 +64,18 @@ private:
 
 	// 開発用
 private:
-	VertexBuffer _vertexBuffer;
-	IndexBuffer _indexBuffer;
-	Shader _vertexShader;
-	Shader _pixelShader;
-	RootSignature _rootSignature;
-	MyFrameWork::Polygon _triangle;
-	MyFrameWork::Polygon _square;
-	CD3DX12_VIEWPORT _viewport;
-	CD3DX12_RECT _scissorRect;
+	VertexBuffer _vertexBuffer;			// 頂点バッファー
+	IndexBuffer _indexBuffer;			// インデックスバッファー
+	Shader _vertexShader;				// 頂点シェーダー
+	Shader _pixelShader;				// ピクセルシェーダー
+	RootSignature _rootSignature;		// ルートシグネチャ
+	MyFrameWork::Polygon _triangle;		// 三角形ポリゴン
+	MyFrameWork::Polygon _square;		// 四角形ポリゴン
+	CD3DX12_VIEWPORT _viewport;			// ビューポート
+	CD3DX12_RECT _scissorRect;			// シザー矩形
 
+	// テクスチャマッピング実装用
+private:
 	DescriptorHeapCBV_SRV_UAV _polygonHeap;
 	Texture _texture;
 	ConstantBuffer _constantBuffer;
@@ -86,8 +88,25 @@ private:
 	PolygonConstantBuffer _polygonConstantBuffer;
 
 	float _angle = 0.f;
+	
+	/// <summary>
+	/// テクスチャ初期化
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT InitTexture();
+	/// <summary>
+	/// コンスタントバッファ―初期化
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT InitConstantBuffer();
 
-	// マルチパスレンダリング
+	/// <summary>
+	/// テクスチャマッピング・コンスタントバッファ―確認用
+	/// </summary>
+	void TextureMappingDraw();
+
+	// マルチパスレンダリング実装用
+private:
 	DescriptorHeapCBV_SRV_UAV _offscreenHeap;	        // オフスクリーンテクスチャ用ヒープ
 	Texture _offscreenTexture;	                        // オフスクリーンテクスチャ
 	
@@ -104,15 +123,14 @@ private:
 	Shader _offscreenVS;	                            // オフスクリーンポリゴン用頂点シェーダー
 	Shader _offscreenPS;	                            // オフスクリーンポリゴン用ピクセルシェーダー
 
-	// テクスチャマッピング実装用
-private:
-	MYRESULT InitTexture();
-	MYRESULT InitConstantBuffer();
-	void TextureMappingDraw();		// テクスチャマッピング・定数バッファー確認用描画関数
-
-	// マルチパスレンダリング実装用
-private:
+	/// <summary>
+	/// オフスクリーンレンダー初期化
+	/// </summary>
+	/// <returns></returns>
 	MYRESULT InitOffscreenRender();
+	/// <summary>
+	/// マルチパスレンダリング確認用
+	/// </summary>
 	void MultiPassRenderingDraw();
 };
 

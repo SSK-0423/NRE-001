@@ -298,6 +298,7 @@ void Dx12Application::MultiPassRenderingDraw()
 	// 1フレームの描画処理
 	_graphicsEngine.BeginDraw();
 	{
+		// _firstPassRender.BeginDraw()
 		// バリア処理
 		renderContext.TransitionResourceState(
 			_offscreenRender.GetBuffer(),
@@ -329,6 +330,8 @@ void Dx12Application::MultiPassRenderingDraw()
 		// 描画
 		_square.Draw(renderContext);
 
+		// _firstPassRender.NextPassRendering()
+
 		// レンダーターゲット→テクスチャへ
 		renderContext.TransitionResourceState(
 			_offscreenRender.GetBuffer(),
@@ -355,6 +358,7 @@ void Dx12Application::MultiPassRenderingDraw()
 			_offscreenRender.GetBuffer(),
 			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
 			D3D12_RESOURCE_STATE_PRESENT);
+		// _firstPassRender.EndDraw()
 	}
 	_graphicsEngine.EndDraw();
 }
