@@ -221,11 +221,19 @@ MYRESULT Dx12Application::InitOffscreenRender()
 	firstPassRenderData.renderTargetData = renderData;
 	firstPassRenderData.rootSignature = _rootSignature;
 	firstPassRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
-	firstPassRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+	firstPassRenderData.pixelShaderData = ShaderData(L"src/BackgroundPixelShader.hlsl", "BackgroundPS", "ps_5_0");
 	firstPassRenderData.viewport = _viewport;
 	firstPassRenderData.scissorRect = _scissorRect;
 
+	// 1パス目生成
 	MYRESULT result = _firstPassRender.Create(device, firstPassRenderData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// 2パス目生成
+	OffScreenRenderData secondPassRenderData = firstPassRenderData;
+	secondPassRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+
+	result = _secondPassRender.Create(device, secondPassRenderData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
@@ -241,31 +249,42 @@ void Dx12Application::MultiPassRenderingDraw()
 	{
 		// 1パス目のレンダリング
 		_firstPassRender.BeginRendering(renderContext);
+		_firstPassRender.EndRendering(renderContext);
+
+		// 2パス目のレンダリング
+		_secondPassRender.BeginRendering(renderContext);
 		{
-			// テクスチャ用の設定
+			// 1パス目のレンダリング結果を描画
+			auto descHeap = _firstPassRender.GetDescriptorHeap();
+
+			renderContext.SetDescriptorHeap(descHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(0, descHeap.GetGPUDescriptorHandleForHeapStartSRV());
+
+			_firstPassRender.Draw(renderContext);
+
+			// 2パス目で描画したいオブジェクトを描画
 			renderContext.SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
 			renderContext.SetGraphicsRootDescriptorTable(
 				0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
 			renderContext.SetGraphicsRootDescriptorTable(
 				1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
 
-			// 描画
 			_square.Draw(renderContext);
 		}
-		_firstPassRender.EndRendering(renderContext);
+		_secondPassRender.EndRendering(renderContext);
 
 		// 最終パスのレンダリング
 		// フレームレンダーターゲットに変更
 		_graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
 		{
-			// 1パス目のレンダーのディスクリプタヒープ取得
-			auto descHeap = _firstPassRender.GetDescriptorHeap();
+			// 2パス目までのレンダリング結果を描画
+			auto descHeap = _secondPassRender.GetDescriptorHeap();
 
 			renderContext.SetDescriptorHeap(descHeap.GetDescriptorHeapAddress());
 			renderContext.SetGraphicsRootDescriptorTable(0, descHeap.GetGPUDescriptorHandleForHeapStartSRV());
 			renderContext.SetGraphicsRootSignature(_rootSignature);
 
-			_firstPassRender.Draw(renderContext);
+			_secondPassRender.Draw(renderContext);
 		}
 	}
 	_graphicsEngine.EndDraw();
