@@ -275,7 +275,7 @@ void Dx12GraphicsEngine::EndDraw()
 	_swapchain->Present(1, 0);
 }
 
-void Dx12GraphicsEngine::SetFrameRenderTarget()
+void Dx12GraphicsEngine::SetFrameRenderTarget(const CD3DX12_VIEWPORT& viewport, const CD3DX12_RECT& scissorRect)
 {
 	// 描画対象のバッファーを示すインデックス取得
 	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
@@ -290,6 +290,10 @@ void Dx12GraphicsEngine::SetFrameRenderTarget()
 	// 画面を指定色でクリア
 	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
 	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+
+	// ビューポートとシザー矩形セット
+	_renderContext.SetViewport(viewport);
+	_renderContext.SetScissorRect(scissorRect);
 }
 
 MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()

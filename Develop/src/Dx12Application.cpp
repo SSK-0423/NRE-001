@@ -214,77 +214,18 @@ MYRESULT Dx12Application::InitOffscreenRender()
 {
 	RenderTargetBufferData renderData(
 		DXGI_FORMAT_R8G8B8A8_UNORM, _window->GetWindowSize().cx, _window->GetWindowSize().cy,
-		{ 0.f,1.f,0.f,1.f });
+		{ 0.f,1.f,0.4f,1.f });
 	ID3D12Device& device = _graphicsEngine.Device();
 
-	// オフスクリーンレンダーターゲット生成
-	MYRESULT result = _offscreenRender.Create(device, renderData);
-	if (result == MYRESULT::FAILED) { return result; }
+	OffScreenRenderData firstPassRenderData;
+	firstPassRenderData.renderTargetData = renderData;
+	firstPassRenderData.rootSignature = _rootSignature;
+	firstPassRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
+	firstPassRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+	firstPassRenderData.viewport = _viewport;
+	firstPassRenderData.scissorRect = _scissorRect;
 
-	// オフスクリーンレンダーターゲットヒープ生成
-	result = _offscreenRTVHeap.Create(device);
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// オフスクリーンレンダーターゲットビュー生成
-	_offscreenRTVHeap.RegistDescriptor(device, _offscreenRender);
-
-	// オフスクリーンテクスチャバッファー生成
-	_offscreenTexture.CreateTextureFromRenderTarget(_offscreenRender);
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// オフスクリーンテクスチャヒープ生成
-	result = _offscreenHeap.Create(device);
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// テクスチャとして登録
-	_offscreenHeap.RegistShaderResource(device, _offscreenTexture);
-
-	// 頂点バッファー
-	std::vector<PolygonVertex> squareVertex(4);
-	squareVertex[0] = { {-1.f,-1.f,0.f}	,{0.f,1.f} };
-	squareVertex[1] = { {-1.f,1.f,0.f}	,{0.f,0.f} };
-	squareVertex[2] = { {1.f,-1.f,0.f}	,{1.f,1.f} };
-	squareVertex[3] = { {1.f,1.f,0.f}	,{1.f,0.f} };
-	
-	result = _offscreenPolygonVB.Create(device, (void*)&squareVertex[0],
-		SizeofVector<PolygonVertex>(squareVertex), sizeof(PolygonVertex));
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// インデックスバッファー
-	std::vector<UINT> index;
-	index.push_back(0); index.push_back(1); index.push_back(2);
-	index.push_back(2); index.push_back(1); index.push_back(3);
-	
-	result = _offscreenPolygonIB.Create(device, index);
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// シェーダー
-	result = _offscreenVS.Create(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
-	if (result == MYRESULT::FAILED) { return result; }
-	result = _offscreenPS.Create(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// オフスクリーンポリゴン生成
-	PolygonData polygonData;
-	polygonData._vertexBuffer = _offscreenPolygonVB;
-	polygonData._indexBuffer = _offscreenPolygonIB;
-	polygonData._vertexShader = _offscreenVS;
-	polygonData._pixelShader = _offscreenPS;
-	polygonData._rootSignature = _rootSignature;
-	polygonData._inputLayout.push_back(
-		{
-			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
-			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		}
-	);
-	polygonData._inputLayout.push_back(
-		{
-			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
-			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
-		}
-	);
-
-	result = _offscreenPolygon.Create(device, polygonData);
+	MYRESULT result = _firstPassRender.Create(device, firstPassRenderData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
@@ -298,67 +239,34 @@ void Dx12Application::MultiPassRenderingDraw()
 	// 1フレームの描画処理
 	_graphicsEngine.BeginDraw();
 	{
-		// _firstPassRender.BeginDraw()
-		// バリア処理
-		renderContext.TransitionResourceState(
-			_offscreenRender.GetBuffer(),
-			D3D12_RESOURCE_STATE_PRESENT,
-			D3D12_RESOURCE_STATE_RENDER_TARGET);
+		// 1パス目のレンダリング
+		_firstPassRender.BeginRendering(renderContext);
+		{
+			// テクスチャ用の設定
+			renderContext.SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(
+				0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			renderContext.SetGraphicsRootDescriptorTable(
+				1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
 
-		// オフスクリーンのレンダーターゲット設定
-		auto offRtvHandle = _offscreenRTVHeap.GetCPUDescriptorHandleForHeapStart();
-		renderContext.SetRenderTarget(&offRtvHandle, nullptr);
+			// 描画
+			_square.Draw(renderContext);
+		}
+		_firstPassRender.EndRendering(renderContext);
 
-		// 画面を指定色でクリア
-		ColorRGBA color(0.f, 1.f, 0.f, 1.f);
-		renderContext.ClearRenderTarget(offRtvHandle, color, 0, nullptr);
-
-		// ルートシグネチャセット
-		renderContext.SetGraphicsRootSignature(_rootSignature);
-
-		// ビューポートとシザー矩形セット
-		renderContext.SetViewport(_viewport);
-		renderContext.SetScissorRect(_scissorRect);
-
-		// テクスチャ用の設定
-		renderContext.SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
-		renderContext.SetGraphicsRootDescriptorTable(
-			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
-		renderContext.SetGraphicsRootDescriptorTable(
-			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
-
-		// 描画
-		_square.Draw(renderContext);
-
-		// _firstPassRender.NextPassRendering()
-
-		// レンダーターゲット→テクスチャへ
-		renderContext.TransitionResourceState(
-			_offscreenRender.GetBuffer(),
-			D3D12_RESOURCE_STATE_RENDER_TARGET,
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-
+		// 最終パスのレンダリング
 		// フレームレンダーターゲットに変更
-		_graphicsEngine.SetFrameRenderTarget();
+		_graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
+		{
+			// 1パス目のレンダーのディスクリプタヒープ取得
+			auto descHeap = _firstPassRender.GetDescriptorHeap();
 
-		renderContext.SetDescriptorHeap(_offscreenHeap.GetDescriptorHeapAddress());
-		renderContext.SetGraphicsRootDescriptorTable(
-			0, _offscreenHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			renderContext.SetDescriptorHeap(descHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(0, descHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			renderContext.SetGraphicsRootSignature(_rootSignature);
 
-		renderContext.SetGraphicsRootSignature(_rootSignature);
-
-		// ビューポートとシザー矩形セット
-		renderContext.SetViewport(_viewport);
-		renderContext.SetScissorRect(_scissorRect);
-
-		_offscreenPolygon.Draw(renderContext);
-
-		// テクスチャ→待機状態
-		renderContext.TransitionResourceState(
-			_offscreenRender.GetBuffer(),
-			D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-			D3D12_RESOURCE_STATE_PRESENT);
-		// _firstPassRender.EndDraw()
+			_firstPassRender.Draw(renderContext);
+		}
 	}
 	_graphicsEngine.EndDraw();
 }

@@ -131,7 +131,7 @@ public:
 	/// <summary>
 	/// フレームレンダーターゲットセット
 	/// </summary>
-	void SetFrameRenderTarget();
+	void SetFrameRenderTarget(const CD3DX12_VIEWPORT& viewport, const CD3DX12_RECT& scissorRect);
 
 	// 開発用
 private:

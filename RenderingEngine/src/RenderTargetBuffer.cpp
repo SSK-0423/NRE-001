@@ -22,7 +22,7 @@ MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, const RenderTargetBuff
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
-		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,		// オフスクリーンレンダリング使用時の状態遷移に対応
 		&clearValue,
 		IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
 

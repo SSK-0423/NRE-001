@@ -59,3 +59,12 @@ MYRESULT Shader::Create(
 
 	return MYRESULT::SUCCESS;
 }
+
+MYRESULT Shader::Create(const ShaderData& shaderData)
+{
+	MYRESULT result = 
+		Create(shaderData.shaderFilePass, shaderData.entoryPointName, shaderData.shaderType);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	return MYRESULT::SUCCESS;
+}
