@@ -15,13 +15,14 @@ MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, const RenderTargetBuff
 {
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(data._colorFormat, data._width, data._height);
+	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
 	CD3DX12_CLEAR_VALUE clearValue(data._colorFormat, data._clearColor);
 
 	HRESULT result = device.CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,
 		&resDesc,
-		D3D12_RESOURCE_STATE_PRESENT,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,		// オフスクリーンレンダリング使用時の状態遷移に対応
 		&clearValue,
 		IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
 
@@ -34,6 +35,9 @@ MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, IDXGISwapChain4& swapc
 {
 	HRESULT result = swapchain.GetBuffer(index, IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return MYRESULT::FAILED; }
+
+	// MipLevel = 1
+	auto resDesc = _rtvBuffer->GetDesc();
 
 	return MYRESULT::SUCCESS;
 }

@@ -9,6 +9,9 @@
 
 #include "EngineUtility.h"
 
+/// <summary>
+/// ポリゴン生成用データ
+/// </summary>
 struct PolygonData
 {
 	Shader _vertexShader;	                            // 頂点シェーダー
@@ -19,6 +22,9 @@ struct PolygonData
 	std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;	// 頂点レイアウト
 };
 
+/// <summary>
+/// ポリゴンの頂点データ
+/// </summary>
 struct PolygonVertex {
 	DirectX::XMFLOAT3 _vertex;
 	DirectX::XMFLOAT2 _uv;

@@ -128,6 +128,10 @@ public:
 	/// 1フレームの描画終了
 	/// </summary>
 	void EndDraw();
+	/// <summary>
+	/// フレームレンダーターゲットセット
+	/// </summary>
+	void SetFrameRenderTarget(const CD3DX12_VIEWPORT& viewport, const CD3DX12_RECT& scissorRect);
 
 	// 開発用
 private:
