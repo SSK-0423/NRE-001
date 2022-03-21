@@ -109,6 +109,7 @@ private:
 	// マルチパスレンダリング実装用
 private:
 	OffScreenRender _firstPassRender;
+	OffScreenRender _secondPassRender;
 
 	/// <summary>
 	/// オフスクリーンレンダー初期化
