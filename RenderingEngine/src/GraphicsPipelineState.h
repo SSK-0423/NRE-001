@@ -18,6 +18,8 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D12PipelineState> _pipelineState = nullptr;	// パイプラインステート
 
+	D3D12_GRAPHICS_PIPELINE_STATE_DESC _pipelineStateDesc;
+
 	/// <summary>
 	/// パイプラインステート生成
 	/// </summary>

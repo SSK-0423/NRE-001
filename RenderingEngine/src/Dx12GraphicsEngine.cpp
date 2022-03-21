@@ -275,6 +275,27 @@ void Dx12GraphicsEngine::EndDraw()
 	_swapchain->Present(1, 0);
 }
 
+void Dx12GraphicsEngine::SetFrameRenderTarget(const CD3DX12_VIEWPORT& viewport, const CD3DX12_RECT& scissorRect)
+{
+	// 描画対象のバッファーを示すインデックス取得
+	auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
+
+	// 描画対象バッファーへ移動
+	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
+	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
+
+	// レンダーターゲットセット
+	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
+
+	// 画面を指定色でクリア
+	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
+	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+
+	// ビューポートとシザー矩形セット
+	_renderContext.SetViewport(viewport);
+	_renderContext.SetScissorRect(scissorRect);
+}
+
 MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 {
 	MYRESULT result;
@@ -288,7 +309,7 @@ MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 		result = _frameBuffers[idx].Create(*_device.Get(), *_swapchain.Get(), idx);
 		if (result == MYRESULT::FAILED) { return result; }
 		// 登録
-		_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx]);
+		_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx], DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 	}
 
 	return MYRESULT::SUCCESS;

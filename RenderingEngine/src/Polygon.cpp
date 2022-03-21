@@ -31,7 +31,8 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 
 	// レンダーターゲットの設定
 	pipelineState.NumRenderTargets = 1;
-	pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	//pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 	// アンチエイリアシングのためのサンプル数設定
 	pipelineState.SampleDesc.Count = 1;	    // サンプリングは1ピクセルにつき1

@@ -13,6 +13,9 @@
 #include "ConstantBuffer.h"
 #include "DescriptorHeapCBV_SRV_UAV.h"
 
+#include "RenderTargetBuffer.h"
+#include "OffScreenRender.h"
+
 #include <DirectXMath.h>
 #include <DirectXTex.h>
 
@@ -62,16 +65,18 @@ private:
 
 	// 開発用
 private:
-	VertexBuffer _vertexBuffer;
-	IndexBuffer _indexBuffer;
-	Shader _vertexShader;
-	Shader _pixelShader;
-	RootSignature _rootSignature;
-	MyFrameWork::Polygon _triangle;
-	MyFrameWork::Polygon _square;
-	CD3DX12_VIEWPORT _viewport;
-	CD3DX12_RECT _scissorRect;
+	VertexBuffer _vertexBuffer;			// 頂点バッファー
+	IndexBuffer _indexBuffer;			// インデックスバッファー
+	Shader _vertexShader;				// 頂点シェーダー
+	Shader _pixelShader;				// ピクセルシェーダー
+	RootSignature _rootSignature;		// ルートシグネチャ
+	MyFrameWork::Polygon _triangle;		// 三角形ポリゴン
+	MyFrameWork::Polygon _square;		// 四角形ポリゴン
+	CD3DX12_VIEWPORT _viewport;			// ビューポート
+	CD3DX12_RECT _scissorRect;			// シザー矩形
 
+	// テクスチャマッピング実装用
+private:
 	DescriptorHeapCBV_SRV_UAV _polygonHeap;
 	Texture _texture;
 	ConstantBuffer _constantBuffer;
@@ -84,12 +89,37 @@ private:
 	PolygonConstantBuffer _polygonConstantBuffer;
 
 	float _angle = 0.f;
-
-
-	// テクスチャマッピング実装用
-private:
+	
+	/// <summary>
+	/// テクスチャ初期化
+	/// </summary>
+	/// <returns></returns>
 	MYRESULT InitTexture();
+	/// <summary>
+	/// コンスタントバッファ―初期化
+	/// </summary>
+	/// <returns></returns>
 	MYRESULT InitConstantBuffer();
+
+	/// <summary>
+	/// テクスチャマッピング・コンスタントバッファ―確認用
+	/// </summary>
+	void TextureMappingDraw();
+
+	// マルチパスレンダリング実装用
+private:
+	OffScreenRender _firstPassRender;
+	OffScreenRender _secondPassRender;
+
+	/// <summary>
+	/// オフスクリーンレンダー初期化
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT InitOffscreenRender();
+	/// <summary>
+	/// マルチパスレンダリング確認用
+	/// </summary>
+	void MultiPassRenderingDraw();
 };
 
 /// メモ

@@ -28,21 +28,15 @@ MYRESULT Dx12Application::Init()
 	SIZE wndSize = _window->GetWindowSize();
 	MYRESULT result = _graphicsEngine.Init(_window->GetHwnd(), wndSize.cx, wndSize.cy);
 
-	// ポリゴン関連初期化(テスト用)
-	std::vector<DirectX::XMFLOAT3> vertex;
-	vertex.push_back({ -0.5f,-0.7f,0.f });	// 左下
-	vertex.push_back({ 0.f,0.7f,0.f });	    // 真ん中
-	vertex.push_back({ 0.5f,-0.7f,0.f });	// 右下
+	// 三角形ポリゴン
+	std::vector<PolygonVertex> triangleVertex;
+	triangleVertex.push_back({ { -0.5f,-0.7f	,0.f }	,{0.f,1.f} });
+	triangleVertex.push_back({ { 0.f  ,0.7f	,0.f }	,{0.5f,0.f} });
+	triangleVertex.push_back({ { 0.5f ,-0.7f	,0.f}	,{1.f,1.f} });
 
-	std::vector<PolygonVertex> polygonVertex;
-	polygonVertex.push_back({ { -0.5f,-0.7f	,0.f }	,{0.f,1.f} });
-	polygonVertex.push_back({ { 0.f  ,0.7f	,0.f }	,{0.5f,0.f} });
-	polygonVertex.push_back({ { 0.5f ,-0.7f	,0.f}	,{1.f,1.f} });
-
-	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
 	result = _vertexBuffer.Create(
-		_graphicsEngine.Device(), (void*)&polygonVertex[0],
-		SizeofVector<PolygonVertex>(polygonVertex), sizeof(PolygonVertex));
+		_graphicsEngine.Device(), (void*)&triangleVertex[0],
+		SizeofVector<PolygonVertex>(triangleVertex), sizeof(PolygonVertex));
 
 	std::vector<UINT> index;
 	index.push_back(0); index.push_back(1); index.push_back(2);
@@ -66,45 +60,37 @@ MYRESULT Dx12Application::Init()
 	polygonData._inputLayout.push_back
 	(
 		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
+			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
 	polygonData._inputLayout.push_back
 	(
 		{
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			D3D12_APPEND_ALIGNED_ELEMENT,
-			D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,
-			0
+			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
 
 	result = _triangle.Create(_graphicsEngine.Device(), polygonData);
 
 	// 四角形ポリゴン
-	//vertex.resize(4);
-	//vertex[0] = { -1.f,-1.f,0.f };
-	//vertex[1] = { -1.f,1.f,0.f };
-	//vertex[2] = { 0.f,-1.f,0.f };
-	//vertex[3] = { 0.f,1.f,0.f };
-	//result = _vertexBuffer.Create(_graphicsEngine.Device(), vertex);
+	std::vector<PolygonVertex> squareVertex(4);
+	squareVertex[0] = { {-1.f,-1.f,0.f},{0.f,1.f} };
+	squareVertex[1] = { {-1.f,1.f,0.f},{0.f,0.f} };
+	squareVertex[2] = { {1.f,-1.f,0.f},{1.f,1.f} };
+	squareVertex[3] = { {1.f,1.f,0.f},{1.f,0.f} };
 
-	//index.push_back(2);	index.push_back(1); index.push_back(3);
-	//result = _indexBuffer.Create(_graphicsEngine.Device(), index);
+	result = _vertexBuffer.Create(_graphicsEngine.Device(), (void*)&squareVertex[0],
+		SizeofVector<PolygonVertex>(squareVertex), sizeof(PolygonVertex));
 
-	//polygonData._vertexBuffer = _vertexBuffer;
-	//polygonData._indexBuffer = _indexBuffer;
+	index.push_back(2);	index.push_back(1); index.push_back(3);
+	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
 
-	//result = _square.Create(_graphicsEngine.Device(), polygonData);
+	polygonData._vertexBuffer = _vertexBuffer;
+	polygonData._indexBuffer = _indexBuffer;
+
+	result = _square.Create(_graphicsEngine.Device(), polygonData);
 
 	_viewport.TopLeftX = 0.f;
 	_viewport.TopLeftY = 0.f;
@@ -116,8 +102,12 @@ MYRESULT Dx12Application::Init()
 	_scissorRect.right = _window->GetWindowSize().cx;
 	_scissorRect.bottom = _window->GetWindowSize().cy;
 
+	// テクスチャマッピング
 	result = InitTexture();
+	// コンスタントバッファ―
 	result = InitConstantBuffer();
+	// マルチパスレンダリング
+	result = InitOffscreenRender();
 
 	return result;
 }
@@ -142,33 +132,13 @@ void Dx12Application::End()
 
 void Dx12Application::Update()
 {
-	_polygonConstantBuffer._matrix = XMMatrixRotationX(_angle);
 	_constantBuffer.UpdateData((void*)&_polygonConstantBuffer);
-	_angle += 0.01f;
 }
 
 void Dx12Application::Draw()
 {
-	// 1フレームの描画処理
-	_graphicsEngine.BeginDraw();
-	{
-		// モデルなどの描画
-		_graphicsEngine.GetRenderingContext().SetGraphicsRootSignature(_rootSignature);
-		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
-		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
-
-		// テクスチャ用の設定
-		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
-		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
-			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
-		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
-			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
-
-		// 描画
-		_triangle.Draw(_graphicsEngine.GetRenderingContext());
-		//_square.Draw(_graphicsEngine.GetRenderingContext());
-	}
-	_graphicsEngine.EndDraw();
+	//TextureMappingDraw();
+	MultiPassRenderingDraw();
 }
 
 MYRESULT Dx12Application::InitTexture()
@@ -189,7 +159,7 @@ MYRESULT Dx12Application::InitConstantBuffer()
 {
 	ID3D12Device& device = _graphicsEngine.Device();
 
-	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 eye(0, 0, -2);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 
@@ -197,13 +167,13 @@ MYRESULT Dx12Application::InitConstantBuffer()
 	DirectX::XMMATRIX world = DirectX::XMMatrixIdentity();
 	// ビュー行列
 	DirectX::XMMATRIX view = DirectX::XMMatrixLookAtLH(
-		XMLoadFloat3(&eye),XMLoadFloat3(&target),XMLoadFloat3(&up));
+		XMLoadFloat3(&eye), XMLoadFloat3(&target), XMLoadFloat3(&up));
 	// プロジェクション行列
 	DirectX::XMMATRIX proj = DirectX::XMMatrixPerspectiveFovLH(
-		XM_PIDIV2, 
+		XM_PIDIV2,
 		static_cast<FLOAT>(_window->GetWindowSize().cx) / static_cast<FLOAT>(_window->GetWindowSize().cy),
 		1.f, 10.f);
-	
+
 	_polygonConstantBuffer._worldViewProj = world * view * proj;
 	_polygonConstantBuffer._matrix = XMMatrixRotationY(0.f);
 
@@ -215,4 +185,107 @@ MYRESULT Dx12Application::InitConstantBuffer()
 	_polygonHeap.RegistConstantBuffer(device, _constantBuffer);
 
 	return MYRESULT::SUCCESS;
+}
+
+void Dx12Application::TextureMappingDraw()
+{
+	// 1フレームの描画処理
+	_graphicsEngine.BeginDraw();
+	{
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootSignature(_rootSignature);
+		_graphicsEngine.GetRenderingContext().SetViewport(_viewport);
+		_graphicsEngine.GetRenderingContext().SetScissorRect(_scissorRect);
+
+		// テクスチャ用の設定
+		_graphicsEngine.GetRenderingContext().SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
+			0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
+		_graphicsEngine.GetRenderingContext().SetGraphicsRootDescriptorTable(
+			1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
+
+		// 描画
+		_triangle.Draw(_graphicsEngine.GetRenderingContext());
+		_square.Draw(_graphicsEngine.GetRenderingContext());
+	}
+	_graphicsEngine.EndDraw();
+}
+
+MYRESULT Dx12Application::InitOffscreenRender()
+{
+	RenderTargetBufferData renderData(
+		DXGI_FORMAT_R8G8B8A8_UNORM, _window->GetWindowSize().cx, _window->GetWindowSize().cy,
+		{ 0.f,1.f,0.4f,1.f });
+	ID3D12Device& device = _graphicsEngine.Device();
+
+	OffScreenRenderData firstPassRenderData;
+	firstPassRenderData.renderTargetData = renderData;
+	firstPassRenderData.rootSignature = _rootSignature;
+	firstPassRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
+	firstPassRenderData.pixelShaderData = ShaderData(L"src/BackgroundPixelShader.hlsl", "BackgroundPS", "ps_5_0");
+	firstPassRenderData.viewport = _viewport;
+	firstPassRenderData.scissorRect = _scissorRect;
+
+	// 1パス目生成
+	MYRESULT result = _firstPassRender.Create(device, firstPassRenderData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// 2パス目生成
+	OffScreenRenderData secondPassRenderData = firstPassRenderData;
+	secondPassRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+
+	result = _secondPassRender.Create(device, secondPassRenderData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	return MYRESULT::SUCCESS;
+}
+
+void Dx12Application::MultiPassRenderingDraw()
+{
+	// レンダリングコンテキスト容易
+	RenderingContext& renderContext = _graphicsEngine.GetRenderingContext();
+
+	// 1フレームの描画処理
+	_graphicsEngine.BeginDraw();
+	{
+		// 1パス目のレンダリング
+		_firstPassRender.BeginRendering(renderContext);
+		_firstPassRender.EndRendering(renderContext);
+
+		// 2パス目のレンダリング
+		_secondPassRender.BeginRendering(renderContext);
+		{
+			// 1パス目のレンダリング結果を描画
+			auto descHeap = _firstPassRender.GetDescriptorHeap();
+
+			renderContext.SetDescriptorHeap(descHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(0, descHeap.GetGPUDescriptorHandleForHeapStartSRV());
+
+			_firstPassRender.Draw(renderContext);
+
+			// 2パス目で描画したいオブジェクトを描画
+			renderContext.SetDescriptorHeap(_polygonHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(
+				0, _polygonHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			renderContext.SetGraphicsRootDescriptorTable(
+				1, _polygonHeap.GetGPUDescriptorHandleForHeapStartCBV());
+
+			_square.Draw(renderContext);
+		}
+		_secondPassRender.EndRendering(renderContext);
+
+		// 最終パスのレンダリング
+		// フレームレンダーターゲットに変更
+		_graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
+		{
+			// 2パス目までのレンダリング結果を描画
+			auto descHeap = _secondPassRender.GetDescriptorHeap();
+
+			renderContext.SetDescriptorHeap(descHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(0, descHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			renderContext.SetGraphicsRootSignature(_rootSignature);
+
+			_secondPassRender.Draw(renderContext);
+		}
+	}
+	_graphicsEngine.EndDraw();
 }

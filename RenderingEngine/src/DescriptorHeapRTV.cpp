@@ -43,7 +43,8 @@ D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapRTV::GetNextCPUDescriptorHandle()
 	return handle;
 }
 
-void DescriptorHeapRTV::RegistDescriptor(ID3D12Device& device, RenderTargetBuffer& buffer)
+void DescriptorHeapRTV::RegistDescriptor(
+	ID3D12Device& device, RenderTargetBuffer& buffer, DXGI_FORMAT format)
 {
 	auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += _registedRTVNum * _handleIncrimentSize;
@@ -51,7 +52,7 @@ void DescriptorHeapRTV::RegistDescriptor(ID3D12Device& device, RenderTargetBuffe
 	// SRGBレンダーターゲットビュー設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 
-	rtvDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+	rtvDesc.Format = format;
 	rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
 	// レンダーターゲットビュー生成

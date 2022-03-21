@@ -8,6 +8,29 @@
 #include "EngineUtility.h"
 
 /// <summary>
+/// シェーダー生成に必要な情報
+/// </summary>
+struct ShaderData
+{
+	const TCHAR* shaderFilePass = nullptr;	// シェーダーファイルのパス
+	const char* entoryPointName = nullptr;	// シェーダーのエントリ関数
+	const char* shaderType = nullptr;       // シェーダーの種類とバージョン
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="shaderFilePass">シェーダーファイルのパス</param>
+	/// <param name="entoryPointName">シェーダーのエントリ関数</param>
+	/// <param name="shaderType">シェーダーの種類とバージョン</param>
+	ShaderData(const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderType)
+		: shaderFilePass(shaderFilePass), entoryPointName(entoryPointName), shaderType(shaderType)
+	{
+	}
+
+	ShaderData() {};
+};
+
+/// <summary>
 /// シェーダークラス
 /// </summary>
 class Shader {
@@ -37,6 +60,13 @@ public:
 	/// <param name="shaderType">シェーダーの種類_モデル</param>
 	/// <returns></returns>
 	MYRESULT Create(const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderType);
+
+	/// <summary>
+	/// シェーダー生成
+	/// </summary>
+	/// <param name="shaderData">シェーダーデータ</param>
+	/// <returns></returns>
+	MYRESULT Create(const ShaderData& shaderData);
 
 	/// <summary>
 	/// シェーダー取得
