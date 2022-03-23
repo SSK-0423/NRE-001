@@ -16,6 +16,7 @@ MYRESULT OffScreenRender::CreateOffScreenPolygon(
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// インデックスバッファー
+	// TODO: index(6)
 	std::vector<UINT> index;
 	index.push_back(0); index.push_back(1); index.push_back(2);
 	index.push_back(2); index.push_back(1); index.push_back(3);

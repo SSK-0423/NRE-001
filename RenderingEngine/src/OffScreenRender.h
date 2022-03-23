@@ -25,6 +25,7 @@ struct OffScreenRenderData
 	ShaderData pixelShaderData;                 // ピクセルシェーダーデータ
 	CD3DX12_VIEWPORT viewport;                  // ビューポート
 	CD3DX12_RECT scissorRect;                   // シザー矩形
+	unsigned int renderTargetNum = 1;
 };
 
 /// <summary>
@@ -38,9 +39,6 @@ private:
 
 	DescriptorHeapRTV _offscreenRTVHeap;	            // オフスクリーンレンダー用ヒープ
 	RenderTargetBuffer _offscreenRender;	            // オフスクリーンレンダー
-
-	RootSignature _offscreenRootSignature;	            // オフスクリーン用ルートシグネチャ(今は未使用)
-	GraphicsPipelineState _offscreenGraphicsPipeline;	// オフスクリーン用パイプライン
 
 	VertexBuffer _offscreenPolygonVB;					// オフスクリーン用頂点バッファー
 	IndexBuffer _offscreenPolygonIB;					// オフスクリーン用インデックスバッファー

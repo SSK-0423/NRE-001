@@ -31,7 +31,7 @@ MYRESULT Dx12Application::Init()
 	// 三角形ポリゴン
 	std::vector<PolygonVertex> triangleVertex;
 	triangleVertex.push_back({ { -0.5f,-0.7f	,0.f }	,{0.f,1.f} });
-	triangleVertex.push_back({ { 0.f  ,0.7f	,0.f }	,{0.5f,0.f} });
+	triangleVertex.push_back({ { 0.f  ,0.7f		,0.f }	,{0.5f,0.f} });
 	triangleVertex.push_back({ { 0.5f ,-0.7f	,0.f}	,{1.f,1.f} });
 
 	result = _vertexBuffer.Create(
@@ -108,6 +108,8 @@ MYRESULT Dx12Application::Init()
 	result = InitConstantBuffer();
 	// マルチパスレンダリング
 	result = InitOffscreenRender();
+	// マルチレンダーターゲット
+	result = InitMultiRenderTarget();
 
 	return result;
 }
@@ -138,7 +140,8 @@ void Dx12Application::Update()
 void Dx12Application::Draw()
 {
 	//TextureMappingDraw();
-	MultiPassRenderingDraw();
+	//MultiPassRenderingDraw();
+	MultiRenderTargetDraw();
 }
 
 MYRESULT Dx12Application::InitTexture()
@@ -286,6 +289,97 @@ void Dx12Application::MultiPassRenderingDraw()
 
 			_secondPassRender.Draw(renderContext);
 		}
+	}
+	_graphicsEngine.EndDraw();
+}
+
+MYRESULT Dx12Application::InitMultiRenderTarget()
+{
+	// マルチレンダーターゲットテスト用のポリゴン生成
+	MYRESULT result = CreateMRTPolygon();
+	if (result == MYRESULT::FAILED) { return result; }
+}
+
+MYRESULT Dx12Application::CreateMRTPolygon()
+{
+	ID3D12Device& device = _graphicsEngine.Device();
+
+	// 頂点バッファー
+	std::vector<PolygonVertex> squareVertex(4);
+	squareVertex[0] = { {-1.f,-1.f,0.f}	,{0.f,1.f} };
+	squareVertex[1] = { {-1.f,1.f,0.f}	,{0.f,0.f} };
+	squareVertex[2] = { {1.f,-1.f,0.f}	,{1.f,1.f} };
+	squareVertex[3] = { {1.f,1.f,0.f}	,{1.f,0.f} };
+
+	MYRESULT result = _mrtPolygonVB.Create(device, (void*)&squareVertex[0],
+		SizeofVector<PolygonVertex>(squareVertex), sizeof(PolygonVertex));
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// インデックスバッファー
+	// TODO: index(6)
+	std::vector<UINT> index;
+	index.push_back(0); index.push_back(1); index.push_back(2);
+	index.push_back(2); index.push_back(1); index.push_back(3);
+
+	result = _mrtPolygonIB.Create(device, index);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// シェーダー
+	result = _mrtPolygonVS.Create(ShaderData(L"src/MRTPolygonVertexShader.hlsl", "MrtVS", "vs_5_0"));
+	if (result == MYRESULT::FAILED) { return result; }
+	result = _mrtPolygonPS.Create(ShaderData(L"src/MRTPolygonPixelShader.hlsl", "MrtPS", "ps_5_0"));
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// オフスクリーンポリゴン生成
+	PolygonData polygonData;
+	polygonData._vertexBuffer = _mrtPolygonVB;
+	polygonData._indexBuffer = _mrtPolygonIB;
+	polygonData._vertexShader = _mrtPolygonVS;
+	polygonData._pixelShader = _mrtPolygonPS;
+	polygonData._rootSignature = _rootSignature;
+	polygonData._renderTargetNum = 2;				// マルチレンダーターゲット
+	polygonData._inputLayout.push_back(
+		{
+			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		}
+	);
+	polygonData._inputLayout.push_back(
+		{
+			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
+		}
+	);
+
+	result = _mrtPolygon.Create(device, polygonData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	return result;
+}
+
+MYRESULT Dx12Application::CreateMRTRenders()
+{
+	RenderTargetBufferData renderData;
+	ID3D12Device& device = _graphicsEngine.Device();
+
+	MYRESULT result;
+	return MYRESULT::SUCCESS;
+}
+
+void Dx12Application::MultiRenderTargetDraw()
+{
+	// レンダリングコンテキスト用意
+	RenderingContext& renderContext = _graphicsEngine.GetRenderingContext();
+
+	// 1フレームの描画
+	_graphicsEngine.BeginDraw();
+	{
+		renderContext.SetGraphicsRootSignature(_rootSignature);
+		renderContext.SetViewport(_viewport);
+		renderContext.SetScissorRect(_scissorRect);
+
+		// オフスクリーン２枚にレンダリング
+		// 最終パスでそれぞれをテクスチャで受け取って描画
 	}
 	_graphicsEngine.EndDraw();
 }
