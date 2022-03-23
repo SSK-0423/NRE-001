@@ -20,6 +20,7 @@ struct PolygonData
 	IndexBuffer _indexBuffer;	                        // インデックスバッファー
 	RootSignature _rootSignature;	                    // ルートシグネチャ
 	std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;	// 頂点レイアウト
+	unsigned int _renderTargetNum = 1;
 };
 
 /// <summary>

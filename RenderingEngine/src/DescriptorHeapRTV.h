@@ -16,12 +16,12 @@ public:
 	DescriptorHeapRTV() = default;
 	~DescriptorHeapRTV() = default;
 
-	static constexpr UINT MAXDESCRIPTORNUM = 8;							// 登録可能なディスクリプタ数
+	static constexpr UINT MAXDESCRIPTORNUM = 8;							    // 登録可能なディスクリプタ数
 
 private:
-	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _rtvHeap = nullptr;	// ディスクリプタヒープ
+	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _rtvHeap = nullptr;	    // ディスクリプタヒープ
 	SIZE_T _handleIncrimentSize = 0;										// ハンドルのインクリメントサイズ
-	UINT _registedRTVNum = 0;									// ヒープに登録されたディスクリプタ数
+	UINT _registedRTVNum = 0;									            // ヒープに登録されたディスクリプタ数
 	UINT _nextHandleLocation = 1;
 
 	/// <summary>
