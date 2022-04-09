@@ -120,6 +120,48 @@ private:
 	/// マルチパスレンダリング確認用
 	/// </summary>
 	void MultiPassRenderingDraw();
+	
+	// マルチレンダーターゲット
+private:
+	MyFrameWork::Polygon _mrtPolygon;
+	VertexBuffer _mrtPolygonVB;					
+	IndexBuffer _mrtPolygonIB;					
+	Shader _mrtPolygonVS;	                    
+	Shader _mrtPolygonPS;
+
+	OffScreenRender _mrtRenders[2];
+	OffScreenRender _mrtSecondRender;
+
+	DescriptorHeapCBV_SRV_UAV _mrtDescriptorHeap;
+
+	/// <summary>
+	/// マルチレンダーターゲット初期化
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT InitMultiRenderTarget();
+
+	/// <summary>
+	/// MRTポリゴン生成
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT CreateMRTPolygon();
+
+	/// <summary>
+	/// MRTレンダーターゲット生成
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT CreateMRTRenders();
+
+	/// <summary>
+	/// MRT用のディスクリプタヒープ生成
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT CreateMRTDescriptorHeap();
+
+	/// <summary>
+	/// マルチレンダーターゲット確認用
+	/// </summary>
+	void MultiRenderTargetDraw();
 };
 
 /// メモ

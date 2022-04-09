@@ -16,6 +16,7 @@ MYRESULT OffScreenRender::CreateOffScreenPolygon(
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// インデックスバッファー
+	// TODO: index(6)
 	std::vector<UINT> index;
 	index.push_back(0); index.push_back(1); index.push_back(2);
 	index.push_back(2); index.push_back(1); index.push_back(3);
@@ -118,15 +119,6 @@ void OffScreenRender::EndRendering(RenderingContext& renderContext)
 		_offscreenRender.GetBuffer(),
 		D3D12_RESOURCE_STATE_RENDER_TARGET,
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
-}
-
-void OffScreenRender::NextPass(RenderingContext& renderContext)
-{
-	// テクスチャ→待機状態
-	renderContext.TransitionResourceState(
-		_offscreenRender.GetBuffer(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET);
 }
 
 void OffScreenRender::Draw(RenderingContext& renderContext)

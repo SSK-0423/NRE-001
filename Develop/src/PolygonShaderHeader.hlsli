@@ -1,4 +1,3 @@
-
 // コンスタントバッファー
 cbuffer cbuff : register(b0)
 {

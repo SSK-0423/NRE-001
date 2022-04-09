@@ -11,6 +11,7 @@ enum class MYRESULT
 	SUCCESS,	//¬Œ÷
 	FAILED		//Ž¸”s
 };
+
 /// <summary>
 /// MYRESULTŒ^‚Ìˆø”‚ª¬Œ÷‚ð•\‚µ‚Ä‚¢‚é‚©’²‚×‚é
 /// </summary>
