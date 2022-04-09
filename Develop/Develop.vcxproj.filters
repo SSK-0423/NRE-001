@@ -46,12 +46,24 @@
     <FxCompile Include="src\BackgroundPixelShader.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="src\MRTPolygonPixelShader.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MRTPolygonVertexShader.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="MultiRenderTargetPixelShader.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonShaderHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
     <None Include="src\OffscreenHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="src\MRTHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>
