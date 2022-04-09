@@ -167,13 +167,16 @@
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
     <ClInclude Include="src\IndexBuffer.h" />
+    <ClInclude Include="src\MultiRender.h" />
     <ClInclude Include="src\OffScreenRender.h" />
     <ClInclude Include="src\Polygon.h" />
     <ClInclude Include="src\RenderingContext.h" />
+    <ClInclude Include="src\RenderTarget.h" />
     <ClInclude Include="src\RenderTargetBuffer.h" />
     <ClInclude Include="src\RootSignature.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\Singleton.h" />
+    <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\VertexBuffer.h" />
   </ItemGroup>
@@ -188,9 +191,11 @@
     <ClCompile Include="src\OffScreenRender.cpp" />
     <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RenderingContext.cpp" />
+    <ClCompile Include="src\RenderTarget.cpp" />
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>

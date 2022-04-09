@@ -121,15 +121,6 @@ void OffScreenRender::EndRendering(RenderingContext& renderContext)
 		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }
 
-void OffScreenRender::NextPass(RenderingContext& renderContext)
-{
-	// テクスチャ→待機状態
-	renderContext.TransitionResourceState(
-		_offscreenRender.GetBuffer(),
-		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
-		D3D12_RESOURCE_STATE_RENDER_TARGET);
-}
-
 void OffScreenRender::Draw(RenderingContext& renderContext)
 {
 	_offscreenPolygon.Draw(renderContext);

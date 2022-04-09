@@ -1,6 +1,6 @@
 #include "MRTHeader.hlsli"
 
-PixelOutput MrtPS(VertexOutput input)
+PixelOutput MrtPolygonPS(VertexOutput input)
 {
     PixelOutput output;
     output.outColor1 = float4(1.f, 1.f, 0.f, 1.f);

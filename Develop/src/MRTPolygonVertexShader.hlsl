@@ -1,6 +1,6 @@
 #include "MRTHeader.hlsli"
 
-VertexOutput MrtVS(float4 pos : POSITION, float2 uv : TEXCOORD)
+VertexOutput MrtPolygonVS(float4 pos : POSITION, float2 uv : TEXCOORD)
 {
     VertexOutput output;
     output.svpos = pos;

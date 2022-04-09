@@ -130,6 +130,9 @@ private:
 	Shader _mrtPolygonPS;
 
 	OffScreenRender _mrtRenders[2];
+	OffScreenRender _mrtSecondRender;
+
+	DescriptorHeapCBV_SRV_UAV _mrtDescriptorHeap;
 
 	/// <summary>
 	/// マルチレンダーターゲット初期化
@@ -148,6 +151,12 @@ private:
 	/// </summary>
 	/// <returns></returns>
 	MYRESULT CreateMRTRenders();
+
+	/// <summary>
+	/// MRT用のディスクリプタヒープ生成
+	/// </summary>
+	/// <returns></returns>
+	MYRESULT CreateMRTDescriptorHeap();
 
 	/// <summary>
 	/// マルチレンダーターゲット確認用
