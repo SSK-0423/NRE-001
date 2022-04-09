@@ -298,6 +298,16 @@ MYRESULT Dx12Application::InitMultiRenderTarget()
 	// マルチレンダーターゲットテスト用のポリゴン生成
 	MYRESULT result = CreateMRTPolygon();
 	if (result == MYRESULT::FAILED) { return result; }
+
+	// マルチレンダーターゲット生成
+	result = CreateMRTRenders();
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// マルチレンダーターゲット用のディスクリプタヒープ生成
+	result = CreateMRTDescriptorHeap();
+	if (result == MYRESULT::FAILED) { return result; }
+
+	return result;
 }
 
 MYRESULT Dx12Application::CreateMRTPolygon()
@@ -325,9 +335,9 @@ MYRESULT Dx12Application::CreateMRTPolygon()
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// シェーダー
-	result = _mrtPolygonVS.Create(ShaderData(L"src/MRTPolygonVertexShader.hlsl", "MrtVS", "vs_5_0"));
+	result = _mrtPolygonVS.Create(ShaderData(L"src/MRTPolygonVertexShader.hlsl", "MrtPolygonVS", "vs_5_0"));
 	if (result == MYRESULT::FAILED) { return result; }
-	result = _mrtPolygonPS.Create(ShaderData(L"src/MRTPolygonPixelShader.hlsl", "MrtPS", "ps_5_0"));
+	result = _mrtPolygonPS.Create(ShaderData(L"src/MRTPolygonPixelShader.hlsl", "MrtPolygonPS", "ps_5_0"));
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// オフスクリーンポリゴン生成
@@ -359,11 +369,35 @@ MYRESULT Dx12Application::CreateMRTPolygon()
 
 MYRESULT Dx12Application::CreateMRTRenders()
 {
-	RenderTargetBufferData renderData;
+	RenderTargetBufferData renderData(
+		DXGI_FORMAT_R8G8B8A8_UNORM, _window->GetWindowSize().cx, _window->GetWindowSize().cy,
+		{ 0.f,1.f,0.4f,1.f });
 	ID3D12Device& device = _graphicsEngine.Device();
 
-	MYRESULT result;
+	OffScreenRenderData offRenderData;
+	offRenderData.renderTargetData = renderData;
+	offRenderData.rootSignature = _rootSignature;
+	offRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
+	offRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+	offRenderData.viewport = _viewport;
+	offRenderData.scissorRect = _scissorRect;
+
+	for (size_t idx = 0; idx < _countof(_mrtRenders); idx++)
+	{
+		MYRESULT result = _mrtRenders[idx].Create(device, offRenderData);
+		if (result == MYRESULT::FAILED) { return result; }
+	}
+
+	// ２パス目のレンダーターゲット生成
+	MYRESULT result = _mrtSecondRender.Create(device, offRenderData);
+	if (result == MYRESULT::FAILED) { return result; }
+
 	return MYRESULT::SUCCESS;
+}
+
+MYRESULT Dx12Application::CreateMRTDescriptorHeap()
+{
+	return _mrtDescriptorHeap.Create(_graphicsEngine.Device());
 }
 
 void Dx12Application::MultiRenderTargetDraw()
@@ -379,7 +413,27 @@ void Dx12Application::MultiRenderTargetDraw()
 		renderContext.SetScissorRect(_scissorRect);
 
 		// オフスクリーン２枚にレンダリング
+		// 1パス目
+		for (size_t idx = 0; idx < _countof(_mrtRenders); idx++) 
+		{
+			_mrtRenders[idx].BeginRendering(renderContext);
+		}
+
+		for (size_t idx = 0; idx < _countof(_mrtRenders); idx++)
+		{
+			_mrtRenders[idx].EndRendering(renderContext);
+		}
+
 		// 最終パスでそれぞれをテクスチャで受け取って描画
+		_graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
+		{
+			auto descHeap = _mrtDescriptorHeap;
+			renderContext.SetDescriptorHeap(descHeap.GetDescriptorHeapAddress());
+			renderContext.SetGraphicsRootDescriptorTable(0, descHeap.GetGPUDescriptorHandleForHeapStartSRV());
+			renderContext.SetGraphicsRootSignature(_rootSignature);
+
+			_mrtPolygon.Draw(renderContext);
+		}
 	}
 	_graphicsEngine.EndDraw();
 }

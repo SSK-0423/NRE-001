@@ -75,10 +75,6 @@ public:
 	/// </summary>
 	void EndRendering(RenderingContext& renderContext);
 	/// <summary>
-	/// 次フレームでレンダーターゲットとして使用できるようにする
-	/// </summary>
-	void NextPass(RenderingContext& renderContext);
-	/// <summary>
 	/// レンダリング結果をテクスチャマッピングしたポリゴン描画
 	/// </summary>
 	/// <param name="renderContext"></param>
