@@ -52,19 +52,19 @@ MYRESULT Dx12Application::Init()
 
 	// ポリゴン生成
 	PolygonData polygonData;
-	polygonData._vertexBuffer = _vertexBuffer;
-	polygonData._indexBuffer = _indexBuffer;
-	polygonData._vertexShader = _vertexShader;
-	polygonData._pixelShader = _pixelShader;
-	polygonData._rootSignature = _rootSignature;
-	polygonData._inputLayout.push_back
+	polygonData.vertexBuffer = _vertexBuffer;
+	polygonData.indexBuffer = _indexBuffer;
+	polygonData.vertexShader = _vertexShader;
+	polygonData.pixelShader = _pixelShader;
+	polygonData.rootSignature = _rootSignature;
+	polygonData.inputLayout.push_back
 	(
 		{
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
-	polygonData._inputLayout.push_back
+	polygonData.inputLayout.push_back
 	(
 		{
 			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
@@ -87,8 +87,8 @@ MYRESULT Dx12Application::Init()
 	index.push_back(2);	index.push_back(1); index.push_back(3);
 	result = _indexBuffer.Create(_graphicsEngine.Device(), index);
 
-	polygonData._vertexBuffer = _vertexBuffer;
-	polygonData._indexBuffer = _indexBuffer;
+	polygonData.vertexBuffer = _vertexBuffer;
+	polygonData.indexBuffer = _indexBuffer;
 
 	result = _square.Create(_graphicsEngine.Device(), polygonData);
 
@@ -342,19 +342,19 @@ MYRESULT Dx12Application::CreateMRTPolygon()
 
 	// オフスクリーンポリゴン生成
 	PolygonData polygonData;
-	polygonData._vertexBuffer = _mrtPolygonVB;
-	polygonData._indexBuffer = _mrtPolygonIB;
-	polygonData._vertexShader = _mrtPolygonVS;
-	polygonData._pixelShader = _mrtPolygonPS;
-	polygonData._rootSignature = _rootSignature;
-	polygonData._renderTargetNum = 2;				// マルチレンダーターゲット
-	polygonData._inputLayout.push_back(
+	polygonData.vertexBuffer = _mrtPolygonVB;
+	polygonData.indexBuffer = _mrtPolygonIB;
+	polygonData.vertexShader = _mrtPolygonVS;
+	polygonData.pixelShader = _mrtPolygonPS;
+	polygonData.rootSignature = _rootSignature;
+	polygonData.renderTargetNum = 2;				// マルチレンダーターゲット
+	polygonData.inputLayout.push_back(
 		{
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
-	polygonData._inputLayout.push_back(
+	polygonData.inputLayout.push_back(
 		{
 			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0

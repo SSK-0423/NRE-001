@@ -54,7 +54,7 @@ void RenderingContext::SetRenderTargets(
 void RenderingContext::ClearRenderTarget(
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color, const UINT& numRects, const D3D12_RECT* rects)
 {
-	float clearColor[4] = { color._color[0],color._color[1], color._color[2], color._color[3] };
+	float clearColor[4] = { color.color[0],color.color[1], color.color[2], color.color[3] };
 	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, numRects, rects);
 }
 

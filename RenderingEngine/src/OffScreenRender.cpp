@@ -32,18 +32,18 @@ MYRESULT OffScreenRender::CreateOffScreenPolygon(
 
 	// オフスクリーンポリゴン生成
 	PolygonData polygonData;
-	polygonData._vertexBuffer = _offscreenPolygonVB;
-	polygonData._indexBuffer = _offscreenPolygonIB;
-	polygonData._vertexShader = _offscreenVS;
-	polygonData._pixelShader = _offscreenPS;
-	polygonData._rootSignature = offScreenRenderData.rootSignature;
-	polygonData._inputLayout.push_back(
+	polygonData.vertexBuffer = _offscreenPolygonVB;
+	polygonData.indexBuffer = _offscreenPolygonIB;
+	polygonData.vertexShader = _offscreenVS;
+	polygonData.pixelShader = _offscreenPS;
+	polygonData.rootSignature = offScreenRenderData.rootSignature;
+	polygonData.inputLayout.push_back(
 		{
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
-	polygonData._inputLayout.push_back(
+	polygonData.inputLayout.push_back(
 		{
 			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
@@ -102,7 +102,7 @@ void OffScreenRender::BeginRendering(RenderingContext& renderContext)
 	renderContext.SetRenderTarget(&offRtvHandle, nullptr);
 
 	// 画面を指定色でクリア
-	renderContext.ClearRenderTarget(offRtvHandle, _offScreenRenderData.renderTargetData._clearColor, 0, nullptr);
+	renderContext.ClearRenderTarget(offRtvHandle, _offScreenRenderData.renderTargetData.clearColor, 0, nullptr);
 
 	// ルートシグネチャセット
 	renderContext.SetGraphicsRootSignature(_offScreenRenderData.rootSignature);
