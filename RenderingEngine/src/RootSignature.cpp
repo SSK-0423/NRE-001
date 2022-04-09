@@ -8,7 +8,7 @@ SamplerData::SamplerData(
 	D3D12_TEXTURE_ADDRESS_MODE addressU,
 	D3D12_TEXTURE_ADDRESS_MODE addressV,
 	D3D12_TEXTURE_ADDRESS_MODE addressW)
-	: _samplerFilter(samplerFilter), _addressU(addressU), _addressV(addressV), _addressW(addressW)
+	: samplerFilter(samplerFilter), addressU(addressU), addressV(addressV), addressW(addressW)
 {}
 
 DescriptorRangeData::DescriptorRangeData(UINT srvDescriptorNum, UINT cbvDescriptorNum, UINT uavDescriptorNum)
@@ -22,10 +22,10 @@ RootSignatureData::RootSignatureData(
 	D3D12_TEXTURE_ADDRESS_MODE addressW,
 	UINT srvDescriptorNum, UINT cbvDescriptorNum, UINT uavDescriptorNum)
 {
-	_samplerData._samplerFilter = samplerFilter;
-	_samplerData._addressU = addressU;
-	_samplerData._addressV = addressV;
-	_samplerData._addressW = addressW;
+	_samplerData.samplerFilter = samplerFilter;
+	_samplerData.addressU = addressU;
+	_samplerData.addressV = addressV;
+	_samplerData.addressW = addressW;
 
 	_descRangeData._srvDescriptorNum = srvDescriptorNum;
 	_descRangeData._cbvDescriptorNum = cbvDescriptorNum;
@@ -83,7 +83,7 @@ MYRESULT RootSignature::Create(ID3D12Device& device, const RootSignatureData& da
 
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = {};
 	samplerDesc.Init(
-		0, samplerData._samplerFilter, samplerData._addressU, samplerData._addressV, samplerData._addressW);
+		0, samplerData.samplerFilter, samplerData.addressU, samplerData.addressV, samplerData.addressW);
 
 	// ルートシグネチャ生成
 	return Create(device, data._descRangeData, samplerDesc, 1);

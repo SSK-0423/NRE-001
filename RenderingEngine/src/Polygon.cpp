@@ -9,9 +9,9 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 	/// ルートシグネチャ
 	/// 頂点レイアウト
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
-	pipelineState.pRootSignature = &data._rootSignature.GetRootSignature();
-	pipelineState.VS = CD3DX12_SHADER_BYTECODE(&data._vertexShader.GetShader());
-	pipelineState.PS = CD3DX12_SHADER_BYTECODE(&data._pixelShader.GetShader());
+	pipelineState.pRootSignature = &data.rootSignature.GetRootSignature();
+	pipelineState.VS = CD3DX12_SHADER_BYTECODE(&data.vertexShader.GetShader());
+	pipelineState.PS = CD3DX12_SHADER_BYTECODE(&data.pixelShader.GetShader());
 
 	// サンプルマスク設定
 	pipelineState.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -24,14 +24,14 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 	pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
 
 	// インプットレイアウトの設定
-	pipelineState.InputLayout.pInputElementDescs = &data._inputLayout[0];
-	pipelineState.InputLayout.NumElements = static_cast<UINT>(data._inputLayout.size());
+	pipelineState.InputLayout.pInputElementDescs = &data.inputLayout[0];
+	pipelineState.InputLayout.NumElements = static_cast<UINT>(data.inputLayout.size());
 	pipelineState.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
 	pipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	// レンダーターゲットの設定
-	pipelineState.NumRenderTargets = data._renderTargetNum;
-	for (size_t idx = 0; idx < data._renderTargetNum; idx++)
+	pipelineState.NumRenderTargets = data.renderTargetNum;
+	for (size_t idx = 0; idx < data.renderTargetNum; idx++)
 	{
 		pipelineState.RTVFormats[idx] = DXGI_FORMAT_R8G8B8A8_UNORM;
 	}
@@ -46,8 +46,8 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 
 MYRESULT Polygon::Create(ID3D12Device& device, const PolygonData& data)
 {
-	_vertexBuffer = data._vertexBuffer;
-	_indexBuffer = data._indexBuffer;
+	_vertexBuffer = data.vertexBuffer;
+	_indexBuffer = data.indexBuffer;
 	
 	return CreateGraphicsPipelineState(device, data);
 }

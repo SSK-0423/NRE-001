@@ -14,21 +14,21 @@
 /// </summary>
 struct PolygonData
 {
-	Shader _vertexShader;	                            // 頂点シェーダー
-	Shader _pixelShader;	                            // ピクセルシェーダー
-	VertexBuffer _vertexBuffer;	                        // 頂点バッファー
-	IndexBuffer _indexBuffer;	                        // インデックスバッファー
-	RootSignature _rootSignature;	                    // ルートシグネチャ
-	std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;	// 頂点レイアウト
-	unsigned int _renderTargetNum = 1;
+	Shader vertexShader;	                            // 頂点シェーダー
+	Shader pixelShader;	                            // ピクセルシェーダー
+	VertexBuffer vertexBuffer;	                        // 頂点バッファー
+	IndexBuffer indexBuffer;	                        // インデックスバッファー
+	RootSignature rootSignature;	                    // ルートシグネチャ
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
+	unsigned int renderTargetNum = 1;
 };
 
 /// <summary>
 /// ポリゴンの頂点データ
 /// </summary>
 struct PolygonVertex {
-	DirectX::XMFLOAT3 _vertex;
-	DirectX::XMFLOAT2 _uv;
+	DirectX::XMFLOAT3 vertex;
+	DirectX::XMFLOAT2 uv;
 };
 
 namespace MyFrameWork
