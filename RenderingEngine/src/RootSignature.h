@@ -40,9 +40,9 @@ struct SamplerData
 
 struct DescriptorRangeData
 {
-	UINT _srvDescriptorNum;	                // SRV数
-	UINT _cbvDescriptorNum;	                // CBV数
-	UINT _uavDescriptorNum;	                // UAV数
+	UINT srvDescriptorNum;	                // SRV数
+	UINT cbvDescriptorNum;	                // CBV数
+	UINT uavDescriptorNum;	                // UAV数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
