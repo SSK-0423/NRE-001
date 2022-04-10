@@ -44,6 +44,7 @@ MYRESULT Dx12GraphicsEngine::Init(
 	// フェンス生成
 	if (FAILED(CreateFence())) { return MYRESULT::FAILED; }
 
+	// フレームバッファ―(最終レンダリング先)生成
 	if (CreateFrameRenderTarget() == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
 	// レンダリングコンテキストの初期化
