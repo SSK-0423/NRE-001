@@ -16,6 +16,9 @@
     <Filter Include="シェーダー">
       <UniqueIdentifier>{e5cff7cd-0474-4cad-b7bd-f483ce21601a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="アプリケーションサンプル">
+      <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">
@@ -24,10 +27,25 @@
     <ClCompile Include="src\main.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
+    <ClCompile Include="src\Application.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DrawPolygonSample.cpp">
+      <Filter>アプリケーションサンプル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12Application.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Dx12ApplicationImpl.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Application.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DrawPolygonSample.h">
+      <Filter>アプリケーションサンプル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -55,6 +73,12 @@
     <FxCompile Include="MultiRenderTargetPixelShader.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
+    <FxCompile Include="src\PolygonSamplePixel.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="src\PolygonSampleVertex.hlsl">
+      <Filter>シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonShaderHeader.hlsli">
@@ -64,6 +88,9 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="src\MRTHeader.hlsli">
+      <Filter>シェーダー</Filter>
+    </None>
+    <None Include="src\PolygonSampleHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
   </ItemGroup>

@@ -1,9 +1,12 @@
 #include "Dx12Application.h"
 #include "EngineUtility.h"
 
+#include "DrawPolygonSample.h"
+
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
-	Dx12Application app;
+	DrawPolygonSample drawPolygonApp;
+	Dx12Application app(drawPolygonApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;
