@@ -16,7 +16,13 @@
     <Filter Include="シェーダー">
       <UniqueIdentifier>{e5cff7cd-0474-4cad-b7bd-f483ce21601a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="アプリケーションサンプル">
+    <Filter Include="シェーダー\PolygonSample">
+      <UniqueIdentifier>{564ebf4b-66bb-4dab-9670-fc91b12868e4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\TextureMapSample">
+      <UniqueIdentifier>{204249df-8d95-4c5a-b68c-bd6a3ec5601e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="サンプル">
       <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -31,7 +37,10 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\DrawPolygonSample.cpp">
-      <Filter>アプリケーションサンプル</Filter>
+      <Filter>サンプル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TextureMappingSample.cpp">
+      <Filter>サンプル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -45,7 +54,10 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\DrawPolygonSample.h">
-      <Filter>アプリケーションサンプル</Filter>
+      <Filter>サンプル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TextureMappingSample.h">
+      <Filter>サンプル</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -74,10 +86,16 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="src\PolygonSamplePixel.hlsl">
-      <Filter>シェーダー</Filter>
+      <Filter>シェーダー\PolygonSample</Filter>
     </FxCompile>
     <FxCompile Include="src\PolygonSampleVertex.hlsl">
-      <Filter>シェーダー</Filter>
+      <Filter>シェーダー\PolygonSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\TextureMapSampleVertex.hlsl">
+      <Filter>シェーダー\TextureMapSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\TextureMapSamplePixel.hlsl">
+      <Filter>シェーダー\TextureMapSample</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -91,7 +109,10 @@
       <Filter>シェーダー</Filter>
     </None>
     <None Include="src\PolygonSampleHeader.hlsli">
-      <Filter>シェーダー</Filter>
+      <Filter>シェーダー\PolygonSample</Filter>
+    </None>
+    <None Include="src\TextureMapSampleHeader.hlsli">
+      <Filter>シェーダー\TextureMapSample</Filter>
     </None>
   </ItemGroup>
 </Project>
