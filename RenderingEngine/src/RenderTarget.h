@@ -52,4 +52,12 @@ public:
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
 	void Draw(RenderingContext& renderContext);
+
+	/// <summary>
+	/// レンダーターゲットのテクスチャ取得
+	/// </summary>
+	/// <returns>レンダーターゲットテクスチャ</returns>
+	Texture& GetRenderTargetTexture() {
+		return _renderTargetTexture;
+	}
 };

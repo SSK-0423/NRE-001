@@ -1,5 +1,4 @@
 #pragma once
-
 #include "Dx12ApplicationImpl.h"
 
 #include "VertexBuffer.h"
@@ -7,10 +6,10 @@
 #include "RootSignature.h"
 #include "Polygon.h"
 
-#include "DescriptorHeapCBV_SRV_UAV.h"
-#include "Texture.h"
+#include "RenderTarget.h"
+#include "Sprite.h"
 
-class TextureMappingSample : public Dx12ApplicationImpl {
+class MultiPassRendering : public Dx12ApplicationImpl {
 public:
 	MYRESULT Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window) override;
 	void Update() override;
@@ -25,24 +24,15 @@ private:
 	Shader _pixelShader;				// ピクセルシェーダー
 	RootSignature _rootSignature;		// ルートシグネチャ
 	MyFrameWork::Polygon _square;		// 四角形ポリゴン
-	
-	/// <summary>
-	/// ポリゴン初期化
-	/// </summary>
-	/// <returns></returns>
-	MYRESULT InitPolygon(Dx12GraphicsEngine& graphicsEngine, AppWindow& window);	            // ポリゴン初期化
 
-// テクスチャ関連
+
 private:
-	DescriptorHeapCBV_SRV_UAV _textureHeap;		// テクスチャ用ヒープ
-	Texture _texture;							// テクスチャ
-
-	/// <summary>
-	/// テクスチャ初期化
-	/// </summary>
-	/// <returns></returns>
-	MYRESULT InitTexture(Dx12GraphicsEngine& graphicsEngine);
-
+	RenderTarget _renderTarget;			// レンダーターゲット
 	CD3DX12_VIEWPORT _viewport;			// ビューポート
 	CD3DX12_RECT _scissorRect;			// シザー矩形
+
+	Sprite _sprite;						// スプライト
+
+	// Spriteテスト用
+	Texture _texture;
 };

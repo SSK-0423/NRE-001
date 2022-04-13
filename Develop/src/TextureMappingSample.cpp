@@ -12,6 +12,18 @@ MYRESULT TextureMappingSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindo
 	result = InitTexture(graphicsEngine);
 	if (result == MYRESULT::FAILED) { return result; }
 
+	// ビューポートセット
+	_viewport.TopLeftX = 0.f;
+	_viewport.TopLeftY = 0.f;
+	_viewport.Width = static_cast<FLOAT>(window.GetWindowSize().cx);
+	_viewport.Height = static_cast<FLOAT>(window.GetWindowSize().cy);
+
+	// シザー矩形セット
+	_scissorRect.left = 0;
+	_scissorRect.top = 0;
+	_scissorRect.right = window.GetWindowSize().cx;
+	_scissorRect.bottom = window.GetWindowSize().cy;
+
 	return result;
 }
 
@@ -92,18 +104,6 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 	);
 
 	result = _square.Create(graphicsEngine.Device(), polygonData);
-
-	// ビューポートセット
-	_viewport.TopLeftX = 0.f;
-	_viewport.TopLeftY = 0.f;
-	_viewport.Width = static_cast<FLOAT>(window.GetWindowSize().cx);
-	_viewport.Height = static_cast<FLOAT>(window.GetWindowSize().cy);
-
-	// シザー矩形セット
-	_scissorRect.left = 0;
-	_scissorRect.top = 0;
-	_scissorRect.right = window.GetWindowSize().cx;
-	_scissorRect.bottom = window.GetWindowSize().cy;
 
 	return result;
 }

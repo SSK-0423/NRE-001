@@ -15,7 +15,7 @@
 struct PolygonData
 {
 	Shader vertexShader;	                            // 頂点シェーダー
-	Shader pixelShader;	                            // ピクセルシェーダー
+	Shader pixelShader;									// ピクセルシェーダー
 	VertexBuffer vertexBuffer;	                        // 頂点バッファー
 	IndexBuffer indexBuffer;	                        // インデックスバッファー
 	RootSignature rootSignature;	                    // ルートシグネチャ
