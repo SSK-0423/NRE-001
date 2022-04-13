@@ -19,9 +19,9 @@ public:
 
 private:
 	static constexpr int _NEXT_REGISTER = -1;
-	static constexpr UINT _MAX_CBV_DESCRIPTOR_NUM = 8;	// 定数バッファーの最大数
-	static constexpr UINT _MAX_SRV_DESCRIPTOR_NUM = 8;	// シェーダーリソースの最大数
-	static constexpr UINT _MAX_UAV_DESCRIPTOR_NUM = 8;	// アンオーダーアクセスの最大数
+	static constexpr UINT _MAX_CBV_DESCRIPTOR_NUM = 64;	// 定数バッファーの最大数
+	static constexpr UINT _MAX_SRV_DESCRIPTOR_NUM = 64;	// シェーダーリソースの最大数
+	static constexpr UINT _MAX_UAV_DESCRIPTOR_NUM = 64;	// アンオーダーアクセスの最大数
 
 	Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> _descriptorHeap = nullptr;
 

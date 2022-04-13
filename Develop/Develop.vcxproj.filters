@@ -42,6 +42,9 @@
     <ClCompile Include="src\TextureMappingSample.cpp">
       <Filter>サンプル</Filter>
     </ClCompile>
+    <ClCompile Include="src\MultiPassRenderingSample.cpp">
+      <Filter>サンプル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12Application.h">
@@ -57,6 +60,9 @@
       <Filter>サンプル</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureMappingSample.h">
+      <Filter>サンプル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\MultiPassRenderingSample.h">
       <Filter>サンプル</Filter>
     </ClInclude>
   </ItemGroup>

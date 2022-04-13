@@ -3,6 +3,7 @@
 
 #include "DrawPolygonSample.h"
 #include "TextureMappingSample.h"
+#include "MultiPassRenderingSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -12,9 +13,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// テクスチャマッピングサンプル
 	TextureMappingSample texMapApp;
 
+	// マルチパスレンダリングサンプル
+	MultiPassRendering multiPassApp;
 
-
-	Dx12Application app(texMapApp);
+	Dx12Application app(multiPassApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;

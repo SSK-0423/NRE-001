@@ -175,6 +175,7 @@
     <ClInclude Include="src\RenderTargetBuffer.h" />
     <ClInclude Include="src\RootSignature.h" />
     <ClInclude Include="src\Shader.h" />
+    <ClInclude Include="src\ShaderLibrary.h" />
     <ClInclude Include="src\Singleton.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\Texture.h" />

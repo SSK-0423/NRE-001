@@ -147,6 +147,7 @@
     <ClCompile Include="src\DrawPolygonSample.cpp" />
     <ClCompile Include="src\Dx12Application.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\MultiPassRenderingSample.cpp" />
     <ClCompile Include="src\TextureMappingSample.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -154,6 +155,7 @@
     <ClInclude Include="src\DrawPolygonSample.h" />
     <ClInclude Include="src\Dx12Application.h" />
     <ClInclude Include="src\Dx12ApplicationImpl.h" />
+    <ClInclude Include="src\MultiPassRenderingSample.h" />
     <ClInclude Include="src\TextureMappingSample.h" />
   </ItemGroup>
   <ItemGroup>
