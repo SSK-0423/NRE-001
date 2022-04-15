@@ -36,7 +36,7 @@ MYRESULT OffScreenRender::CreateOffScreenPolygon(
 	polygonData.indexBuffer = _offscreenPolygonIB;
 	polygonData.vertexShader = _offscreenVS;
 	polygonData.pixelShader = _offscreenPS;
-	polygonData.rootSignature = offScreenRenderData.rootSignature;
+	//polygonData.rootSignature = offScreenRenderData.rootSignature;
 	polygonData.inputLayout.push_back(
 		{
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,

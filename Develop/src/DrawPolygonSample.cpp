@@ -22,10 +22,6 @@ MYRESULT DrawPolygonSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	// インデックスバッファー生成
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
-	// ルートシグネチャ生成
-	RootSignatureData data;
-	result = _rootSignature.Create(graphicsEngine.Device(), data);
-
 	// シェーダー
 	result = _vertexShader.Create(L"src/PolygonSampleVertex.hlsl", "PolygonSampleVS", "vs_5_0");
 	result = _pixelShader.Create(L"src/PolygonSamplePixel.hlsl", "PolygonSamplePS", "ps_5_0");
@@ -36,7 +32,7 @@ MYRESULT DrawPolygonSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	polygonData.indexBuffer = _indexBuffer;
 	polygonData.vertexShader = _vertexShader;
 	polygonData.pixelShader = _pixelShader;
-	polygonData.rootSignature = _rootSignature;
+	polygonData.rootSignatureData = _rootSignatureData;
 	polygonData.inputLayout.push_back
 	(
 		{
@@ -78,7 +74,6 @@ void DrawPolygonSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	// レンダリングコンテキスト取得
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
 
-	renderContext.SetGraphicsRootSignature(_rootSignature);
 	renderContext.SetViewport(_viewport);
 	renderContext.SetScissorRect(_scissorRect);
 

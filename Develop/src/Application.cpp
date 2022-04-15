@@ -56,7 +56,6 @@ MYRESULT Application::Init()
 	polygonData.indexBuffer = _indexBuffer;
 	polygonData.vertexShader = _vertexShader;
 	polygonData.pixelShader = _pixelShader;
-	polygonData.rootSignature = _rootSignature;
 	polygonData.inputLayout.push_back
 	(
 		{
@@ -346,7 +345,6 @@ MYRESULT Application::CreateMRTPolygon()
 	polygonData.indexBuffer = _mrtPolygonIB;
 	polygonData.vertexShader = _mrtPolygonVS;
 	polygonData.pixelShader = _mrtPolygonPS;
-	polygonData.rootSignature = _rootSignature;
 	polygonData.renderTargetNum = 2;				// マルチレンダーターゲット
 	polygonData.inputLayout.push_back(
 		{

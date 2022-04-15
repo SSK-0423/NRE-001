@@ -23,9 +23,8 @@ private:
 	IndexBuffer _indexBuffer;			// インデックスバッファー
 	Shader _vertexShader;				// 頂点シェーダー
 	Shader _pixelShader;				// ピクセルシェーダー
-	RootSignature _rootSignature;		// ルートシグネチャ
 	MyFrameWork::Polygon _square;		// 四角形ポリゴン
-	
+
 	/// <summary>
 	/// ポリゴン初期化
 	/// </summary>
