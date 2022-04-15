@@ -8,8 +8,14 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 	/// 頂点/ピクセルシェーダー
 	/// ルートシグネチャ
 	/// 頂点レイアウト
+
+	// ルートシグネチャ生成
+	MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
+	if (MYRESULT::FAILED == result) { return result; }
+	
+	// ルートシグネチャとシェーダーセット
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
-	pipelineState.pRootSignature = &data.rootSignature.GetRootSignature();
+	pipelineState.pRootSignature = &_rootSignature.GetRootSignature();
 	pipelineState.VS = CD3DX12_SHADER_BYTECODE(&data.vertexShader.GetShader());
 	pipelineState.PS = CD3DX12_SHADER_BYTECODE(&data.pixelShader.GetShader());
 
@@ -48,15 +54,25 @@ MYRESULT Polygon::Create(ID3D12Device& device, const PolygonData& data)
 {
 	_vertexBuffer = data.vertexBuffer;
 	_indexBuffer = data.indexBuffer;
-	
+
 	return CreateGraphicsPipelineState(device, data);
 }
 
 void Polygon::Draw(RenderingContext& renderContext)
 {
+	renderContext.SetGraphicsRootSignature(_rootSignature);
+	
+	if(_descriptorHeap != nullptr)
+		renderContext.SetDescriptorHeap(*_descriptorHeap);
+	
 	renderContext.SetPipelineState(_graphicsPipelineState);
 	renderContext.SetVertexBuffer(0, _vertexBuffer);
 	renderContext.SetIndexBuffer(_indexBuffer);
 	renderContext.SetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
+}
+
+void MyFrameWork::Polygon::SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap)
+{
+	_descriptorHeap = &descriptorHeap;
 }

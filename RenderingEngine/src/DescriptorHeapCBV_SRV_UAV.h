@@ -117,6 +117,24 @@ public:
 		const int& registerNo = _NEXT_REGISTER);
 
 	/// <summary>
+	/// コンスタントバッファーが登録されているか
+	/// </summary>
+	/// <returns></returns>
+	bool IsRegistedConstantBuffer() { return _registedCBVNum > 0; }
+
+	/// <summary>
+	/// シェーダーリソースが登録されているか
+	/// </summary>
+	/// <returns></returns>
+	bool IsRegistedShaderResource() { return _registedSRVNum > 0; }
+
+	/// <summary>
+	/// アンオーダーアクセスリソースが登録されているか
+	/// </summary>
+	/// <returns></returns>
+	bool IsRegistedUnorderedAccessResource() { return _registedUAVNum > 0; }
+
+	/// <summary>
 	/// ディスクリプタヒープのアドレス取得
 	/// </summary>
 	/// <returns>ディスクリプタヒープのアドレス</returns>

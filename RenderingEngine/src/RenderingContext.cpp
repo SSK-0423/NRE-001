@@ -1,6 +1,7 @@
 #include "d3dx12.h"
 #include "RenderingContext.h"
 #include "DescriptorHeapRTV.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "GraphicsPipelineState.h"
@@ -112,6 +113,22 @@ void RenderingContext::SetPrimitiveTopology(const D3D12_PRIMITIVE_TOPOLOGY& prim
 void RenderingContext::SetDescriptorHeap(ID3D12DescriptorHeap* const* descriptorHeap)
 {
 	_cmdList->SetDescriptorHeaps(1, descriptorHeap);
+}
+
+void RenderingContext::SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap)
+{
+	_cmdList->SetDescriptorHeaps(1, descriptorHeap.GetDescriptorHeapAddress());
+
+	// ディスクリプタテーブルに登録する
+	if (descriptorHeap.IsRegistedShaderResource()) {
+		_cmdList->SetGraphicsRootDescriptorTable(0, descriptorHeap.GetGPUDescriptorHandleForHeapStartSRV());
+	}
+	if (descriptorHeap.IsRegistedConstantBuffer()) {
+		_cmdList->SetGraphicsRootDescriptorTable(1, descriptorHeap.GetGPUDescriptorHandleForHeapStartCBV());
+	}
+	if (descriptorHeap.IsRegistedUnorderedAccessResource()) {
+		_cmdList->SetGraphicsRootDescriptorTable(2, descriptorHeap.GetGPUDescriptorHandleForHeapStartUAV());
+	}
 }
 
 void RenderingContext::SetDescriptorHeaps(const UINT& descriptorHeapNum, ID3D12DescriptorHeap* const* descriptorHeaps)

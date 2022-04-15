@@ -6,6 +6,7 @@
 #include "RootSignature.h"
 #include "RenderingContext.h"
 #include "Shader.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
 
 #include "EngineUtility.h"
 
@@ -18,7 +19,7 @@ struct PolygonData
 	Shader pixelShader;									// ピクセルシェーダー
 	VertexBuffer vertexBuffer;	                        // 頂点バッファー
 	IndexBuffer indexBuffer;	                        // インデックスバッファー
-	RootSignature rootSignature;	                    // ルートシグネチャ
+	RootSignatureData rootSignatureData;				// ルートシグネチャ
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
 	unsigned int renderTargetNum = 1;
 };
@@ -43,6 +44,8 @@ namespace MyFrameWork
 		VertexBuffer _vertexBuffer;
 		IndexBuffer _indexBuffer;
 		GraphicsPipelineState _graphicsPipelineState;
+		RootSignature _rootSignature;
+		DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
 
 		/// <summary>
 		/// ポリゴン表示用のパイプラインステート生成
@@ -64,6 +67,8 @@ namespace MyFrameWork
 		/// </summary>
 		/// <param name="renderContext">レンダリングコンテキスト</param>
 		void Draw(RenderingContext& renderContext);
+
+		void SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap);
 	};
 }
 

@@ -116,7 +116,7 @@
     <ClCompile Include="src\Texture.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\DescriptorHeapSRV_CBV_UAV.cpp">
+    <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\ConstantBuffer.cpp">

@@ -22,6 +22,9 @@ struct SpriteData {
 	ShaderData vertexShaderData;				                                // 頂点シェーダー生成データ
 	ShaderData pixelShaderData;					                                // ピクセルシェーダー生成データ
 	RootSignature rootSignature;
+	RootSignatureData rootSignatureData;
+	unsigned int width = 0;
+	unsigned int height = 0;
 
 	std::array<DXGI_FORMAT, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> colorFormats = {
 		DXGI_FORMAT_R8G8B8A8_UNORM,

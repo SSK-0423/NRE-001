@@ -37,7 +37,6 @@ MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 	polygonData.indexBuffer = _indexBuffer;
 	polygonData.vertexShader = _vertexShader;
 	polygonData.pixelShader = _pixelShader;
-	polygonData.rootSignature = spriteData.rootSignature;
 	polygonData.inputLayout.push_back
 	(
 		{
@@ -81,6 +80,7 @@ MYRESULT Sprite::CreateTextureResource(
 		for (auto tex : spriteData.textures) {
 			if (tex == nullptr) { break; }
 			_textureHeap.RegistShaderResource(device, *tex);
+			_polygon.SetDescriptorHeap(_textureHeap);
 		}
 	}
 
@@ -109,7 +109,5 @@ MYRESULT Sprite::Create(Dx12GraphicsEngine& graphicsEngine, SpriteData& spriteDa
 
 void Sprite::Draw(RenderingContext& renderContext)
 {
-	// テクスチャ用の設定
-	renderContext.SetDescriptorHeap(_textureHeap.GetDescriptorHeapAddress());
-	renderContext.SetGraphicsRootDescriptorTable(0, _textureHeap.GetGPUDescriptorHandleForHeapStartSRV());
+	_polygon.Draw(renderContext);
 }

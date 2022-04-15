@@ -36,13 +36,8 @@ void TextureMappingSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	// レンダリングコンテキスト取得
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
 
-	renderContext.SetGraphicsRootSignature(_rootSignature);
 	renderContext.SetViewport(_viewport);
 	renderContext.SetScissorRect(_scissorRect);
-
-	// テクスチャ用の設定
-	renderContext.SetDescriptorHeap(_textureHeap.GetDescriptorHeapAddress());
-	renderContext.SetGraphicsRootDescriptorTable(0, _textureHeap.GetGPUDescriptorHandleForHeapStartSRV());
 
 	// ポリゴン描画
 	_square.Draw(renderContext);
@@ -56,10 +51,10 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 {
 	// 四角形ポリゴン
 	std::vector<PolygonVertex> squareVertex(4);
-	squareVertex[0] = { {-1.f,-1.f,0.f},{0.f,1.f} };
+	squareVertex[0] = { {-1.f,-1.f,0.f},{0.f,2.f} };
 	squareVertex[1] = { {-1.f,1.f,0.f},{0.f,0.f} };
-	squareVertex[2] = { {1.f,-1.f,0.f},{1.f,1.f} };
-	squareVertex[3] = { {1.f,1.f,0.f},{1.f,0.f} };
+	squareVertex[2] = { {1.f,-1.f,0.f},{2.f,2.f} };
+	squareVertex[3] = { {1.f,1.f,0.f},{2.f,0.f} };
 
 	// 頂点バッファー生成
 	MYRESULT result = _vertexBuffer.Create(graphicsEngine.Device(), (void*)&squareVertex[0],
@@ -74,8 +69,9 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
 	// ルートシグネチャ生成
-	RootSignatureData data;
-	result = _rootSignature.Create(graphicsEngine.Device(), data);
+	RootSignatureData rootSignatureData;
+	rootSignatureData._samplerData.addressU = D3D12_TEXTURE_ADDRESS_MODE_MIRROR;
+	rootSignatureData._samplerData.addressV = D3D12_TEXTURE_ADDRESS_MODE_MIRROR;
 
 	// シェーダー
 	result = _vertexShader.Create(L"src/TextureMapSampleVertex.hlsl", "TexMapVS", "vs_5_0");
@@ -87,7 +83,7 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 	polygonData.indexBuffer = _indexBuffer;
 	polygonData.vertexShader = _vertexShader;
 	polygonData.pixelShader = _pixelShader;
-	polygonData.rootSignature = _rootSignature;
+	polygonData.rootSignatureData = rootSignatureData;
 	polygonData.inputLayout.push_back
 	(
 		{
@@ -113,7 +109,7 @@ MYRESULT TextureMappingSample::InitTexture(Dx12GraphicsEngine& graphicsEngine)
 	ID3D12Device& device = graphicsEngine.Device();
 
 	// テクスチャファイルパス
-	std::wstring path(L"Ramen.JPG");
+	std::wstring path(L"草.jpg");
 
 	// テクスチャ生成
 	MYRESULT result = _texture.CreateTextureFromWIC(graphicsEngine, path);
@@ -125,6 +121,9 @@ MYRESULT TextureMappingSample::InitTexture(Dx12GraphicsEngine& graphicsEngine)
 
 	// テクスチャをヒープに登録
 	_textureHeap.RegistShaderResource(device, _texture);
+
+	// ポリゴンのディスクリプタヒープセット
+	_square.SetDescriptorHeap(_textureHeap);
 
 	return result;
 }

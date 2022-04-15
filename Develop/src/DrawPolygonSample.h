@@ -16,12 +16,12 @@ public:
 	void Final() override;
 
 private:
-	VertexBuffer _vertexBuffer;			// 頂点バッファー
-	IndexBuffer _indexBuffer;			// インデックスバッファー
-	Shader _vertexShader;				// 頂点シェーダー
-	Shader _pixelShader;				// ピクセルシェーダー
-	RootSignature _rootSignature;		// ルートシグネチャ
-	MyFrameWork::Polygon _triangle;		// 三角形ポリゴン
-	CD3DX12_VIEWPORT _viewport;			// ビューポート
-	CD3DX12_RECT _scissorRect;			// シザー矩形
+	VertexBuffer _vertexBuffer;			        // 頂点バッファー
+	IndexBuffer _indexBuffer;			        // インデックスバッファー
+	Shader _vertexShader;				        // 頂点シェーダー
+	Shader _pixelShader;				        // ピクセルシェーダー
+	RootSignatureData _rootSignatureData;		// ルートシグネチャ
+	MyFrameWork::Polygon _triangle;		        // 三角形ポリゴン
+	CD3DX12_VIEWPORT _viewport;			        // ビューポート
+	CD3DX12_RECT _scissorRect;			        // シザー矩形
 };
