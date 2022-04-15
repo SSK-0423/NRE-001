@@ -28,14 +28,31 @@ MYRESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTarg
 	return MYRESULT::SUCCESS;
 }
 
-void RenderTarget::BeginRendering(RenderingContext& renderContext)
+void RenderTarget::BeginRendering(RenderingContext& renderContext, CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect)
 {
+	// レンダーターゲットに移行
+	renderContext.TransitionResourceState(
+		_renderTargetBuffer.GetBuffer(),
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE,
+		D3D12_RESOURCE_STATE_RENDER_TARGET);
+
+	// レンダーターゲットセット
+	auto rtvHandle = _rtvHeap.GetCPUDescriptorHandleForHeapStart();
+	renderContext.SetRenderTarget(&rtvHandle, nullptr);
+
+	// 画面を指定色でクリア
+	renderContext.ClearRenderTarget(rtvHandle, _renderTargetData.renderTargetBufferData.clearColor, 0, nullptr);
+
+	// ビューポート、シザー矩形セット
+	renderContext.SetViewport(viewport);
+	renderContext.SetScissorRect(scissorRect);
 }
 
 void RenderTarget::EndRendering(RenderingContext& renderContext)
 {
-}
-
-void RenderTarget::Draw(RenderingContext& renderContext)
-{
+	// ピクセルシェーダーリソースへ移行
+	renderContext.TransitionResourceState(
+		_renderTargetBuffer.GetBuffer(),
+		D3D12_RESOURCE_STATE_RENDER_TARGET,
+		D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 }

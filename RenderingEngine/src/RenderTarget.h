@@ -39,19 +39,13 @@ public:
 	/// レンダリング開始
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
-	void BeginRendering(RenderingContext& renderContext);
+	void BeginRendering(RenderingContext& renderContext, CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
 
 	/// <summary>
 	/// レンダリング終了
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
 	void EndRendering(RenderingContext& renderContext);
-
-	/// <summary>
-	/// レンダリング結果をテクスチャマッピングしたポリゴン描画
-	/// </summary>
-	/// <param name="renderContext">レンダリングコンテキスト</param>
-	void Draw(RenderingContext& renderContext);
 
 	/// <summary>
 	/// レンダーターゲットのテクスチャ取得

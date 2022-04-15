@@ -32,6 +32,7 @@ private:
 	CD3DX12_RECT _scissorRect;			// シザー矩形
 
 	Sprite _sprite;						// スプライト
+	Sprite _myself;						// 俺
 
 	// Spriteテスト用
 	Texture _texture;
