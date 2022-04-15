@@ -21,10 +21,9 @@ struct SpriteData {
 	std::array<const std::wstring*, MAX_TEXTURE> texturePaths = { nullptr };	// テクスチャパス(現在はWIC想定)
 	ShaderData vertexShaderData;				                                // 頂点シェーダー生成データ
 	ShaderData pixelShaderData;					                                // ピクセルシェーダー生成データ
-	RootSignature rootSignature;
-	RootSignatureData rootSignatureData;
-	unsigned int width = 0;
-	unsigned int height = 0;
+	RootSignatureData rootSignatureData;			                            // ルートシグネチャ生成データ
+	unsigned int width = 0;	                                                    // スプライト幅(ピクセル単位)
+	unsigned int height = 0;	                                                // スプライト高(ピクセル単位)
 
 	std::array<DXGI_FORMAT, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> colorFormats = {
 		DXGI_FORMAT_R8G8B8A8_UNORM,

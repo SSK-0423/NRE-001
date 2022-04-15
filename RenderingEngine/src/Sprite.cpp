@@ -80,8 +80,8 @@ MYRESULT Sprite::CreateTextureResource(
 		for (auto tex : spriteData.textures) {
 			if (tex == nullptr) { break; }
 			_textureHeap.RegistShaderResource(device, *tex);
-			_polygon.SetDescriptorHeap(_textureHeap);
 		}
+		_polygon.SetDescriptorHeap(_textureHeap);
 	}
 
 	// テクスチャ、テクスチャパスが何も指定されていない場合
