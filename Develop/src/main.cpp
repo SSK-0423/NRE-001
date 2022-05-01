@@ -17,7 +17,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// マルチパスレンダリングサンプル
 	MultiPassRendering multiPassApp;
 
-	// マルチレンダーターゲット用
+	// マルチレンダーターゲットサンプル
 	MultiRenderTargetSample multiRenderApp;
 
 	Dx12Application app(multiRenderApp);
