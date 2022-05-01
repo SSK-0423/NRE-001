@@ -2,21 +2,21 @@
 #include "d3dx12.h"
 
 RenderTargetBufferData::RenderTargetBufferData(
-	const DXGI_FORMAT& colorFormat, const UINT& width, const UINT& height, const float(&clearColor)[4])
-	: _colorFormat(colorFormat), _width(width), _height(height)
+	const DXGI_FORMAT& colorFormat, const UINT& width, const UINT& height, const float(&color)[4])
+	: colorFormat(colorFormat), width(width), height(height)
 {
-	_clearColor[0] = clearColor[0];
-	_clearColor[1] = clearColor[1];
-	_clearColor[2] = clearColor[2];
-	_clearColor[3] = clearColor[3];
+	clearColor[0] = color[0];
+	clearColor[1] = color[1];
+	clearColor[2] = color[2];
+	clearColor[3] = color[3];
 }
 
 MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, const RenderTargetBufferData& data)
 {
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(data._colorFormat, data._width, data._height);
+	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(data.colorFormat, data.width, data.height);
 	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_RENDER_TARGET;
-	CD3DX12_CLEAR_VALUE clearValue(data._colorFormat, data._clearColor);
+	CD3DX12_CLEAR_VALUE clearValue(data.colorFormat, data.clearColor);
 
 	HRESULT result = device.CreateCommittedResource(
 		&heapProp,

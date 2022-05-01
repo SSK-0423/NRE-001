@@ -39,7 +39,7 @@ public:
 	/// レンダリング開始
 	/// </summary>
 	/// <param name="renderContext">レンダリングコンテキスト</param>
-	void BeginRendering(RenderingContext& renderContext);
+	void BeginRendering(RenderingContext& renderContext, CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
 
 	/// <summary>
 	/// レンダリング終了
@@ -48,8 +48,25 @@ public:
 	void EndRendering(RenderingContext& renderContext);
 
 	/// <summary>
-	/// レンダリング結果をテクスチャマッピングしたポリゴン描画
+	/// レンダーターゲットのテクスチャ取得
 	/// </summary>
-	/// <param name="renderContext">レンダリングコンテキスト</param>
-	void Draw(RenderingContext& renderContext);
+	/// <returns>レンダーターゲットテクスチャ</returns>
+	Texture& GetRenderTargetTexture() {
+		return _renderTargetTexture;
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="renderTargets"></param>
+	/// <param name="renderContext"></param>
+	/// <param name="viewport"></param>
+	/// <param name="scissorRect"></param>
+	static void BeginMultiRendering(
+		RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext,
+		CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
+
+	static void EndMultiRendering(
+		RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext,
+		CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
 };

@@ -3,6 +3,7 @@
 
 class DescriptorHeapRTV;
 class DescriptorHeapDSV;
+class DescriptorHeapCBV_SRV_UAV;
 class VertexBuffer;
 class IndexBuffer;
 class RootSignature;
@@ -148,6 +149,12 @@ public:
 	/// </summary>
 	/// <param name="descriptorHeap">ディスクリプタヒープのダブルポインタ</param>
 	void SetDescriptorHeap(ID3D12DescriptorHeap* const* descriptorHeap);
+
+	/// <summary>
+	/// ディスクリプタヒープをセットする
+	/// </summary>
+	/// <param name="descriptorHeap">ディスクリプタヒープクラス</param>
+	void SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap);
 	
 	/// <summary>
 	/// 複数のディスクリプタヒープをセットする

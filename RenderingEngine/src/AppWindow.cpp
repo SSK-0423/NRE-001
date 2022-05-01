@@ -2,11 +2,11 @@
 #include <cassert>
 
 AppWindowInitData::AppWindowInitData(const TCHAR* name, LONG width, LONG height)
-	: _windowName(name)
+	: windowName(name)
 {
 	assert(width > 0 && height > 0);
-	_windowWidth = width;
-	_windowHeight = height;
+	windowWidth = width;
+	windowHeight = height;
 }
 
 /// <summary>
@@ -36,13 +36,13 @@ void AppWindow::CreateAppWindow(AppWindowInitData initData)
 
 	RegisterClassEx(&_wndClassEx);
 
-	RECT rect = { 0,0,initData._windowWidth,initData._windowHeight };
+	RECT rect = { 0,0,initData.windowWidth,initData.windowHeight };
 
 	AdjustWindowRect(&rect, WS_OVERLAPPEDWINDOW, false);
 
 	//ウィンドウオブジェクトの生成
 	_hwnd = CreateWindow(_wndClassEx.lpszClassName,
-		initData._windowName,	// タイトルバーの文字
+		initData.windowName,	// タイトルバーの文字
 		WS_OVERLAPPEDWINDOW,	// タイトルバーと境界線があるウィンドウ
 		CW_USEDEFAULT,			// 表示X座標はOSにお任せ
 		CW_USEDEFAULT,			// 表示Y座標はOSにお任せ

@@ -17,6 +17,6 @@ HRESULT GraphicsPipelineState::CreateGraphicsPipelineState(
 		&piplineStateDesc, IID_PPV_ARGS(_pipelineState.ReleaseAndGetAddressOf()));
 
 	if (FAILED(result)) { return result; }
-
+	
 	return result;
 }

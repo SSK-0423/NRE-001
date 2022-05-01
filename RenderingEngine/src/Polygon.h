@@ -1,11 +1,14 @@
 #pragma once
 
+#include <array>
+
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "GraphicsPipelineState.h"
 #include "RootSignature.h"
 #include "RenderingContext.h"
 #include "Shader.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
 
 #include "EngineUtility.h"
 
@@ -14,21 +17,21 @@
 /// </summary>
 struct PolygonData
 {
-	Shader _vertexShader;	                            // 頂点シェーダー
-	Shader _pixelShader;	                            // ピクセルシェーダー
-	VertexBuffer _vertexBuffer;	                        // 頂点バッファー
-	IndexBuffer _indexBuffer;	                        // インデックスバッファー
-	RootSignature _rootSignature;	                    // ルートシグネチャ
-	std::vector<D3D12_INPUT_ELEMENT_DESC> _inputLayout;	// 頂点レイアウト
-	unsigned int _renderTargetNum = 1;
+	Shader vertexShader;	                            // 頂点シェーダー
+	Shader pixelShader;									// ピクセルシェーダー
+	VertexBuffer vertexBuffer;	                        // 頂点バッファー
+	IndexBuffer indexBuffer;	                        // インデックスバッファー
+	RootSignatureData rootSignatureData;				// ルートシグネチャ
+	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
+	unsigned int renderTargetNum = 1;
 };
 
 /// <summary>
 /// ポリゴンの頂点データ
 /// </summary>
 struct PolygonVertex {
-	DirectX::XMFLOAT3 _vertex;
-	DirectX::XMFLOAT2 _uv;
+	DirectX::XMFLOAT3 vertex;
+	DirectX::XMFLOAT2 uv;
 };
 
 namespace MyFrameWork
@@ -43,6 +46,8 @@ namespace MyFrameWork
 		VertexBuffer _vertexBuffer;
 		IndexBuffer _indexBuffer;
 		GraphicsPipelineState _graphicsPipelineState;
+		RootSignature _rootSignature;
+		DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
 
 		/// <summary>
 		/// ポリゴン表示用のパイプラインステート生成
@@ -64,6 +69,8 @@ namespace MyFrameWork
 		/// </summary>
 		/// <param name="renderContext">レンダリングコンテキスト</param>
 		void Draw(RenderingContext& renderContext);
+
+		void SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap);
 	};
 }
 

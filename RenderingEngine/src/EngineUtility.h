@@ -55,7 +55,7 @@ inline void ReleaseComObj(Microsoft::WRL::ComPtr<T> obj) {
 /// </summary>
 struct ColorRGBA
 {
-	float _color[4];
+	float color[4];
 
 	/// <summary>
 	/// コンストラクタ デフォルト：黒
@@ -66,10 +66,10 @@ struct ColorRGBA
 	/// <param name="a">透明度</param>
 	ColorRGBA(float r = 0.f, float g = 0.f, float b = 0.f, float a = 1.f)
 	{
-		_color[0] = r;
-		_color[1] = g;
-		_color[2] = b;
-		_color[3] = a;
+		color[0] = r;
+		color[1] = g;
+		color[2] = b;
+		color[3] = a;
 	}
 };
 
