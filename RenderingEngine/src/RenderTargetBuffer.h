@@ -10,10 +10,10 @@
 
 struct RenderTargetBufferData
 {
-	DXGI_FORMAT _colorFormat;
-	UINT _width;
-	UINT _height;
-	float _clearColor[4];
+	DXGI_FORMAT colorFormat;
+	UINT width;
+	UINT height;
+	float clearColor[4];
 
 	/// <summary>
 	/// コンストラクタ

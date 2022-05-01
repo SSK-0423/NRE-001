@@ -8,12 +8,12 @@ SamplerData::SamplerData(
 	D3D12_TEXTURE_ADDRESS_MODE addressU,
 	D3D12_TEXTURE_ADDRESS_MODE addressV,
 	D3D12_TEXTURE_ADDRESS_MODE addressW)
-	: _samplerFilter(samplerFilter), _addressU(addressU), _addressV(addressV), _addressW(addressW)
+	: samplerFilter(samplerFilter), addressU(addressU), addressV(addressV), addressW(addressW)
 {}
 
 DescriptorRangeData::DescriptorRangeData(UINT srvDescriptorNum, UINT cbvDescriptorNum, UINT uavDescriptorNum)
-	: _srvDescriptorNum(srvDescriptorNum), _cbvDescriptorNum(cbvDescriptorNum),
-	_uavDescriptorNum(uavDescriptorNum)
+	: srvDescriptorNum(srvDescriptorNum), cbvDescriptorNum(cbvDescriptorNum),
+	uavDescriptorNum(uavDescriptorNum)
 {}
 
 RootSignatureData::RootSignatureData(
@@ -22,14 +22,14 @@ RootSignatureData::RootSignatureData(
 	D3D12_TEXTURE_ADDRESS_MODE addressW,
 	UINT srvDescriptorNum, UINT cbvDescriptorNum, UINT uavDescriptorNum)
 {
-	_samplerData._samplerFilter = samplerFilter;
-	_samplerData._addressU = addressU;
-	_samplerData._addressV = addressV;
-	_samplerData._addressW = addressW;
+	_samplerData.samplerFilter = samplerFilter;
+	_samplerData.addressU = addressU;
+	_samplerData.addressV = addressV;
+	_samplerData.addressW = addressW;
 
-	_descRangeData._srvDescriptorNum = srvDescriptorNum;
-	_descRangeData._cbvDescriptorNum = cbvDescriptorNum;
-	_descRangeData._uavDescriptorNum = uavDescriptorNum;
+	_descRangeData.srvDescriptorNum = srvDescriptorNum;
+	_descRangeData.cbvDescriptorNum = cbvDescriptorNum;
+	_descRangeData.uavDescriptorNum = uavDescriptorNum;
 }
 
 RootSignatureData::RootSignatureData(SamplerData samplerData, DescriptorRangeData descRangeData)
@@ -42,9 +42,9 @@ HRESULT RootSignature::CreateRootSignature(
 {
 	// ディスクリプタレンジ
 	CD3DX12_DESCRIPTOR_RANGE descTblRange[DESCRIPTORTYPE_NUM] = {};
-	descTblRange[DESCRIPTORTYPE_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, descRangeData._srvDescriptorNum, 0);
-	descTblRange[DESCRIPTORTYPE_CBV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, descRangeData._cbvDescriptorNum, 0);
-	descTblRange[DESCRIPTORTYPE_UAV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, descRangeData._uavDescriptorNum, 0);
+	descTblRange[DESCRIPTORTYPE_SRV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, descRangeData.srvDescriptorNum, 0);
+	descTblRange[DESCRIPTORTYPE_CBV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_CBV, descRangeData.cbvDescriptorNum, 0);
+	descTblRange[DESCRIPTORTYPE_UAV].Init(D3D12_DESCRIPTOR_RANGE_TYPE_UAV, descRangeData.uavDescriptorNum, 0);
 
 	// ルートパラメータ
 	CD3DX12_ROOT_PARAMETER	rootPrams[DESCRIPTORTYPE_NUM] = {};
@@ -83,7 +83,7 @@ MYRESULT RootSignature::Create(ID3D12Device& device, const RootSignatureData& da
 
 	CD3DX12_STATIC_SAMPLER_DESC samplerDesc = {};
 	samplerDesc.Init(
-		0, samplerData._samplerFilter, samplerData._addressU, samplerData._addressV, samplerData._addressW);
+		0, samplerData.samplerFilter, samplerData.addressU, samplerData.addressV, samplerData.addressW);
 
 	// ルートシグネチャ生成
 	return Create(device, data._descRangeData, samplerDesc, 1);

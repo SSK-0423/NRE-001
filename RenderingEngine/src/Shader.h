@@ -24,8 +24,7 @@ struct ShaderData
 	/// <param name="shaderType">シェーダーの種類とバージョン</param>
 	ShaderData(const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderType)
 		: shaderFilePass(shaderFilePass), entoryPointName(entoryPointName), shaderType(shaderType)
-	{
-	}
+	{}
 
 	ShaderData() {};
 };

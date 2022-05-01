@@ -50,10 +50,10 @@ float4 OffscreenPS(OffOut input) : SV_TARGET
         { -1, 4, -1 },
         { 0, -1, 0 }
     };
-    //return filetring(input, smoothing);
+    //return filetring(input, shapness);
     
     float4 texColor = tex.Sample(smp, input.uv);
-    return texColor;
+    return 1.f - texColor;
     
     
     //float4 output = 1.f - texColor;

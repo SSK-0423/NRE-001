@@ -19,10 +19,10 @@ enum DESCRIPTORTYPE
 
 struct SamplerData
 {
-	D3D12_FILTER _samplerFilter;			// サンプラーフィルター
-	D3D12_TEXTURE_ADDRESS_MODE _addressU;	// X方向のテクスチャマッピング設定
-	D3D12_TEXTURE_ADDRESS_MODE _addressV;   // Y方向のテクスチャマッピング設定
-	D3D12_TEXTURE_ADDRESS_MODE _addressW;   // Z方向のテクスチャマッピング設定
+	D3D12_FILTER samplerFilter;			// サンプラーフィルター
+	D3D12_TEXTURE_ADDRESS_MODE addressU;	// X方向のテクスチャマッピング設定
+	D3D12_TEXTURE_ADDRESS_MODE addressV;   // Y方向のテクスチャマッピング設定
+	D3D12_TEXTURE_ADDRESS_MODE addressW;   // Z方向のテクスチャマッピング設定
 
 	/// <summary>
 	/// コンストラクタ
@@ -40,9 +40,9 @@ struct SamplerData
 
 struct DescriptorRangeData
 {
-	UINT _srvDescriptorNum;	                // SRV数
-	UINT _cbvDescriptorNum;	                // CBV数
-	UINT _uavDescriptorNum;	                // UAV数
+	UINT srvDescriptorNum;	                // SRV数
+	UINT cbvDescriptorNum;	                // CBV数
+	UINT uavDescriptorNum;	                // UAV数
 	/// <summary>
 	/// コンストラクタ
 	/// </summary>
