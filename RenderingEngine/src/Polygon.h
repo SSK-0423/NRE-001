@@ -23,7 +23,22 @@ struct PolygonData
 	IndexBuffer indexBuffer;	                        // インデックスバッファー
 	RootSignatureData rootSignatureData;				// ルートシグネチャ
 	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
-	unsigned int renderTargetNum = 1;
+	std::array<DXGI_FORMAT, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> colorFormats = {
+	DXGI_FORMAT_R8G8B8A8_UNORM,
+	DXGI_FORMAT_UNKNOWN,
+	DXGI_FORMAT_UNKNOWN,
+	DXGI_FORMAT_UNKNOWN,
+	DXGI_FORMAT_UNKNOWN,
+	DXGI_FORMAT_UNKNOWN,
+	DXGI_FORMAT_UNKNOWN,
+	DXGI_FORMAT_UNKNOWN,
+	};	// レンダーターゲットのカラーフォーマット
+
+	/// <summary>
+	/// カラーフォーマット配列を調べてレンダーターゲット数を返す
+	/// </summary>
+	/// <returns>レンダーターゲット数</returns>
+	size_t GetRenderTargetNum() const;
 };
 
 /// <summary>

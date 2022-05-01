@@ -345,7 +345,7 @@ MYRESULT Application::CreateMRTPolygon()
 	polygonData.indexBuffer = _mrtPolygonIB;
 	polygonData.vertexShader = _mrtPolygonVS;
 	polygonData.pixelShader = _mrtPolygonPS;
-	polygonData.renderTargetNum = 2;				// マルチレンダーターゲット
+	polygonData.colorFormats = polygonData.colorFormats;
 	polygonData.inputLayout.push_back(
 		{
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
