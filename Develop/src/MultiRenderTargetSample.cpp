@@ -32,12 +32,20 @@ MYRESULT MultiRenderTargetSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWi
 	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetFirstPixel.hlsl", "MrtFirstPixel", "ps_5_0");
 	spriteData.colorFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;	// 2つ目のレンダーターゲットのフォーマットセット
 
+	// ルートシグネチャ設定
+	RootSignatureData rootSigData;
+	rootSigData._descRangeData.srvDescriptorNum = 2;
+
+	spriteData.rootSignatureData = rootSigData;
+
 	// １パス目用のスプライト生成
 	result = _firstSprite.Create(graphicsEngine, spriteData);
 	if (result == MYRESULT::FAILED) return result;
 
 	spriteData.vertexShaderData = ShaderData(L"src/MultiRenderTargetVertex.hlsl", "MrtVertex", "vs_5_0");
 	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetPixel.hlsl", "MrtPixel", "ps_5_0");
+	spriteData.colorFormats[1] = DXGI_FORMAT_UNKNOWN;
+
 
 	// レンダーターゲットのテクスチャセット
 	for (size_t idx = 0; idx < _countof(_renderTargets); idx++)
@@ -56,22 +64,29 @@ void MultiRenderTargetSample::Update(float deltaTime)
 {
 }
 
+/*
+ * 1パス目：2つのレンダーターゲットへ描画
+ * 最終パス：スプライトによって2つのレンダーターゲットの描画結果を表示する
+ */
 void MultiRenderTargetSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 {
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
 
-	// 複数のレンダーターゲットセット
+	// １パス目のレンダリング
+	RenderTarget::BeginMultiRendering(
+		_renderTargets, _countof(_renderTargets), renderContext, _viewport, _scissorRect);
+	{
+		_firstSprite.Draw(renderContext);
+	}
+	RenderTarget::EndMultiRendering(
+		_renderTargets, _countof(_renderTargets), renderContext, _viewport, _scissorRect);
 
+	// フレームバッファーへレンダリング
+	graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
+	{
+		_finalSprite.Draw(renderContext);
+	}
 
-	//graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
-	//{
-	//	_finalSprite.Draw(renderContext);
-	//}
-
-	/*
-	* 最初の描画で２つのレンダーターゲットへ描画
-	* 最終パスで２つのレンダーターゲットの描画結果をテクスチャとして持つスプライトを描画
-	*/
 }
 
 void MultiRenderTargetSample::Final()

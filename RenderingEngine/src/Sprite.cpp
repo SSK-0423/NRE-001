@@ -37,6 +37,8 @@ MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 	polygonData.indexBuffer = _indexBuffer;
 	polygonData.vertexShader = _vertexShader;
 	polygonData.pixelShader = _pixelShader;
+	polygonData.colorFormats = spriteData.colorFormats;
+	polygonData.rootSignatureData = spriteData.rootSignatureData;
 	polygonData.inputLayout.push_back
 	(
 		{
@@ -51,7 +53,6 @@ MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
-	polygonData.renderTargetNum;
 
 	result = _polygon.Create(device, polygonData);
 	if (result == MYRESULT::FAILED) { return result; }

@@ -2,6 +2,15 @@
 
 using namespace MyFrameWork;
 
+size_t PolygonData::GetRenderTargetNum() const
+{
+	for (size_t idx = 0; idx < colorFormats.size(); idx++)
+	{
+		if (colorFormats[idx] == DXGI_FORMAT_UNKNOWN)
+			return idx;
+	}
+}
+
 MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const PolygonData& data)
 {
 	/// 必要なモノ
@@ -12,7 +21,7 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 	// ルートシグネチャ生成
 	MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
 	if (MYRESULT::FAILED == result) { return result; }
-	
+
 	// ルートシグネチャとシェーダーセット
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
 	pipelineState.pRootSignature = &_rootSignature.GetRootSignature();
@@ -36,10 +45,11 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 	pipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 	// レンダーターゲットの設定
-	pipelineState.NumRenderTargets = data.renderTargetNum;
-	for (size_t idx = 0; idx < data.renderTargetNum; idx++)
+	pipelineState.NumRenderTargets = data.GetRenderTargetNum();
+
+	for (size_t idx = 0; idx < pipelineState.NumRenderTargets; idx++)
 	{
-		pipelineState.RTVFormats[idx] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		pipelineState.RTVFormats[idx] = data.colorFormats[idx];
 	}
 
 	// アンチエイリアシングのためのサンプル数設定
@@ -61,10 +71,10 @@ MYRESULT Polygon::Create(ID3D12Device& device, const PolygonData& data)
 void Polygon::Draw(RenderingContext& renderContext)
 {
 	renderContext.SetGraphicsRootSignature(_rootSignature);
-	
-	if(_descriptorHeap != nullptr)
+
+	if (_descriptorHeap != nullptr)
 		renderContext.SetDescriptorHeap(*_descriptorHeap);
-	
+
 	renderContext.SetPipelineState(_graphicsPipelineState);
 	renderContext.SetVertexBuffer(0, _vertexBuffer);
 	renderContext.SetIndexBuffer(_indexBuffer);
