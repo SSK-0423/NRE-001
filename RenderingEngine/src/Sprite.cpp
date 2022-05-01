@@ -38,6 +38,7 @@ MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 	polygonData.vertexShader = _vertexShader;
 	polygonData.pixelShader = _pixelShader;
 	polygonData.colorFormats = spriteData.colorFormats;
+	polygonData.rootSignatureData = spriteData.rootSignatureData;
 	polygonData.inputLayout.push_back
 	(
 		{
