@@ -1,4 +1,10 @@
-float4 MrtVertex( float4 pos : POSITION ) : SV_POSITION
+#include "MultiRenderTargetHeader.hlsli"
+
+MultiRenderiFinalVertex MrtVertex(float4 pos : POSITION, float2 uv : TEXCOORD)
 {
-	return pos;
+    MultiRenderiFinalVertex output;
+    output.pos = pos;
+    output.uv = uv;
+    
+    return output;
 }
