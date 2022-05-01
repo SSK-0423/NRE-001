@@ -9,14 +9,17 @@
 #include "RenderTarget.h"
 #include "Sprite.h"
 
-class MultiPassRendering : public Dx12ApplicationImpl {
+class MultiRenderTargetSample : public Dx12ApplicationImpl {
 public:
-	MYRESULT Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window) override;
+	MYRESULT Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& appWindow) override;
+
 	void Update(float deltaTime) override;
+
 	void Draw(Dx12GraphicsEngine& graphicsEngine) override;
+
 	void Final() override;
 
-// ポリゴン関連
+	// ポリゴン関連
 private:
 	VertexBuffer _vertexBuffer;			// 頂点バッファー
 	IndexBuffer _indexBuffer;			// インデックスバッファー
@@ -25,14 +28,14 @@ private:
 	RootSignature _rootSignature;		// ルートシグネチャ
 	MyFrameWork::Polygon _square;		// 四角形ポリゴン
 
-
 private:
-	RenderTarget _renderTarget;			// レンダーターゲット
+	RenderTarget _renderTargets[2];		// レンダーターゲット
 	CD3DX12_VIEWPORT _viewport;			// ビューポート
 	CD3DX12_RECT _scissorRect;			// シザー矩形
 
-	Sprite _sprite;						// スプライト
-	Sprite _myself;						// 1パス目に描画するスプライト(レンダーターゲット2つ)
+	Sprite _finalSprite;				// スプライト
+	Sprite _firstSprite;				// 1パス目に描画するスプライト
 
-	Texture _texture;					// １パス目に描画するテクスチャ
+
+	Texture _renderTextures[2];			// レンダーターゲット用テクスチャ
 };

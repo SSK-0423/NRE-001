@@ -25,6 +25,12 @@
     <Filter Include="サンプル">
       <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\MultiPassRenderingSample">
+      <UniqueIdentifier>{3c4b1109-2c99-4988-8a10-c55218da26d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\MultiRenderTargetSample">
+      <UniqueIdentifier>{d9235384-2ee9-4d24-a725-dd10be3b1776}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">
@@ -43,6 +49,9 @@
       <Filter>サンプル</Filter>
     </ClCompile>
     <ClCompile Include="src\MultiPassRenderingSample.cpp">
+      <Filter>サンプル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MultiRenderTargetSample.cpp">
       <Filter>サンプル</Filter>
     </ClCompile>
   </ItemGroup>
@@ -65,18 +74,15 @@
     <ClInclude Include="src\MultiPassRenderingSample.h">
       <Filter>サンプル</Filter>
     </ClInclude>
+    <ClInclude Include="src\MultiRenderTargetSample.h">
+      <Filter>サンプル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="src\PolygonVertexShader.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="src\PolygonPixelShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="src\OffscreenVertexShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="src\OffscreenPixelShader.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="src\BackgroundPixelShader.hlsl">
@@ -86,9 +92,6 @@
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="src\MRTPolygonVertexShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="MultiRenderTargetPixelShader.hlsl">
       <Filter>シェーダー</Filter>
     </FxCompile>
     <FxCompile Include="src\PolygonSamplePixel.hlsl">
@@ -103,12 +106,27 @@
     <FxCompile Include="src\TextureMapSamplePixel.hlsl">
       <Filter>シェーダー\TextureMapSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\OffscreenPixelShader.hlsl">
+      <Filter>シェーダー\MultiPassRenderingSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\OffscreenVertexShader.hlsl">
+      <Filter>シェーダー\MultiPassRenderingSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MultiRenderTargetFirstPixel.hlsl">
+      <Filter>シェーダー\MultiRenderTargetSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MultiRenderTargetFirstVertex.hlsl">
+      <Filter>シェーダー\MultiRenderTargetSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MultiRenderTargetPixel.hlsl">
+      <Filter>シェーダー\MultiRenderTargetSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MultiRenderTargetVertex.hlsl">
+      <Filter>シェーダー\MultiRenderTargetSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonShaderHeader.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="src\OffscreenHeader.hlsli">
       <Filter>シェーダー</Filter>
     </None>
     <None Include="src\MRTHeader.hlsli">
@@ -119,6 +137,12 @@
     </None>
     <None Include="src\TextureMapSampleHeader.hlsli">
       <Filter>シェーダー\TextureMapSample</Filter>
+    </None>
+    <None Include="src\OffscreenHeader.hlsli">
+      <Filter>シェーダー\MultiPassRenderingSample</Filter>
+    </None>
+    <None Include="src\MultiRenderTargetHeader.hlsli">
+      <Filter>シェーダー\MultiRenderTargetSample</Filter>
     </None>
   </ItemGroup>
 </Project>

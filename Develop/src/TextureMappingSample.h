@@ -13,7 +13,7 @@
 class TextureMappingSample : public Dx12ApplicationImpl {
 public:
 	MYRESULT Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window) override;
-	void Update() override;
+	void Update(float deltaTime) override;
 	void Draw(Dx12GraphicsEngine& graphicsEngine) override;
 	void Final() override;
 

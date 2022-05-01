@@ -22,7 +22,7 @@ public:
 	/// <summary>
 	/// アプリケーションの更新処理
 	/// </summary>
-	virtual void Update() = 0;
+	virtual void Update(float deltaTime) = 0;
 
 	/// <summary>
 	/// アプリケーションの描画処理

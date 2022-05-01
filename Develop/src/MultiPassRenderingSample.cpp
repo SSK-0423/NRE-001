@@ -16,7 +16,8 @@ MYRESULT MultiPassRendering::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow&
 
 	// レンダーターゲット生成
 	RenderTargetData renderTargetData;
-	renderTargetData.renderTargetBufferData = RenderTargetBufferData(DXGI_FORMAT_R8G8B8A8_UNORM, 1280, 720, { 0.f,1.f,1.f,1.f });
+	renderTargetData.renderTargetBufferData 
+		= RenderTargetBufferData(DXGI_FORMAT_R8G8B8A8_UNORM, 1280, 720, { 0.f,1.f,1.f,1.f });
 
 	MYRESULT result = _renderTarget.Create(graphicsEngine.Device(), renderTargetData);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -43,7 +44,7 @@ MYRESULT MultiPassRendering::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow&
 	return result;
 }
 
-void MultiPassRendering::Update()
+void MultiPassRendering::Update(float deltaTime)
 {
 }
 

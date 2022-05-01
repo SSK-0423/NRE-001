@@ -54,4 +54,19 @@ public:
 	Texture& GetRenderTargetTexture() {
 		return _renderTargetTexture;
 	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="renderTargets"></param>
+	/// <param name="renderContext"></param>
+	/// <param name="viewport"></param>
+	/// <param name="scissorRect"></param>
+	static void BeginMultiRendering(
+		RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext,
+		CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
+
+	static void EndMultiRendering(
+		RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext,
+		CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
 };

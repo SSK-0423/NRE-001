@@ -4,6 +4,7 @@
 #include "DrawPolygonSample.h"
 #include "TextureMappingSample.h"
 #include "MultiPassRenderingSample.h"
+#include "MultiRenderTargetSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -16,7 +17,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// マルチパスレンダリングサンプル
 	MultiPassRendering multiPassApp;
 
-	Dx12Application app(multiPassApp);
+	// マルチレンダーターゲット用
+	MultiRenderTargetSample multiRenderApp;
+
+	Dx12Application app(multiRenderApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;

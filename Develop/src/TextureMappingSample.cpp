@@ -27,7 +27,7 @@ MYRESULT TextureMappingSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindo
 	return result;
 }
 
-void TextureMappingSample::Update()
+void TextureMappingSample::Update(float deltaTime)
 {
 }
 

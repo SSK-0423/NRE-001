@@ -1,5 +1,7 @@
 #pragma once
 
+#include <array>
+
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
 #include "GraphicsPipelineState.h"
