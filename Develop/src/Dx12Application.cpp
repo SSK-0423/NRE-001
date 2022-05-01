@@ -42,7 +42,7 @@ void Dx12Application::Run()
 	while (_window->DispatchWindowMessage())
 	{
 		// いずれエンジン(フレームワーク側)に吸収させる？？？？
-		_applicationImpl.Update();
+		_applicationImpl.Update(0.f);
 
 		// 1フレームの描画
 		_graphicsEngine.BeginDraw();

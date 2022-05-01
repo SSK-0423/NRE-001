@@ -65,7 +65,7 @@ MYRESULT DrawPolygonSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	return result;
 }
 
-void DrawPolygonSample::Update()
+void DrawPolygonSample::Update(float deltaTime)
 {
 }
 

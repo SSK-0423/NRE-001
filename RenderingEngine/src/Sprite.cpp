@@ -51,6 +51,7 @@ MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0
 		}
 	);
+	polygonData.renderTargetNum;
 
 	result = _polygon.Create(device, polygonData);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -82,11 +83,6 @@ MYRESULT Sprite::CreateTextureResource(
 			_textureHeap.RegistShaderResource(device, *tex);
 		}
 		_polygon.SetDescriptorHeap(_textureHeap);
-	}
-
-	// テクスチャ、テクスチャパスが何も指定されていない場合
-	else {
-		return MYRESULT::FAILED;
 	}
 
 	return result;
