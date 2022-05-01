@@ -38,6 +38,7 @@ MYRESULT MultiRenderTargetSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWi
 
 	spriteData.vertexShaderData = ShaderData(L"src/MultiRenderTargetVertex.hlsl", "MrtVertex", "vs_5_0");
 	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetPixel.hlsl", "MrtPixel", "ps_5_0");
+	spriteData.colorFormats[1] = DXGI_FORMAT_UNKNOWN;
 
 	// レンダーターゲットのテクスチャセット
 	for (size_t idx = 0; idx < _countof(_renderTargets); idx++)
