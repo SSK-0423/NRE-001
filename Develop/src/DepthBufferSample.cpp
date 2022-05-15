@@ -1,8 +1,11 @@
 #include "DepthBufferSample.h"
+#include "Dx12GraphicsEngine.h"
 
 MYRESULT DepthBufferSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
-    return MYRESULT();
+    MYRESULT result = _dsvHeap.Create(graphicsEngine.Device());
+
+    return result;
 }
 
 void DepthBufferSample::Update(float deltaTime)

@@ -49,7 +49,7 @@ void DescriptorHeapRTV::RegistDescriptor(
 	auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 	handle.ptr += _registedRTVNum * _handleIncrimentSize;
 
-	// SRGBレンダーターゲットビュー設定
+	// レンダーターゲットビュー設定
 	D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 
 	rtvDesc.Format = format;
