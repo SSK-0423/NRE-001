@@ -86,7 +86,6 @@ void MultiRenderTargetSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	{
 		_finalSprite.Draw(renderContext);
 	}
-
 }
 
 void MultiRenderTargetSample::Final()
