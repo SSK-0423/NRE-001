@@ -55,7 +55,7 @@
       <Filter>サンプル</Filter>
     </ClCompile>
     <ClCompile Include="src\DepthBufferSample.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>サンプル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

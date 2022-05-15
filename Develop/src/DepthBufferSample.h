@@ -8,6 +8,9 @@
 #include "RootSignature.h"
 #include "Polygon.h"
 
+#include "DepthStencilBuffer.h"
+#include "DescriptorHeapDSV.h"
+
 class DepthBufferSample : public Dx12ApplicationImpl
 {
 public:
@@ -17,5 +20,5 @@ public:
 	void Final() override;
 
 private:
-
+	DescriptorHeapDSV _dsvHeap;
 };
