@@ -54,6 +54,9 @@
     <ClCompile Include="src\MultiRenderTargetSample.cpp">
       <Filter>サンプル</Filter>
     </ClCompile>
+    <ClCompile Include="src\DepthBufferSample.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12Application.h">
@@ -75,6 +78,9 @@
       <Filter>サンプル</Filter>
     </ClInclude>
     <ClInclude Include="src\MultiRenderTargetSample.h">
+      <Filter>サンプル</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DepthBufferSample.h">
       <Filter>サンプル</Filter>
     </ClInclude>
   </ItemGroup>

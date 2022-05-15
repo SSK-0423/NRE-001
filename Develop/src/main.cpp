@@ -20,6 +20,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// マルチレンダーターゲットサンプル
 	MultiRenderTargetSample multiRenderApp;
 
+	// 深度バッファーサンプル
+
+
 	Dx12Application app(multiRenderApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
