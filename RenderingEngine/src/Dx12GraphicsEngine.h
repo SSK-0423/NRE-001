@@ -137,12 +137,13 @@ public:
 
 	// 開発用
 private:
-	RenderingContext _renderContext;	        // レンダリングコンテキスト
-	RenderTargetBuffer _frameBuffers[2];	    // フレームバッファ
-	DescriptorHeapRTV _frameHeap;	            // フレームバッファ用ディスクリプタヒープ	
+	RenderingContext _renderContext;	            // レンダリングコンテキスト
+	RenderTargetBuffer _frameBuffers[2];	        // フレームバッファ
+	DescriptorHeapRTV _frameHeap;	                // フレームバッファ用ディスクリプタヒープ	
 
-	DepthStencilBuffer _depthStencilBuffer;		// デプスステンシルバッファー
-	DescriptorHeapDSV _dsvHeap;					// デプスステンシル用ヒープ
+	DepthStencilBufferData depthStencilBufferData;	// デプスステンシルバッファーの設定
+	DepthStencilBuffer _depthStencilBuffer;		    // デプスステンシルバッファー
+	DescriptorHeapDSV _dsvHeap;					    // デプスステンシル用ヒープ
 
 	/// <summary>
 	/// フレームバッファ用のレンダーターゲット生成

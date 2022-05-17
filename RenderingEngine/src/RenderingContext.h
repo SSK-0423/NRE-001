@@ -74,7 +74,7 @@ public:
 	/// <param name="numRects">rectsの要素数</param>
 	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
 	void ClearRenderTarget(
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color, 
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color,
 		const UINT& numRects, const D3D12_RECT* rects);
 
 	/// <summary>
@@ -85,8 +85,21 @@ public:
 	/// <param name="numRects">rectsの要素数</param>
 	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
 	void ClearRenderTarget(
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color, 
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const float* color,
 		const UINT& numRects, const D3D12_RECT* rects);
+
+	/// <summary>
+	/// デプスステンシルの値初期化
+	/// </summary>
+	/// <param name="dsvHandle">デプスステンシルビューのハンドル</param>
+	/// <param name="clearFlags">初期化先の指定</param>
+	/// <param name="clearDepth">初期化深度値</param>
+	/// <param name="clearStencil">初期化ステンシル値</param>
+	/// <param name="numRects">rectsの要素数</param>
+	/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
+	void ClearDepthStencilView(
+		D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, D3D12_CLEAR_FLAGS clearFlags,
+		const FLOAT& clearDepth, const UINT8& clearStencil, const UINT& numRects, const D3D12_RECT* rects);
 
 	/// <summary>
 	/// ビューポートセット
@@ -155,7 +168,7 @@ public:
 	/// </summary>
 	/// <param name="descriptorHeap">ディスクリプタヒープクラス</param>
 	void SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap);
-	
+
 	/// <summary>
 	/// 複数のディスクリプタヒープをセットする
 	/// </summary>
@@ -169,7 +182,7 @@ public:
 	/// <param name="rootPrameterIndex">セットするルートパラメータのインデックス</param>
 	/// <param name="handle">セット済みのディスクリプタヒープのGPUハンドル</param>
 	void SetGraphicsRootDescriptorTable(const UINT& rootPrameterIndex, D3D12_GPU_DESCRIPTOR_HANDLE handle);
-	
+
 	/// <summary>
 	/// インスタンス描画
 	/// </summary>
@@ -192,7 +205,7 @@ public:
 	/// <param name="startInstanceLocation">インスタンスのオフセット デフォルト:0</param>
 	void DrawIndexedInstanced(
 		const UINT& indexNumPerInstance, const UINT& instanceNum,
-		const UINT startIndexLocation = 0, const INT& baseVertexLocation = 0, 
+		const UINT startIndexLocation = 0, const INT& baseVertexLocation = 0,
 		const UINT& startInstanceLocation = 0);
 
 	/// <summary>

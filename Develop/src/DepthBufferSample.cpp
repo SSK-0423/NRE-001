@@ -38,7 +38,7 @@ void DepthBufferSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 
 	// ポリゴン描画
 	_nearPolygon.Draw(renderContext);
-	//_farPolygon.Draw(renderContext);
+	_farPolygon.Draw(renderContext);
 }
 
 void DepthBufferSample::Final()
@@ -66,9 +66,8 @@ MYRESULT DepthBufferSample::CreateNearPolygon(Dx12GraphicsEngine& graphicsEngine
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/PolygonSampleVertex.hlsl", "PolygonSampleVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/PolygonSamplePixel.hlsl", "PolygonSamplePS", "ps_5_0");
-
+	result = _vertexShader.Create(L"src/NearPolygonVS.hlsl", "NearPolygonVS", "vs_5_0");
+	result = _pixelShader.Create(L"src/NearPolygonPS.hlsl", "NearPolygonPS", "ps_5_0");
 	// ポリゴン生成
 	PolygonData polygonData;
 	polygonData.vertexBuffer = _vertexBuffer;
@@ -100,9 +99,9 @@ MYRESULT DepthBufferSample::CreateFarPolygon(Dx12GraphicsEngine& graphicsEngine)
 {
 	// ポリゴンの頂点データ用意
 	std::vector<PolygonVertex> triangleVertex;
-	triangleVertex.push_back({ { -0.25f,-0.7f	,0.5f }	,{0.f,1.f} });
-	triangleVertex.push_back({ { 0.f  ,0.7f		,0.5f }	,{0.5f,0.f} });
-	triangleVertex.push_back({ { 0.25f ,-0.7f	,0.5f}	,{1.f,1.f} });
+	triangleVertex.push_back({ { -0.8f,-0.4f	,0.5f }	,{0.f,1.f} });
+	triangleVertex.push_back({ { 0.f  ,0.4f		,0.5f }	,{0.5f,0.f} });
+	triangleVertex.push_back({ { 0.8f ,-0.4f	,0.5f}	,{1.f,1.f} });
 
 	// 頂点バッファー生成
 	MYRESULT result = _vertexBuffer.Create(
@@ -117,8 +116,8 @@ MYRESULT DepthBufferSample::CreateFarPolygon(Dx12GraphicsEngine& graphicsEngine)
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/PolygonSampleVertex.hlsl", "PolygonSampleVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/PolygonSamplePixel.hlsl", "PolygonSamplePS", "ps_5_0");
+	result = _vertexShader.Create(L"src/FarPolygonVS.hlsl", "FarPolygonVS", "vs_5_0");
+	result = _pixelShader.Create(L"src/FarPolygonPS.hlsl", "FarPolygonPS", "ps_5_0");
 
 	// ポリゴン生成
 	PolygonData polygonData;
