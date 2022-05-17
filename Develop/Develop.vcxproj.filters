@@ -31,6 +31,9 @@
     <Filter Include="シェーダー\MultiRenderTargetSample">
       <UniqueIdentifier>{d9235384-2ee9-4d24-a725-dd10be3b1776}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\DepthBufferSample">
+      <UniqueIdentifier>{845daa14-6e07-464a-9830-2abf63f0dd2a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">

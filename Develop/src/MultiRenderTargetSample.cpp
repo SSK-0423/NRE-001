@@ -18,6 +18,8 @@ MYRESULT MultiRenderTargetSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWi
 	RenderTargetData renderTargetData;
 	renderTargetData.renderTargetBufferData
 		= RenderTargetBufferData(DXGI_FORMAT_R8G8B8A8_UNORM, 1280, 720, { 0.f,1.f,1.f,1.f });
+	renderTargetData.depthStencilBufferData.width = window.GetWindowSize().cx;
+	renderTargetData.depthStencilBufferData.height = window.GetWindowSize().cy;
 
 	MYRESULT result = MYRESULT::FAILED;
 	for (auto& render : _renderTargets)

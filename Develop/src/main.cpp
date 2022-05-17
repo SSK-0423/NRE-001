@@ -24,7 +24,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// 深度バッファーサンプル
 	DepthBufferSample depthBufferApp;
 
-	Dx12Application app(depthBufferApp);
+	Dx12Application app(drawPolygonApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;

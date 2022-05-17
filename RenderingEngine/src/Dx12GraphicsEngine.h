@@ -4,6 +4,8 @@
 #include "RenderingContext.h"
 #include "RenderTargetBuffer.h"
 #include "DescriptorHeapRTV.h"
+#include "DepthStencilBuffer.h"
+#include "DescriptorHeapDSV.h"
 
 #include <d3d12.h>
 #include <dxgi1_6.h>
@@ -135,9 +137,12 @@ public:
 
 	// 開発用
 private:
-	RenderingContext _renderContext;	    // レンダリングコンテキスト
-	RenderTargetBuffer _frameBuffers[2];	// フレームバッファ
-	DescriptorHeapRTV _frameHeap;	        // フレームバッファ用ディスクリプタヒープ
+	RenderingContext _renderContext;	        // レンダリングコンテキスト
+	RenderTargetBuffer _frameBuffers[2];	    // フレームバッファ
+	DescriptorHeapRTV _frameHeap;	            // フレームバッファ用ディスクリプタヒープ	
+
+	DepthStencilBuffer _depthStencilBuffer;		// デプスステンシルバッファー
+	DescriptorHeapDSV _dsvHeap;					// デプスステンシル用ヒープ
 
 	/// <summary>
 	/// フレームバッファ用のレンダーターゲット生成

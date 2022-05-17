@@ -186,6 +186,7 @@
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\ConstantBuffer.cpp" />
+    <ClCompile Include="src\DepthStencilBuffer.cpp" />
     <ClCompile Include="src\DescriptorHeapDSV.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp" />

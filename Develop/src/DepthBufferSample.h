@@ -20,5 +20,16 @@ public:
 	void Final() override;
 
 private:
-	DescriptorHeapDSV _dsvHeap;
+	VertexBuffer _vertexBuffer;			        // 頂点バッファー
+	IndexBuffer _indexBuffer;			        // インデックスバッファー
+	Shader _vertexShader;				        // 頂点シェーダー
+	Shader _pixelShader;				        // ピクセルシェーダー
+	RootSignatureData _rootSignatureData;		// ルートシグネチャ
+	MyFrameWork::Polygon _nearPolygon;		    // 手前ポリゴン
+	MyFrameWork::Polygon _farPolygon;		    // 奥ポリゴン
+	CD3DX12_VIEWPORT _viewport;			        // ビューポート
+	CD3DX12_RECT _scissorRect;			        // シザー矩形
+
+	MYRESULT CreateNearPolygon(Dx12GraphicsEngine& graphicsEngine);
+	MYRESULT CreateFarPolygon(Dx12GraphicsEngine& graphicsEngine);
 };

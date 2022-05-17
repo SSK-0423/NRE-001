@@ -15,6 +15,17 @@ MYRESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTarg
 	// レンダーターゲットビュー生成
 	_rtvHeap.RegistDescriptor(device, _renderTargetBuffer);
 
+	// デプスステンシルバッファー生成
+	result = _depthStencilBuffer.Create(device, renderTargetData.depthStencilBufferData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// デプスステンシル用ディスクリプタヒープ生成
+	result = _dsvHeap.Create(device);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// デプスステンシルビュー生成
+	_dsvHeap.RegistDescriptor(device, _depthStencilBuffer);
+
 	// オフスクリーンテクスチャバッファー生成
 	_renderTargetTexture.CreateTextureFromRenderTarget(_renderTargetBuffer);
 
