@@ -51,8 +51,17 @@ void RenderTarget::BeginRendering(RenderingContext& renderContext, CD3DX12_VIEWP
 	auto rtvHandle = _rtvHeap.GetCPUDescriptorHandleForHeapStart();
 	renderContext.SetRenderTarget(&rtvHandle, nullptr);
 
+	// 深度バッファー
+	auto dsvHandle = _dsvHeap.GetCPUDescriptorHandleForHeapStart();
+
 	// 画面を指定色でクリア
 	renderContext.ClearRenderTarget(rtvHandle, _renderTargetData.renderTargetBufferData.clearColor, 0, nullptr);
+
+	// デプスステンシルバッファーをクリア
+	renderContext.ClearDepthStencilView(
+		dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
+		_renderTargetData.depthStencilBufferData.clearDepth,
+		_renderTargetData.depthStencilBufferData.clearStencil, 0, nullptr);
 
 	// ビューポート、シザー矩形セット
 	renderContext.SetViewport(viewport);
@@ -74,6 +83,7 @@ void RenderTarget::BeginMultiRendering(
 {
 	// ハンドル
 	D3D12_CPU_DESCRIPTOR_HANDLE* rtvHandles = new D3D12_CPU_DESCRIPTOR_HANDLE[length];
+	D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandles = new D3D12_CPU_DESCRIPTOR_HANDLE[length];
 
 	for (size_t idx = 0; idx < length; idx++)
 	{
@@ -84,10 +94,17 @@ void RenderTarget::BeginMultiRendering(
 			D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 		rtvHandles[idx] = renderTargets[idx]._rtvHeap.GetCPUDescriptorHandleForHeapStart();
+		dsvHandles[idx] = renderTargets[idx]._dsvHeap.GetCPUDescriptorHandleForHeapStart();
 
 		// 画面を指定色でクリア
 		renderContext.ClearRenderTarget(
 			rtvHandles[idx], renderTargets[idx]._renderTargetData.renderTargetBufferData.clearColor, 0, nullptr);
+
+		// デプスステンシルバッファーをクリア
+		renderContext.ClearDepthStencilView(
+			dsvHandles[idx], D3D12_CLEAR_FLAG_DEPTH,
+			renderTargets[idx]._renderTargetData.depthStencilBufferData.clearDepth,
+			renderTargets[idx]._renderTargetData.depthStencilBufferData.clearStencil, 0, nullptr);
 	}
 
 	// レンダーターゲットセット

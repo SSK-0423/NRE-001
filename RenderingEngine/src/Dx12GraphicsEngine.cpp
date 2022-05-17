@@ -237,6 +237,11 @@ void Dx12GraphicsEngine::BeginDraw()
 	// 画面を指定色でクリア
 	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
 	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+
+	// デプスステンシルバッファをクリア
+	_renderContext.ClearDepthStencilView(
+		dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
+		depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
 }
 
 void Dx12GraphicsEngine::EndDraw()
@@ -317,7 +322,6 @@ MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 	}
 
 	// デプスステンシルバッファー生成
-	DepthStencilBufferData depthStencilBufferData;
 	depthStencilBufferData.width = _windowWidth;
 	depthStencilBufferData.height = _windowHeight;
 	result = _depthStencilBuffer.Create(*_device.Get(), depthStencilBufferData);

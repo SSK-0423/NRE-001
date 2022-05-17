@@ -133,6 +133,18 @@
     <FxCompile Include="src\MultiRenderTargetVertex.hlsl">
       <Filter>シェーダー\MultiRenderTargetSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\NearPolygonVS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\FarPolygonVS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\NearPolygonPS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\FarPolygonPS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonShaderHeader.hlsli">
@@ -152,6 +164,9 @@
     </None>
     <None Include="src\MultiRenderTargetHeader.hlsli">
       <Filter>シェーダー\MultiRenderTargetSample</Filter>
+    </None>
+    <None Include="src\DepthBufferSampleHeader.hlsli">
+      <Filter>シェーダー\DepthBufferSample</Filter>
     </None>
   </ItemGroup>
 </Project>
