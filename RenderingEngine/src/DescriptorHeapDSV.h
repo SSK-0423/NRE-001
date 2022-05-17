@@ -56,4 +56,12 @@ public:
 	/// <param name="device">デバイス</param>
 	/// <param name="buffer">デプスステンシルバッファー</param>
 	void RegistDescriptor(ID3D12Device& device, DepthStencilBuffer& buffer);
+
+	/// <summary>
+	/// CPUのディスクリプタヒープの先頭ハンドルを取得
+	/// </summary>
+	/// <returns></returns>
+	D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandleForHeapStart() {
+		return _dsvHeap->GetCPUDescriptorHandleForHeapStart();
+	}
 };
