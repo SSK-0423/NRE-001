@@ -29,6 +29,7 @@ private:
 	RenderTargetBuffer _renderTargetBuffer;		// レンダーターゲットバッファー
 	DescriptorHeapRTV _rtvHeap;					// レンダーターゲット用ヒープ
 
+	Texture _depthStencilTexture;				// デプスステンシルテクスチャ
 	DepthStencilBuffer _depthStencilBuffer;		// デプスステンシルバッファー
 	DescriptorHeapDSV _dsvHeap;					// デプスステンシル用ヒープ
 
@@ -60,6 +61,14 @@ public:
 	/// <returns>レンダーターゲットテクスチャ</returns>
 	Texture& GetRenderTargetTexture() {
 		return _renderTargetTexture;
+	}
+
+	/// <summary>
+	/// デプスステンシルのテクスチャ取得
+	/// </summary>
+	/// <returns>デプスステンシルテクスチャ</returns>
+	Texture& GetDepthStencilTexture() {
+		return _depthStencilTexture;
 	}
 
 	/// <summary>

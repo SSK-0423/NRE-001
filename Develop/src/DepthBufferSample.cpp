@@ -22,6 +22,25 @@ MYRESULT DepthBufferSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	// シザー矩形セット
 	_scissorRect = CD3DX12_RECT(0, 0, window.GetWindowSize().cx, window.GetWindowSize().cy);
 
+	RenderTargetData renderTargetData;
+	renderTargetData.renderTargetBufferData
+		= RenderTargetBufferData(DXGI_FORMAT_R8G8B8A8_UNORM, 1280, 720, { 0.f,1.f,1.f,1.f });
+	renderTargetData.depthStencilBufferData.width = window.GetWindowSize().cx;
+	renderTargetData.depthStencilBufferData.height = window.GetWindowSize().cy;
+	
+	result = _firstRender.Create(graphicsEngine.Device(), renderTargetData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	SpriteData data;
+	data.vertexShaderData = ShaderData(L"src/SpriteVS.hlsl", "SpriteVS", "vs_5_0");
+	data.pixelShaderData = ShaderData(L"src/SpritePS.hlsl", "SpritePS", "ps_5_0");
+	data.textures[0] = &_firstRender.GetRenderTargetTexture();
+	data.textures[1] = &_firstRender.GetDepthStencilTexture();
+
+	result = _firstRenderingSprite.Create(graphicsEngine, data);
+	if (result == MYRESULT::FAILED) { return result; }
+
+
 	return result;
 }
 
@@ -37,12 +56,18 @@ void DepthBufferSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	// レンダリングコンテキスト取得
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
 
-	renderContext.SetViewport(_viewport);
-	renderContext.SetScissorRect(_scissorRect);
+	_firstRender.BeginRendering(renderContext, _viewport, _scissorRect);
+	{
+		// ポリゴン描画
+		_nearPolygon.Draw(renderContext);
+		_farPolygon.Draw(renderContext);
+	}
+	_firstRender.EndRendering(renderContext);
 
-	// ポリゴン描画
-	_nearPolygon.Draw(renderContext);
-	_farPolygon.Draw(renderContext);
+	graphicsEngine.SetFrameRenderTarget(_viewport, _scissorRect);
+	{
+		_firstRenderingSprite.Draw(renderContext);
+	}
 }
 
 void DepthBufferSample::Final()
@@ -159,7 +184,7 @@ MYRESULT DepthBufferSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine
 	// 変換行列用意
 	XMMATRIX worldViewProj = XMMatrixIdentity();
 
-	XMFLOAT3 eye(0, 0, -5);
+	XMFLOAT3 eye(0, 0, -3);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 
