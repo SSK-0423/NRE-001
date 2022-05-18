@@ -4,6 +4,9 @@
 #include "DescriptorHeapCBV_SRV_UAV.h"
 #include "RenderTargetBuffer.h"
 
+#include "DescriptorHeapDSV.h"
+#include "DepthStencilBuffer.h"
+
 #include "Texture.h"
 
 #include "EngineUtility.h"
@@ -11,6 +14,7 @@
 struct RenderTargetData
 {
 	RenderTargetBufferData renderTargetBufferData;	// レンダーターゲットバッファー用データ
+	DepthStencilBufferData depthStencilBufferData;	// デプスステンシルバッファー用データ
 };
 
 /// <summary>
@@ -24,6 +28,10 @@ private:
 
 	RenderTargetBuffer _renderTargetBuffer;		// レンダーターゲットバッファー
 	DescriptorHeapRTV _rtvHeap;					// レンダーターゲット用ヒープ
+
+	Texture _depthStencilTexture;				// デプスステンシルテクスチャ
+	DepthStencilBuffer _depthStencilBuffer;		// デプスステンシルバッファー
+	DescriptorHeapDSV _dsvHeap;					// デプスステンシル用ヒープ
 
 	RenderTargetData _renderTargetData;			// レンダーターゲットデータ
 
@@ -53,6 +61,14 @@ public:
 	/// <returns>レンダーターゲットテクスチャ</returns>
 	Texture& GetRenderTargetTexture() {
 		return _renderTargetTexture;
+	}
+
+	/// <summary>
+	/// デプスステンシルのテクスチャ取得
+	/// </summary>
+	/// <returns>デプスステンシルテクスチャ</returns>
+	Texture& GetDepthStencilTexture() {
+		return _depthStencilTexture;
 	}
 
 	/// <summary>

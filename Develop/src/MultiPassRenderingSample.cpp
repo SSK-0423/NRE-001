@@ -3,21 +3,19 @@
 MYRESULT MultiPassRendering::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
 	// ビューポートセット
-	_viewport.TopLeftX = 0.f;
-	_viewport.TopLeftY = 0.f;
-	_viewport.Width = static_cast<FLOAT>(window.GetWindowSize().cx);
-	_viewport.Height = static_cast<FLOAT>(window.GetWindowSize().cy);
+	_viewport = CD3DX12_VIEWPORT(0.f, 0.f,
+		static_cast<FLOAT>(window.GetWindowSize().cx),
+		static_cast<FLOAT>(window.GetWindowSize().cy));
 
 	// シザー矩形セット
-	_scissorRect.left = 0;
-	_scissorRect.top = 0;
-	_scissorRect.right = window.GetWindowSize().cx;
-	_scissorRect.bottom = window.GetWindowSize().cy;
+	_scissorRect = CD3DX12_RECT(0, 0, window.GetWindowSize().cx, window.GetWindowSize().cy);
 
 	// レンダーターゲット生成
 	RenderTargetData renderTargetData;
 	renderTargetData.renderTargetBufferData 
 		= RenderTargetBufferData(DXGI_FORMAT_R8G8B8A8_UNORM, 1280, 720, { 0.f,1.f,1.f,1.f });
+	renderTargetData.depthStencilBufferData.width = window.GetWindowSize().cx;
+	renderTargetData.depthStencilBufferData.height = window.GetWindowSize().cy;
 
 	MYRESULT result = _renderTarget.Create(graphicsEngine.Device(), renderTargetData);
 	if (result == MYRESULT::FAILED) { return result; }

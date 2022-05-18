@@ -222,6 +222,9 @@ void Dx12GraphicsEngine::BeginDraw()
 	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
 
+	// 深度バッファー
+	auto dsvHandle = _dsvHeap.GetCPUDescriptorHandleForHeapStart();
+
 	// バリア処理
 	_renderContext.TransitionResourceState(
 		_frameBuffers[bbIdx].GetBuffer(),
@@ -229,11 +232,16 @@ void Dx12GraphicsEngine::BeginDraw()
 		D3D12_RESOURCE_STATE_RENDER_TARGET);
 
 	// レンダーターゲットセット
-	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
+	_renderContext.SetRenderTarget(&rtvHandle, &dsvHandle);
 
 	// 画面を指定色でクリア
 	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
 	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+
+	// デプスステンシルバッファをクリア
+	_renderContext.ClearDepthStencilView(
+		dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
+		depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
 }
 
 void Dx12GraphicsEngine::EndDraw()
@@ -285,12 +293,20 @@ void Dx12GraphicsEngine::SetFrameRenderTarget(const CD3DX12_VIEWPORT& viewport, 
 	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
 
+	// 深度バッファー
+	auto dsvHandle = _dsvHeap.GetCPUDescriptorHandleForHeapStart();
+	
 	// レンダーターゲットセット
-	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
+	_renderContext.SetRenderTarget(&rtvHandle, &dsvHandle);
 
 	// 画面を指定色でクリア
 	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
 	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+
+	// デプスステンシルバッファをクリア
+	_renderContext.ClearDepthStencilView(
+		dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
+		depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
 
 	// ビューポートとシザー矩形セット
 	_renderContext.SetViewport(viewport);
@@ -312,6 +328,19 @@ MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 		// 登録
 		_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx], DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 	}
+
+	// デプスステンシルバッファー生成
+	depthStencilBufferData.width = _windowWidth;
+	depthStencilBufferData.height = _windowHeight;
+	result = _depthStencilBuffer.Create(*_device.Get(), depthStencilBufferData);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// デプスステンシル用ディスクリプタヒープ生成
+	result = _dsvHeap.Create(*_device.Get());
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// デプスステンシルビュー生成
+	_dsvHeap.RegistDescriptor(*_device.Get(), _depthStencilBuffer);
 
 	return MYRESULT::SUCCESS;
 }

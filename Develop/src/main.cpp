@@ -5,6 +5,7 @@
 #include "TextureMappingSample.h"
 #include "MultiPassRenderingSample.h"
 #include "MultiRenderTargetSample.h"
+#include "DepthBufferSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -20,7 +21,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// マルチレンダーターゲットサンプル
 	MultiRenderTargetSample multiRenderApp;
 
-	Dx12Application app(multiRenderApp);
+	// 深度バッファーサンプル
+	DepthBufferSample depthBufferApp;
+
+	Dx12Application app(depthBufferApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;
