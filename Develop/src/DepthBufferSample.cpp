@@ -32,8 +32,8 @@ MYRESULT DepthBufferSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 void DepthBufferSample::Update(float deltaTime)
 {
 	angle += 0.01f;
-	_nearCBuffData.rotation = XMMatrixRotationY(angle);
-	_nearCBuffer.UpdateData((void*)&_nearCBuffData);
+	/*_nearCBuffData.rotation = XMMatrixRotationY(angle);
+	_nearCBuffer.UpdateData((void*)&_nearCBuffData);*/
 }
 
 void DepthBufferSample::Draw(Dx12GraphicsEngine& graphicsEngine)
@@ -177,7 +177,7 @@ MYRESULT DepthBufferSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine
 		10.f);
 
 	_nearCBuffData.worldViewProj = worldViewProj;
-	_nearCBuffData.rotation = DirectX::XMMatrixRotationY(90);
+	_nearCBuffData.rotation = DirectX::XMMatrixRotationY(45.f);
 
 	MYRESULT result = _nearCBuffer.Create(graphicsEngine.Device(), &_nearCBuffData, sizeof(NearConstBuff));
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
