@@ -53,10 +53,11 @@ void RenderTarget::BeginRendering(RenderingContext& renderContext, CD3DX12_VIEWP
 
 	// レンダーターゲットセット
 	auto rtvHandle = _rtvHeap.GetCPUDescriptorHandleForHeapStart();
-	renderContext.SetRenderTarget(&rtvHandle, nullptr);
 
 	// 深度バッファー
 	auto dsvHandle = _dsvHeap.GetCPUDescriptorHandleForHeapStart();
+
+	renderContext.SetRenderTarget(&rtvHandle, &dsvHandle);
 
 	// 画面を指定色でクリア
 	renderContext.ClearRenderTarget(rtvHandle, _renderTargetData.renderTargetBufferData.clearColor, 0, nullptr);
