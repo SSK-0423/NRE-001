@@ -12,6 +12,8 @@ DepthStencilBufferData::DepthStencilBufferData(
 
 MYRESULT DepthStencilBuffer::Create(ID3D12Device& device, const DepthStencilBufferData& data)
 {
+	_depthStencilBufferData = data;
+
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
 	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(data.depthFormat, data.width, data.height);
 	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;

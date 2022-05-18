@@ -42,6 +42,8 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _dsvBuffer = nullptr;
 
+	DepthStencilBufferData _depthStencilBufferData;
+
 public:
 	/// <summary>
 	/// デプスステンシルバッファー生成
@@ -57,5 +59,14 @@ public:
 	/// <returns></returns>
 	ID3D12Resource& GetBuffer() {
 		return *_dsvBuffer.Get();
+	}
+
+	/// <summary>
+	/// デプスステンシルバッファーの設定構造体を取得
+	/// </summary>
+	/// <returns></returns>
+	DepthStencilBufferData GetDepthStencilBufferData()
+	{
+		return _depthStencilBufferData;
 	}
 };

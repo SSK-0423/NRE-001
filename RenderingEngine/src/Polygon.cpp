@@ -46,6 +46,7 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 	
 	// デプスステンシル設定
 	pipelineState.DepthStencilState.DepthEnable = true;
+	pipelineState.DepthStencilState.StencilEnable = false;
 	pipelineState.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
 	pipelineState.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
 	pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
