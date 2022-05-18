@@ -36,6 +36,7 @@ MYRESULT DepthBufferSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	data.pixelShaderData = ShaderData(L"src/SpritePS.hlsl", "SpritePS", "ps_5_0");
 	data.textures[0] = &_firstRender.GetRenderTargetTexture();
 	data.textures[1] = &_firstRender.GetDepthStencilTexture();
+	data.rootSignatureData._descRangeData.srvDescriptorNum = 2;
 
 	result = _firstRenderingSprite.Create(graphicsEngine, data);
 	if (result == MYRESULT::FAILED) { return result; }
