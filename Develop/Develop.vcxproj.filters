@@ -145,6 +145,12 @@
     <FxCompile Include="src\FarPolygonPS.hlsl">
       <Filter>シェーダー\DepthBufferSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\SpriteVS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SpritePS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonShaderHeader.hlsli">

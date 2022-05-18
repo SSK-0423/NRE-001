@@ -26,7 +26,7 @@ struct DepthStencilBufferData
 	/// <param name="clearColor">初期化深度 デフォルト：1.f</param>
 	DepthStencilBufferData(
 		const DXGI_FORMAT& depthFormat = DXGI_FORMAT_D32_FLOAT,
-		const UINT& width = 1024, const UINT& height = 768, 
+		const UINT& width = 1024, const UINT& height = 768,
 		const float& clearDepth = 1.f, const UINT8& clearStencil = 0);
 };
 

@@ -13,6 +13,9 @@
 #include "DescriptorHeapCBV_SRV_UAV.h"
 #include "ConstantBuffer.h"
 
+#include "RenderTarget.h"
+#include "Sprite.h"
+
 #include <DirectXMath.h>
 
 class DepthBufferSample : public Dx12ApplicationImpl
@@ -44,6 +47,9 @@ private:
 	NearConstBuff _nearCBuffData;
 	DescriptorHeapCBV_SRV_UAV _nearHeap;
 	ConstantBuffer _nearCBuffer;
+
+	RenderTarget _firstRender;
+	Sprite _firstRenderingSprite;
 
 	MYRESULT CreateNearPolygon(Dx12GraphicsEngine& graphicsEngine);
 	MYRESULT CreateFarPolygon(Dx12GraphicsEngine& graphicsEngine);

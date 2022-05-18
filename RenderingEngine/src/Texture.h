@@ -11,6 +11,7 @@
 #include "Dx12GraphicsEngine.h"
 #include "EngineUtility.h"
 #include "RenderTargetBuffer.h"
+#include "DepthStencilBuffer.h"
 
 class Texture {
 public:
@@ -82,6 +83,12 @@ public:
 	/// </summary>
 	/// <param name="renderTargetBuffer">レンダーターゲットバッファー</param>
 	void CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer);
+
+	/// <summary>
+	/// デプスステンシルバッファーからテクスチャ生成
+	/// </summary>
+	/// <param name="depthStencilBuffer">デプスステンシルバッファー</param>
+	void CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuffer);
 
 	/// <summary>
 	/// テクスチャバッファー取得

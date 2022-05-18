@@ -15,10 +15,10 @@ MYRESULT DepthStencilBuffer::Create(ID3D12Device& device, const DepthStencilBuff
 	_depthStencilBufferData = data;
 
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
-	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(data.depthFormat, data.width, data.height);
+	CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(DXGI_FORMAT_R32_TYPELESS, data.width, data.height);
 	resDesc.Flags = D3D12_RESOURCE_FLAG_ALLOW_DEPTH_STENCIL;
 	CD3DX12_CLEAR_VALUE clearValue(data.depthFormat, data.clearDepth, data.clearStencil);
-	
+
 	HRESULT result = device.CreateCommittedResource(
 		&heapProp,
 		D3D12_HEAP_FLAG_NONE,

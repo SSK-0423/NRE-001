@@ -199,3 +199,17 @@ void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuff
 
 	_metaData.mipLevels = 1;
 }
+
+void Texture::CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuffer)
+{
+	// デプスステンシルバッファーとテクスチャバッファーを結びつける
+	_textureBuffer = &depthStencilBuffer.GetBuffer();
+
+
+	// シェーダーリソースとして登録する際に必要な情報をセット
+	DirectX::Image* img = new DirectX::Image();
+	img->format = DXGI_FORMAT_R32_FLOAT;	
+	_image = img;
+
+	_metaData.mipLevels = 1;
+}

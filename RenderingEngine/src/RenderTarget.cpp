@@ -29,12 +29,16 @@ MYRESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTarg
 	// オフスクリーンテクスチャバッファー生成
 	_renderTargetTexture.CreateTextureFromRenderTarget(_renderTargetBuffer);
 
-	// オフスクリーンテクスチャ用ヒープ生成
+	// デプスステンシルテクスチャバッファー生成
+	_depthStencilTexture.CreateTextureFromDepthStencil(_depthStencilBuffer);
+
+	// テクスチャ用ヒープ生成
 	result = _textureHeap.Create(device);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// テクスチャとして登録
 	_textureHeap.RegistShaderResource(device, _renderTargetTexture);
+	_textureHeap.RegistShaderResource(device, _depthStencilTexture);
 
 	return MYRESULT::SUCCESS;
 }
@@ -108,7 +112,7 @@ void RenderTarget::BeginMultiRendering(
 	}
 
 	// レンダーターゲットセット
-	renderContext.SetRenderTargets(length, rtvHandles, nullptr);
+	renderContext.SetRenderTargets(length, rtvHandles, &dsvHandles[0]);
 
 	// ビューポート、シザー矩形セット
 	renderContext.SetViewport(viewport);
