@@ -15,16 +15,12 @@ MYRESULT DepthBufferSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// ビューポートセット
-	_viewport.TopLeftX = 0.f;
-	_viewport.TopLeftY = 0.f;
-	_viewport.Width = static_cast<FLOAT>(window.GetWindowSize().cx);
-	_viewport.Height = static_cast<FLOAT>(window.GetWindowSize().cy);
+	_viewport = CD3DX12_VIEWPORT(0.f, 0.f,
+		static_cast<FLOAT>(window.GetWindowSize().cx),
+		static_cast<FLOAT>(window.GetWindowSize().cy));
 
 	// シザー矩形セット
-	_scissorRect.left = 0;
-	_scissorRect.top = 0;
-	_scissorRect.right = window.GetWindowSize().cx;
-	_scissorRect.bottom = window.GetWindowSize().cy;
+	_scissorRect = CD3DX12_RECT(0, 0, window.GetWindowSize().cx, window.GetWindowSize().cy);
 
 	return result;
 }
@@ -57,10 +53,10 @@ MYRESULT DepthBufferSample::CreateNearPolygon(Dx12GraphicsEngine& graphicsEngine
 {
 	// ポリゴンの頂点データ用意
 	std::vector<PolygonVertex> triangleVertex;
-	triangleVertex.push_back({ { -2.f,-0.4f	,-0.5f }	,{0.f,1.f} });
-	triangleVertex.push_back({ { -2.f  ,0.4f,-0.5f }	,{0.f,0.f} });
-	triangleVertex.push_back({ { 2.f ,-0.4f	,-0.5f}	,{1.f,1.f} });
-	triangleVertex.push_back({ { 2.f ,0.4f	,-0.5f}	,{1.f,0.f} });
+	triangleVertex.push_back({ { -2.f,-0.4f	,-0.f }	,{0.f,1.f} });
+	triangleVertex.push_back({ { -2.f ,0.4f,-0.f }	,{0.f,0.f} });
+	triangleVertex.push_back({ { 2.f  ,-0.4f,-0.f}	,{1.f,1.f} });
+	triangleVertex.push_back({ { 2.f  ,0.4f	,-0.f}	,{1.f,0.f} });
 
 	// 頂点バッファー生成
 	MYRESULT result = _vertexBuffer.Create(
@@ -109,10 +105,10 @@ MYRESULT DepthBufferSample::CreateFarPolygon(Dx12GraphicsEngine& graphicsEngine)
 {
 	// ポリゴンの頂点データ用意
 	std::vector<PolygonVertex> triangleVertex;
-	triangleVertex.push_back({ { -1.f,-1.f	,0.5f }	,{0.f,1.f} });
-	triangleVertex.push_back({ { -1.f  ,1.f,0.5f }	,{0.f,0.f} });
-	triangleVertex.push_back({ { 1.f ,-1.f	,0.5f}	,{1.f,1.f} });
-	triangleVertex.push_back({ { 1.f ,1.f	,0.5f}	,{1.f,0.f} });
+	triangleVertex.push_back({ { -1.f,-1.f	,0.f }	,{0.f,1.f} });
+	triangleVertex.push_back({ { -1.f  ,1.f,0.f }	,{0.f,0.f} });
+	triangleVertex.push_back({ { 1.f ,-1.f	,0.f}	,{1.f,1.f} });
+	triangleVertex.push_back({ { 1.f ,1.f	,0.f}	,{1.f,0.f} });
 
 	// 頂点バッファー生成
 	MYRESULT result = _vertexBuffer.Create(
@@ -163,7 +159,7 @@ MYRESULT DepthBufferSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine
 	// 変換行列用意
 	XMMATRIX worldViewProj = XMMatrixIdentity();
 
-	XMFLOAT3 eye(0, 0, -3);
+	XMFLOAT3 eye(0, 0, -5);
 	XMFLOAT3 target(0, 0, 0);
 	XMFLOAT3 up(0, 1, 0);
 
@@ -177,7 +173,7 @@ MYRESULT DepthBufferSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine
 		10.f);
 
 	_nearCBuffData.worldViewProj = worldViewProj;
-	_nearCBuffData.rotation = DirectX::XMMatrixRotationY(90);
+	_nearCBuffData.rotation = DirectX::XMMatrixRotationY(30);
 
 	MYRESULT result = _nearCBuffer.Create(graphicsEngine.Device(), &_nearCBuffData, sizeof(NearConstBuff));
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }

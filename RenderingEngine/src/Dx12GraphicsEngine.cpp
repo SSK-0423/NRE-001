@@ -293,12 +293,20 @@ void Dx12GraphicsEngine::SetFrameRenderTarget(const CD3DX12_VIEWPORT& viewport, 
 	auto rtvHandle = _frameHeap.GetCPUDescriptorHandleForHeapStart();
 	rtvHandle.ptr += bbIdx * _frameHeap.GetHandleIncrimentSize();
 
+	// 深度バッファー
+	auto dsvHandle = _dsvHeap.GetCPUDescriptorHandleForHeapStart();
+	
 	// レンダーターゲットセット
-	_renderContext.SetRenderTarget(&rtvHandle, nullptr);
+	_renderContext.SetRenderTarget(&rtvHandle, &dsvHandle);
 
 	// 画面を指定色でクリア
 	ColorRGBA color(0.f, 1.f, 1.f, 1.f);
 	_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
+
+	// デプスステンシルバッファをクリア
+	_renderContext.ClearDepthStencilView(
+		dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
+		depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
 
 	// ビューポートとシザー矩形セット
 	_renderContext.SetViewport(viewport);

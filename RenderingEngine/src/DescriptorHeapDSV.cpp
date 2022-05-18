@@ -35,7 +35,7 @@ void DescriptorHeapDSV::RegistDescriptor(ID3D12Device& device, DepthStencilBuffe
 
 	// デプスステンシルビュー設定
 	D3D12_DEPTH_STENCIL_VIEW_DESC dsvDesc = {};
-	dsvDesc.Format = DXGI_FORMAT_D32_FLOAT;
+	dsvDesc.Format = buffer.GetDepthStencilBufferData().depthFormat;
 	dsvDesc.ViewDimension = D3D12_DSV_DIMENSION_TEXTURE2D;
 	dsvDesc.Flags = D3D12_DSV_FLAG_NONE;
 
