@@ -145,6 +145,7 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\DepthBufferSample.cpp" />
+    <ClCompile Include="src\DrawMeshSample.cpp" />
     <ClCompile Include="src\DrawPolygonSample.cpp" />
     <ClCompile Include="src\Dx12Application.cpp" />
     <ClCompile Include="src\main.cpp" />
@@ -155,6 +156,7 @@
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\DepthBufferSample.h" />
+    <ClInclude Include="src\DrawMeshSample.h" />
     <ClInclude Include="src\DrawPolygonSample.h" />
     <ClInclude Include="src\Dx12Application.h" />
     <ClInclude Include="src\Dx12ApplicationImpl.h" />
