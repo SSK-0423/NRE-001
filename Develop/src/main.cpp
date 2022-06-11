@@ -6,6 +6,7 @@
 #include "MultiPassRenderingSample.h"
 #include "MultiRenderTargetSample.h"
 #include "DepthBufferSample.h"
+#include "DrawMeshSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -25,9 +26,9 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	DepthBufferSample depthBufferApp;
 
 	// メッシュ描画サンプル
+	DrawMeshSample drawMeshApp;
 
-
-	Dx12Application app(depthBufferApp);
+	Dx12Application app(drawMeshApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		return -1;
