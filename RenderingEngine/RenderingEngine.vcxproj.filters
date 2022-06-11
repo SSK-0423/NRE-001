@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="DirectX12Wrapper">
+      <UniqueIdentifier>{2256e66e-ae22-42f5-be74-6e8d63a19d9c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Mesh">
+      <UniqueIdentifier>{1360d64a-0d15-4ed9-93b2-280c5f3206a3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12GraphicsEngine.h">
@@ -27,49 +33,10 @@
     <ClInclude Include="src\AppWindow.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\RenderingContext.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DescriptorHeapRTV.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderTargetBuffer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IndexBuffer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RootSignature.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphicsPipelineState.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\Polygon.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\Shader.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Texture.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ConstantBuffer.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="src\OffScreenRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MultiRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderTarget.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\Sprite.h">
@@ -78,11 +45,53 @@
     <ClInclude Include="src\ShaderLibrary.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="src\DescriptorHeapDSV.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="src\ConstantBuffer.h">
+      <Filter>DirectX12Wrapper</Filter>
     </ClInclude>
     <ClInclude Include="src\DepthStencilBuffer.h">
-      <Filter>ヘッダー ファイル</Filter>
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DescriptorHeapDSV.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\DescriptorHeapRTV.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GraphicsPipelineState.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\IndexBuffer.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderingContext.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderTarget.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RenderTargetBuffer.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\RootSignature.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Shader.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Texture.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\VertexBuffer.h">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClInclude>
+    <ClInclude Include="src\FBXLoader.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Mesh.h">
+      <Filter>Mesh</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -92,55 +101,61 @@
     <ClCompile Include="src\AppWindow.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderingContext.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DescriptorHeapRTV.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderTargetBuffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RootSignature.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GraphicsPipelineState.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Polygon.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ConstantBuffer.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\OffScreenRender.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\RenderTarget.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\Sprite.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\DescriptorHeapDSV.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="src\ConstantBuffer.cpp">
+      <Filter>DirectX12Wrapper</Filter>
     </ClCompile>
     <ClCompile Include="src\DepthStencilBuffer.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DescriptorHeapDSV.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\DescriptorHeapRTV.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\GraphicsPipelineState.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\IndexBuffer.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderingContext.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTarget.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RenderTargetBuffer.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\RootSignature.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Shader.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Texture.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\VertexBuffer.cpp">
+      <Filter>DirectX12Wrapper</Filter>
+    </ClCompile>
+    <ClCompile Include="src\FBXLoader.cpp">
+      <Filter>Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Mesh.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

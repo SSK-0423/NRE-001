@@ -1,13 +1,13 @@
 #include "DrawMeshSample.h"
-#include <fbxsdk.h>
 
 MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
-    fbxsdk::FbxManager* fbx_manager = fbxsdk::FbxManager::Create();
-
-    fbx_manager->Destroy();
-
-    return MYRESULT::FAILED;
+    MYRESULT result = mesh.LoadMesh("");
+    
+    if (result == MYRESULT::FAILED) {
+        return MYRESULT::FAILED;
+    }
+    return MYRESULT::SUCCESS;
 }
 
 void DrawMeshSample::Update(float deltaTime)

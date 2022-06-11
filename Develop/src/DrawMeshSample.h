@@ -15,6 +15,8 @@
 #include "RenderTarget.h"
 #include "Sprite.h"
 
+#include "Mesh.h"
+
 #include <DirectXMath.h>
 
 class DrawMeshSample : public Dx12ApplicationImpl
@@ -25,4 +27,6 @@ public:
 	void Draw(Dx12GraphicsEngine& graphicsEngine) override;
 	void Final() override;
 
+private:
+	Mesh mesh;
 };

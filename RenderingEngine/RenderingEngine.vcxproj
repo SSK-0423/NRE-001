@@ -169,9 +169,10 @@
     <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h" />
     <ClInclude Include="src\Dx12GraphicsEngine.h" />
     <ClInclude Include="src\EngineUtility.h" />
+    <ClInclude Include="src\FBXLoader.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
     <ClInclude Include="src\IndexBuffer.h" />
-    <ClInclude Include="src\MultiRender.h" />
+    <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\OffScreenRender.h" />
     <ClInclude Include="src\Polygon.h" />
     <ClInclude Include="src\RenderingContext.h" />
@@ -193,8 +194,10 @@
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
+    <ClCompile Include="src\FBXLoader.cpp" />
     <ClCompile Include="src\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
+    <ClCompile Include="src\Mesh.cpp" />
     <ClCompile Include="src\OffScreenRender.cpp" />
     <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RenderingContext.cpp" />

@@ -22,9 +22,6 @@
     <Filter Include="シェーダー\TextureMapSample">
       <UniqueIdentifier>{204249df-8d95-4c5a-b68c-bd6a3ec5601e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="サンプル">
-      <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
-    </Filter>
     <Filter Include="シェーダー\MultiPassRenderingSample">
       <UniqueIdentifier>{3c4b1109-2c99-4988-8a10-c55218da26d9}</UniqueIdentifier>
     </Filter>
@@ -33,6 +30,9 @@
     </Filter>
     <Filter Include="シェーダー\DepthBufferSample">
       <UniqueIdentifier>{845daa14-6e07-464a-9830-2abf63f0dd2a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SampleApplication">
+      <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -46,22 +46,22 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="src\DrawPolygonSample.cpp">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClCompile>
     <ClCompile Include="src\TextureMappingSample.cpp">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClCompile>
     <ClCompile Include="src\MultiPassRenderingSample.cpp">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClCompile>
     <ClCompile Include="src\MultiRenderTargetSample.cpp">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClCompile>
     <ClCompile Include="src\DepthBufferSample.cpp">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClCompile>
     <ClCompile Include="src\DrawMeshSample.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -75,22 +75,22 @@
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
     <ClInclude Include="src\DrawPolygonSample.h">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\TextureMappingSample.h">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\MultiPassRenderingSample.h">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\MultiRenderTargetSample.h">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\DepthBufferSample.h">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\DrawMeshSample.h">
-      <Filter>サンプル</Filter>
+      <Filter>SampleApplication</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
