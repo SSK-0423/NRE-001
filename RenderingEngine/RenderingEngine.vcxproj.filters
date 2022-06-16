@@ -93,6 +93,9 @@
     <ClInclude Include="src\Mesh.h">
       <Filter>Mesh</Filter>
     </ClInclude>
+    <ClInclude Include="src\IMeshLoader.h">
+      <Filter>Mesh</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12GraphicsEngine.cpp">

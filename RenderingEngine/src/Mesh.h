@@ -17,11 +17,17 @@ public:
 	/// </summary>
 	/// <param name="modelPath">ファイルパス</param>
 	/// <returns></returns>
-	MYRESULT LoadMesh(const char* modelPath);
+	MYRESULT LoadMesh(const char* modelPath,ID3D12Device& device);
 
 	/// <summary>
 	/// 描画
 	/// </summary>
 	/// <param name="renderContext"></param>
 	void Draw(RenderingContext& renderContext);
+
+private:
+
+	MYRESULT CreateVertexBuffers(ID3D12Device& device);
+
+	MYRESULT CreateIndexBuffers(ID3D12Device& device);
 };

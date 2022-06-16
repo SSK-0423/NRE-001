@@ -171,6 +171,7 @@
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\FBXLoader.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
+    <ClInclude Include="src\IMeshLoader.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\Mesh.h" />
     <ClInclude Include="src\OffScreenRender.h" />
