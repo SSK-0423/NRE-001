@@ -34,6 +34,9 @@
     <Filter Include="SampleApplication">
       <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\MeshDrawSample">
+      <UniqueIdentifier>{607c0744-33e3-4d7c-8a92-569dad5ed898}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">
@@ -94,21 +97,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\PolygonVertexShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="src\PolygonPixelShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="src\BackgroundPixelShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MRTPolygonPixelShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MRTPolygonVertexShader.hlsl">
-      <Filter>シェーダー</Filter>
-    </FxCompile>
     <FxCompile Include="src\PolygonSamplePixel.hlsl">
       <Filter>シェーダー\PolygonSample</Filter>
     </FxCompile>
@@ -120,6 +108,30 @@
     </FxCompile>
     <FxCompile Include="src\TextureMapSamplePixel.hlsl">
       <Filter>シェーダー\TextureMapSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\FarPolygonPS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\FarPolygonVS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\NearPolygonPS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\NearPolygonVS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SpritePS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SpriteVS.hlsl">
+      <Filter>シェーダー\DepthBufferSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MeshPS.hlsl">
+      <Filter>シェーダー\MeshDrawSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MeshVS.hlsl">
+      <Filter>シェーダー\MeshDrawSample</Filter>
     </FxCompile>
     <FxCompile Include="src\OffscreenPixelShader.hlsl">
       <Filter>シェーダー\MultiPassRenderingSample</Filter>
@@ -139,32 +151,8 @@
     <FxCompile Include="src\MultiRenderTargetVertex.hlsl">
       <Filter>シェーダー\MultiRenderTargetSample</Filter>
     </FxCompile>
-    <FxCompile Include="src\NearPolygonVS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\FarPolygonVS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\NearPolygonPS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\FarPolygonPS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\SpriteVS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\SpritePS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="src\PolygonShaderHeader.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
-    <None Include="src\MRTHeader.hlsli">
-      <Filter>シェーダー</Filter>
-    </None>
     <None Include="src\PolygonSampleHeader.hlsli">
       <Filter>シェーダー\PolygonSample</Filter>
     </None>

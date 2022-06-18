@@ -26,8 +26,8 @@ MYRESULT MultiRenderTargetSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWi
 
 	// スプライト生成
 	SpriteData spriteData;
-	spriteData.vertexShaderData = ShaderData(L"src/MultiRenderTargetFirstVertex.hlsl", "MrtFirstVertex", "vs_5_0");
-	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetFirstPixel.hlsl", "MrtFirstPixel", "ps_5_0");
+	spriteData.vertexShaderData = ShaderData(L"src/MultiRenderTargetFirstVertex.hlsl", "main", "vs_5_0");
+	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetFirstPixel.hlsl", "main", "ps_5_0");
 	spriteData.colorFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;	// 2つ目のレンダーターゲットのフォーマットセット
 
 	// ルートシグネチャ設定
@@ -40,8 +40,8 @@ MYRESULT MultiRenderTargetSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWi
 	result = _firstSprite.Create(graphicsEngine, spriteData);
 	if (result == MYRESULT::FAILED) return result;
 
-	spriteData.vertexShaderData = ShaderData(L"src/MultiRenderTargetVertex.hlsl", "MrtVertex", "vs_5_0");
-	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetPixel.hlsl", "MrtPixel", "ps_5_0");
+	spriteData.vertexShaderData = ShaderData(L"src/MultiRenderTargetVertex.hlsl", "main", "vs_5_0");
+	spriteData.pixelShaderData = ShaderData(L"src/MultiRenderTargetPixel.hlsl", "main", "ps_5_0");
 	spriteData.colorFormats[1] = DXGI_FORMAT_UNKNOWN;
 
 

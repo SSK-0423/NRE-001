@@ -47,8 +47,8 @@ MYRESULT Application::Init()
 	result = _rootSignature.Create(_graphicsEngine.Device(), data);
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/PolygonVertexShader.hlsl", "PolygonVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/PolygonPixelShader.hlsl", "PolygonPS", "ps_5_0");
+	result = _vertexShader.Create(L"src/PolygonVertexShader.hlsl", "main", "vs_5_0");
+	result = _pixelShader.Create(L"src/PolygonPixelShader.hlsl", "main", "ps_5_0");
 
 	// ポリゴン生成
 	PolygonData polygonData;
@@ -222,8 +222,8 @@ MYRESULT Application::InitOffscreenRender()
 	OffScreenRenderData firstPassRenderData;
 	firstPassRenderData.renderTargetData = renderData;
 	firstPassRenderData.rootSignature = _rootSignature;
-	firstPassRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
-	firstPassRenderData.pixelShaderData = ShaderData(L"src/BackgroundPixelShader.hlsl", "BackgroundPS", "ps_5_0");
+	firstPassRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "main", "vs_5_0");
+	firstPassRenderData.pixelShaderData = ShaderData(L"src/BackgroundPixelShader.hlsl", "main", "ps_5_0");
 	firstPassRenderData.viewport = _viewport;
 	firstPassRenderData.scissorRect = _scissorRect;
 
@@ -233,7 +233,7 @@ MYRESULT Application::InitOffscreenRender()
 
 	// 2パス目生成
 	OffScreenRenderData secondPassRenderData = firstPassRenderData;
-	secondPassRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+	secondPassRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "main", "ps_5_0");
 
 	result = _secondPassRender.Create(device, secondPassRenderData);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -334,9 +334,9 @@ MYRESULT Application::CreateMRTPolygon()
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// シェーダー
-	result = _mrtPolygonVS.Create(ShaderData(L"src/MRTPolygonVertexShader.hlsl", "MrtPolygonVS", "vs_5_0"));
+	result = _mrtPolygonVS.Create(ShaderData(L"src/MRTPolygonVertexShader.hlsl", "main", "vs_5_0"));
 	if (result == MYRESULT::FAILED) { return result; }
-	result = _mrtPolygonPS.Create(ShaderData(L"src/MRTPolygonPixelShader.hlsl", "MrtPolygonPS", "ps_5_0"));
+	result = _mrtPolygonPS.Create(ShaderData(L"src/MRTPolygonPixelShader.hlsl", "main", "ps_5_0"));
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// オフスクリーンポリゴン生成
@@ -375,8 +375,8 @@ MYRESULT Application::CreateMRTRenders()
 	OffScreenRenderData offRenderData;
 	offRenderData.renderTargetData = renderData;
 	offRenderData.rootSignature = _rootSignature;
-	offRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
-	offRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+	offRenderData.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "main", "vs_5_0");
+	offRenderData.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "main", "ps_5_0");
 	offRenderData.viewport = _viewport;
 	offRenderData.scissorRect = _scissorRect;
 

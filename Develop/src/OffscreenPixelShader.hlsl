@@ -20,7 +20,7 @@ float4 filetring(OffOut output, float3x3 filter)
     return ret;
 }
 
-float4 OffscreenPS(OffOut input) : SV_TARGET
+float4 main(OffOut input) : SV_TARGET
 {
     //平滑化フィルター
     float3x3 smoothing =

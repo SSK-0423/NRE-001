@@ -21,6 +21,11 @@
 
 class DrawMeshSample : public Dx12ApplicationImpl
 {
+	struct MeshConstBuff
+	{
+		DirectX::XMMATRIX worldViewProj;
+	};
+
 public:
 	MYRESULT Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window) override;
 	void Update(float deltaTime) override;
@@ -29,4 +34,9 @@ public:
 
 private:
 	Mesh mesh;
+
+	MeshConstBuff _meshCBuffData;
+	ConstantBuffer _meshCBuffer;
+	DescriptorHeapCBV_SRV_UAV _meshHeap;
+	MYRESULT SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window);
 };

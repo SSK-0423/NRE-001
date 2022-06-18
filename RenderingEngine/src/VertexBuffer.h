@@ -20,7 +20,6 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _vertexBuffer = nullptr;	// 頂点バッファー
 	D3D12_VERTEX_BUFFER_VIEW _vertexBufferView;	                    // 頂点バッファービュー
-	DirectX::XMFLOAT3* _vertMap = nullptr;	                        // マップ先
 	UINT _vertexNum = 0;											// 頂点数
 
 	/// <summary>

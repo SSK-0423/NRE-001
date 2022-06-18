@@ -20,7 +20,7 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 
 	// ルートシグネチャ生成
 	MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
-	if (MYRESULT::FAILED == result) { return result; }
+	if (result == MYRESULT::FAILED) { return result; }
 
 	// ルートシグネチャとシェーダーセット
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};

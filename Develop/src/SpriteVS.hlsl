@@ -1,6 +1,6 @@
 #include "DepthBufferSampleHeader.hlsli"
 
-DepthSampleVSOut SpriteVS(float4 pos : POSITION, float2 uv : TEXCOORD)
+DepthSampleVSOut main(float4 pos : POSITION, float2 uv : TEXCOORD)
 {
     DepthSampleVSOut output;
     output.position = pos;

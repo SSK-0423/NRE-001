@@ -21,19 +21,19 @@ MYRESULT MultiPassRendering::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow&
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// テクスチャ生成
-	result = _texture.CreateTextureFromWIC(graphicsEngine, L"草.JPG");
+	result = _texture.CreateTextureFromWIC(graphicsEngine, L"Ramen.JPG");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	SpriteData data;
-	data.vertexShaderData = ShaderData(L"src/TextureMapSampleVertex.hlsl", "TexMapVS", "vs_5_0");
-	data.pixelShaderData = ShaderData(L"src/TextureMapSamplePixel.hlsl", "TexMapPS", "ps_5_0");
+	data.vertexShaderData = ShaderData(L"src/TextureMapSampleVertex.hlsl", "main", "vs_5_0");
+	data.pixelShaderData = ShaderData(L"src/TextureMapSamplePixel.hlsl", "main", "ps_5_0");
 	data.textures[0] = &_texture;
 
 	result = _myself.Create(graphicsEngine, data);
 	if (result == MYRESULT::FAILED) { return result; }
 
-	data.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "OffscreenVS", "vs_5_0");
-	data.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "OffscreenPS", "ps_5_0");
+	data.vertexShaderData = ShaderData(L"src/OffscreenVertexShader.hlsl", "main", "vs_5_0");
+	data.pixelShaderData = ShaderData(L"src/OffscreenPixelShader.hlsl", "main", "ps_5_0");
 	data.textures[0] = &_renderTarget.GetRenderTargetTexture();
 
 	result = _sprite.Create(graphicsEngine, data);

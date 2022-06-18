@@ -205,6 +205,7 @@ bool FBXLoader::Load(const char* meshPath)
 	for (auto data : meshNodeList) {
 		// mesh¶¬
 		CreateMesh(data.first.c_str(), data.second->GetMesh());
+		CreateMesh2(data.first.c_str(), data.second->GetMesh());
 	}
 
 	return true;
@@ -215,7 +216,17 @@ std::vector<MeshVertex>& FBXLoader::GetVertices()
 	return meshVertices;
 }
 
+std::map<std::string, std::vector<MeshVertex>>& FBXLoader::GetMapVertices()
+{
+	return meshVertices2;
+}
+
 std::vector<unsigned int>& FBXLoader::GetIndices()
 {
 	return meshIndices;
+}
+
+std::map<std::string, std::vector<unsigned int>>& FBXLoader::GetMapIndices()
+{
+	return meshIndices2;
 }

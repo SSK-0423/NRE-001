@@ -20,7 +20,12 @@ public:
 
 	std::vector<MeshVertex>& GetVertices() override;
 
+	std::map<std::string, std::vector<MeshVertex>>& GetMapVertices();
+
 	std::vector<unsigned int>& GetIndices() override;
+
+	std::map<std::string, std::vector<unsigned int>>& GetMapIndices();
+
 
 private:
 	std::map<std::string, FbxNode*> meshNodeList;
