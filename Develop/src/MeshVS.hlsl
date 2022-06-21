@@ -1,7 +1,11 @@
+#include "MeshSampleHeader.hlsli"
+
 // コンスタントバッファー
 cbuffer constBuff : register(b0)
 {
+    matrix world;
     matrix worldViewProj;
+    float3 eye;
 };
 
 struct VSInput
@@ -10,7 +14,14 @@ struct VSInput
     float3 normal : NORMAL;
 };
 
-float4 main(VSInput input) : SV_POSITION
+VSOutput main(VSInput input)
 {
-    return mul(worldViewProj, input.pos);
+    VSOutput output;
+    output.pos = mul(worldViewProj, input.pos);
+    
+    float4 normal = float4(input.normal.xyz, 0.f);
+    output.normal = mul(world, normal);
+    
+    output.ray = normalize(input.pos.xyz - eye);
+    return output;
 }

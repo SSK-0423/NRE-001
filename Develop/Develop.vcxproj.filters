@@ -168,5 +168,8 @@
     <None Include="src\DepthBufferSampleHeader.hlsli">
       <Filter>シェーダー\DepthBufferSample</Filter>
     </None>
+    <None Include="src\MeshSampleHeader.hlsli">
+      <Filter>シェーダー\MeshDrawSample</Filter>
+    </None>
   </ItemGroup>
 </Project>

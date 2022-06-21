@@ -73,7 +73,7 @@ void FBXLoader::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& 
 
 void FBXLoader::CreateMesh(const char* nodeName, FbxMesh* mesh)
 {
-	// 頂点バッファの取得
+	// 頂点バッファの取得 
 	FbxVector4* vertices = mesh->GetControlPoints();
 	// インデックスバッファの取得
 	int* indices = mesh->GetPolygonVertices();

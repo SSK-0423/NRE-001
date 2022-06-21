@@ -85,7 +85,7 @@ void Polygon::Draw(RenderingContext& renderContext)
 	renderContext.SetPipelineState(_graphicsPipelineState);
 	renderContext.SetVertexBuffer(0, _vertexBuffer);
 	renderContext.SetIndexBuffer(_indexBuffer);
-	renderContext.SetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
 }
 

@@ -23,7 +23,9 @@ class DrawMeshSample : public Dx12ApplicationImpl
 {
 	struct MeshConstBuff
 	{
+		DirectX::XMMATRIX world;
 		DirectX::XMMATRIX worldViewProj;
+		DirectX::XMFLOAT3 eye;
 	};
 
 public:
@@ -38,5 +40,14 @@ private:
 	MeshConstBuff _meshCBuffData;
 	ConstantBuffer _meshCBuffer;
 	DescriptorHeapCBV_SRV_UAV _meshHeap;
+
+	CD3DX12_VIEWPORT _viewport;			        // ビューポート
+	CD3DX12_RECT _scissorRect;			        // シザー矩形
+
+	float _angle;
+
+	DirectX::XMMATRIX _view;
+	DirectX::XMMATRIX _proj;
+
 	MYRESULT SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window);
 };

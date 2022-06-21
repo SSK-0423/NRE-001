@@ -55,7 +55,7 @@ void Mesh::Draw(RenderingContext& renderContext)
 	renderContext.SetPipelineState(_graphicsPipelineState);
 	renderContext.SetVertexBuffer(0, _vertexBuffer);
 	renderContext.SetIndexBuffer(_indexBuffer);
-	renderContext.SetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
 }
 
@@ -66,9 +66,9 @@ void Mesh::SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap)
 
 MYRESULT Mesh::CreateVertexBuffers(ID3D12Device& device)
 {
-	std::vector<MeshVertex> vertices = _loader->GetVertices();
+	std::vector<MeshVertex>& vertices = _loader->GetVertices();
 	MYRESULT result = _vertexBuffer.Create(
-		device, (void*)&vertices[0], SizeofVector(vertices), sizeof(MeshVertex));
+		device, &vertices[0], SizeofVector(vertices), sizeof(MeshVertex));
 	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
@@ -76,7 +76,7 @@ MYRESULT Mesh::CreateVertexBuffers(ID3D12Device& device)
 
 MYRESULT Mesh::CreateIndexBuffers(ID3D12Device& device)
 {
-	std::vector<unsigned int> indices = _loader->GetIndices();
+	std::vector<unsigned int>& indices = _loader->GetIndices();
 	MYRESULT result = _indexBuffer.Create(device, indices);
 	if (result == MYRESULT::FAILED) { return result; }
 
@@ -132,8 +132,6 @@ MYRESULT Mesh::CreateGraphicsPipelineState(ID3D12Device& device, MeshData& data)
 
 	// グラフィックスパイプラインステート生成
 	return _graphicsPipelineState.Create(device, pipelineState);
-
-	return MYRESULT::SUCCESS;
 }
 
 //

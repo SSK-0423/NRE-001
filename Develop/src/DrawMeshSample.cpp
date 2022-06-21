@@ -31,16 +31,29 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	result = mesh.LoadMesh(
 		"res/bunny/bunny.fbx", graphicsEngine.Device(), meshData);
 	if (result == MYRESULT::FAILED) { return result; }
-
+	// メッシュにコンスタントバッファーセット
 	result = SetConstantBuffer(graphicsEngine, window);
 	if (result == MYRESULT::FAILED) { return result; }
 
+	// ビューポートセット
+	_viewport = CD3DX12_VIEWPORT(0.f, 0.f,
+		static_cast<FLOAT>(window.GetWindowSize().cx),
+		static_cast<FLOAT>(window.GetWindowSize().cy));
+
+	// シザー矩形セット
+	_scissorRect = CD3DX12_RECT(0, 0, window.GetWindowSize().cx, window.GetWindowSize().cy);
 
 	return MYRESULT::SUCCESS;
 }
 
 void DrawMeshSample::Update(float deltaTime)
 {
+	_angle -= 0.01f;
+	_meshCBuffData.world = XMMatrixRotationY(_angle) * XMMatrixTranslation(0.f, -0.75f, 0.f);
+	_meshCBuffData.worldViewProj =
+		XMMatrixIdentity() * _meshCBuffData.world * _view * _proj;
+
+	_meshCBuffer.UpdateData(&_meshCBuffData);
 }
 
 void DrawMeshSample::Draw(Dx12GraphicsEngine& graphicsEngine)
@@ -48,6 +61,8 @@ void DrawMeshSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	// レンダリングコンテキスト取得
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
 
+	renderContext.SetViewport(_viewport);
+	renderContext.SetScissorRect(_scissorRect);
 	mesh.Draw(renderContext);
 }
 
@@ -57,28 +72,32 @@ void DrawMeshSample::Final()
 
 MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
-	// 変換行列用意
-	XMMATRIX worldViewProj = XMMatrixIdentity();
-
-	XMVECTOR eye = XMVectorSet(0, 0, -3.f, 0);
-	XMVECTOR target = XMVectorSet(0, 0, 0, 0);
-	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
+	// ワールド行列
+	_angle = 0.f;
+	_meshCBuffData.world = XMMatrixRotationY(_angle);
 
 	// カメラ行列
-	worldViewProj *= XMMatrixLookAtLH(eye, target, up);
+	XMVECTOR eye = XMVectorSet(0, 0.f, -2.f, 0);
+	XMVECTOR target = XMVectorSet(0, 0.f, 0, 0);
+	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
+	_view = XMMatrixLookAtLH(eye, target, up);
+	XMStoreFloat3(&_meshCBuffData.eye, eye);
 
-
-	worldViewProj *= XMMatrixPerspectiveFovLH(
+	// プロジェクション行列
+	_proj = XMMatrixPerspectiveFovLH(
 		XM_PIDIV2,
 		static_cast<float>(window.GetWindowSize().cx) / static_cast<float>(window.GetWindowSize().cy),
 		0.1f,
 		10.f);
 
-	_meshCBuffData.worldViewProj = worldViewProj;
+	// ワールドビュープロジェクション行列
+	_meshCBuffData.worldViewProj = XMMatrixIdentity() * _meshCBuffData.world * _view * _proj;
 
+	// コンスタントバッファー生成
 	MYRESULT result = _meshCBuffer.Create(graphicsEngine.Device(), &_meshCBuffData, sizeof(MeshConstBuff));
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
+	// メッシュ用のディスクリプタヒープ生成
 	result = _meshHeap.Create(graphicsEngine.Device());
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 

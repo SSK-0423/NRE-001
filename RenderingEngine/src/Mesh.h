@@ -64,6 +64,8 @@ private:
 
 	DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
 
+
+
 public:
 	/// <summary>
 	/// ƒƒbƒVƒ…“Ç‚İ‚İ
