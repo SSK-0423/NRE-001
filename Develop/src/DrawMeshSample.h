@@ -15,7 +15,7 @@
 #include "RenderTarget.h"
 #include "Sprite.h"
 
-#include "Mesh.h"
+#include "FBXMesh.h"
 
 #include <DirectXMath.h>
 
@@ -35,7 +35,7 @@ public:
 	void Final() override;
 
 private:
-	Mesh mesh;
+	FBXMesh mesh;
 
 	MeshConstBuff _meshCBuffData;
 	ConstantBuffer _meshCBuffer;

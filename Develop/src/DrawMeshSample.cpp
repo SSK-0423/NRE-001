@@ -14,8 +14,10 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	result = pixelShader.Create(L"src/MeshPS.hlsl", "main", "ps_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
 
-	// MeshData用意
-	MeshData meshData;
+	// FBXMeshData用意
+	FBXMeshCreateData meshData;
+	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
+	meshData.modelPath = "res/city/city.fbx";
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
 	meshData.rootSignatureData = RootSignatureData();
@@ -28,8 +30,7 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
 
 	// メッシュ読み込み
-	result = mesh.LoadMesh(
-		"res/bunny/bunny.fbx", graphicsEngine.Device(), meshData);
+	result = mesh.LoadFBX(graphicsEngine.Device(), meshData);
 	if (result == MYRESULT::FAILED) { return result; }
 	// メッシュにコンスタントバッファーセット
 	result = SetConstantBuffer(graphicsEngine, window);
@@ -49,10 +50,12 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 void DrawMeshSample::Update(float deltaTime)
 {
 	_angle -= 0.01f;
-	_meshCBuffData.world = XMMatrixRotationY(_angle) * XMMatrixTranslation(0.f, -0.75f, 0.f);
+	_meshCBuffData.world =
+		XMMatrixScaling(0.1, 0.1, 0.1) *
+		XMMatrixRotationY(_angle) *
+		XMMatrixTranslation(0.f, -1.f, 0.f);
 	_meshCBuffData.worldViewProj =
 		XMMatrixIdentity() * _meshCBuffData.world * _view * _proj;
-
 	_meshCBuffer.UpdateData(&_meshCBuffData);
 }
 
@@ -77,7 +80,7 @@ MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, A
 	_meshCBuffData.world = XMMatrixRotationY(_angle);
 
 	// カメラ行列
-	XMVECTOR eye = XMVectorSet(0, 0.f, -2.f, 0);
+	XMVECTOR eye = XMVectorSet(0, 100.f, -70.f, 0);
 	XMVECTOR target = XMVectorSet(0, 0.f, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
 	_view = XMMatrixLookAtLH(eye, target, up);
@@ -88,7 +91,7 @@ MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, A
 		XM_PIDIV2,
 		static_cast<float>(window.GetWindowSize().cx) / static_cast<float>(window.GetWindowSize().cy),
 		0.1f,
-		10.f);
+		1000.f);
 
 	// ワールドビュープロジェクション行列
 	_meshCBuffData.worldViewProj = XMMatrixIdentity() * _meshCBuffData.world * _view * _proj;

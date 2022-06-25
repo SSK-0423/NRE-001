@@ -13,10 +13,12 @@
 #include "RenderingContext.h"
 
 #include "EngineUtility.h"
+
 /// <summary>
 /// メッシュ生成用データ
 /// </summary>
-struct MeshData {
+struct FBXMeshCreateData {
+	const char* modelPath;								// 3Dモデルへのファイルパス
 	Shader vertexShader;	                            // 頂点シェーダー
 	Shader pixelShader;									// ピクセルシェーダー
 	RootSignatureData rootSignatureData;				// ルートシグネチャ
@@ -42,29 +44,28 @@ struct MeshData {
 /// <summary>
 /// メッシュクラス
 /// </summary>
-class Mesh {
+class FBXMesh {
 public:
-	Mesh();
-	~Mesh();
+	FBXMesh();
+	~FBXMesh();
 
 private:
-	IMeshLoader* _loader = nullptr;
 	FBXLoader* _fbxLoader = nullptr;
 
-	VertexBuffer _vertexBuffer;
+	std::vector<FBXMeshData> _meshDataList;
+
+	std::vector<VertexBuffer> _vertexBuffers;
 	MYRESULT CreateVertexBuffers(ID3D12Device& device);
 
-	IndexBuffer _indexBuffer;
+	std::vector<IndexBuffer> _indexBuffers;
 	MYRESULT CreateIndexBuffers(ID3D12Device& device);
 
 	GraphicsPipelineState _graphicsPipelineState;
-	MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, MeshData& meshData);
+	MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& meshData);
 
 	RootSignature _rootSignature;
 
 	DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
-
-
 
 public:
 	/// <summary>
@@ -72,7 +73,7 @@ public:
 	/// </summary>
 	/// <param name="modelPath">ファイルパス</param>
 	/// <returns></returns>
-	MYRESULT LoadMesh(const char* modelPath, ID3D12Device& device, MeshData& meshData);
+	MYRESULT LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshData);
 
 	/// <summary>
 	/// 描画

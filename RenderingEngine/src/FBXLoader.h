@@ -4,9 +4,17 @@
 #include <vector>
 #include <DirectXMath.h>
 
-#include "IMeshLoader.h"
+struct FBXMeshVertex {
+	DirectX::XMFLOAT3 position;
+	DirectX::XMFLOAT3 normal;
+};
 
-class FBXLoader : public IMeshLoader{
+struct FBXMeshData {
+	std::vector<FBXMeshVertex> vertices;	// 頂点
+	std::vector<unsigned int> indices;		// 頂点インデックス
+};
+
+class FBXLoader{
 public:
 	FBXLoader();
 	~FBXLoader();
@@ -16,19 +24,10 @@ public:
 	FbxScene* fbxScene;
 
 public:
-	bool Load(const char* meshPath) override;
-
-	std::vector<MeshVertex>& GetVertices() override;
-
-	std::map<std::string, std::vector<MeshVertex>>& GetMapVertices();
-
-	std::vector<unsigned int>& GetIndices() override;
-
-	std::map<std::string, std::vector<unsigned int>>& GetMapIndices();
-
+	bool Load(const char* meshPath, std::vector<FBXMeshData>& meshDataList);
 
 private:
-	std::map<std::string, FbxNode*> meshNodeList;
+	std::vector<FBXMeshData> _meshDataList;
 
 	/// <summary>
 	/// FBX_SDK初期化
@@ -36,30 +35,17 @@ private:
 	/// <returns></returns>
 	bool Init();
 
-	/// <summary>
-	/// メッシュノード収集
-	/// </summary>
-	/// <param name="node"></param>
-	/// <param name="list"></param>
-	void CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& list);
+	FBXMeshData CreateMesh(FbxMesh* mesh);
 
-	/// <summary>
-	/// メッシュ生成
-	/// </summary>
-	/// <param name="nodeName"></param>
-	/// <param name="mesh"></param>
-	void CreateMesh(const char* nodeName, FbxMesh* mesh);
+	// 頂点読み込み 
+	void LoadVertices(FBXMeshData& meshData, FbxMesh* mesh);
 
-	// TODO: map化が不必要なら削除
-	void CreateMesh2(const char* nodeName, FbxMesh* mesh);
+	// インデックスバッファ読み込み
+	void LoadIndices(FBXMeshData& meshData, FbxMesh* mesh);
 
-	// メッシュの頂点リスト
-	std::vector<MeshVertex> meshVertices;
-	// TODO: map化が不必要なら削除
-	std::map<std::string, std::vector<MeshVertex>> meshVertices2;
+	// 法線読み込み
+	void LoadNormals(FBXMeshData& meshData, FbxMesh* mesh);
 
-	// メッシュのインデックスリスト
-	std::vector<unsigned int> meshIndices;
-	// TODO: map化が不必要なら削除
-	std::map<std::string, std::vector<unsigned int>> meshIndices2;
+	// マテリアル読み込み
+	//void LoadMaterial();
 };

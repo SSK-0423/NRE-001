@@ -90,10 +90,7 @@
     <ClInclude Include="src\FBXLoader.h">
       <Filter>Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="src\Mesh.h">
-      <Filter>Mesh</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IMeshLoader.h">
+    <ClInclude Include="src\FBXMesh.h">
       <Filter>Mesh</Filter>
     </ClInclude>
   </ItemGroup>
@@ -158,8 +155,8 @@
     <ClCompile Include="src\FBXLoader.cpp">
       <Filter>Mesh</Filter>
     </ClCompile>
-    <ClCompile Include="src\Mesh.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="src\FBXMesh.cpp">
+      <Filter>Mesh</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

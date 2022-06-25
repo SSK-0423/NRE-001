@@ -51,27 +51,17 @@ bool FBXLoader::Init()
 	return true;
 }
 
-void FBXLoader::CollectMeshNode(FbxNode* node, std::map<std::string, FbxNode*>& list)
+FBXMeshData FBXLoader::CreateMesh(FbxMesh* mesh)
 {
-	// ノードにメッシュアトリビュートが含まれている場合はリストに追加する
-	for (size_t i = 0; i < node->GetNodeAttributeCount(); i++) {
+	FBXMeshData meshData;
+	LoadVertices(meshData, mesh);
+	LoadIndices(meshData, mesh);
+	LoadNormals(meshData, mesh);
 
-		FbxNodeAttribute* attribute = node->GetNodeAttributeByIndex(i);
-
-		// Attributeがメッシュなら追加
-		if (attribute->GetAttributeType() == FbxNodeAttribute::EType::eMesh) {
-			list[node->GetName()] = node;
-			break;
-		}
-	}
-
-	// 子ノードのメッシュを探す
-	for (size_t i = 0; i < node->GetChildCount(); i++) {
-		CollectMeshNode(node->GetChild(i), list);
-	}
+	return meshData;
 }
 
-void FBXLoader::CreateMesh(const char* nodeName, FbxMesh* mesh)
+void FBXLoader::LoadVertices(FBXMeshData& meshData, FbxMesh* mesh)
 {
 	// 頂点バッファの取得 
 	FbxVector4* vertices = mesh->GetControlPoints();
@@ -82,7 +72,7 @@ void FBXLoader::CreateMesh(const char* nodeName, FbxMesh* mesh)
 
 	for (size_t idx = 0; idx < polygonVertexCount; idx++) {
 
-		MeshVertex vertex;
+		FBXMeshVertex vertex;
 
 		// インデックスバッファから頂点番号を取得
 		int index = indices[idx];
@@ -93,69 +83,12 @@ void FBXLoader::CreateMesh(const char* nodeName, FbxMesh* mesh)
 		vertex.position.z = vertices[index][2];
 
 		// 追加
-		meshVertices.push_back(vertex);
-	}
-
-	FbxArray<FbxVector4> normals;
-	// 法線リスト取得
-	mesh->GetPolygonVertexNormals(normals);
-
-	// 法線設定
-	for (size_t idx = 0; idx < normals.Size(); idx++) {
-		meshVertices[idx].normal.x = (float)-normals[idx][0];
-		meshVertices[idx].normal.y = (float)normals[idx][1];
-		meshVertices[idx].normal.z = (float)normals[idx][2];
-	}
-
-	// ポリゴン数の取得
-	int polygonCount = mesh->GetPolygonCount();
-
-	// ポリゴンの数だけ連番として保存する
-	for (unsigned int i = 0; i < polygonCount; i++) {
-		// インデックスバッファの順番で並んでいるのでそのまま
-		// 左手系対策
-		meshIndices.push_back(i * 3 + 2);
-		meshIndices.push_back(i * 3 + 1);
-		meshIndices.push_back(i * 3);
+		meshData.vertices.push_back(vertex);
 	}
 }
 
-void FBXLoader::CreateMesh2(const char* nodeName, FbxMesh* mesh)
+void FBXLoader::LoadIndices(FBXMeshData& meshData, FbxMesh* mesh)
 {
-	// 頂点バッファの取得
-	FbxVector4* vertices = mesh->GetControlPoints();
-	// インデックスバッファの取得
-	int* indices = mesh->GetPolygonVertices();
-	// 頂点座標の数(頂点数)の取得
-	unsigned long long polygonVertexCount = mesh->GetPolygonVertexCount();
-
-	for (size_t idx = 0; idx < polygonVertexCount; idx++) {
-
-		MeshVertex vertex;
-		
-		// インデックスバッファから頂点番号を取得
-		int index = indices[idx];
-
-		// 頂点座標リストから座標を取得する
-		vertex.position.x = -vertices[index][0]; // FBXは右手系 DirectXは左手系なのでX座標を反転
-		vertex.position.y = vertices[index][1];
-		vertex.position.z = vertices[index][2];
-
-		// 追加
-		meshVertices2[nodeName].push_back(vertex);
-	}
-
-	FbxArray<FbxVector4> normals;
-	// 法線リスト取得
-	mesh->GetPolygonVertexNormals(normals);
-
-	// 法線設定
-	for (size_t idx = 0; idx < normals.Size(); idx++) {
-		meshVertices2[nodeName][idx].normal.x = (float)-normals[idx][0];
-		meshVertices2[nodeName][idx].normal.y = (float)normals[idx][1];
-		meshVertices2[nodeName][idx].normal.z = (float)normals[idx][2];
-	}
-
 	// ポリゴン数の取得
 	int polygonCount = mesh->GetPolygonCount();
 
@@ -163,13 +96,27 @@ void FBXLoader::CreateMesh2(const char* nodeName, FbxMesh* mesh)
 	for (unsigned int i = 0; i < polygonCount; i++) {
 		// インデックスバッファの順番で並んでいるのでそのまま
 		// 左手系対策
-		meshIndices2[nodeName].push_back(i * 3 + 2);
-		meshIndices2[nodeName].push_back(i * 3 + 1);
-		meshIndices2[nodeName].push_back(i * 3);
+		meshData.indices.push_back(i * 3 + 2);
+		meshData.indices.push_back(i * 3 + 1);
+		meshData.indices.push_back(i * 3);
 	}
 }
 
-bool FBXLoader::Load(const char* meshPath)
+void FBXLoader::LoadNormals(FBXMeshData& meshData, FbxMesh* mesh)
+{
+	FbxArray<FbxVector4> normals;
+	// 法線リスト取得
+	mesh->GetPolygonVertexNormals(normals);
+
+	// 法線設定
+	for (size_t idx = 0; idx < normals.Size(); idx++) {
+		meshData.vertices[idx].normal.x = (float)-normals[idx][0];
+		meshData.vertices[idx].normal.y = (float)normals[idx][1];
+		meshData.vertices[idx].normal.z = (float)normals[idx][2];
+	}
+}
+
+bool FBXLoader::Load(const char* meshPath, std::vector<FBXMeshData>& meshDataList)
 {
 	assert(fbxManager != nullptr && fbxScene != nullptr && fbxImporter != nullptr);
 
@@ -189,44 +136,25 @@ bool FBXLoader::Load(const char* meshPath)
 		return false;
 	}
 
-	// ポリゴンを三角形にする
 	FbxGeometryConverter converter(fbxManager);
+	// 全てのFbxMeshをマテリアルごとに分割
+	converter.SplitMeshesPerMaterial(fbxScene, true);
+	// ポリゴンを三角形にする
 	converter.Triangulate(fbxScene, true);
 
-	// ルートノード取得
-	FbxNode* rootNode = fbxScene->GetRootNode();
-	if (rootNode == nullptr) {
-		return false;
-	}
+	// マテリアル数取得
+	int materialNum = fbxScene->GetSrcObjectCount<FbxSurfaceMaterial>();
 
-	// メッシュNodeを探す
-	CollectMeshNode(rootNode, meshNodeList);
+	// FbxMeshの数を取得
+	int meshNum = fbxScene->GetSrcObjectCount<FbxMesh>();
 
-	for (auto data : meshNodeList) {
-		// mesh生成
-		CreateMesh(data.first.c_str(), data.second->GetMesh());
-		CreateMesh2(data.first.c_str(), data.second->GetMesh());
+	// メッシュ数分のメモリ確保
+	meshDataList.resize(meshNum);
+
+	// メッシュ生成
+	for (int idx = 0; idx < meshNum; idx++) {
+		meshDataList[idx] = CreateMesh(fbxScene->GetSrcObject<FbxMesh>(idx));
 	}
 
 	return true;
-}
-
-std::vector<MeshVertex>& FBXLoader::GetVertices()
-{
-	return meshVertices;
-}
-
-std::map<std::string, std::vector<MeshVertex>>& FBXLoader::GetMapVertices()
-{
-	return meshVertices2;
-}
-
-std::vector<unsigned int>& FBXLoader::GetIndices()
-{
-	return meshIndices;
-}
-
-std::map<std::string, std::vector<unsigned int>>& FBXLoader::GetMapIndices()
-{
-	return meshIndices2;
 }

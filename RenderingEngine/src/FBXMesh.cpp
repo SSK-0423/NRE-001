@@ -1,7 +1,6 @@
-#include "Mesh.h"
-#include "IMeshLoader.h"
+#include "FBXMesh.h"
 
-size_t MeshData::GetRenderTargetNum() const
+size_t FBXMeshCreateData::GetRenderTargetNum() const
 {
 	for (size_t idx = 0; idx < colorFormats.size(); idx++)
 	{
@@ -10,22 +9,21 @@ size_t MeshData::GetRenderTargetNum() const
 	}
 }
 
-Mesh::Mesh() : _loader(nullptr)
+FBXMesh::FBXMesh()
 {
 }
 
-Mesh::~Mesh()
+FBXMesh::~FBXMesh()
 {
-	delete _loader;
 }
 
-MYRESULT Mesh::LoadMesh(const char* meshPath, ID3D12Device& device, MeshData& meshData)
+MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateData)
 {
 	// ローダー用意
-	_loader = new FBXLoader();
+	_fbxLoader = new FBXLoader();
 
 	// FBX読み込み
-	if (!_loader->Load(meshPath))
+	if (!_fbxLoader->Load(meshCreateData.modelPath, _meshDataList))
 	{
 		return MYRESULT::FAILED;
 	}
@@ -39,51 +37,69 @@ MYRESULT Mesh::LoadMesh(const char* meshPath, ID3D12Device& device, MeshData& me
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// グラフィクスパイプラインステート生成
-	result = CreateGraphicsPipelineState(device, meshData);
+	result = CreateGraphicsPipelineState(device, meshCreateData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
 }
 
-void Mesh::Draw(RenderingContext& renderContext)
+void FBXMesh::Draw(RenderingContext& renderContext)
 {
 	renderContext.SetGraphicsRootSignature(_rootSignature);
 
 	if (_descriptorHeap != nullptr)
-	    renderContext.SetDescriptorHeap(*_descriptorHeap);
+		renderContext.SetDescriptorHeap(*_descriptorHeap);
 
 	renderContext.SetPipelineState(_graphicsPipelineState);
-	renderContext.SetVertexBuffer(0, _vertexBuffer);
-	renderContext.SetIndexBuffer(_indexBuffer);
-	renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
+
+	// メッシュ数分描画
+	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
+		renderContext.SetVertexBuffer(0, _vertexBuffers[idx]);
+		renderContext.SetIndexBuffer(_indexBuffers[idx]);
+		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		renderContext.DrawIndexedInstanced(_indexBuffers[idx].GetIndexNum(), 1);
+	}
 }
 
-void Mesh::SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap)
+void FBXMesh::SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap)
 {
 	_descriptorHeap = &descriptorHeap;
 }
 
-MYRESULT Mesh::CreateVertexBuffers(ID3D12Device& device)
+MYRESULT FBXMesh::CreateVertexBuffers(ID3D12Device& device)
 {
-	std::vector<MeshVertex>& vertices = _loader->GetVertices();
-	MYRESULT result = _vertexBuffer.Create(
-		device, &vertices[0], SizeofVector(vertices), sizeof(MeshVertex));
-	if (result == MYRESULT::FAILED) { return result; }
+	// メッシュ数分の頂点バッファーメモリ確保
+	_vertexBuffers.resize(_meshDataList.size());
+
+	// メッシュ数分の頂点バッファー生成
+	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
+		std::vector<FBXMeshVertex>& vertices = _meshDataList[idx].vertices;
+
+		MYRESULT result = _vertexBuffers[idx].Create(
+			device, &vertices[0], SizeofVector(vertices), sizeof(FBXMeshVertex));
+		if (result == MYRESULT::FAILED) { return result; }
+	}
 
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT Mesh::CreateIndexBuffers(ID3D12Device& device)
+MYRESULT FBXMesh::CreateIndexBuffers(ID3D12Device& device)
 {
-	std::vector<unsigned int>& indices = _loader->GetIndices();
-	MYRESULT result = _indexBuffer.Create(device, indices);
-	if (result == MYRESULT::FAILED) { return result; }
+	// メッシュ数分のインデックスバッファーメモリ確保
+	_indexBuffers.resize(_meshDataList.size());
+
+	// メッシュ数分のインデックスバッファー生成
+	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
+		std::vector<unsigned int>& indices = _meshDataList[idx].indices;
+
+		MYRESULT result = _indexBuffers[idx].Create(device, indices);
+		if (result == MYRESULT::FAILED) { return result; }
+	}
 
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT Mesh::CreateGraphicsPipelineState(ID3D12Device& device, MeshData& data)
+MYRESULT FBXMesh::CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& data)
 {
 	// ルートシグネチャ生成
 	MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
@@ -133,20 +149,3 @@ MYRESULT Mesh::CreateGraphicsPipelineState(ID3D12Device& device, MeshData& data)
 	// グラフィックスパイプラインステート生成
 	return _graphicsPipelineState.Create(device, pipelineState);
 }
-
-//
-// 実装案
-// 1. Mesh側でバッファー生成
-// メリット
-// ・FBXLoaderがVertexBuffer/IndexBufferクラスに依存しなくなるので、独立性が増して色々な実装に対応できる
-// デメリット
-// ・Mesh側のFBXLoaderへの依存が強くなる
-// ・他形式のファイルを読み込む際に対応できない
-// 2. FBXLoader側でバッファー生成
-// メリット
-// ・メッシュ側の処理が簡素になる
-// ・他形式を読み込むローダークラスへの切り替えが容易
-// デメリット
-// ・VertexBuffer/IndexBufferクラスに依存する形になる
-// ・独立性が損なわれ、部品としての使いまわしがしづらくなる
-//
