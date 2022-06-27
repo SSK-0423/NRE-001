@@ -16,7 +16,7 @@
     <Filter Include="DirectX12Wrapper">
       <UniqueIdentifier>{2256e66e-ae22-42f5-be74-6e8d63a19d9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Mesh">
+    <Filter Include="FBX">
       <UniqueIdentifier>{1360d64a-0d15-4ed9-93b2-280c5f3206a3}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -88,10 +88,10 @@
       <Filter>DirectX12Wrapper</Filter>
     </ClInclude>
     <ClInclude Include="src\FBXLoader.h">
-      <Filter>Mesh</Filter>
+      <Filter>FBX</Filter>
     </ClInclude>
     <ClInclude Include="src\FBXMesh.h">
-      <Filter>Mesh</Filter>
+      <Filter>FBX</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -153,10 +153,10 @@
       <Filter>DirectX12Wrapper</Filter>
     </ClCompile>
     <ClCompile Include="src\FBXLoader.cpp">
-      <Filter>Mesh</Filter>
+      <Filter>FBX</Filter>
     </ClCompile>
     <ClCompile Include="src\FBXMesh.cpp">
-      <Filter>Mesh</Filter>
+      <Filter>FBX</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

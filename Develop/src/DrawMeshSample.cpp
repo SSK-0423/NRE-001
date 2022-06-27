@@ -16,8 +16,8 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 
 	// FBXMeshDataópà”
 	FBXMeshCreateData meshData;
-	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
-	meshData.modelPath = "res/city/city.fbx";
+	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
+	//meshData.modelPath = "res/city/city.fbx";
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
 	meshData.rootSignatureData = RootSignatureData();
@@ -80,7 +80,7 @@ MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, A
 	_meshCBuffData.world = XMMatrixRotationY(_angle);
 
 	// ÉJÉÅÉâçsóÒ
-	XMVECTOR eye = XMVectorSet(0, 100.f, -70.f, 0);
+	XMVECTOR eye = XMVectorSet(0, 10.f, -70.f, 0);
 	XMVECTOR target = XMVectorSet(0, 0.f, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
 	_view = XMMatrixLookAtLH(eye, target, up);

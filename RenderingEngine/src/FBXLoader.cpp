@@ -116,6 +116,137 @@ void FBXLoader::LoadNormals(FBXMeshData& meshData, FbxMesh* mesh)
 	}
 }
 
+void FBXLoader::LoadMaterial(FbxSurfaceMaterial* material)
+{
+	FBXMaterial fbxMaterial;
+
+	enum class MATERIAL
+	{
+		DIFFUSE,
+		AMBIENT,
+		SPECULAR,
+		MATERIAL_NUM
+	};
+
+	FbxDouble3 materialColors[static_cast<int>(MATERIAL::MATERIAL_NUM)];
+	FbxDouble factors[static_cast<int>(MATERIAL::MATERIAL_NUM)];
+	FbxProperty prop;
+
+	// FbxSurfacePhongクラスか判定
+	if (material->GetClassId().Is(FbxSurfacePhong::ClassId)) {
+		// 取得するマテリアルデータ
+		const char* colorElements[] = {
+			FbxSurfaceMaterial::sDiffuse,
+			FbxSurfaceMaterial::sAmbient,
+			FbxSurfaceMaterial::sSpecular,
+		};
+
+		// 取得するファクター(重み)
+		const char* factorElements[] = {
+			FbxSurfaceMaterial::sDiffuseFactor,
+			FbxSurfaceMaterial::sAmbientFactor,
+			FbxSurfaceMaterial::sSpecularFactor,
+		};
+
+		for (size_t idx = 0; idx < _countof(colorElements); idx++) {
+			prop = material->FindProperty(colorElements[idx]);
+			if (prop.IsValid()) {
+				materialColors[idx] = prop.Get<FbxDouble3>();
+			}
+			else {
+				materialColors[idx] = FbxDouble3(1.f, 1.f, 1.f);
+			}
+		}
+
+		for (size_t idx = 0; idx < _countof(factorElements); idx++) {
+			prop = material->FindProperty(factorElements[idx]);
+			if (prop.IsValid()) {
+				factors[idx] = prop.Get<FbxDouble>();
+			}
+			else {
+				factors[idx] = 1.f;
+			}
+		}
+
+		FbxDouble3 color = materialColors[static_cast<int>(MATERIAL::DIFFUSE)];
+		FbxDouble factor = factors[static_cast<int>(MATERIAL::DIFFUSE)];
+		fbxMaterial.SetDiffuse(
+			static_cast<float>(color[0]),
+			static_cast<float>(color[1]),
+			static_cast<float>(color[2]),
+			static_cast<float>(factor));
+		
+		color = materialColors[static_cast<int>(MATERIAL::AMBIENT)];
+		factor = factors[static_cast<int>(MATERIAL::AMBIENT)];
+		fbxMaterial.SetAmbient(
+			static_cast<float>(color[0]),
+			static_cast<float>(color[1]),
+			static_cast<float>(color[2]),
+			static_cast<float>(factor));
+
+		color = materialColors[static_cast<int>(MATERIAL::SPECULAR)];
+		factor = factors[static_cast<int>(MATERIAL::SPECULAR)];
+		fbxMaterial.SetSpecular(
+			static_cast<float>(color[0]),
+			static_cast<float>(color[1]),
+			static_cast<float>(color[2]),
+			static_cast<float>(factor));
+
+	}
+
+	// FbxSurfaceLambertクラスか判定
+	else if (material->GetClassId().Is(FbxSurfaceLambert::ClassId)) {
+		// 取得するマテリアルカラー
+		const char* colorElements[] = {
+			FbxSurfaceMaterial::sDiffuse,
+			FbxSurfaceMaterial::sAmbient,
+		};
+		// 取得するファクター(重み)
+		const char* factorElements[] = {
+			FbxSurfaceMaterial::sDiffuseFactor,
+			FbxSurfaceMaterial::sAmbientFactor,
+		};
+
+		for (size_t idx = 0; idx < _countof(colorElements); idx++) {
+			prop = material->FindProperty(colorElements[idx]);
+			if (prop.IsValid()) {
+				materialColors[idx] = prop.Get<FbxDouble3>();
+			}
+			else {
+				materialColors[idx] = FbxDouble3(1.f, 1.f, 1.f);
+			}
+		}
+
+		for (size_t idx = 0; idx < _countof(factorElements); idx++) {
+			prop = material->FindProperty(factorElements[idx]);
+			if (prop.IsValid()) {
+				factors[idx] = prop.Get<FbxDouble>();
+			}
+			else {
+				factors[idx] = 1.f;
+			}
+		}
+
+		FbxDouble3 color = materialColors[static_cast<int>(MATERIAL::DIFFUSE)];
+		FbxDouble factor = factors[static_cast<int>(MATERIAL::DIFFUSE)];
+		fbxMaterial.SetDiffuse(
+			static_cast<float>(color[0]),
+			static_cast<float>(color[1]),
+			static_cast<float>(color[2]),
+			static_cast<float>(factor));
+
+		color = materialColors[static_cast<int>(MATERIAL::AMBIENT)];
+		factor = factors[static_cast<int>(MATERIAL::AMBIENT)];
+		fbxMaterial.SetAmbient(
+			static_cast<float>(color[0]),
+			static_cast<float>(color[1]),
+			static_cast<float>(color[2]),
+			static_cast<float>(factor));
+	}
+
+	_materials[material->GetName()] = fbxMaterial;
+}
+
 bool FBXLoader::Load(const char* meshPath, std::vector<FBXMeshData>& meshDataList)
 {
 	assert(fbxManager != nullptr && fbxScene != nullptr && fbxImporter != nullptr);
@@ -144,6 +275,9 @@ bool FBXLoader::Load(const char* meshPath, std::vector<FBXMeshData>& meshDataLis
 
 	// マテリアル数取得
 	int materialNum = fbxScene->GetSrcObjectCount<FbxSurfaceMaterial>();
+	for (int idx = 0; idx < materialNum; idx++) {
+		LoadMaterial(fbxScene->GetSrcObject<FbxSurfaceMaterial>(idx));
+	}
 
 	// FbxMeshの数を取得
 	int meshNum = fbxScene->GetSrcObjectCount<FbxMesh>();

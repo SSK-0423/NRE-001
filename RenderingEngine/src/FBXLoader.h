@@ -14,7 +14,53 @@ struct FBXMeshData {
 	std::vector<unsigned int> indices;		// 頂点インデックス
 };
 
-class FBXLoader{
+struct FBXMaterial {
+	FBXMaterial()
+	{
+		for (int i = 0; i < _countof(ambient); i++)
+		{
+			ambient[i] = 1.0f;
+			diffuse[i] = 1.0f;
+			specular[i] = 1.0f;
+		}
+		alpha = 0.f;
+		//TextureKeyWord = "";
+		//TextureName = "";
+	}
+
+	void SetAmbient(float r, float g, float b, float factor)
+	{
+		ambient[0] = r;
+		ambient[1] = g;
+		ambient[2] = b;
+		ambient[3] = factor;
+	}
+
+	void SetDiffuse(float r, float g, float b, float factor)
+	{
+		diffuse[0] = r;
+		diffuse[1] = g;
+		diffuse[2] = b;
+		diffuse[3] = factor;
+	}
+
+	void SetSpecular(float r, float g, float b, float factor)
+	{
+		specular[0] = r;
+		specular[1] = g;
+		specular[2] = b;
+		specular[3] = factor;
+	}
+
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+	float alpha;	// これなに？Shiness?
+	//std::string TextureKeyWord;
+	//std::string TextureName;
+};
+
+class FBXLoader {
 public:
 	FBXLoader();
 	~FBXLoader();
@@ -29,6 +75,8 @@ public:
 private:
 	std::vector<FBXMeshData> _meshDataList;
 
+	std::map<std::string, FBXMaterial> _materials;
+
 	/// <summary>
 	/// FBX_SDK初期化
 	/// </summary>
@@ -37,15 +85,11 @@ private:
 
 	FBXMeshData CreateMesh(FbxMesh* mesh);
 
-	// 頂点読み込み 
 	void LoadVertices(FBXMeshData& meshData, FbxMesh* mesh);
 
-	// インデックスバッファ読み込み
 	void LoadIndices(FBXMeshData& meshData, FbxMesh* mesh);
 
-	// 法線読み込み
 	void LoadNormals(FBXMeshData& meshData, FbxMesh* mesh);
 
-	// マテリアル読み込み
-	//void LoadMaterial();
+	void LoadMaterial(FbxSurfaceMaterial* material);
 };
