@@ -1,14 +1,5 @@
 #include "MeshSampleHeader.hlsli"
 
-// コンスタントバッファー
-cbuffer material : register(b0)
-{
-    float4 ambient;
-    float4 diffuse;
-    float4 specular;
-    float alpha;
-}
-
 cbuffer constBuff : register(b1)
 {
     matrix world;

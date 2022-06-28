@@ -37,7 +37,7 @@ struct FBXMeshCreateData {
 	DXGI_FORMAT_UNKNOWN,
 	DXGI_FORMAT_UNKNOWN,
 	};	// レンダーターゲットのカラーフォーマット
-
+	
 	/// <summary>
 	/// カラーフォーマット配列を調べてレンダーターゲット数を返す
 	/// </summary>
@@ -76,7 +76,9 @@ private:
 		DirectX::XMFLOAT4 specular;
 		float alpha;
 	};
+	// マテリアル
 	MaterialBuff _material;
+	void SetMaterial(const FBXMaterial& material);
 
 	// マテリアル用のコンスタントバッファー
 	ConstantBuffer _materialConstantBuffer;

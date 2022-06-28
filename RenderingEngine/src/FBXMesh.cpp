@@ -1,5 +1,7 @@
 #include "FBXMesh.h"
 
+using namespace DirectX;
+
 size_t FBXMeshCreateData::GetRenderTargetNum() const
 {
 	for (size_t idx = 0; idx < colorFormats.size(); idx++)
@@ -76,11 +78,30 @@ void FBXMesh::Draw(RenderingContext& renderContext)
 
 	// メッシュ数分描画
 	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
+		// メッシュごとのマテリアルセット
+		SetMaterial(_meshDataList[idx].material);
 		renderContext.SetVertexBuffer(0, _vertexBuffers[idx]);
 		renderContext.SetIndexBuffer(_indexBuffers[idx]);
 		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		renderContext.DrawIndexedInstanced(_indexBuffers[idx].GetIndexNum(), 1);
 	}
+}
+
+void FBXMesh::SetMaterial(const FBXMaterial& material)
+{
+	// アンビエントセット
+	XMStoreFloat4(&_material.ambient,
+		XMVectorSet(material.ambient[0], material.ambient[1], material.ambient[2], material.ambient[3]));
+	// ディフューズ
+	XMStoreFloat4(&_material.diffuse,
+		XMVectorSet(material.diffuse[0], material.diffuse[1], material.diffuse[2], material.diffuse[3]));
+	// スペキュラー
+	XMStoreFloat4(&_material.specular,
+		XMVectorSet(material.specular[0], material.specular[1], material.specular[2], material.specular[3]));
+	// アルファ
+	_material.alpha = material.alpha;
+
+	_materialConstantBuffer.UpdateData(&_material);
 }
 
 void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
