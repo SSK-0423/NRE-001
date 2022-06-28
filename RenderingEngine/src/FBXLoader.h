@@ -9,10 +9,6 @@ struct FBXMeshVertex {
 	DirectX::XMFLOAT3 normal;
 };
 
-struct FBXMeshData {
-	std::vector<FBXMeshVertex> vertices;	// 頂点
-	std::vector<unsigned int> indices;		// 頂点インデックス
-};
 
 struct FBXMaterial {
 	FBXMaterial()
@@ -58,6 +54,12 @@ struct FBXMaterial {
 	float alpha;	// これなに？Shiness?
 	//std::string TextureKeyWord;
 	//std::string TextureName;
+};
+
+struct FBXMeshData {
+	std::vector<FBXMeshVertex> vertices;	// 頂点
+	std::vector<unsigned int> indices;		// 頂点インデックス
+	FBXMaterial material;
 };
 
 class FBXLoader {

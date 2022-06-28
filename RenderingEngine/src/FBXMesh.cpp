@@ -17,6 +17,21 @@ FBXMesh::~FBXMesh()
 {
 }
 
+MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
+{
+	return _descriptorHeap.Create(device);
+}
+
+MYRESULT FBXMesh::CreateMaterialConsnantBuffer(ID3D12Device& device)
+{
+	MYRESULT result = _materialConstantBuffer.Create(device, &_material, sizeof(MaterialBuff));
+	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
+
+	_descriptorHeap.RegistConstantBuffer(device, _materialConstantBuffer);
+
+	return MYRESULT::SUCCESS;
+}
+
 MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateData)
 {
 	// ローダー用意
@@ -40,6 +55,14 @@ MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateDat
 	result = CreateGraphicsPipelineState(device, meshCreateData);
 	if (result == MYRESULT::FAILED) { return result; }
 
+	// ディスクリプタヒープ生成
+	result = CreateDescriptorHeap(device);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	// マテリアル用コンスタントバッファー生成
+	result = CreateMaterialConsnantBuffer(device);
+	if (result == MYRESULT::FAILED) { return result; }
+
 	return MYRESULT::SUCCESS;
 }
 
@@ -47,8 +70,7 @@ void FBXMesh::Draw(RenderingContext& renderContext)
 {
 	renderContext.SetGraphicsRootSignature(_rootSignature);
 
-	if (_descriptorHeap != nullptr)
-		renderContext.SetDescriptorHeap(*_descriptorHeap);
+	renderContext.SetDescriptorHeap(_descriptorHeap);
 
 	renderContext.SetPipelineState(_graphicsPipelineState);
 
@@ -61,9 +83,14 @@ void FBXMesh::Draw(RenderingContext& renderContext)
 	}
 }
 
-void FBXMesh::SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap)
+void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
 {
-	_descriptorHeap = &descriptorHeap;
+	_descriptorHeap.RegistConstantBuffer(device, constantBuffer);
+}
+
+void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture)
+{
+	_descriptorHeap.RegistShaderResource(device, texture);
 }
 
 MYRESULT FBXMesh::CreateVertexBuffers(ID3D12Device& device)

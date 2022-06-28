@@ -21,6 +21,7 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
 	meshData.rootSignatureData = RootSignatureData();
+	meshData.rootSignatureData._descRangeData.cbvDescriptorNum = 2;
 	meshData.inputLayout.resize(2);
 	meshData.inputLayout[0] = {
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
@@ -104,9 +105,12 @@ MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, A
 	result = _meshHeap.Create(graphicsEngine.Device());
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
-	_meshHeap.RegistConstantBuffer(graphicsEngine.Device(), _meshCBuffer);
+	//_meshHeap.RegistConstantBuffer(graphicsEngine.Device(), _meshCBuffer);
 
-	mesh.SetDescriptorHeap(_meshHeap);
+	//mesh.SetDescriptorHeap(_meshHeap);
+
+	mesh.SetConstantBuffer(graphicsEngine.Device(), _meshCBuffer);
+
 
 	return result;
 }

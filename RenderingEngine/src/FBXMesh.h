@@ -9,7 +9,11 @@
 #include "IndexBuffer.h"
 #include "RootSignature.h"
 #include "GraphicsPipelineState.h"
+
 #include "DescriptorHeapCBV_SRV_UAV.h"
+#include "ConstantBuffer.h"
+#include "Texture.h"
+
 #include "RenderingContext.h"
 
 #include "EngineUtility.h"
@@ -65,7 +69,22 @@ private:
 
 	RootSignature _rootSignature;
 
-	DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
+	// マテリアル用コンスタントバッファー構造体
+	struct MaterialBuff {
+		DirectX::XMFLOAT4 ambient;
+		DirectX::XMFLOAT4 diffuse;
+		DirectX::XMFLOAT4 specular;
+		float alpha;
+	};
+	MaterialBuff _material;
+
+	// マテリアル用のコンスタントバッファー
+	ConstantBuffer _materialConstantBuffer;
+	MYRESULT CreateMaterialConsnantBuffer(ID3D12Device& device);
+	
+	// ディスクリプタヒープ
+	DescriptorHeapCBV_SRV_UAV _descriptorHeap;
+	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
 
 public:
 	/// <summary>
@@ -75,12 +94,10 @@ public:
 	/// <returns></returns>
 	MYRESULT LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshData);
 
-	/// <summary>
-	/// 描画
-	/// </summary>
-	/// <param name="renderContext"></param>
 	void Draw(RenderingContext& renderContext);
 
-	void SetDescriptorHeap(DescriptorHeapCBV_SRV_UAV& descriptorHeap);
+	void SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer);
+	
+	void SetTexture(ID3D12Device& device, Texture& texture);
 
 };
