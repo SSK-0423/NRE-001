@@ -19,6 +19,9 @@
     <Filter Include="FBX">
       <UniqueIdentifier>{1360d64a-0d15-4ed9-93b2-280c5f3206a3}</UniqueIdentifier>
     </Filter>
+    <Filter Include="リソース ファイル\シェーダー">
+      <UniqueIdentifier>{e2a86667-1e25-4d55-a090-b91dad48792c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12GraphicsEngine.h">
@@ -158,5 +161,10 @@
     <ClCompile Include="src\FBXMesh.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\PhongReflectionModel.hlsli">
+      <Filter>リソース ファイル\シェーダー</Filter>
+    </None>
   </ItemGroup>
 </Project>

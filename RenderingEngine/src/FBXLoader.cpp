@@ -57,6 +57,7 @@ FBXMeshData FBXLoader::CreateMesh(FbxMesh* mesh)
 	LoadVertices(meshData, mesh);
 	LoadIndices(meshData, mesh);
 	LoadNormals(meshData, mesh);
+	SetMaterial(meshData, mesh);
 
 	return meshData;
 }
@@ -168,6 +169,15 @@ void FBXLoader::LoadMaterial(FbxSurfaceMaterial* material)
 			}
 		}
 
+		// Shiness取得
+		prop = material->FindProperty(FbxSurfaceMaterial::sShininess);
+		if (prop.IsValid()) {
+			fbxMaterial.shiness = prop.Get<FbxDouble>();
+		}
+		else {
+			fbxMaterial.shiness = 1.f;
+		}
+
 		FbxDouble3 color = materialColors[static_cast<int>(MATERIAL::DIFFUSE)];
 		FbxDouble factor = factors[static_cast<int>(MATERIAL::DIFFUSE)];
 		fbxMaterial.SetDiffuse(
@@ -175,7 +185,7 @@ void FBXLoader::LoadMaterial(FbxSurfaceMaterial* material)
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
 			static_cast<float>(factor));
-		
+
 		color = materialColors[static_cast<int>(MATERIAL::AMBIENT)];
 		factor = factors[static_cast<int>(MATERIAL::AMBIENT)];
 		fbxMaterial.SetAmbient(
@@ -191,7 +201,6 @@ void FBXLoader::LoadMaterial(FbxSurfaceMaterial* material)
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
 			static_cast<float>(factor));
-
 	}
 
 	// FbxSurfaceLambertクラスか判定
@@ -245,6 +254,31 @@ void FBXLoader::LoadMaterial(FbxSurfaceMaterial* material)
 	}
 
 	_materials[material->GetName()] = fbxMaterial;
+}
+
+void FBXLoader::SetMaterial(FBXMeshData& meshData, FbxMesh* mesh)
+{
+	// マテリアルが無ければ終わり
+	if (mesh->GetElementMaterialCount() == 0) {
+		//TODO: ない場合のマテリアルをどうするか
+		return;
+	}
+
+	// FbxMesh側のマテリアル情報取得
+	FbxLayerElementMaterial* material = mesh->GetElementMaterial();
+	int index = material->GetIndexArray().GetAt(0);
+	FbxSurfaceMaterial* surfaceMaterial = mesh->GetNode()->GetSrcObject<FbxSurfaceMaterial>(index);
+
+	if (surfaceMaterial != nullptr) {
+		for (auto mat : _materials) {
+			if (mat.first == surfaceMaterial->GetName()) {
+				meshData.material = mat.second;
+			}
+		}
+	}
+	else {
+		//TODO: ない場合のマテリアルをどうするか
+	}
 }
 
 bool FBXLoader::Load(const char* meshPath, std::vector<FBXMeshData>& meshDataList)

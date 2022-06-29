@@ -17,6 +17,14 @@ FBXMesh::FBXMesh()
 
 FBXMesh::~FBXMesh()
 {
+	if (_graphicsPipelineState != nullptr) {
+		delete _graphicsPipelineState;
+		_graphicsPipelineState = nullptr;
+	}
+	if (_rootSignature != nullptr) {
+		delete _rootSignature;
+		_rootSignature = nullptr;
+	}
 }
 
 MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
@@ -34,27 +42,14 @@ MYRESULT FBXMesh::CreateMaterialConsnantBuffer(ID3D12Device& device)
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateData)
+MYRESULT FBXMesh::CreateAsChild(ID3D12Device& device, ChildMeshCreateData& meshData)
 {
-	// ローダー用意
-	_fbxLoader = new FBXLoader();
-
-	// FBX読み込み
-	if (!_fbxLoader->Load(meshCreateData.modelPath, _meshDataList))
-	{
-		return MYRESULT::FAILED;
-	}
-
 	// 頂点バッファ―生成
-	MYRESULT result = CreateVertexBuffers(device);
+	MYRESULT result = CreateVertexBuffer(device, meshData.meshData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// インデックスバッファー生成
-	result = CreateIndexBuffers(device);
-	if (result == MYRESULT::FAILED) { return result; }
-
-	// グラフィクスパイプラインステート生成
-	result = CreateGraphicsPipelineState(device, meshCreateData);
+	result = CreateIndexBuffer(device, meshData.meshData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// ディスクリプタヒープ生成
@@ -65,25 +60,98 @@ MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateDat
 	result = CreateMaterialConsnantBuffer(device);
 	if (result == MYRESULT::FAILED) { return result; }
 
+	// マテリアルセット
+	SetMaterial(meshData.meshData.material);
+
 	return MYRESULT::SUCCESS;
+}
+
+MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateData)
+{
+	// ローダー用意
+	FBXLoader* _fbxLoader = new FBXLoader();
+
+	// FBX読み込み
+	if (!_fbxLoader->Load(meshCreateData.modelPath, _meshDataList))
+	{
+		return MYRESULT::FAILED;
+	}
+
+	// グラフィクスパイプラインステート生成
+	MYRESULT result = CreateGraphicsPipelineState(device, meshCreateData);
+	if (result == MYRESULT::FAILED) { return result; }
+	// ディスクリプタヒープ生成
+	result = CreateDescriptorHeap(device);
+	if (result == MYRESULT::FAILED) { return result; }
+
+	_childs.resize(_meshDataList.size());
+	for (size_t idx = 0; idx < _childs.size(); idx++) {
+
+		ChildMeshCreateData data;
+		data.meshData = _meshDataList[idx];
+
+		FBXMesh* child = new FBXMesh();
+		result = child->CreateAsChild(device, data);
+		if (result == MYRESULT::FAILED) { return result; }
+
+		_childs[idx] = child;
+	}
+
+	delete _fbxLoader;
+
+	return MYRESULT::SUCCESS;
+}
+
+void FBXMesh::CommonDraw(RenderingContext& renderContext)
+{
+	renderContext.SetGraphicsRootSignature(*_rootSignature);
+
+	renderContext.SetPipelineState(*_graphicsPipelineState);
 }
 
 void FBXMesh::Draw(RenderingContext& renderContext)
 {
-	renderContext.SetGraphicsRootSignature(_rootSignature);
+	Draw(renderContext, true);
+	/* マテリアル切り替え */
+	//
+	// 方針：b1に入れるコンスタントバッファービューを切り替え
+	// 現状：CBVのディスクリプタテーブルは１つのみ
+	// b0の値は不変、b1の値のみ変更したい
+	// 実装案1：FBXMesh用のルートシグネチャを生成する
+	// メリット
+	// ・シャドウマップ実装時にシャドウマップ用のサンプラーが必要になる
+	// ・ルートシグネチャが
+	// デメリット
+	// ・初期化に使う構造体の中身がPolygonやSpriteと異なり、ルートシグネチャ系のクラスがもう一つ増えることになる
+	// ディファードレンダリングやったことなくてわかんないので、とりあえずこっち
+	// 実装案2：メッシュごとにFBXMeshを生成し、マテリアル部分のみを変更する
+	// メリット
+	// ・階層メッシュアニメ―ションにも対応できそう
+	// 
+	// 
+	// 
+	// 
+	// ルートパラメータの設定で、b0,b1が用意されている
+	// ディスクリプタヒープにはCBVが64個ある
+	// 1. マテリアル数分のCBVを生成する
+	//
+}
 
-	renderContext.SetDescriptorHeap(_descriptorHeap);
-
-	renderContext.SetPipelineState(_graphicsPipelineState);
-
-	// メッシュ数分描画
-	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
-		// メッシュごとのマテリアルセット
-		SetMaterial(_meshDataList[idx].material);
-		renderContext.SetVertexBuffer(0, _vertexBuffers[idx]);
-		renderContext.SetIndexBuffer(_indexBuffers[idx]);
+void FBXMesh::Draw(RenderingContext& renderContext, bool isRootMesh)
+{
+	if (isRootMesh) {
+		CommonDraw(renderContext);
+	}
+	else {
+		renderContext.SetDescriptorHeap(_descriptorHeap);
+		renderContext.SetVertexBuffer(0, _vertexBuffer);
+		renderContext.SetIndexBuffer(_indexBuffer);
 		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderContext.DrawIndexedInstanced(_indexBuffers[idx].GetIndexNum(), 1);
+		renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
+	}
+
+	for (auto child : _childs) {
+		child->Draw(renderContext, false);
 	}
 }
 
@@ -99,7 +167,7 @@ void FBXMesh::SetMaterial(const FBXMaterial& material)
 	XMStoreFloat4(&_material.specular,
 		XMVectorSet(material.specular[0], material.specular[1], material.specular[2], material.specular[3]));
 	// アルファ
-	_material.alpha = material.alpha;
+	_material.shiness = material.shiness;
 
 	_materialConstantBuffer.UpdateData(&_material);
 }
@@ -107,6 +175,9 @@ void FBXMesh::SetMaterial(const FBXMaterial& material)
 void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
 {
 	_descriptorHeap.RegistConstantBuffer(device, constantBuffer);
+	for (auto child : _childs) {
+		child->SetConstantBuffer(device, constantBuffer);
+	}
 }
 
 void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture)
@@ -114,35 +185,25 @@ void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture)
 	_descriptorHeap.RegistShaderResource(device, texture);
 }
 
-MYRESULT FBXMesh::CreateVertexBuffers(ID3D12Device& device)
+MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)
 {
-	// メッシュ数分の頂点バッファーメモリ確保
-	_vertexBuffers.resize(_meshDataList.size());
+	// 頂点バッファー生成
+	std::vector<FBXMeshVertex>& vertices = meshData.vertices;
 
-	// メッシュ数分の頂点バッファー生成
-	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
-		std::vector<FBXMeshVertex>& vertices = _meshDataList[idx].vertices;
-
-		MYRESULT result = _vertexBuffers[idx].Create(
-			device, &vertices[0], SizeofVector(vertices), sizeof(FBXMeshVertex));
-		if (result == MYRESULT::FAILED) { return result; }
-	}
+	MYRESULT result = _vertexBuffer.Create(
+		device, &vertices[0], SizeofVector(vertices), sizeof(FBXMeshVertex));
+	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT FBXMesh::CreateIndexBuffers(ID3D12Device& device)
+MYRESULT FBXMesh::CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData)
 {
-	// メッシュ数分のインデックスバッファーメモリ確保
-	_indexBuffers.resize(_meshDataList.size());
+	// インデックスバッファー生成
+	std::vector<unsigned int>& indices = meshData.indices;
 
-	// メッシュ数分のインデックスバッファー生成
-	for (size_t idx = 0; idx < _meshDataList.size(); idx++) {
-		std::vector<unsigned int>& indices = _meshDataList[idx].indices;
-
-		MYRESULT result = _indexBuffers[idx].Create(device, indices);
-		if (result == MYRESULT::FAILED) { return result; }
-	}
+	MYRESULT result = _indexBuffer.Create(device, indices);
+	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
 }
@@ -150,12 +211,14 @@ MYRESULT FBXMesh::CreateIndexBuffers(ID3D12Device& device)
 MYRESULT FBXMesh::CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& data)
 {
 	// ルートシグネチャ生成
-	MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
+	if (_rootSignature != nullptr) delete _rootSignature;
+	_rootSignature = new RootSignature();
+	MYRESULT result = _rootSignature->Create(device, data.rootSignatureData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// ルートシグネチャとシェーダーセット
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
-	pipelineState.pRootSignature = &_rootSignature.GetRootSignature();
+	pipelineState.pRootSignature = &_rootSignature->GetRootSignature();
 	pipelineState.VS = CD3DX12_SHADER_BYTECODE(&data.vertexShader.GetShader());
 	pipelineState.PS = CD3DX12_SHADER_BYTECODE(&data.pixelShader.GetShader());
 
@@ -195,5 +258,7 @@ MYRESULT FBXMesh::CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreat
 	pipelineState.SampleDesc.Quality = 0;	// クオリティは最低
 
 	// グラフィックスパイプラインステート生成
-	return _graphicsPipelineState.Create(device, pipelineState);
+	if (_graphicsPipelineState != nullptr) delete _graphicsPipelineState;
+	_graphicsPipelineState = new GraphicsPipelineState();
+	return _graphicsPipelineState->Create(device, pipelineState);
 }

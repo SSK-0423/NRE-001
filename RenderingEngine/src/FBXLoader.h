@@ -19,7 +19,10 @@ struct FBXMaterial {
 			diffuse[i] = 1.0f;
 			specular[i] = 1.0f;
 		}
-		alpha = 0.f;
+		shiness = 1.f;
+		ambient[3] = 0.f;
+		diffuse[3] = 0.f;
+		specular[3] = 0.f;
 		//TextureKeyWord = "";
 		//TextureName = "";
 	}
@@ -51,7 +54,7 @@ struct FBXMaterial {
 	float ambient[4];
 	float diffuse[4];
 	float specular[4];
-	float alpha;	// Ç±ÇÍÇ»Ç…ÅHShiness?
+	float shiness;	// Ç±ÇÍÇ»Ç…ÅHShiness?
 	//std::string TextureKeyWord;
 	//std::string TextureName;
 };
@@ -94,4 +97,6 @@ private:
 	void LoadNormals(FBXMeshData& meshData, FbxMesh* mesh);
 
 	void LoadMaterial(FbxSurfaceMaterial* material);
+
+	void SetMaterial(FBXMeshData& meshData, FbxMesh* mesh);
 };

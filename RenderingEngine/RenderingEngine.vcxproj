@@ -221,6 +221,9 @@
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="src\PhongReflectionModel.hlsli" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -54,27 +54,28 @@ public:
 	~FBXMesh();
 
 private:
-	FBXLoader* _fbxLoader = nullptr;
 
 	std::vector<FBXMeshData> _meshDataList;
 
-	std::vector<VertexBuffer> _vertexBuffers;
-	MYRESULT CreateVertexBuffers(ID3D12Device& device);
+	VertexBuffer _vertexBuffer;
+	MYRESULT CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
-	std::vector<IndexBuffer> _indexBuffers;
-	MYRESULT CreateIndexBuffers(ID3D12Device& device);
+	IndexBuffer _indexBuffer;
+	MYRESULT CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
-	GraphicsPipelineState _graphicsPipelineState;
+	GraphicsPipelineState* _graphicsPipelineState = nullptr;
 	MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& meshData);
 
-	RootSignature _rootSignature;
+	RootSignature* _rootSignature = nullptr;
+
+	std::vector<FBXMesh*> _childs;
 
 	// マテリアル用コンスタントバッファー構造体
 	struct MaterialBuff {
 		DirectX::XMFLOAT4 ambient;
 		DirectX::XMFLOAT4 diffuse;
 		DirectX::XMFLOAT4 specular;
-		float alpha;
+		float shiness;
 	};
 	// マテリアル
 	MaterialBuff _material;
@@ -87,6 +88,26 @@ private:
 	// ディスクリプタヒープ
 	DescriptorHeapCBV_SRV_UAV _descriptorHeap;
 	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
+
+	/// <summary>
+	/// 子メッシュを生成する際の構造体
+	/// </summary>
+	struct ChildMeshCreateData {
+		FBXMeshData meshData;
+	};
+
+	// 親子共通の描画処理
+	void CommonDraw(RenderingContext& renderContext);
+	// 階層メッシュ対応の描画
+	void Draw(RenderingContext& renderContext, bool isRootMesh);
+
+	/// <summary>
+	/// 子メッシュとして生成
+	/// </summary>
+	/// <param name="device"></param>
+	/// <param name="meshData"></param>
+	/// <returns></returns>
+	MYRESULT CreateAsChild(ID3D12Device& device, ChildMeshCreateData& meshData);
 
 public:
 	/// <summary>
