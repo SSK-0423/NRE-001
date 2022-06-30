@@ -23,6 +23,7 @@
 /// </summary>
 struct FBXMeshCreateData {
 	const char* modelPath;								// 3Dモデルへのファイルパス
+	std::wstring textureFolderPath;						// テクスチャフォルダへのパス
 	Shader vertexShader;	                            // 頂点シェーダー
 	Shader pixelShader;									// ピクセルシェーダー
 	RootSignatureData rootSignatureData;				// ルートシグネチャ
@@ -37,7 +38,7 @@ struct FBXMeshCreateData {
 	DXGI_FORMAT_UNKNOWN,
 	DXGI_FORMAT_UNKNOWN,
 	};	// レンダーターゲットのカラーフォーマット
-	
+
 	/// <summary>
 	/// カラーフォーマット配列を調べてレンダーターゲット数を返す
 	/// </summary>
@@ -57,10 +58,10 @@ private:
 
 	std::vector<FBXMeshData> _meshDataList;
 
-	VertexBuffer _vertexBuffer;
+	VertexBuffer* _vertexBuffer = nullptr;
 	MYRESULT CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
-	IndexBuffer _indexBuffer;
+	IndexBuffer* _indexBuffer = nullptr;
 	MYRESULT CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
 	GraphicsPipelineState* _graphicsPipelineState = nullptr;
@@ -69,6 +70,15 @@ private:
 	RootSignature* _rootSignature = nullptr;
 
 	std::vector<FBXMesh*> _childs;
+
+	// ディスクリプタヒープ
+	DescriptorHeapCBV_SRV_UAV _descriptorHeap;
+	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
+
+	// シェーダーリソース生成
+	Texture* _texture = nullptr;
+	MYRESULT CreateTexture(
+		Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData, std::wstring textureFolderPath);
 
 	// マテリアル用コンスタントバッファー構造体
 	struct MaterialBuff {
@@ -82,18 +92,15 @@ private:
 	void SetMaterial(const FBXMaterial& material);
 
 	// マテリアル用のコンスタントバッファー
-	ConstantBuffer _materialConstantBuffer;
+	ConstantBuffer* _materialConstantBuffer = nullptr;
 	MYRESULT CreateMaterialConsnantBuffer(ID3D12Device& device);
-	
-	// ディスクリプタヒープ
-	DescriptorHeapCBV_SRV_UAV _descriptorHeap;
-	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
 
 	/// <summary>
 	/// 子メッシュを生成する際の構造体
 	/// </summary>
 	struct ChildMeshCreateData {
 		FBXMeshData meshData;
+		std::wstring textureFolderPath;
 	};
 
 	// 親子共通の描画処理
@@ -101,26 +108,15 @@ private:
 	// 階層メッシュ対応の描画
 	void Draw(RenderingContext& renderContext, bool isRootMesh);
 
-	/// <summary>
-	/// 子メッシュとして生成
-	/// </summary>
-	/// <param name="device"></param>
-	/// <param name="meshData"></param>
-	/// <returns></returns>
-	MYRESULT CreateAsChild(ID3D12Device& device, ChildMeshCreateData& meshData);
+	MYRESULT CreateAsChild(Dx12GraphicsEngine& graphicsEngine, ChildMeshCreateData& meshData);
 
 public:
-	/// <summary>
-	/// メッシュ読み込み
-	/// </summary>
-	/// <param name="modelPath">ファイルパス</param>
-	/// <returns></returns>
-	MYRESULT LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshData);
+	MYRESULT LoadFBX(Dx12GraphicsEngine& device, FBXMeshCreateData& meshCreateData);
 
 	void Draw(RenderingContext& renderContext);
 
 	void SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer);
-	
+
 	void SetTexture(ID3D12Device& device, Texture& texture);
 
 };

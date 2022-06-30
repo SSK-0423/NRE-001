@@ -1,4 +1,5 @@
 #include "FBXLoader.h"
+#include "EngineUtility.h"
 #include <Windows.h>
 #include <cassert>
 
@@ -254,6 +255,27 @@ void FBXLoader::LoadMaterial(FbxSurfaceMaterial* material)
 	}
 
 	_materials[material->GetName()] = fbxMaterial;
+
+	// テクスチャ読み込み
+	// Diffuseプロパティを取得
+	prop = material->FindProperty(FbxSurfaceMaterial::sDiffuse);
+	FbxFileTexture* texture = nullptr;
+	int textureNum = prop.GetSrcObjectCount<FbxFileTexture>();
+	// シングルテクスチャの場合
+	if (textureNum > 0) {
+		texture = prop.GetSrcObject<FbxFileTexture>(0);
+	}
+	// マルチテクスチャの場合
+	else {
+		int layerNum = prop.GetSrcObjectCount<FbxLayeredTexture>();
+		if (layerNum > 0) {
+			// TODO:マルチテクスチャへの対応
+			texture = prop.GetSrcObject<FbxFileTexture>();
+		}
+	}
+
+	// ファイルネームのみ取得
+	_materials[material->GetName()].textureName = GetTextureFileName(texture);
 }
 
 void FBXLoader::SetMaterial(FBXMeshData& meshData, FbxMesh* mesh)
@@ -279,6 +301,36 @@ void FBXLoader::SetMaterial(FBXMeshData& meshData, FbxMesh* mesh)
 	else {
 		//TODO: ない場合のマテリアルをどうするか
 	}
+}
+
+std::wstring FBXLoader::GetTextureFileName(FbxFileTexture* texture)
+{
+	if (texture == nullptr) { return L""; }
+
+	// 相対パス取得
+	std::string path = texture->GetRelativeFileName();
+
+	// 置換
+	path = ReplaceString(path, "\\", "/");
+
+	// 拡張子込みのファイル名取得
+	std::string::size_type pos = path.rfind("/");
+	// 「/」を除いた文字列取得
+	path = path.substr(pos + 1);
+
+	// 文字化け対策
+	char* charFileName;
+	// 文字コード変換
+	FbxUTF8ToAnsi(path.c_str(), charFileName);
+
+	// wstringに変換
+	wchar_t wchartFileName[256];
+	errno_t err = charToWchar(charFileName, wchartFileName, 256);
+	if (err != 0) {
+		return L"";
+	}
+
+	return std::wstring(wchartFileName);
 }
 
 bool FBXLoader::Load(const char* meshPath, std::vector<FBXMeshData>& meshDataList)

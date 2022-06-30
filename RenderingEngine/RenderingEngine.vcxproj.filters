@@ -161,6 +161,9 @@
     <ClCompile Include="src\FBXMesh.cpp">
       <Filter>FBX</Filter>
     </ClCompile>
+    <ClCompile Include="src\EngineUtility.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PhongReflectionModel.hlsli">

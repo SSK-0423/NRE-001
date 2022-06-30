@@ -206,6 +206,7 @@
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
     <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp" />
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
+    <ClCompile Include="src\EngineUtility.cpp" />
     <ClCompile Include="src\FBXLoader.cpp" />
     <ClCompile Include="src\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />

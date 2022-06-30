@@ -17,14 +17,12 @@ FBXMesh::FBXMesh()
 
 FBXMesh::~FBXMesh()
 {
-	if (_graphicsPipelineState != nullptr) {
-		delete _graphicsPipelineState;
-		_graphicsPipelineState = nullptr;
-	}
-	if (_rootSignature != nullptr) {
-		delete _rootSignature;
-		_rootSignature = nullptr;
-	}
+	SafetyDelete<VertexBuffer>(_vertexBuffer);
+	SafetyDelete<IndexBuffer>(_indexBuffer);
+	SafetyDelete<Texture>(_texture);
+	SafetyDelete<ConstantBuffer>(_materialConstantBuffer);
+	SafetyDelete<GraphicsPipelineState>(_graphicsPipelineState);
+	SafetyDelete<RootSignature>(_rootSignature);
 }
 
 MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
@@ -32,18 +30,41 @@ MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
 	return _descriptorHeap.Create(device);
 }
 
-MYRESULT FBXMesh::CreateMaterialConsnantBuffer(ID3D12Device& device)
+MYRESULT FBXMesh::CreateTexture(
+	Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData, std::wstring textureFolderPath)
 {
-	MYRESULT result = _materialConstantBuffer.Create(device, &_material, sizeof(MaterialBuff));
+	// テクスチャがないならスキップ
+	if (meshData.material.textureName == L"") { return MYRESULT::SUCCESS; }
+
+	if (_texture != nullptr) { delete _texture; }
+	_texture = new Texture();
+
+	std::wstring texturePath = textureFolderPath + L"/" + meshData.material.textureName;
+	MYRESULT result = _texture->CreateTextureFromWIC(graphicsEngine, texturePath);
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
-	_descriptorHeap.RegistConstantBuffer(device, _materialConstantBuffer);
+	_descriptorHeap.RegistShaderResource(graphicsEngine.Device(), *_texture);
 
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT FBXMesh::CreateAsChild(ID3D12Device& device, ChildMeshCreateData& meshData)
+MYRESULT FBXMesh::CreateMaterialConsnantBuffer(ID3D12Device& device)
 {
+	if (_materialConstantBuffer != nullptr) { delete _materialConstantBuffer; }
+	_materialConstantBuffer = new ConstantBuffer();
+
+	MYRESULT result = _materialConstantBuffer->Create(device, &_material, sizeof(MaterialBuff));
+	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
+
+	_descriptorHeap.RegistConstantBuffer(device, *_materialConstantBuffer);
+
+	return MYRESULT::SUCCESS;
+}
+
+MYRESULT FBXMesh::CreateAsChild(Dx12GraphicsEngine& graphicsEngine, ChildMeshCreateData& meshData)
+{
+	ID3D12Device& device = graphicsEngine.Device();
+
 	// 頂点バッファ―生成
 	MYRESULT result = CreateVertexBuffer(device, meshData.meshData);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -63,10 +84,14 @@ MYRESULT FBXMesh::CreateAsChild(ID3D12Device& device, ChildMeshCreateData& meshD
 	// マテリアルセット
 	SetMaterial(meshData.meshData.material);
 
+	// テクスチャ生成
+	result = CreateTexture(graphicsEngine, meshData.meshData, meshData.textureFolderPath);
+	if (result == MYRESULT::FAILED) { return result; }
+
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateData)
+MYRESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData& meshCreateData)
 {
 	// ローダー用意
 	FBXLoader* _fbxLoader = new FBXLoader();
@@ -78,10 +103,10 @@ MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateDat
 	}
 
 	// グラフィクスパイプラインステート生成
-	MYRESULT result = CreateGraphicsPipelineState(device, meshCreateData);
+	MYRESULT result = CreateGraphicsPipelineState(graphicsEngine.Device(), meshCreateData);
 	if (result == MYRESULT::FAILED) { return result; }
 	// ディスクリプタヒープ生成
-	result = CreateDescriptorHeap(device);
+	result = CreateDescriptorHeap(graphicsEngine.Device());
 	if (result == MYRESULT::FAILED) { return result; }
 
 	_childs.resize(_meshDataList.size());
@@ -89,9 +114,10 @@ MYRESULT FBXMesh::LoadFBX(ID3D12Device& device, FBXMeshCreateData& meshCreateDat
 
 		ChildMeshCreateData data;
 		data.meshData = _meshDataList[idx];
+		data.textureFolderPath = meshCreateData.textureFolderPath;
 
 		FBXMesh* child = new FBXMesh();
-		result = child->CreateAsChild(device, data);
+		result = child->CreateAsChild(graphicsEngine, data);
 		if (result == MYRESULT::FAILED) { return result; }
 
 		_childs[idx] = child;
@@ -144,10 +170,10 @@ void FBXMesh::Draw(RenderingContext& renderContext, bool isRootMesh)
 	}
 	else {
 		renderContext.SetDescriptorHeap(_descriptorHeap);
-		renderContext.SetVertexBuffer(0, _vertexBuffer);
-		renderContext.SetIndexBuffer(_indexBuffer);
+		renderContext.SetVertexBuffer(0, *_vertexBuffer);
+		renderContext.SetIndexBuffer(*_indexBuffer);
 		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
+		renderContext.DrawIndexedInstanced(_indexBuffer->GetIndexNum(), 1);
 	}
 
 	for (auto child : _childs) {
@@ -169,7 +195,7 @@ void FBXMesh::SetMaterial(const FBXMaterial& material)
 	// アルファ
 	_material.shiness = material.shiness;
 
-	_materialConstantBuffer.UpdateData(&_material);
+	_materialConstantBuffer->UpdateData(&_material);
 }
 
 void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
@@ -190,7 +216,10 @@ MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData
 	// 頂点バッファー生成
 	std::vector<FBXMeshVertex>& vertices = meshData.vertices;
 
-	MYRESULT result = _vertexBuffer.Create(
+	if (_vertexBuffer != nullptr) { delete _vertexBuffer; }
+	_vertexBuffer = new VertexBuffer();
+
+	MYRESULT result = _vertexBuffer->Create(
 		device, &vertices[0], SizeofVector(vertices), sizeof(FBXMeshVertex));
 	if (result == MYRESULT::FAILED) { return result; }
 
@@ -202,7 +231,10 @@ MYRESULT FBXMesh::CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData)
 	// インデックスバッファー生成
 	std::vector<unsigned int>& indices = meshData.indices;
 
-	MYRESULT result = _indexBuffer.Create(device, indices);
+	if (_indexBuffer != nullptr) { delete _indexBuffer; }
+	_indexBuffer = new IndexBuffer();
+
+	MYRESULT result = _indexBuffer->Create(device, indices);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	return MYRESULT::SUCCESS;
@@ -213,6 +245,7 @@ MYRESULT FBXMesh::CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreat
 	// ルートシグネチャ生成
 	if (_rootSignature != nullptr) delete _rootSignature;
 	_rootSignature = new RootSignature();
+
 	MYRESULT result = _rootSignature->Create(device, data.rootSignatureData);
 	if (result == MYRESULT::FAILED) { return result; }
 

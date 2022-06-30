@@ -7,8 +7,8 @@
 struct FBXMeshVertex {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 normal;
+	DirectX::XMFLOAT2 uv;
 };
-
 
 struct FBXMaterial {
 	FBXMaterial()
@@ -23,8 +23,8 @@ struct FBXMaterial {
 		ambient[3] = 0.f;
 		diffuse[3] = 0.f;
 		specular[3] = 0.f;
-		//TextureKeyWord = "";
-		//TextureName = "";
+		textureKeyWord = L"";
+		textureName = L"";
 	}
 
 	void SetAmbient(float r, float g, float b, float factor)
@@ -55,8 +55,8 @@ struct FBXMaterial {
 	float diffuse[4];
 	float specular[4];
 	float shiness;	// Ç±ÇÍÇ»Ç…ÅHShiness?
-	//std::string TextureKeyWord;
-	//std::string TextureName;
+	std::wstring textureKeyWord;
+	std::wstring textureName;
 };
 
 struct FBXMeshData {
@@ -99,4 +99,6 @@ private:
 	void LoadMaterial(FbxSurfaceMaterial* material);
 
 	void SetMaterial(FBXMeshData& meshData, FbxMesh* mesh);
+
+	std::wstring GetTextureFileName(FbxFileTexture* texture);
 };

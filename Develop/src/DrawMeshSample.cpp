@@ -16,23 +16,28 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 
 	// FBXMeshData用意
 	FBXMeshCreateData meshData;
-	meshData.modelPath = "res/TestModel/MaterialBox.fbx";
+	meshData.modelPath = "res/TestModel/Cube03.fbx";
+	meshData.textureFolderPath = L"res/TestModel/Texture";
+	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
 	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
 	//meshData.modelPath = "res/city/city.fbx";
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
 	meshData.rootSignatureData = RootSignatureData();
 	meshData.rootSignatureData._descRangeData.cbvDescriptorNum = 2;
-	meshData.inputLayout.resize(2);
+	meshData.inputLayout.resize(3);
 	meshData.inputLayout[0] = {
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
 	meshData.inputLayout[1] = {
 			"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
-
+	meshData.inputLayout[2] = {
+			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
+			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
+	
 	// メッシュ読み込み
-	result = mesh.LoadFBX(graphicsEngine.Device(), meshData);
+	result = mesh.LoadFBX(graphicsEngine, meshData);
 	if (result == MYRESULT::FAILED) { return result; }
 	// メッシュにコンスタントバッファーセット
 	result = SetConstantBuffer(graphicsEngine, window);
@@ -55,7 +60,7 @@ void DrawMeshSample::Update(float deltaTime)
 	_meshCBuffData.world =
 		XMMatrixScaling(1., 1., 1.) *
 		XMMatrixRotationY(_angle);
-		//XMMatrixTranslation(0.f, -1.f, 0.f);
+	//XMMatrixTranslation(0.f, -1.f, 0.f);
 	_meshCBuffData.worldViewProj =
 		XMMatrixIdentity() * _meshCBuffData.world * _view * _proj;
 	_meshCBuffer.UpdateData(&_meshCBuffData);
@@ -82,7 +87,7 @@ MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, A
 	_meshCBuffData.world = XMMatrixRotationY(_angle);
 
 	// カメラ行列
-	XMVECTOR eye = XMVectorSet(0, 2.f, -3.f, 0);
+	XMVECTOR eye = XMVectorSet(0, 100.f, -150.f, 0);
 	XMVECTOR target = XMVectorSet(0, 0.f, 0, 0);
 	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
 	_view = XMMatrixLookAtLH(eye, target, up);
