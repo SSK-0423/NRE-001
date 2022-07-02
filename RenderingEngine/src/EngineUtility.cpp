@@ -19,7 +19,7 @@ errno_t charToWchar(const char* src, wchar_t* dst, const size_t dstSize) {
 	size_t convertedCount;
 	
 	// “ú–{Œê‘Î‰
-	// ‚±‚ê‚ª‚È‚¢‚Æ“ú–{Œê‚ªŠÜ‚Ü‚ê‚échar‚Ì•ÏŠ·‚ª¸”s‚·‚é
+	// ‚±‚ê‚ª‚È‚¢‚Æsrc‚É“ú–{Œê‚ªŠÜ‚Ü‚ê‚Ä‚¢‚éê‡‚É•ÏŠ·‚ª¸”s‚·‚é
 	setlocale(LC_ALL, "Japanese");
 
 	errno_t err = mbstowcs_s(&convertedCount, dst, dstSize, src, _TRUNCATE);

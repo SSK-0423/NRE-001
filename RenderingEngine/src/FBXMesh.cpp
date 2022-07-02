@@ -27,7 +27,10 @@ FBXMesh::~FBXMesh()
 
 MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
 {
-	return _descriptorHeap.Create(device);
+	if (_descriptorHeap != nullptr) { delete _descriptorHeap; }
+
+	_descriptorHeap = new DescriptorHeapCBV_SRV_UAV();
+	return _descriptorHeap->Create(device);
 }
 
 MYRESULT FBXMesh::CreateTexture(
@@ -43,7 +46,7 @@ MYRESULT FBXMesh::CreateTexture(
 	MYRESULT result = _texture->CreateTextureFromWIC(graphicsEngine, texturePath);
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
-	_descriptorHeap.RegistShaderResource(graphicsEngine.Device(), *_texture);
+	_descriptorHeap->RegistShaderResource(graphicsEngine.Device(), *_texture);
 
 	return MYRESULT::SUCCESS;
 }
@@ -56,7 +59,7 @@ MYRESULT FBXMesh::CreateMaterialConsnantBuffer(ID3D12Device& device)
 	MYRESULT result = _materialConstantBuffer->Create(device, &_material, sizeof(MaterialBuff));
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
-	_descriptorHeap.RegistConstantBuffer(device, *_materialConstantBuffer);
+	_descriptorHeap->RegistConstantBuffer(device, *_materialConstantBuffer);
 
 	return MYRESULT::SUCCESS;
 }
@@ -109,6 +112,7 @@ MYRESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData&
 	result = CreateDescriptorHeap(graphicsEngine.Device());
 	if (result == MYRESULT::FAILED) { return result; }
 
+	// マテリアルを分けるためにマテリアル毎にFBXMeshを生成
 	_childs.resize(_meshDataList.size());
 	for (size_t idx = 0; idx < _childs.size(); idx++) {
 
@@ -169,7 +173,7 @@ void FBXMesh::Draw(RenderingContext& renderContext, bool isRootMesh)
 		CommonDraw(renderContext);
 	}
 	else {
-		renderContext.SetDescriptorHeap(_descriptorHeap);
+		renderContext.SetDescriptorHeap(*_descriptorHeap);
 		renderContext.SetVertexBuffer(0, *_vertexBuffer);
 		renderContext.SetIndexBuffer(*_indexBuffer);
 		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -200,7 +204,7 @@ void FBXMesh::SetMaterial(const FBXMaterial& material)
 
 void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
 {
-	_descriptorHeap.RegistConstantBuffer(device, constantBuffer);
+	_descriptorHeap->RegistConstantBuffer(device, constantBuffer);
 	for (auto child : _childs) {
 		child->SetConstantBuffer(device, constantBuffer);
 	}
@@ -208,7 +212,7 @@ void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBu
 
 void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture)
 {
-	_descriptorHeap.RegistShaderResource(device, texture);
+	_descriptorHeap->RegistShaderResource(device, texture);
 }
 
 MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)

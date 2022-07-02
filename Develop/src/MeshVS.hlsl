@@ -22,6 +22,9 @@ VSOutput main(VSInput input)
     float4 normal = float4(input.normal.xyz, 0.f);
     output.normal = mul(world, normal);
     
+    output.uv = input.uv;
+    
     output.ray = normalize(input.pos.xyz - eye);
+    
     return output;
 }

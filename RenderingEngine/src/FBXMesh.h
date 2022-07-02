@@ -23,7 +23,12 @@
 /// </summary>
 struct FBXMeshCreateData {
 	const char* modelPath;								// 3Dモデルへのファイルパス
-	std::wstring textureFolderPath;						// テクスチャフォルダへのパス
+	/// <summary>
+	/// 3Dモデルのテクスチャがあるフォルダへのパス
+	/// 3Dモデル毎にフォルダを分けて管理するためこのパスが必要
+	/// wstringなのはテクスチャロード関数対応のため
+	/// </summary>
+	std::wstring textureFolderPath;
 	Shader vertexShader;	                            // 頂点シェーダー
 	Shader pixelShader;									// ピクセルシェーダー
 	RootSignatureData rootSignatureData;				// ルートシグネチャ
@@ -56,7 +61,7 @@ public:
 
 private:
 
-	std::vector<FBXMeshData> _meshDataList;
+	std::vector<FBXMeshData> _meshDataList;		// メッシュ情報のリスト
 
 	VertexBuffer* _vertexBuffer = nullptr;
 	MYRESULT CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData);
@@ -72,7 +77,7 @@ private:
 	std::vector<FBXMesh*> _childs;
 
 	// ディスクリプタヒープ
-	DescriptorHeapCBV_SRV_UAV _descriptorHeap;
+	DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
 	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
 
 	// シェーダーリソース生成
@@ -103,9 +108,15 @@ private:
 		std::wstring textureFolderPath;
 	};
 
-	// 親子共通の描画処理
+	/// <summary>
+	///	親子共通の描画処理
+	/// </summary>
 	void CommonDraw(RenderingContext& renderContext);
-	// 階層メッシュ対応の描画
+	/// <summary>
+	/// 階層メッシュ対応の描画(予定)
+	/// </summary>
+	/// <param name="renderContext"></param>
+	/// <param name="isRootMesh"></param>
 	void Draw(RenderingContext& renderContext, bool isRootMesh);
 
 	MYRESULT CreateAsChild(Dx12GraphicsEngine& graphicsEngine, ChildMeshCreateData& meshData);

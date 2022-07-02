@@ -10,6 +10,10 @@ cbuffer material : register(b0)
     float shiness;
 }
 
+sampler smp : register(s0);
+
+Texture2D tex : register(t0);
+
 float4 main(VSOutput input) : SV_TARGET
 {
     PhongReflectionModelData data;
@@ -31,6 +35,8 @@ float4 main(VSOutput input) : SV_TARGET
     data.shiness = shiness;
     data.ambient = ambient.rgb;
     data.ambientFactor = ambient.a;
+    
+    return tex.Sample(smp, input.uv);
     
     return PhongReflectionModel(data);
 }

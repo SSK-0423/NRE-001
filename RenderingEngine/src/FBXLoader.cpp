@@ -58,6 +58,7 @@ FBXMeshData FBXLoader::CreateMesh(FbxMesh* mesh)
 	LoadVertices(meshData, mesh);
 	LoadIndices(meshData, mesh);
 	LoadNormals(meshData, mesh);
+	LoadUV(meshData, mesh);
 	SetMaterial(meshData, mesh);
 
 	return meshData;
@@ -300,6 +301,27 @@ void FBXLoader::SetMaterial(FBXMeshData& meshData, FbxMesh* mesh)
 	}
 	else {
 		//TODO: ない場合のマテリアルをどうするか
+	}
+}
+
+void FBXLoader::LoadUV(FBXMeshData& meshData, FbxMesh* mesh)
+{
+	FbxStringList uvsetNames;
+	// UVSetの名前リストを取得
+	mesh->GetUVSetNames(uvsetNames);
+
+	FbxArray<FbxVector2> uvBuffer;
+
+	// UVSetの名前からUVsetを取得する
+	// 今回はマルチテクスチャには対応しないので最初の名前を使う
+	mesh->GetPolygonVertexUVs(uvsetNames.GetStringAt(0), uvBuffer);
+
+	for (int idx = 0; idx < uvBuffer.Size(); idx++) {
+		FbxVector2& uv = uvBuffer[idx];
+
+		meshData.vertices[idx].uv.x = static_cast<float>(uv[0]);
+		// DirectXは左上原点 テクスチャは左下原点に貼っているのでv値を反転
+		meshData.vertices[idx].uv.y = static_cast<float>(1.f - uv[1]);
 	}
 }
 

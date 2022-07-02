@@ -79,7 +79,7 @@ struct ColorRGBA
 /// </summary>
 /// <param name="size">データサイズ</param>
 /// <param name="alignment">アライメント数</param>
-/// <returns></returns>
+/// <returns>アライメントされたサイズ</returns>
 inline size_t AlignmentedSize(size_t size, size_t alignment) {
 	return size + alignment - size % alignment;
 }
@@ -116,8 +116,8 @@ errno_t charToWchar(const char* src, wchar_t* dst, const size_t dstSize);
 /// <summary>
 /// nullptrチェックを行うdelete
 /// </summary>
-/// <typeparam name="T"></typeparam>
-/// <param name="ptr"></param>
+/// <typeparam name="T">解放するポインタタイプ</typeparam>
+/// <param name="ptr>解放するポインタ</param>
 template <typename T>
 inline void SafetyDelete(T* ptr) {
 	if (ptr != nullptr) {

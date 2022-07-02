@@ -4,12 +4,19 @@
 #include <vector>
 #include <DirectXMath.h>
 
+/// <summary>
+/// FBXメッシュの頂点データ
+/// </summary>
 struct FBXMeshVertex {
 	DirectX::XMFLOAT3 position;
 	DirectX::XMFLOAT3 normal;
 	DirectX::XMFLOAT2 uv;
 };
 
+/// <summary>
+/// FBXメッシュのマテリアルデータ
+/// FBXMeshクラスがマテリアル・テクスチャ描画を行う
+/// </summary>
 struct FBXMaterial {
 	FBXMaterial()
 	{
@@ -23,7 +30,6 @@ struct FBXMaterial {
 		ambient[3] = 0.f;
 		diffuse[3] = 0.f;
 		specular[3] = 0.f;
-		textureKeyWord = L"";
 		textureName = L"";
 	}
 
@@ -55,14 +61,17 @@ struct FBXMaterial {
 	float diffuse[4];
 	float specular[4];
 	float shiness;	// これなに？Shiness?
-	std::wstring textureKeyWord;
 	std::wstring textureName;
 };
 
+/// <summary>
+/// FBXメッシュ情報を格納する構造体
+/// FBXMeshクラスがこの情報を元に頂点バッファー生成やマテリアル情報のセットを行う
+/// </summary>
 struct FBXMeshData {
 	std::vector<FBXMeshVertex> vertices;	// 頂点
 	std::vector<unsigned int> indices;		// 頂点インデックス
-	FBXMaterial material;
+	FBXMaterial material;					// マテリアル
 };
 
 class FBXLoader {
@@ -78,8 +87,6 @@ public:
 	bool Load(const char* meshPath, std::vector<FBXMeshData>& meshDataList);
 
 private:
-	std::vector<FBXMeshData> _meshDataList;
-
 	std::map<std::string, FBXMaterial> _materials;
 
 	/// <summary>
@@ -97,8 +104,10 @@ private:
 	void LoadNormals(FBXMeshData& meshData, FbxMesh* mesh);
 
 	void LoadMaterial(FbxSurfaceMaterial* material);
-
+	
 	void SetMaterial(FBXMeshData& meshData, FbxMesh* mesh);
+
+	void LoadUV(FBXMeshData& meshData, FbxMesh* mesh);
 
 	std::wstring GetTextureFileName(FbxFileTexture* texture);
 };
