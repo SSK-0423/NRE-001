@@ -6,6 +6,7 @@
 #include "MultiPassRenderingSample.h"
 #include "MultiRenderTargetSample.h"
 #include "DepthBufferSample.h"
+#include "DrawMeshSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -24,9 +25,13 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// 深度バッファーサンプル
 	DepthBufferSample depthBufferApp;
 
-	Dx12Application app(multiPassApp);
+	// メッシュ描画サンプル
+	DrawMeshSample drawMeshApp;
+
+	Dx12Application app(drawMeshApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
+		MessageBox(NULL, L"アプリケーションの初期化に失敗しました。", L"エラーメッセージ", MB_OK);
 		return -1;
 	}
 	app.Run();

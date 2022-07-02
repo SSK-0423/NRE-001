@@ -2,6 +2,7 @@
 #include <Windows.h>
 #include <wrl.h>
 #include <vector>
+#include <string>
 
 /// <summary>
 /// 関数の成功/失敗
@@ -78,7 +79,7 @@ struct ColorRGBA
 /// </summary>
 /// <param name="size">データサイズ</param>
 /// <param name="alignment">アライメント数</param>
-/// <returns></returns>
+/// <returns>アライメントされたサイズ</returns>
 inline size_t AlignmentedSize(size_t size, size_t alignment) {
 	return size + alignment - size % alignment;
 }
@@ -92,4 +93,35 @@ inline size_t AlignmentedSize(size_t size, size_t alignment) {
 template <typename T>
 inline UINT SizeofVector(const std::vector<T>& vec) {
 	return static_cast<UINT>(sizeof(T) * vec.size());
+}
+
+/// <summary>
+/// 文字列置換
+/// </summary>
+/// <param name="str">文字列</param>
+/// <param name="target">置換対象</param>
+/// <param name="replacement">置換後の文字列</param>
+/// <returns>置換処理後の文字列</returns>
+std::string ReplaceString(std::string str, std::string target, std::string replacement);
+
+/// <summary>
+/// char型⇒wchar_tへの変換
+/// </summary>
+/// <param name="src">変換元文字列</param>
+/// <param name="dst">変換後の文字列の格納先</param>
+/// <param name="dstSize">変換後文字列のサイズ</param>
+/// <returns>正常終了:0 失敗:エラーコード</returns>
+errno_t charToWchar(const char* src, wchar_t* dst, const size_t dstSize);
+
+/// <summary>
+/// nullptrチェックを行うdelete
+/// </summary>
+/// <typeparam name="T">解放するポインタタイプ</typeparam>
+/// <param name="ptr>解放するポインタ</param>
+template <typename T>
+inline void SafetyDelete(T* ptr) {
+	if (ptr != nullptr) {
+		delete ptr;
+		ptr = nullptr;
+	}
 }

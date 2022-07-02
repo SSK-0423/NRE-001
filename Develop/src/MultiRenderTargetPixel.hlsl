@@ -1,6 +1,6 @@
 #include "MultiRenderTargetHeader.hlsli"
 
-float4 MrtPixel(MultiRenderiFinalVertex input) : SV_TARGET
+float4 main(MultiRenderiFinalVertex input) : SV_TARGET
 {
     // ¶‚S•ª‚Ì1‚ÍƒŒƒ“ƒ_[ƒ^[ƒQƒbƒg1‚ğ•`‰æ
     if (input.uv.x >= 0.f && input.uv.x <= 0.25f)

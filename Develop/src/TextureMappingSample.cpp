@@ -70,8 +70,8 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 	rootSignatureData._samplerData.addressV = D3D12_TEXTURE_ADDRESS_MODE_MIRROR;
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/TextureMapSampleVertex.hlsl", "TexMapVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/TextureMapSamplePixel.hlsl", "TexMapPS", "ps_5_0");
+	result = _vertexShader.Create(L"src/TextureMapSampleVertex.hlsl", "main", "vs_5_0");
+	result = _pixelShader.Create(L"src/TextureMapSamplePixel.hlsl", "main", "ps_5_0");
 
 	// ポリゴン生成
 	PolygonData polygonData;
@@ -105,7 +105,7 @@ MYRESULT TextureMappingSample::InitTexture(Dx12GraphicsEngine& graphicsEngine)
 	ID3D12Device& device = graphicsEngine.Device();
 
 	// テクスチャファイルパス
-	std::wstring path(L"草.jpg");
+	std::wstring path(L"Ramen.JPG");
 
 	// テクスチャ生成
 	MYRESULT result = _texture.CreateTextureFromWIC(graphicsEngine, path);

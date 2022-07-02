@@ -1,6 +1,6 @@
 #include "DepthBufferSampleHeader.hlsli"
 
-DepthSampleVSOut FarPolygonVS(float4 pos : POSITION, float2 uv : TEXCOORD)
+DepthSampleVSOut main(float4 pos : POSITION, float2 uv : TEXCOORD)
 {
     DepthSampleVSOut output;
     

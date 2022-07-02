@@ -1,6 +1,6 @@
 #include "MultiRenderTargetHeader.hlsli"
 
-MultiRenderFirstPixelOut MrtFirstPixel()
+MultiRenderFirstPixelOut main()
 {
     MultiRenderFirstPixelOut output;
     output.render1Color = float4(1.f, 0.f, 0.f, 1.f);

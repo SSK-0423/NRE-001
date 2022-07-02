@@ -32,8 +32,8 @@ MYRESULT DepthBufferSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	if (result == MYRESULT::FAILED) { return result; }
 
 	SpriteData data;
-	data.vertexShaderData = ShaderData(L"src/SpriteVS.hlsl", "SpriteVS", "vs_5_0");
-	data.pixelShaderData = ShaderData(L"src/SpritePS.hlsl", "SpritePS", "ps_5_0");
+	data.vertexShaderData = ShaderData(L"src/SpriteVS.hlsl", "main", "vs_5_0");
+	data.pixelShaderData = ShaderData(L"src/SpritePS.hlsl", "main", "ps_5_0");
 	data.textures[0] = &_firstRender.GetRenderTargetTexture();
 	data.textures[1] = &_firstRender.GetDepthStencilTexture();
 	data.rootSignatureData._descRangeData.srvDescriptorNum = 2;
@@ -98,8 +98,8 @@ MYRESULT DepthBufferSample::CreateNearPolygon(Dx12GraphicsEngine& graphicsEngine
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/NearPolygonVS.hlsl", "NearPolygonVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/NearPolygonPS.hlsl", "NearPolygonPS", "ps_5_0");
+	result = _vertexShader.Create(L"src/NearPolygonVS.hlsl", "main", "vs_5_0");
+	result = _pixelShader.Create(L"src/NearPolygonPS.hlsl", "main", "ps_5_0");
 	// ポリゴン生成
 	PolygonData polygonData;
 	polygonData.vertexBuffer = _vertexBuffer;
@@ -150,8 +150,8 @@ MYRESULT DepthBufferSample::CreateFarPolygon(Dx12GraphicsEngine& graphicsEngine)
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/FarPolygonVS.hlsl", "FarPolygonVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/FarPolygonPS.hlsl", "FarPolygonPS", "ps_5_0");
+	result = _vertexShader.Create(L"src/FarPolygonVS.hlsl", "main", "vs_5_0");
+	result = _pixelShader.Create(L"src/FarPolygonPS.hlsl", "main", "ps_5_0");
 
 	// ポリゴン生成
 	PolygonData polygonData;

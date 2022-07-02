@@ -1,6 +1,6 @@
 #include "TextureMapSampleHeader.hlsli"
 
-TexMapOut TexMapVS( float4 pos : POSITION, float2 uv : TEXCOORD )
+TexMapOut main( float4 pos : POSITION, float2 uv : TEXCOORD )
 {
     TexMapOut output;
     output.pos = pos;

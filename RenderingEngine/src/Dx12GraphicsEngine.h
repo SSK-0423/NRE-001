@@ -45,7 +45,7 @@ public:
 
 private:
 	// DXGIŠÖ˜A
-	Microsoft::WRL::ComPtr<IDXGIFactory6> _dxgiFactory = nullptr;
+	Microsoft::WRL::ComPtr<IDXGIFactory7> _dxgiFactory = nullptr;
 	Microsoft::WRL::ComPtr<IDXGISwapChain4> _swapchain = nullptr;
 
 	// DirectX12‰Šú‰»ŠÖ˜A

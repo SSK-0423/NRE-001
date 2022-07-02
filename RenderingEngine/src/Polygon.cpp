@@ -20,7 +20,7 @@ MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const Polygo
 
 	// ルートシグネチャ生成
 	MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
-	if (MYRESULT::FAILED == result) { return result; }
+	if (result == MYRESULT::FAILED) { return result; }
 
 	// ルートシグネチャとシェーダーセット
 	D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
@@ -85,7 +85,7 @@ void Polygon::Draw(RenderingContext& renderContext)
 	renderContext.SetPipelineState(_graphicsPipelineState);
 	renderContext.SetVertexBuffer(0, _vertexBuffer);
 	renderContext.SetIndexBuffer(_indexBuffer);
-	renderContext.SetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+	renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 	renderContext.DrawIndexedInstanced(_indexBuffer.GetIndexNum(), 1);
 }
 

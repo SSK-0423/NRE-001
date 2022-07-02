@@ -23,8 +23,8 @@ MYRESULT DrawPolygonSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& 
 	result = _indexBuffer.Create(graphicsEngine.Device(), index);
 
 	// シェーダー
-	result = _vertexShader.Create(L"src/PolygonSampleVertex.hlsl", "PolygonSampleVS", "vs_5_0");
-	result = _pixelShader.Create(L"src/PolygonSamplePixel.hlsl", "PolygonSamplePS", "ps_5_0");
+	result = _vertexShader.Create(L"src/PolygonSampleVertex.hlsl", "main", "vs_5_0");
+	result = _pixelShader.Create(L"src/PolygonSamplePixel.hlsl", "main", "ps_5_0");
 
 	// ポリゴン生成
 	PolygonData polygonData;
