@@ -1,9 +1,9 @@
-#include "DrawMeshSample.h"
+#include "PBRSample.h"
 #include "Shader.h"
 
 using namespace DirectX;
 
-MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
+MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
 	MYRESULT result;
 	// シェーダー
@@ -20,13 +20,13 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	//meshData.textureFolderPath = L"res/TestModel/Texture";
 	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
 
-	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
-	//meshData.textureFolderPath= L"res/Renault12TL/Textures";
+	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
+	meshData.textureFolderPath= L"res/Renault12TL/Textures";
 
 	//meshData.modelPath = "res/city/city.fbx";
 
-	meshData.modelPath = "res/TV/TV.fbx";
-	meshData.textureFolderPath = L"res/TV/Textures";
+	//meshData.modelPath = "res/TV/TV.fbx";
+	//meshData.textureFolderPath = L"res/TV/Textures";
 
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
@@ -42,7 +42,7 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	meshData.inputLayout[2] = {
 			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
-	
+
 	// メッシュ読み込み
 	result = mesh.LoadFBX(graphicsEngine, meshData);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -61,7 +61,7 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	return MYRESULT::SUCCESS;
 }
 
-void DrawMeshSample::Update(float deltaTime)
+void PBRSample::Update(float deltaTime)
 {
 	_angle -= 0.01f;
 	_meshCBuffData.world =
@@ -73,7 +73,7 @@ void DrawMeshSample::Update(float deltaTime)
 	_meshCBuffer.UpdateData(&_meshCBuffData);
 }
 
-void DrawMeshSample::Draw(Dx12GraphicsEngine& graphicsEngine)
+void PBRSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 {
 	// レンダリングコンテキスト取得
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
@@ -83,11 +83,11 @@ void DrawMeshSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	mesh.Draw(renderContext);
 }
 
-void DrawMeshSample::Final()
+void PBRSample::Final()
 {
 }
 
-MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
+MYRESULT PBRSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
 	// ワールド行列
 	_angle = 0.f;

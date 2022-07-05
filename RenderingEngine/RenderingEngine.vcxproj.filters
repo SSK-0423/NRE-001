@@ -169,5 +169,8 @@
     <None Include="src\PhongReflectionModel.hlsli">
       <Filter>リソース ファイル\シェーダー</Filter>
     </None>
+    <None Include="src\PBR.hlsli">
+      <Filter>リソース ファイル\シェーダー</Filter>
+    </None>
   </ItemGroup>
 </Project>

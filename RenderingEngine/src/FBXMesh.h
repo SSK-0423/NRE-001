@@ -29,6 +29,12 @@ struct FBXMeshCreateData {
 	/// wstringなのはテクスチャロード関数対応のため
 	/// </summary>
 	std::wstring textureFolderPath;
+
+	///
+	/// FBXSDKでPBRマテリアルを読み込む方法が分からない(対応してないっぽい)ので
+	/// PBRテクスチャのファイル名を直接書いてもらう
+	///
+
 	Shader vertexShader;	                            // 頂点シェーダー
 	Shader pixelShader;									// ピクセルシェーダー
 	RootSignatureData rootSignatureData;				// ルートシグネチャ

@@ -18,6 +18,14 @@ struct FBXMeshVertex {
 /// FBXMeshクラスがマテリアル・テクスチャ描画を行う
 /// </summary>
 struct FBXMaterial {
+
+	float ambient[4];
+	float diffuse[4];
+	float specular[4];
+	float shiness;
+	
+	std::wstring textureName;
+
 	FBXMaterial()
 	{
 		for (int i = 0; i < _countof(ambient); i++)
@@ -56,12 +64,6 @@ struct FBXMaterial {
 		specular[2] = b;
 		specular[3] = factor;
 	}
-
-	float ambient[4];
-	float diffuse[4];
-	float specular[4];
-	float shiness;	// これなに？Shiness?
-	std::wstring textureName;
 };
 
 /// <summary>
@@ -104,7 +106,7 @@ private:
 	void LoadNormals(FBXMeshData& meshData, FbxMesh* mesh);
 
 	void LoadMaterial(FbxSurfaceMaterial* material);
-	
+
 	void SetMaterial(FBXMeshData& meshData, FbxMesh* mesh);
 
 	void LoadUV(FBXMeshData& meshData, FbxMesh* mesh);
