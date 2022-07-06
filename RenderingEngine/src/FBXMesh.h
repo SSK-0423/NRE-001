@@ -22,7 +22,13 @@
 /// メッシュ生成用データ
 /// </summary>
 struct FBXMeshCreateData {
+	/// <summary>
+	/// PBRの場合 baseColorName,metallicName,roughnessNam,normalName,occlusionNameの設定が必要
+	/// </summary>
+	MATERIAL_TYPE materialType;
+
 	const char* modelPath;								// 3Dモデルへのファイルパス
+
 	/// <summary>
 	/// 3Dモデルのテクスチャがあるフォルダへのパス
 	/// 3Dモデル毎にフォルダを分けて管理するためこのパスが必要
@@ -30,10 +36,13 @@ struct FBXMeshCreateData {
 	/// </summary>
 	std::wstring textureFolderPath;
 
-	///
 	/// FBXSDKでPBRマテリアルを読み込む方法が分からない(対応してないっぽい)ので
 	/// PBRテクスチャのファイル名を直接書いてもらう
-	///
+	std::wstring baseColorName;
+	std::wstring metallicName;
+	std::wstring roughnessName;
+	std::wstring normalName;
+	std::wstring occlusionName;
 
 	Shader vertexShader;	                            // 頂点シェーダー
 	Shader pixelShader;									// ピクセルシェーダー
@@ -50,10 +59,6 @@ struct FBXMeshCreateData {
 	DXGI_FORMAT_UNKNOWN,
 	};	// レンダーターゲットのカラーフォーマット
 
-	/// <summary>
-	/// カラーフォーマット配列を調べてレンダーターゲット数を返す
-	/// </summary>
-	/// <returns>レンダーターゲット数</returns>
 	size_t GetRenderTargetNum() const;
 };
 
@@ -86,38 +91,17 @@ private:
 	DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
 	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
 
-	// シェーダーリソース生成
-	Texture* _texture = nullptr;
-	MYRESULT CreateTexture(
-		Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData, std::wstring textureFolderPath);
-
-	// マテリアル用コンスタントバッファー構造体
-	struct MaterialBuff {
-		DirectX::XMFLOAT4 ambient;
-		DirectX::XMFLOAT4 diffuse;
-		DirectX::XMFLOAT4 specular;
-		float shiness;
-	};
-	// マテリアル
-	MaterialBuff _material;
-	void SetMaterial(const FBXMaterial& material);
-
-	// マテリアル用のコンスタントバッファー
-	ConstantBuffer* _materialConstantBuffer = nullptr;
-	MYRESULT CreateMaterialConsnantBuffer(ID3D12Device& device);
-
 	/// <summary>
-	/// 子メッシュを生成する際の構造体
+	/// マテリアルセット
 	/// </summary>
-	struct ChildMeshCreateData {
-		FBXMeshData meshData;
-		std::wstring textureFolderPath;
-	};
+	/// <param name="material"></param>
+	void SetMaterial(IMaterial& material);
 
 	/// <summary>
 	///	親子共通の描画処理
 	/// </summary>
 	void CommonDraw(RenderingContext& renderContext);
+
 	/// <summary>
 	/// 階層メッシュ対応の描画(予定)
 	/// </summary>
@@ -125,7 +109,7 @@ private:
 	/// <param name="isRootMesh"></param>
 	void Draw(RenderingContext& renderContext, bool isRootMesh);
 
-	MYRESULT CreateAsChild(Dx12GraphicsEngine& graphicsEngine, ChildMeshCreateData& meshData);
+	MYRESULT CreateAsChild(Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData);
 
 public:
 	MYRESULT LoadFBX(Dx12GraphicsEngine& device, FBXMeshCreateData& meshCreateData);

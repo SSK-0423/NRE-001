@@ -18,6 +18,7 @@ public:
 	Texture() = default;
 	~Texture() = default;
 
+	Texture& operator=(const Texture& inst);
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;		// 中間バッファー(アップロード元)
 	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;	// テクスチャバッファー(アップロード先)

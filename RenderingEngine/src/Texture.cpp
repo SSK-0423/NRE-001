@@ -1,5 +1,20 @@
 #include "Texture.h"
 
+Texture& Texture::operator=(const Texture& inst)
+{
+	// テクスチャバッファーと結びつける
+	this->_textureBuffer = inst._textureBuffer.Get();
+
+	// シェーダーリソースとして登録する際に必要な情報をセット
+	DirectX::Image* img = new DirectX::Image();
+	img->format = inst._image->format;
+	this->_image = img;
+
+	this->_metaData.mipLevels = 1;
+
+	return *this;
+}
+
 HRESULT Texture::LoadTextureFromWICFile(const std::wstring& texturePath)
 {
 	// ファイル読み込み
@@ -204,7 +219,6 @@ void Texture::CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuff
 {
 	// デプスステンシルバッファーとテクスチャバッファーを結びつける
 	_textureBuffer = &depthStencilBuffer.GetBuffer();
-
 
 	// シェーダーリソースとして登録する際に必要な情報をセット
 	DirectX::Image* img = new DirectX::Image();

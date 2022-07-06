@@ -16,17 +16,13 @@ MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 
 	// FBXMeshData—pˆÓ
 	FBXMeshCreateData meshData;
+	meshData.materialType = MATERIAL_TYPE::PHONG;
 	//meshData.modelPath = "res/TestModel/Cube03.fbx";
 	//meshData.textureFolderPath = L"res/TestModel/Texture";
 	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
 
 	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
 	meshData.textureFolderPath= L"res/Renault12TL/Textures";
-
-	//meshData.modelPath = "res/city/city.fbx";
-
-	//meshData.modelPath = "res/TV/TV.fbx";
-	//meshData.textureFolderPath = L"res/TV/Textures";
 
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
