@@ -16,6 +16,10 @@ public:
 	PhongMaterial(const PhongMaterial& inst);
 
 private:
+	static const size_t _dummyTextureWidth = 16;
+	static const size_t _dummyTextureHeight = 16;
+
+	
 	std::wstring _textureName;
 	std::wstring _textureFolderPath;
 

@@ -19,10 +19,10 @@ MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 	meshData.materialType = MATERIAL_TYPE::PHONG;
 	//meshData.modelPath = "res/TestModel/Cube03.fbx";
 	//meshData.textureFolderPath = L"res/TestModel/Texture";
-	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
+	meshData.modelPath = "res/TestModel/MaterialBox.fbx";
 
-	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
-	meshData.textureFolderPath= L"res/Renault12TL/Textures";
+	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
+	//meshData.textureFolderPath= L"res/Renault12TL/Textures";
 
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
@@ -61,7 +61,7 @@ void PBRSample::Update(float deltaTime)
 {
 	_angle -= 0.01f;
 	_meshCBuffData.world =
-		XMMatrixScaling(0.3, 0.3, 0.3) *
+		XMMatrixScaling(40.3, 40.3, 40.3) *
 		XMMatrixRotationY(_angle);
 	//XMMatrixTranslation(0.f, -1.f, 0.f);
 	_meshCBuffData.worldViewProj =
