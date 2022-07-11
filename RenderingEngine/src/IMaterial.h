@@ -11,6 +11,14 @@ enum class MATERIAL_TYPE
 
 /// <summary>
 /// マテリアルクラスのインターフェース
+/// 仕様:
+/// ・メッシュクラスにセットするもの
+/// ・PhongMaterialとPBRMaterialは別仕様
+/// ・IMaterialクラスのセット関数でメッシュにマテリアルを適用する
+/// マテリアルの定義
+/// ・オブジェクトの質感を決定するもの
+/// ・シェーディング関連の数値
+/// ・テクスチャも該当
 /// </summary>
 class IMaterial {
 public:

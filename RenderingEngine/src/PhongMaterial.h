@@ -7,15 +7,7 @@
 #include "Texture.h"
 
 /// <summary>
-/// メッシュのマテリアルクラス　レンダリングエンジンレイヤー
-/// 仕様:
-/// ・メッシュクラスにセットするもの
-/// ・PhongMaterialとPBRMaterialは別仕様
-/// ・IMaterialクラスのセット関数でメッシュにマテリアルを適用する
-/// マテリアルの定義
-/// ・オブジェクトの質感を決定するもの
-/// ・シェーディング関連の数値
-/// ・テクスチャも該当
+/// フォンの反射モデル用マテリアルクラス
 /// </summary>
 class PhongMaterial : public IMaterial {
 public:
@@ -43,7 +35,10 @@ private:
 	MYRESULT CreateTexture(Dx12GraphicsEngine& graphicsEngine);
 
 public:
-	
+	/// <summary>
+	/// マテリアルを利用可能な状態にする
+	/// </summary>
+	/// <returns></returns>
 	MYRESULT Commit();
 
 	void ApplyMaterial(FBXMesh& mesh) override;

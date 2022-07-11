@@ -46,7 +46,7 @@ void RenderingContext::SetRenderTarget(
 }
 
 void RenderingContext::SetRenderTargets(
-	const UINT& rtvNum, const D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[], 
+	const UINT& rtvNum, const D3D12_CPU_DESCRIPTOR_HANDLE rtvHandles[],
 	const D3D12_CPU_DESCRIPTOR_HANDLE* dsvHandle)
 {
 	_cmdList->OMSetRenderTargets(rtvNum, rtvHandles, false, dsvHandle);
@@ -55,7 +55,7 @@ void RenderingContext::SetRenderTargets(
 void RenderingContext::ClearRenderTarget(
 	D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const ColorRGBA& color, const UINT& numRects, const D3D12_RECT* rects)
 {
-	float clearColor[4] = { color.color[0],color.color[1], color.color[2], color.color[3] };
+	float clearColor[4] = { color.r,color.g, color.b, color.a };
 	_cmdList->ClearRenderTargetView(rtvHandle, clearColor, numRects, rects);
 }
 
@@ -66,7 +66,7 @@ void RenderingContext::ClearRenderTarget(
 }
 
 void RenderingContext::ClearDepthStencilView(
-	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, D3D12_CLEAR_FLAGS clearFlags, 
+	D3D12_CPU_DESCRIPTOR_HANDLE dsvHandle, D3D12_CLEAR_FLAGS clearFlags,
 	const FLOAT& clearDepth, const UINT8& clearStencil, const UINT& numRects, const D3D12_RECT* rects)
 {
 	_cmdList->ClearDepthStencilView(dsvHandle, clearFlags, clearDepth, clearStencil, numRects, rects);
