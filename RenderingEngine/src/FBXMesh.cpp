@@ -66,10 +66,18 @@ MYRESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData&
 	// ローダー用意
 	FBXLoader* _fbxLoader = new FBXLoader();
 
+	FBXLoadData loadData;
+	loadData.meshPath = meshCreateData.modelPath;
+	loadData.materialType = meshCreateData.materialType;
+	loadData.textureFolderPath = meshCreateData.textureFolderPath;
+	loadData.baseColorName = meshCreateData.baseColorName;
+	loadData.metallicName = meshCreateData.metallicName;
+	loadData.roughnessName = meshCreateData.roughnessName;
+	loadData.normalName = meshCreateData.normalName;
+	loadData.occlusionName = meshCreateData.occlusionName;
+
 	// FBX読み込み
-	if (!_fbxLoader->Load(
-		meshCreateData.modelPath, meshCreateData.textureFolderPath, 
-		meshCreateData.materialType, _meshDataList))
+	if (!_fbxLoader->Load(_meshDataList, loadData))
 	{
 		return MYRESULT::FAILED;
 	}
@@ -150,17 +158,17 @@ void FBXMesh::Draw(RenderingContext& renderContext, bool isRootMesh)
 	}
 }
 
-void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
+void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
 {
-	_descriptorHeap->RegistConstantBuffer(device, constantBuffer);
+	_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
 	for (auto child : _childs) {
 		child->SetConstantBuffer(device, constantBuffer);
 	}
 }
 
-void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture)
+void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture, const int& registerNo)
 {
-	_descriptorHeap->RegistShaderResource(device, texture);
+	_descriptorHeap->RegistShaderResource(device, texture, registerNo);
 }
 
 MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)

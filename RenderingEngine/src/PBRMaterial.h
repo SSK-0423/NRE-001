@@ -5,6 +5,16 @@
 #include "IMaterial.h"
 #include "Texture.h"
 
+enum class PBRTEXTURETYPE
+{
+	BASE_COLOR = 0,
+	METALLIC,
+	ROUGHNESS,
+	NORMAL,
+	OCCULUSION,	// アンビエントオクルージョン
+	TYPE_NUM
+};
+
 /// <summary>
 /// PBR対応マテリアルクラス
 /// </summary>
@@ -12,22 +22,14 @@ class PBRMaterial : public IMaterial {
 public:
 	PBRMaterial();
 	~PBRMaterial();
+	PBRMaterial(const PBRMaterial& inst);
 
 private:
 	std::wstring _textureFolderPath = L"";
 
-	enum class TEXTURETYPE
-	{
-		BASE_COLOR = 0,
-		METALLIC,
-		ROUGHNESS,
-		NORMAL,
-		OCCULUSION,	// アンビエントオクルージョン
-		TYPE_NUM
-	};
 
-	std::unordered_map<TEXTURETYPE, std::wstring> _pbrTexturePaths;
-	std::unordered_map<TEXTURETYPE, Texture*> _pbrTextures;
+	std::unordered_map<PBRTEXTURETYPE, std::wstring> _pbrTextureNames;
+	std::unordered_map<PBRTEXTURETYPE, Texture*> _pbrTextures;
 
 	Texture _dummyTexture;	// テクスチャが指定されていない場合のダミー用テクスチャ
 
@@ -60,5 +62,5 @@ public:
 	/// </summary>
 	/// <param name="type">テクスチャの種類(ベースカラー・メタリック・ラフネスなど)</param>
 	/// <param name="path"></param>
-	void SetTextureName(TEXTURETYPE type, std::wstring path);
+	void SetTextureName(PBRTEXTURETYPE type, std::wstring textureName);
 };

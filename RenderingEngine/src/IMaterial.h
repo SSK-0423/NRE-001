@@ -21,6 +21,10 @@ enum class MATERIAL_TYPE
 /// ・テクスチャも該当
 /// </summary>
 class IMaterial {
+protected:
+	static const size_t _dummyTextureWidth = 16;
+	static const size_t _dummyTextureHeight = 16;
+
 public:
 	
 	/// <summary>

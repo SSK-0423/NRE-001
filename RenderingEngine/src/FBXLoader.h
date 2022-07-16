@@ -24,6 +24,20 @@ struct FBXMeshData {
 	std::vector<unsigned int> indices;		// 頂点インデックス
 	IMaterial* material = nullptr;			// 実装中マテリアル
 };
+/// <summary>
+/// FBXメッシュを読み込むのに必要な情報をまとめた構造体
+/// </summary>
+struct FBXLoadData {
+	const char* meshPath;
+	MATERIAL_TYPE materialType;
+	std::wstring textureFolderPath;
+
+	std::wstring baseColorName = L"";
+	std::wstring metallicName = L"";
+	std::wstring roughnessName = L"";
+	std::wstring normalName = L"";
+	std::wstring occlusionName = L"";
+};
 
 class FBXLoader {
 public:
@@ -38,14 +52,10 @@ public:
 	/// <summary>
 	/// FBXファイルを読み込む
 	/// </summary>
-	/// <param name="meshPath">.fbxへのパス</param>
-	/// <param name="textureFolderPath">読み込むモデルのテクスチャがあるフォルダへのパス</param>
-	/// <param name="materialType">使用するマテリアルタイプ</param>
 	/// <param name="meshDataList">読み込んだメッシュの情報を格納するリスト</param>
+	/// <param name="data">FBXを読み込むのに必要な情報をまとめた構造体</param>
 	/// <returns>true:成功 false:失敗</returns>
-	bool Load(
-		const char* meshPath, std::wstring textureFolderPath,
-		MATERIAL_TYPE materialType, std::vector<FBXMeshData>& meshDataList);
+	bool Load(std::vector<FBXMeshData>& meshDataList, FBXLoadData& data);
 
 private:
 	std::map<std::string, IMaterial*> _materials;
@@ -58,9 +68,13 @@ private:
 
 	bool LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring textureFolderPath);
 
-	bool LoadPBRMaterial(FbxSurfaceMaterial* material, std::wstring textureFolderPath);
+	bool LoadPBRMaterial(
+		FbxSurfaceMaterial* material, std::wstring textureFolderPath,
+		std::wstring baseColorTextureName, std::wstring metallicTextureName,
+		std::wstring roughnessTextureName, std::wstring normalTextureName,
+		std::wstring occlusionTextureName);
 
-	bool LoadMaterial(MATERIAL_TYPE materialType, std::wstring textureFolderPath);
+	bool LoadMaterial(FBXLoadData& data);
 
 	FBXMeshData CreateMesh(FbxMesh* mesh);
 
@@ -71,7 +85,6 @@ private:
 	void LoadNormals(FBXMeshData& meshData, FbxMesh* mesh);
 
 	void SetMaterial(FBXMeshData& meshData, FbxMesh* mesh);
-
 
 	void LoadUV(FBXMeshData& meshData, FbxMesh* mesh);
 

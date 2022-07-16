@@ -116,8 +116,12 @@ public:
 
 	void Draw(RenderingContext& renderContext);
 
-	void SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer);
+	void SetConstantBuffer(
+		ID3D12Device& device, ConstantBuffer& constantBuffer, 
+		const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
 
-	void SetTexture(ID3D12Device& device, Texture& texture);
+	void SetTexture(
+		ID3D12Device& device, Texture& texture, 
+		const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
 
 };

@@ -150,7 +150,7 @@ void FBXLoader::SetMaterial(FBXMeshData& meshData, FbxMesh* mesh)
 
 bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring textureFolderPath)
 {
-	PhongMaterial phongMaterial;
+	PhongMaterial* phongMaterial = new PhongMaterial();
 
 	enum class MATERIAL
 	{
@@ -203,15 +203,15 @@ bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring tex
 		// Shiness取得
 		prop = material->FindProperty(FbxSurfaceMaterial::sShininess);
 		if (prop.IsValid()) {
-			phongMaterial.SetShininess(prop.Get<FbxDouble>());
+			phongMaterial->SetShininess(prop.Get<FbxDouble>());
 		}
 		else {
-			phongMaterial.SetShininess(1.f);
+			phongMaterial->SetShininess(1.f);
 		}
 
 		FbxDouble3 color = materialColors[static_cast<int>(MATERIAL::DIFFUSE)];
 		FbxDouble factor = factors[static_cast<int>(MATERIAL::DIFFUSE)];
-		phongMaterial.SetDiffuse(
+		phongMaterial->SetDiffuse(
 			static_cast<float>(color[0]),
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
@@ -219,7 +219,7 @@ bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring tex
 
 		color = materialColors[static_cast<int>(MATERIAL::AMBIENT)];
 		factor = factors[static_cast<int>(MATERIAL::AMBIENT)];
-		phongMaterial.SetAmbient(
+		phongMaterial->SetAmbient(
 			static_cast<float>(color[0]),
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
@@ -227,7 +227,7 @@ bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring tex
 
 		color = materialColors[static_cast<int>(MATERIAL::SPECULAR)];
 		factor = factors[static_cast<int>(MATERIAL::SPECULAR)];
-		phongMaterial.SetSpecular(
+		phongMaterial->SetSpecular(
 			static_cast<float>(color[0]),
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
@@ -269,7 +269,7 @@ bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring tex
 
 		FbxDouble3 color = materialColors[static_cast<int>(MATERIAL::DIFFUSE)];
 		FbxDouble factor = factors[static_cast<int>(MATERIAL::DIFFUSE)];
-		phongMaterial.SetDiffuse(
+		phongMaterial->SetDiffuse(
 			static_cast<float>(color[0]),
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
@@ -277,7 +277,7 @@ bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring tex
 
 		color = materialColors[static_cast<int>(MATERIAL::AMBIENT)];
 		factor = factors[static_cast<int>(MATERIAL::AMBIENT)];
-		phongMaterial.SetAmbient(
+		phongMaterial->SetAmbient(
 			static_cast<float>(color[0]),
 			static_cast<float>(color[1]),
 			static_cast<float>(color[2]),
@@ -303,47 +303,63 @@ bool FBXLoader::LoadPhongMaterial(FbxSurfaceMaterial* material, std::wstring tex
 	}
 
 	// ファイルネームのみ取得
-	phongMaterial.SetTextureName(GetTextureFileName(texture));
+	phongMaterial->SetTextureName(GetTextureFileName(texture));
 	// テクスチャフォルダへのパスセット
-	phongMaterial.SetTextureFolderPath(textureFolderPath);
+	phongMaterial->SetTextureFolderPath(textureFolderPath);
 	// マテリアルを利用可能な状態にする
-	if (phongMaterial.Commit() == MYRESULT::FAILED) { return false; }
+	if (phongMaterial->Commit() == MYRESULT::FAILED) { return false; }
 
 	// マテリアルリストに登録
-	_materials[material->GetName()] = new PhongMaterial(phongMaterial);
+	_materials[material->GetName()] = phongMaterial;
 
 	return true;
 }
 
-bool FBXLoader::LoadPBRMaterial(FbxSurfaceMaterial* material, std::wstring textureFolderPath)
+bool FBXLoader::LoadPBRMaterial(
+	FbxSurfaceMaterial* material, std::wstring textureFolderPath,
+	std::wstring baseColorTextureName, std::wstring metallicTextureName,
+	std::wstring roughnessTextureName, std::wstring normalTextureName, std::wstring occulusionTextureName)
 {
 	// PBRテクスチャ読み込み
+	PBRMaterial* pbrMaterial = new PBRMaterial();
+	pbrMaterial->SetTextureFolderPath(textureFolderPath);
+	// マテリアルにテクスチャセット
+	pbrMaterial->SetTextureName(PBRTEXTURETYPE::BASE_COLOR, baseColorTextureName);
+	pbrMaterial->SetTextureName(PBRTEXTURETYPE::METALLIC, metallicTextureName);
+	pbrMaterial->SetTextureName(PBRTEXTURETYPE::ROUGHNESS, roughnessTextureName);
+	pbrMaterial->SetTextureName(PBRTEXTURETYPE::NORMAL, normalTextureName);
+	pbrMaterial->SetTextureName(PBRTEXTURETYPE::OCCULUSION, occulusionTextureName);
+	// マテリアルを利用可能にする
+	if (pbrMaterial->Commit() == MYRESULT::FAILED) { return false; }
+	// マテリアルリストに登録
+	_materials[material->GetName()] = pbrMaterial;
+
 	return true;
 }
 
-bool FBXLoader::LoadMaterial(MATERIAL_TYPE materialType, std::wstring textureFolderPath)
+bool FBXLoader::LoadMaterial(FBXLoadData& data)
 {
 	// マテリアル数取得
 	int materialNum = fbxScene->GetSrcObjectCount<FbxSurfaceMaterial>();
 
 	// フォンの反射モデルのマテリアル読み込み
-	if (materialType == MATERIAL_TYPE::PHONG) {
+	if (data.materialType == MATERIAL_TYPE::PHONG) {
 		for (int idx = 0; idx < materialNum; idx++) {
 			bool result = LoadPhongMaterial(
-				fbxScene->GetSrcObject<FbxSurfaceMaterial>(idx), textureFolderPath);
+				fbxScene->GetSrcObject<FbxSurfaceMaterial>(idx), data.textureFolderPath);
 			if (!result) { return false; }
 		}
 	}
 
 	// PBRマテリアル読み込み
-	else if (materialType == MATERIAL_TYPE::PBR) {
+	else if (data.materialType == MATERIAL_TYPE::PBR) {
 		for (int idx = 0; idx < materialNum; idx++) {
 			bool result = LoadPBRMaterial(
-				fbxScene->GetSrcObject<FbxSurfaceMaterial>(idx), textureFolderPath);
+				fbxScene->GetSrcObject<FbxSurfaceMaterial>(idx), data.textureFolderPath,
+				data.baseColorName, data.metallicName, data.roughnessName, data.normalName, data.occlusionName);
 			if (!result) { return false; }
 		}
 	}
-
 	return true;
 }
 
@@ -398,14 +414,12 @@ std::wstring FBXLoader::GetTextureFileName(FbxFileTexture* texture)
 	return std::wstring(wchartFileName);
 }
 
-bool FBXLoader::Load(
-	const char* meshPath, std::wstring textureFolderPath,
-	MATERIAL_TYPE materialType, std::vector<FBXMeshData>& meshDataList)
+bool FBXLoader::Load(std::vector<FBXMeshData>& meshDataList, FBXLoadData& data)
 {
 	assert(fbxManager != nullptr && fbxScene != nullptr && fbxImporter != nullptr);
 
 	// ファイルを初期化する
-	if (fbxImporter->Initialize(meshPath) == false) {
+	if (fbxImporter->Initialize(data.meshPath) == false) {
 		fbxImporter->Destroy();
 		fbxScene->Destroy();
 		fbxManager->Destroy();
@@ -427,7 +441,7 @@ bool FBXLoader::Load(
 	converter.Triangulate(fbxScene, true);
 
 	// マテリアル読み込み
-	if (LoadMaterial(materialType, textureFolderPath) == false) { return false; }
+	if (LoadMaterial(data) == false) { return false; }
 
 	// FbxMeshの数を取得
 	int meshNum = fbxScene->GetSrcObjectCount<FbxMesh>();

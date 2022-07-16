@@ -166,6 +166,12 @@
     <FxCompile Include="src\PBRSamplePS.hlsl">
       <Filter>シェーダー\PBRSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\MeshPBRVS.hlsl">
+      <Filter>シェーダー\MeshDrawSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MeshPBRPS.hlsl">
+      <Filter>シェーダー\MeshDrawSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonSampleHeader.hlsli">

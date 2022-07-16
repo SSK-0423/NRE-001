@@ -16,9 +16,9 @@ class DescriptorHeapCBV_SRV_UAV
 public:
 	DescriptorHeapCBV_SRV_UAV() = default;
 	~DescriptorHeapCBV_SRV_UAV() = default;
+	static constexpr int _NEXT_REGISTER = -1;
 
 private:
-	static constexpr int _NEXT_REGISTER = -1;
 	static constexpr UINT _MAX_CBV_DESCRIPTOR_NUM = 64;	// 定数バッファーの最大数
 	static constexpr UINT _MAX_SRV_DESCRIPTOR_NUM = 64;	// シェーダーリソースの最大数
 	static constexpr UINT _MAX_UAV_DESCRIPTOR_NUM = 64;	// アンオーダーアクセスの最大数

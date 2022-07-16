@@ -41,7 +41,7 @@ void DescriptorHeapCBV_SRV_UAV::RegistShaderResource(
 	if (registerNo == _NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
 		handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(_registedSRVNum) + _MAX_CBV_DESCRIPTOR_NUM);
 	else                                // 指定されたレジスタ
-		handle.ptr += _handleIncrimentSize * registerNo;
+		handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
 
 	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
 	srvDesc.Format = texture.GetImage().format;

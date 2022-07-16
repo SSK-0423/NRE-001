@@ -103,6 +103,20 @@ inline UINT SizeofVector(const std::vector<T>& vec) {
 std::string ReplaceString(std::string str, std::string target, std::string replacement);
 
 /// <summary>
+/// ファイル拡張子取得
+/// </summary>
+/// <param name="fileName">ファイル名</param>
+/// <returns>「.」を除いた拡張子</returns>
+std::string GetExtension(std::string fileName);
+
+/// <summary>
+/// ファイル拡張子取得(ワイド文字)
+/// </summary>
+/// <param name="fileName">ファイル名(ワイド文字)</param>
+/// <returns>「.」を除いた拡張子</returns>
+std::wstring GetExtension(std::wstring fileName);
+
+/// <summary>
 /// char型⇒wchar_tへの変換
 /// </summary>
 /// <param name="src">変換元文字列</param>

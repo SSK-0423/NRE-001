@@ -9,25 +9,31 @@ MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 	// シェーダー
 	Shader vertexShader;
 	Shader pixelShader;
-	result = vertexShader.Create(L"src/MeshVS.hlsl", "main", "vs_5_0");
+	result = vertexShader.Create(L"src/MeshPBRVS.hlsl", "main", "vs_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
-	result = pixelShader.Create(L"src/MeshPS.hlsl", "main", "ps_5_0");
+	result = pixelShader.Create(L"src/MeshPBRPS.hlsl", "main", "ps_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// FBXMeshData用意
 	FBXMeshCreateData meshData;
-	meshData.materialType = MATERIAL_TYPE::PHONG;
+	meshData.materialType = MATERIAL_TYPE::PBR;
 	//meshData.modelPath = "res/TestModel/Cube03.fbx";
 	//meshData.textureFolderPath = L"res/TestModel/Texture";
-	meshData.modelPath = "res/TestModel/MaterialBox.fbx";
+	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
 
-	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
-	//meshData.textureFolderPath= L"res/Renault12TL/Textures";
+	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
+	meshData.textureFolderPath= L"res/Renault12TL/Textures";
+	meshData.baseColorName = L"Renault12TL_BaseColor.png";
+	meshData.metallicName = L"Renault12TL_Metallic.png";
+	meshData.roughnessName = L"Renault12TL_Roughness.png";
+	meshData.normalName = L"Renault12TL_Normal.png";
+	meshData.occlusionName = L"Renault12TL_AO.png";
 
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
 	meshData.rootSignatureData = RootSignatureData();
-	meshData.rootSignatureData._descRangeData.cbvDescriptorNum = 2;
+	meshData.rootSignatureData._descRangeData.cbvDescriptorNum = 1;
+	meshData.rootSignatureData._descRangeData.srvDescriptorNum = 5;
 	meshData.inputLayout.resize(3);
 	meshData.inputLayout[0] = {
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
@@ -61,7 +67,7 @@ void PBRSample::Update(float deltaTime)
 {
 	_angle -= 0.01f;
 	_meshCBuffData.world =
-		XMMatrixScaling(40.3, 40.3, 40.3) *
+		XMMatrixScaling(0.3, 0.3, 0.3) *
 		XMMatrixRotationY(_angle);
 	//XMMatrixTranslation(0.f, -1.f, 0.f);
 	_meshCBuffData.worldViewProj =
