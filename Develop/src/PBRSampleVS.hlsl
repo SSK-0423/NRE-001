@@ -1,12 +1,5 @@
 #include "PBRSampleHeader.hlsli"
 
-cbuffer constBuff : register(b1)
-{
-    matrix world;
-    matrix worldViewProj;
-    float3 eye;
-};
-
 struct VSInput
 {
     float4 pos : POSITION;

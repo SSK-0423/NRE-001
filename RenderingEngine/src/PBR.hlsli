@@ -7,42 +7,39 @@ Texture2D occlusion : register(t4); // ƒIƒNƒ‹[ƒWƒ‡ƒ“‚Ìg‚¢•û‚Í‚í‚©‚ç‚È‚¢Ë‘½•ªŒ
 
 sampler smp : register(s0);
 
-float PI = 3.141592f;
+static const float PI = 3.141592f;
 
 struct PBRInput
 {
-    float3 eye;
-    float3 pos;
-    float3 lightDir;
-    float3 w_m;   //ƒ}ƒCƒNƒƒT[ƒtƒF[ƒXã‚Ì–@ü
-    float3 w_g;
-    float3 w_i;   // “üË•ûŒü
-    float3 w_o;   // oË•ûŒü
-    float2 uv;    // ƒeƒNƒXƒ`ƒƒÀ•W
-    float cos_in; // “üËŠp‚ÌƒRƒTƒCƒ“
-    float cos_mn; // ƒ}ƒCƒNƒƒT[ƒtƒF[ƒXã‚Ì–@ü‚Æ‚ÌƒRƒTƒCƒ“
+    float3 lightColor;
+    float2 uv; // ƒeƒNƒXƒ`ƒƒÀ•W
+    float NH;
+    float NV;
+    float NL;
+    float VH;
+    float LR;
 };
 
 // Schlick‚É‚æ‚éƒtƒŒƒlƒ‹€‚Ì‹ß—®
 // cos_in “üËŠp‚ÌƒRƒTƒCƒ“
-float3 SchlickFresnel(float2 uv, float cos_in)
+float3 SchlickFresnel(float2 uv, float VH)
 {
     // Fr = F(0) + (1 - F(0))(1 - cosƒÆ)^5
-    float3 F0 = metallic.Sample(smp, uv).rgb;
+    float3 F0 = baseColor.Sample(smp, uv).rgb * metallic.Sample(smp, uv).r;
     
-    return F0 + (1 - F0) * pow((1 - cos_in), 5);
+    return F0 + (1.f - F0) * pow((1 - VH), 5);
 }
 
 // –@ü•ª•zŠÖ”
 // Beckman•ª•z
-float Beckman(float2 uv, float cos_mn)
+float Beckman(float2 uv, float NH)
 {
     float alpha = roughness.Sample(smp, uv).r;
     float alpha2 = pow(alpha, 2);
-    float cos_mn4 = pow(cos_mn, 4);
-    float tan_mn2 = 1.f / pow(cos_mn, 2) - 1.f;
+    float cos4 = pow(NH, 4);
+    float tan_mn2 = (1.f - pow(NH, 2)) / pow(NH, 2);
     
-    return 1.f / (alpha2 * cos_mn4) * exp(-tan_mn2 / alpha2);
+    return (1.f / (alpha2 * cos4)) * exp(-tan_mn2 / alpha2);
 }
 
 // ƒ}ƒCƒNƒƒtƒ@ƒZƒbƒg
@@ -50,41 +47,33 @@ float Beckman(float2 uv, float cos_mn)
 // w_m ƒ}ƒCƒNƒƒT[ƒtƒF[ƒXã‚Ì–@ü
 // w_i “üË•ûŒü
 // w_o oË•ûŒü
-float Vcavity(float3 w_m, float3 w_g, float3 w_i, float3 w_o)
+float Vcavity(float NH, float NV, float NL, float VH)
 {
-    float mg = dot(w_m, w_g);
-    float og = dot(w_o, w_g);
-    float ig = dot(w_i, w_g);
-    float om = saturate(dot(w_o, w_m));
-    float im = saturate(dot(w_i, w_m));
-    
-    return min(1, min(2 * mg * og / om, 2 * mg * ig / im));
+    return min(1.f, min(2.f * NH * NV / VH, 2.f * NH * NL / VH));
 }
 
 // ³‹K‰»ƒ‰ƒ“ƒo[ƒg
 float3 normalizeLambert(PBRInput input)
 {
     float3 diffuse = baseColor.Sample(smp, input.uv).rgb;
-    float3 intensity = float3(1.f, 1.f, 1.f) - metallic.Sample(smp, input.uv).rgb;
-    
-    return diffuse * intensity * (1.f / PI);
+    return diffuse * (1.f / PI);
 }
 
 // PBR‚É‚¨‚¯‚é‹¾–Ê”½Ëƒ‚ƒfƒ‹
 // Cook-Torrance‚âKarisƒ‚ƒfƒ‹‚Ì”h¶Œ³
 float3 TorranceSparrow(float D, float G, float3 Fr, float cos_o, float cos_i)
 {
-    return (D * G * Fr) / (4 * cos_o * cos_i);
+    return (D * G * Fr) / (4.f * cos_o * cos_i);
 }
 
 // Cook-Torranceƒ‚ƒfƒ‹
 float3 CookTorrance(PBRInput input)
 {
-    float D = Beckman(input.uv, input.cos_mn);
-    float G2 = Vcavity(input.w_m, input.w_g, input.w_i, input.w_o);
-    float3 Fr = SchlickFresnel(input.uv, input.cos_in);
-    float cos_o; // oË•ûŒü‚ÌƒRƒTƒCƒ“
-    float cos_i; // “üË•ûŒü‚ÌƒRƒTƒCƒ“
+    float D = Beckman(input.uv, input.NH);
+    float G2 = Vcavity(input.NH, input.NV, input.NL, input.VH);
+    float3 Fr = SchlickFresnel(input.uv, input.VH);
+    float cos_o = input.NL; // oË•ûŒü‚ÌƒRƒTƒCƒ“
+    float cos_i = input.NV; // “üË•ûŒü‚ÌƒRƒTƒCƒ“
     
     return TorranceSparrow(D, G2, Fr, cos_o, cos_i);
 }
@@ -93,11 +82,14 @@ float3 CookTorrance(PBRInput input)
 float4 PBR(PBRInput input)
 {
     // ŠgU€
-    float3 lambertColor = normalizeLambert(input);
+    float3 lambertColor = saturate(normalizeLambert(input));
     
     // ‹¾–Ê”½Ë€
-    float3 specularColor = CookTorrance(input);
+    float3 specularColor = saturate(CookTorrance(input));
     
-    float3 color = lambertColor + specularColor;
+    float3 F = metallic.Sample(smp, input.uv).r;
+    
+    float cos = input.NL;
+    float3 color = saturate(lambertColor * (1.f - F) + specularColor) * input.lightColor * cos * occlusion.Sample(smp, input.uv).r;
     return float4(color, 1.f);
 }

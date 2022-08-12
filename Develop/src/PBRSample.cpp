@@ -9,17 +9,14 @@ MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 	// シェーダー
 	Shader vertexShader;
 	Shader pixelShader;
-	result = vertexShader.Create(L"src/MeshPBRVS.hlsl", "main", "vs_5_0");
+	result = vertexShader.Create(L"src/PBRSampleVS.hlsl", "main", "vs_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
-	result = pixelShader.Create(L"src/MeshPBRPS.hlsl", "main", "ps_5_0");
+	result = pixelShader.Create(L"src/PBRSamplePS.hlsl", "main", "ps_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// FBXMeshData用意
 	FBXMeshCreateData meshData;
 	meshData.materialType = MATERIAL_TYPE::PBR;
-	//meshData.modelPath = "res/TestModel/Cube03.fbx";
-	//meshData.textureFolderPath = L"res/TestModel/Texture";
-	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
 
 	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
 	meshData.textureFolderPath= L"res/Renault12TL/Textures";
@@ -65,7 +62,7 @@ MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 
 void PBRSample::Update(float deltaTime)
 {
-	_angle -= 0.01f;
+	_angle -= 0.001f;
 	_meshCBuffData.world =
 		XMMatrixScaling(0.3, 0.3, 0.3) *
 		XMMatrixRotationY(_angle);

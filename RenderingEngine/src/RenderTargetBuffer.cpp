@@ -31,7 +31,7 @@ MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, const RenderTargetBuff
 	return MYRESULT::SUCCESS;
 }
 
-MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, IDXGISwapChain4& swapchain, const size_t& index)
+MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, IDXGISwapChain3& swapchain, const size_t& index)
 {
 	HRESULT result = swapchain.GetBuffer(index, IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return MYRESULT::FAILED; }
