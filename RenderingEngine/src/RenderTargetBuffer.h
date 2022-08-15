@@ -56,7 +56,7 @@ public:
 	/// <param name="swapchain">スワップチェーン</param>
 	/// <param name="index">生成するバッファのインデックス ダブルバッファリングなら0か1</param>
 	/// <returns>MYRESULT::SUCCESS: 成功 MYRESULT::FAILED: 失敗</returns>
-	MYRESULT Create(ID3D12Device& device, IDXGISwapChain4& swapchain, const size_t& index);
+	MYRESULT Create(ID3D12Device& device, IDXGISwapChain3& swapchain, const size_t& index);
 
 	/// <summary>
 	/// バッファー取得

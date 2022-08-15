@@ -103,14 +103,20 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 MYRESULT TextureMappingSample::InitTexture(Dx12GraphicsEngine& graphicsEngine)
 {
 	ID3D12Device& device = graphicsEngine.Device();
+	
+	std::vector<ColorRGBA> _texData(512 * 512);
+	for (auto& color : _texData) {
+		color = ColorRGBA(0.f, 1.f, 1.f, 1.f);
+	}
 
 	// テクスチャファイルパス
 	std::wstring path(L"Ramen.JPG");
 
 	// テクスチャ生成
 	MYRESULT result = _texture.CreateTextureFromWIC(graphicsEngine, path);
+	//MYRESULT result = _texture.CreateTextureFromRGBAData(graphicsEngine, _texData, 512, 512, DXGI_FORMAT_R32G32B32A32_FLOAT);
 	if (result == MYRESULT::FAILED) { return result; }
-	
+
 	// テクスチャ用ヒープ生成
 	result = _textureHeap.Create(device);
 	if (result == MYRESULT::FAILED) { return result; }

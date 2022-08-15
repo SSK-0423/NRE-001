@@ -183,8 +183,11 @@
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\FBXLoader.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
+    <ClInclude Include="src\IMaterial.h" />
     <ClInclude Include="src\IndexBuffer.h" />
     <ClInclude Include="src\FBXMesh.h" />
+    <ClInclude Include="src\PBRMaterial.h" />
+    <ClInclude Include="src\PhongMaterial.h" />
     <ClInclude Include="src\OffScreenRender.h" />
     <ClInclude Include="src\Polygon.h" />
     <ClInclude Include="src\RenderingContext.h" />
@@ -212,6 +215,8 @@
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\FBXMesh.cpp" />
     <ClCompile Include="src\OffScreenRender.cpp" />
+    <ClCompile Include="src\PBRMaterial.cpp" />
+    <ClCompile Include="src\PhongMaterial.cpp" />
     <ClCompile Include="src\Polygon.cpp" />
     <ClCompile Include="src\RenderingContext.cpp" />
     <ClCompile Include="src\RenderTarget.cpp" />
@@ -223,6 +228,7 @@
     <ClCompile Include="src\VertexBuffer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\PBR.hlsli" />
     <None Include="src\PhongReflectionModel.hlsli" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

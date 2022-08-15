@@ -80,6 +80,11 @@ HRESULT Dx12GraphicsEngine::CreateDeviceAndDXGIFactory()
 		MessageBoxA(_hwnd, "ファクトリー生成失敗", "エラー", MB_OK | MB_ICONERROR);
 		return result;
 	}
+	//result = _dxgiFactory.Get()->QueryInterface(IID_PPV_ARGS(_dxgiFactory.ReleaseAndGetAddressOf()));
+	//if (FAILED(result)) {
+	//	MessageBoxA(_hwnd, "ファクトリー7生成失敗", "エラー", MB_OK | MB_ICONERROR);
+	//	return result;
+	//}
 
 	// アダプター列挙
 	std::vector<ComPtr<IDXGIAdapter>> adapters;
@@ -148,7 +153,7 @@ HRESULT Dx12GraphicsEngine::CreateCommandX()
 
 HRESULT Dx12GraphicsEngine::CreateSwapChain(
 	const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight,
-	const ComPtr<IDXGIFactory6>& dxgiFactory)
+	const ComPtr<IDXGIFactory4>& dxgiFactory)
 {
 	DXGI_SWAP_CHAIN_DESC1 swapchainDesc = {};
 	swapchainDesc.Width = windowWidth;
@@ -209,7 +214,7 @@ ID3D12CommandQueue& Dx12GraphicsEngine::CmdQueue()
 	return *_cmdQueue.Get();
 }
 
-IDXGISwapChain4& Dx12GraphicsEngine::SwapChain()
+IDXGISwapChain3& Dx12GraphicsEngine::SwapChain()
 {
 	return *_swapchain.Get();
 }

@@ -1,37 +1,36 @@
-#include "DrawMeshSample.h"
+#include "PBRSample.h"
 #include "Shader.h"
 
 using namespace DirectX;
 
-MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
+MYRESULT PBRSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
 	MYRESULT result;
 	// シェーダー
 	Shader vertexShader;
 	Shader pixelShader;
-	result = vertexShader.Create(L"src/MeshVS.hlsl", "main", "vs_5_0");
+	result = vertexShader.Create(L"src/PBRSampleVS.hlsl", "main", "vs_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
-	result = pixelShader.Create(L"src/MeshPS.hlsl", "main", "ps_5_0");
+	result = pixelShader.Create(L"src/PBRSamplePS.hlsl", "main", "ps_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// FBXMeshData用意
 	FBXMeshCreateData meshData;
-	//meshData.modelPath = "res/TestModel/Cube03.fbx";
-	//meshData.textureFolderPath = L"res/TestModel/Texture";
-	//meshData.modelPath = "res/TestModel/MaterialBox.fbx";
+	meshData.materialType = MATERIAL_TYPE::PBR;
 
-	//meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
-	//meshData.textureFolderPath= L"res/Renault12TL/Textures";
-
-	//meshData.modelPath = "res/city/city.fbx";
-
-	meshData.modelPath = "res/TV/TV.fbx";
-	meshData.textureFolderPath = L"res/TV/Textures";
+	meshData.modelPath = "res/Renault12TL/Renault12TL.fbx";
+	meshData.textureFolderPath= L"res/Renault12TL/Textures";
+	meshData.baseColorName = L"Renault12TL_BaseColor.png";
+	meshData.metallicName = L"Renault12TL_Metallic.png";
+	meshData.roughnessName = L"Renault12TL_Roughness.png";
+	meshData.normalName = L"Renault12TL_Normal.png";
+	meshData.occlusionName = L"Renault12TL_AO.png";
 
 	meshData.vertexShader = vertexShader;
 	meshData.pixelShader = pixelShader;
 	meshData.rootSignatureData = RootSignatureData();
-	meshData.rootSignatureData._descRangeData.cbvDescriptorNum = 2;
+	meshData.rootSignatureData._descRangeData.cbvDescriptorNum = 1;
+	meshData.rootSignatureData._descRangeData.srvDescriptorNum = 5;
 	meshData.inputLayout.resize(3);
 	meshData.inputLayout[0] = {
 			"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
@@ -42,7 +41,7 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	meshData.inputLayout[2] = {
 			"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
 			D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
-	
+
 	// メッシュ読み込み
 	result = mesh.LoadFBX(graphicsEngine, meshData);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -61,11 +60,12 @@ MYRESULT DrawMeshSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& win
 	return MYRESULT::SUCCESS;
 }
 
-void DrawMeshSample::Update(float deltaTime)
+void PBRSample::Update(float deltaTime)
 {
-	_angle -= 0.01f;
+	_angle -= 0.001f;
 	_meshCBuffData.world =
 		XMMatrixScaling(0.3, 0.3, 0.3) *
+		//XMMatrixRotationX(-45.f) *
 		XMMatrixRotationY(_angle);
 	//XMMatrixTranslation(0.f, -1.f, 0.f);
 	_meshCBuffData.worldViewProj =
@@ -73,7 +73,7 @@ void DrawMeshSample::Update(float deltaTime)
 	_meshCBuffer.UpdateData(&_meshCBuffData);
 }
 
-void DrawMeshSample::Draw(Dx12GraphicsEngine& graphicsEngine)
+void PBRSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 {
 	// レンダリングコンテキスト取得
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
@@ -83,11 +83,11 @@ void DrawMeshSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 	mesh.Draw(renderContext);
 }
 
-void DrawMeshSample::Final()
+void PBRSample::Final()
 {
 }
 
-MYRESULT DrawMeshSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
+MYRESULT PBRSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, AppWindow& window)
 {
 	// ワールド行列
 	_angle = 0.f;

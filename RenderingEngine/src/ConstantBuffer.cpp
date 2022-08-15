@@ -2,6 +2,8 @@
 
 #include "ConstantBuffer.h"
 
+using namespace Microsoft::WRL;
+
 HRESULT ConstantBuffer::CreateConstantBuffer(ID3D12Device& device, const UINT& bufferSize)
 {
 	CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);

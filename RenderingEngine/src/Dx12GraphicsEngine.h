@@ -8,7 +8,7 @@
 #include "DescriptorHeapDSV.h"
 
 #include <d3d12.h>
-#include <dxgi1_6.h>
+#include <dxgi1_4.h>
 #include <d3dx12.h>
 
 #pragma comment(lib,"d3d12.lib")
@@ -45,8 +45,8 @@ public:
 
 private:
 	// DXGI関連
-	Microsoft::WRL::ComPtr<IDXGIFactory7> _dxgiFactory = nullptr;
-	Microsoft::WRL::ComPtr<IDXGISwapChain4> _swapchain = nullptr;
+	Microsoft::WRL::ComPtr<IDXGIFactory4> _dxgiFactory = nullptr;
+	Microsoft::WRL::ComPtr<IDXGISwapChain3> _swapchain = nullptr;
 
 	// DirectX12初期化関連
 	Microsoft::WRL::ComPtr<ID3D12Device> _device = nullptr;
@@ -88,7 +88,7 @@ private:
 	/// <returns></returns>
 	HRESULT CreateSwapChain(
 		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight,
-		const Microsoft::WRL::ComPtr<IDXGIFactory6>& dxgiFactory);
+		const Microsoft::WRL::ComPtr<IDXGIFactory4>& dxgiFactory);
 	/// <summary>
 	/// フェンス生成
 	/// </summary>
@@ -120,7 +120,7 @@ public:
 	/// スワップチェーン取得
 	/// </summary>
 	/// <returns></returns>
-	IDXGISwapChain4& SwapChain();
+	IDXGISwapChain3& SwapChain();
 
 	/// <summary>
 	/// 1フレームの描画開始

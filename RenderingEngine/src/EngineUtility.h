@@ -56,8 +56,10 @@ inline void ReleaseComObj(Microsoft::WRL::ComPtr<T> obj) {
 /// </summary>
 struct ColorRGBA
 {
-	float color[4];
-
+	float r;
+	float g;
+	float b;
+	float a;
 	/// <summary>
 	/// コンストラクタ デフォルト：黒
 	/// </summary>
@@ -66,12 +68,8 @@ struct ColorRGBA
 	/// <param name="b">青</param>
 	/// <param name="a">透明度</param>
 	ColorRGBA(float r = 0.f, float g = 0.f, float b = 0.f, float a = 1.f)
-	{
-		color[0] = r;
-		color[1] = g;
-		color[2] = b;
-		color[3] = a;
-	}
+		: r(r), g(g), b(b), a(a)
+	{}
 };
 
 /// <summary>
@@ -103,6 +101,20 @@ inline UINT SizeofVector(const std::vector<T>& vec) {
 /// <param name="replacement">置換後の文字列</param>
 /// <returns>置換処理後の文字列</returns>
 std::string ReplaceString(std::string str, std::string target, std::string replacement);
+
+/// <summary>
+/// ファイル拡張子取得
+/// </summary>
+/// <param name="fileName">ファイル名</param>
+/// <returns>「.」を除いた拡張子</returns>
+std::string GetExtension(std::string fileName);
+
+/// <summary>
+/// ファイル拡張子取得(ワイド文字)
+/// </summary>
+/// <param name="fileName">ファイル名(ワイド文字)</param>
+/// <returns>「.」を除いた拡張子</returns>
+std::wstring GetExtension(std::wstring fileName);
 
 /// <summary>
 /// char型⇒wchar_tへの変換

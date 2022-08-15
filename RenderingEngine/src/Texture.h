@@ -18,10 +18,12 @@ public:
 	Texture() = default;
 	~Texture() = default;
 
+	Texture& operator=(const Texture& inst);
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;		// 中間バッファー(アップロード元)
 	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;	// テクスチャバッファー(アップロード先)
 
+	// ScratchImage::GetImageの戻り値にconstがついているため
 	const DirectX::Image* _image = nullptr;	// テクスチャの生データ
 	DirectX::TexMetadata _metaData;	        // テクスチャのメタ情報
 	DirectX::ScratchImage _scratchImage;    // 
@@ -52,14 +54,17 @@ private:
 	/// </summary>
 	/// <returns></returns>
 	HRESULT MapTexture();
-	
+
 	/// <summary>
 	/// アップロードバッファーの内容をテクスチャバッファーへコピー
 	/// </summary>
 	/// <param name="device">デバイス</param>
 	/// <param name="graphicsEngine">グラフィクスエンジン</param>
 	/// <returns></returns>
-	HRESULT CopyTexture(ID3D12Device& device,Dx12GraphicsEngine& graphicsEngine);
+	HRESULT CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine);
+
+	void SetTextureData(
+		std::vector<ColorRGBA>& data, const size_t& width, const size_t& height, const DXGI_FORMAT& format);
 
 public:
 	/// <summary>
@@ -77,6 +82,18 @@ public:
 	/// <param name="texturePath">テクスチャへのパス</param>
 	/// <returns>成功：MYRESULT::SUCCESS 失敗：MYRESULT::FAILED</returns>
 	MYRESULT CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+
+	/// <summary>
+	/// 用意したRGBAデータからテクスチャ生成
+	/// </summary>
+	/// <param name="graphicsEngine"></param>
+	/// <param name="data"></param>
+	/// <param name="width"></param>
+	/// <param name="height"></param>
+	/// <returns></returns>
+	MYRESULT CreateTextureFromRGBAData(
+		Dx12GraphicsEngine& graphicsEngine, std::vector<ColorRGBA>& data,
+		const size_t& width, const size_t& height, const DXGI_FORMAT& format);
 
 	/// <summary>
 	/// レンダーターゲットからテクスチャ生成

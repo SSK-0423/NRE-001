@@ -19,8 +19,6 @@ FBXMesh::~FBXMesh()
 {
 	SafetyDelete<VertexBuffer>(_vertexBuffer);
 	SafetyDelete<IndexBuffer>(_indexBuffer);
-	SafetyDelete<Texture>(_texture);
-	SafetyDelete<ConstantBuffer>(_materialConstantBuffer);
 	SafetyDelete<GraphicsPipelineState>(_graphicsPipelineState);
 	SafetyDelete<RootSignature>(_rootSignature);
 }
@@ -33,63 +31,32 @@ MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
 	return _descriptorHeap->Create(device);
 }
 
-MYRESULT FBXMesh::CreateTexture(
-	Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData, std::wstring textureFolderPath)
+void FBXMesh::SetMaterial(IMaterial& material)
 {
-	// テクスチャがないならスキップ
-	if (meshData.material.textureName == L"") { return MYRESULT::SUCCESS; }
-
-	if (_texture != nullptr) { delete _texture; }
-	_texture = new Texture();
-
-	std::wstring texturePath = textureFolderPath + L"/" + meshData.material.textureName;
-	MYRESULT result = _texture->CreateTextureFromWIC(graphicsEngine, texturePath);
-	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
-
-	_descriptorHeap->RegistShaderResource(graphicsEngine.Device(), *_texture);
-
-	return MYRESULT::SUCCESS;
+	// ここでマテリアルを適用する
+	// ・フォンモデルのコンスタントバッファー登録
+	// ・テクスチャ登録など
+	material.ApplyMaterial(*this);
 }
 
-MYRESULT FBXMesh::CreateMaterialConsnantBuffer(ID3D12Device& device)
-{
-	if (_materialConstantBuffer != nullptr) { delete _materialConstantBuffer; }
-	_materialConstantBuffer = new ConstantBuffer();
-
-	MYRESULT result = _materialConstantBuffer->Create(device, &_material, sizeof(MaterialBuff));
-	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
-
-	_descriptorHeap->RegistConstantBuffer(device, *_materialConstantBuffer);
-
-	return MYRESULT::SUCCESS;
-}
-
-MYRESULT FBXMesh::CreateAsChild(Dx12GraphicsEngine& graphicsEngine, ChildMeshCreateData& meshData)
+MYRESULT FBXMesh::CreateAsChild(Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData)
 {
 	ID3D12Device& device = graphicsEngine.Device();
 
 	// 頂点バッファ―生成
-	MYRESULT result = CreateVertexBuffer(device, meshData.meshData);
+	MYRESULT result = CreateVertexBuffer(device, meshData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// インデックスバッファー生成
-	result = CreateIndexBuffer(device, meshData.meshData);
+	result = CreateIndexBuffer(device, meshData);
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// ディスクリプタヒープ生成
 	result = CreateDescriptorHeap(device);
 	if (result == MYRESULT::FAILED) { return result; }
 
-	// マテリアル用コンスタントバッファー生成
-	result = CreateMaterialConsnantBuffer(device);
-	if (result == MYRESULT::FAILED) { return result; }
-
 	// マテリアルセット
-	SetMaterial(meshData.meshData.material);
-
-	// テクスチャ生成
-	result = CreateTexture(graphicsEngine, meshData.meshData, meshData.textureFolderPath);
-	if (result == MYRESULT::FAILED) { return result; }
+	SetMaterial(*meshData.material);
 
 	return MYRESULT::SUCCESS;
 }
@@ -99,8 +66,18 @@ MYRESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData&
 	// ローダー用意
 	FBXLoader* _fbxLoader = new FBXLoader();
 
+	FBXLoadData loadData;
+	loadData.meshPath = meshCreateData.modelPath;
+	loadData.materialType = meshCreateData.materialType;
+	loadData.textureFolderPath = meshCreateData.textureFolderPath;
+	loadData.baseColorName = meshCreateData.baseColorName;
+	loadData.metallicName = meshCreateData.metallicName;
+	loadData.roughnessName = meshCreateData.roughnessName;
+	loadData.normalName = meshCreateData.normalName;
+	loadData.occlusionName = meshCreateData.occlusionName;
+
 	// FBX読み込み
-	if (!_fbxLoader->Load(meshCreateData.modelPath, _meshDataList))
+	if (!_fbxLoader->Load(_meshDataList, loadData))
 	{
 		return MYRESULT::FAILED;
 	}
@@ -116,12 +93,8 @@ MYRESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData&
 	_childs.resize(_meshDataList.size());
 	for (size_t idx = 0; idx < _childs.size(); idx++) {
 
-		ChildMeshCreateData data;
-		data.meshData = _meshDataList[idx];
-		data.textureFolderPath = meshCreateData.textureFolderPath;
-
 		FBXMesh* child = new FBXMesh();
-		result = child->CreateAsChild(graphicsEngine, data);
+		result = child->CreateAsChild(graphicsEngine, _meshDataList[idx]);
 		if (result == MYRESULT::FAILED) { return result; }
 
 		_childs[idx] = child;
@@ -185,34 +158,17 @@ void FBXMesh::Draw(RenderingContext& renderContext, bool isRootMesh)
 	}
 }
 
-void FBXMesh::SetMaterial(const FBXMaterial& material)
+void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
 {
-	// アンビエントセット
-	XMStoreFloat4(&_material.ambient,
-		XMVectorSet(material.ambient[0], material.ambient[1], material.ambient[2], material.ambient[3]));
-	// ディフューズ
-	XMStoreFloat4(&_material.diffuse,
-		XMVectorSet(material.diffuse[0], material.diffuse[1], material.diffuse[2], material.diffuse[3]));
-	// スペキュラー
-	XMStoreFloat4(&_material.specular,
-		XMVectorSet(material.specular[0], material.specular[1], material.specular[2], material.specular[3]));
-	// アルファ
-	_material.shiness = material.shiness;
-
-	_materialConstantBuffer->UpdateData(&_material);
-}
-
-void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer)
-{
-	_descriptorHeap->RegistConstantBuffer(device, constantBuffer);
+	_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
 	for (auto child : _childs) {
 		child->SetConstantBuffer(device, constantBuffer);
 	}
 }
 
-void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture)
+void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture, const int& registerNo)
 {
-	_descriptorHeap->RegistShaderResource(device, texture);
+	_descriptorHeap->RegistShaderResource(device, texture, registerNo);
 }
 
 MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)

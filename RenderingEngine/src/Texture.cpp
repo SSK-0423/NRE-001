@@ -1,5 +1,20 @@
 #include "Texture.h"
 
+Texture& Texture::operator=(const Texture& inst)
+{
+	// テクスチャバッファーと結びつける
+	this->_textureBuffer = inst._textureBuffer.Get();
+
+	// シェーダーリソースとして登録する際に必要な情報をセット
+	DirectX::Image* img = new DirectX::Image();
+	img->format = inst._image->format;
+	this->_image = img;
+
+	this->_metaData.mipLevels = 1;
+
+	return *this;
+}
+
 HRESULT Texture::LoadTextureFromWICFile(const std::wstring& texturePath)
 {
 	// ファイル読み込み
@@ -77,7 +92,7 @@ HRESULT Texture::MapTexture()
 	if (FAILED(result)) { return result; }
 
 	// データコピー
-	uint8_t* srcAddress = _image->pixels;;
+	uint8_t* srcAddress = _image->pixels;
 	size_t alignRowPitch = AlignmentedSize(_image->rowPitch, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
 	for (size_t y = 0; y < _image->height; y++) {
@@ -90,7 +105,7 @@ HRESULT Texture::MapTexture()
 	return result;
 }
 
-HRESULT Texture::CopyTexture(ID3D12Device& device,Dx12GraphicsEngine& graphicsEngine)
+HRESULT Texture::CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine)
 {
 	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
 	ID3D12CommandAllocator& cmdAllocator = graphicsEngine.CmdAllocator();
@@ -155,6 +170,29 @@ HRESULT Texture::CopyTexture(ID3D12Device& device,Dx12GraphicsEngine& graphicsEn
 	return result;
 }
 
+void Texture::SetTextureData(
+	std::vector<ColorRGBA>& data, const size_t& width, const size_t& height, const DXGI_FORMAT& format)
+{
+	SafetyDelete<const DirectX::Image>(_image);
+
+	DirectX::Image* img = new DirectX::Image();
+	img->width = width;
+	img->height = height;
+	img->format = format;
+	img->rowPitch = sizeof(ColorRGBA) * width;
+	img->slicePitch = SizeofVector(data);
+	img->pixels = (uint8_t*)&data[0];
+	_image = img;
+
+	_metaData.width = width;
+	_metaData.height = height;
+	_metaData.depth = 1;
+	_metaData.arraySize = 1;
+	_metaData.mipLevels = 1;
+	_metaData.format = format;
+	_metaData.dimension = DirectX::TEX_DIMENSION_TEXTURE2D;
+}
+
 MYRESULT Texture::CreateTextureFromWIC(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 {
 	ID3D12Device& device = graphicsEngine.Device();
@@ -187,6 +225,23 @@ MYRESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const
 	return MYRESULT::SUCCESS;
 }
 
+MYRESULT Texture::CreateTextureFromRGBAData(
+	Dx12GraphicsEngine& graphicsEngine, std::vector<ColorRGBA>& data,
+	const size_t& width, const size_t& height, const DXGI_FORMAT& format)
+{
+	ID3D12Device& device = graphicsEngine.Device();
+
+	// テクスチャ生成用データ用意
+	SetTextureData(data, width, height, format);
+	// バッファー生成
+	if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
+	// マップ処理
+	if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
+	// アップロードバッファーの内容をテクスチャバッファーへコピー
+	if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
+	return MYRESULT::SUCCESS;
+}
+
 void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer)
 {
 	// レンダーターゲットバッファーとテクスチャバッファーを結びつける
@@ -205,10 +260,9 @@ void Texture::CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuff
 	// デプスステンシルバッファーとテクスチャバッファーを結びつける
 	_textureBuffer = &depthStencilBuffer.GetBuffer();
 
-
 	// シェーダーリソースとして登録する際に必要な情報をセット
 	DirectX::Image* img = new DirectX::Image();
-	img->format = DXGI_FORMAT_R32_FLOAT;	
+	img->format = DXGI_FORMAT_R32_FLOAT;
 	_image = img;
 
 	_metaData.mipLevels = 1;

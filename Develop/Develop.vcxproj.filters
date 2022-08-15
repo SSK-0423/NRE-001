@@ -37,6 +37,9 @@
     <Filter Include="シェーダー\MeshDrawSample">
       <UniqueIdentifier>{607c0744-33e3-4d7c-8a92-569dad5ed898}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\PBRSample">
+      <UniqueIdentifier>{709c1744-9c15-48ad-a88d-6d00785c88cb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">
@@ -66,6 +69,9 @@
     <ClCompile Include="src\DrawMeshSample.cpp">
       <Filter>SampleApplication</Filter>
     </ClCompile>
+    <ClCompile Include="src\PBRSample.cpp">
+      <Filter>SampleApplication</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12Application.h">
@@ -93,6 +99,9 @@
       <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\DrawMeshSample.h">
+      <Filter>SampleApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="src\PBRSample.h">
       <Filter>SampleApplication</Filter>
     </ClInclude>
   </ItemGroup>
@@ -151,6 +160,18 @@
     <FxCompile Include="src\MultiRenderTargetVertex.hlsl">
       <Filter>シェーダー\MultiRenderTargetSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\PBRSampleVS.hlsl">
+      <Filter>シェーダー\PBRSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\PBRSamplePS.hlsl">
+      <Filter>シェーダー\PBRSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MeshPBRVS.hlsl">
+      <Filter>シェーダー\MeshDrawSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\MeshPBRPS.hlsl">
+      <Filter>シェーダー\MeshDrawSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonSampleHeader.hlsli">
@@ -170,6 +191,9 @@
     </None>
     <None Include="src\MeshSampleHeader.hlsli">
       <Filter>シェーダー\MeshDrawSample</Filter>
+    </None>
+    <None Include="src\PBRSampleHeader.hlsli">
+      <Filter>シェーダー\PBRSample</Filter>
     </None>
   </ItemGroup>
 </Project>
