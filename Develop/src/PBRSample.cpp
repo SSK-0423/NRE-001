@@ -65,6 +65,7 @@ void PBRSample::Update(float deltaTime)
 	_angle -= 0.001f;
 	_meshCBuffData.world =
 		XMMatrixScaling(0.3, 0.3, 0.3) *
+		//XMMatrixRotationX(-45.f) *
 		XMMatrixRotationY(_angle);
 	//XMMatrixTranslation(0.f, -1.f, 0.f);
 	_meshCBuffData.worldViewProj =
