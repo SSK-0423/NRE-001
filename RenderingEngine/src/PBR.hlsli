@@ -35,6 +35,7 @@ float3 SchlickFresnel(float2 uv, float VH)
 float Beckman(float2 uv, float NH)
 {
     float alpha = roughness.Sample(smp, uv).r;
+    alpha = 0.001f;
     float alpha2 = pow(alpha, 2);
     float cos4 = pow(NH, 4);
     float tan_mn2 = (1.f - pow(NH, 2)) / pow(NH, 2);
@@ -88,8 +89,8 @@ float4 PBR(PBRInput input)
     float3 specularColor = saturate(CookTorrance(input));
     
     float3 F = metallic.Sample(smp, input.uv).r;
-    
+    F = SchlickFresnel(input.uv, input.VH);
     float cos = input.NL;
-    float3 color = saturate(lambertColor * (1.f - F) + specularColor) * input.lightColor * cos * occlusion.Sample(smp, input.uv).r;
+    float3 color = saturate(lambertColor * (1.f - F) + specularColor) * input.lightColor * cos;
     return float4(color, 1.f);
 }

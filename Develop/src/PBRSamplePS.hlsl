@@ -21,9 +21,7 @@ float4 main(VSOutput input) : SV_TARGET
     float NH = saturate(dot(N, H)); //   
     float NV = saturate(dot(N, V)); //  
     float NL = saturate(dot(N, L)); //  “üË•ûŒü‚Ìcos
-    float VH = saturate(dot(V, H)); //  
-    
-    float LR = saturate(dot(L, R));
+    float VH = saturate(dot(V, H)); //  oË•ûŒü‚Ìcos
     
     PBRInput pbrInput;
     pbrInput.NH = NH;
