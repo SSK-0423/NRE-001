@@ -72,6 +72,9 @@
     <ClCompile Include="src\PBRSample.cpp">
       <Filter>SampleApplication</Filter>
     </ClCompile>
+    <ClCompile Include="src\SphereMapSample.cpp">
+      <Filter>SampleApplication</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12Application.h">
@@ -102,6 +105,9 @@
       <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\PBRSample.h">
+      <Filter>SampleApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SphereMapSample.h">
       <Filter>SampleApplication</Filter>
     </ClInclude>
   </ItemGroup>

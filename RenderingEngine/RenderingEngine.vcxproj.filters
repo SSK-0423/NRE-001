@@ -28,6 +28,12 @@
     <Filter Include="RenderingEngine\Material">
       <UniqueIdentifier>{0ae7543a-9342-4206-8f1c-688a140090c0}</UniqueIdentifier>
     </Filter>
+    <Filter Include="RenderingEngine\Geometry">
+      <UniqueIdentifier>{52d170de-97eb-45db-bc94-e04824e864a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="RenderingEngine\Sky">
+      <UniqueIdentifier>{d01bd533-3eea-442a-99d7-319cada3f5f6}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Singleton.h">
@@ -111,6 +117,18 @@
     <ClInclude Include="src\PBRMaterial.h">
       <Filter>RenderingEngine\Material</Filter>
     </ClInclude>
+    <ClInclude Include="src\Geometry.h">
+      <Filter>RenderingEngine\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\GeometryImpl.h">
+      <Filter>RenderingEngine\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SphereGeometry.h">
+      <Filter>RenderingEngine\Geometry</Filter>
+    </ClInclude>
+    <ClInclude Include="src\SkySphere.h">
+      <Filter>RenderingEngine\Sky</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OffScreenRender.cpp">
@@ -184,6 +202,15 @@
     </ClCompile>
     <ClCompile Include="src\PhongMaterial.cpp">
       <Filter>RenderingEngine\Material</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Geometry.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SphereGeometry.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SkySphere.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
