@@ -1,4 +1,5 @@
 #include "RenderTarget.h"
+#include "ShaderResourceViewDesc.h"
 
 MYRESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTargetData)
 {
@@ -37,8 +38,11 @@ MYRESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTarg
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// ƒeƒNƒXƒ`ƒƒ‚Æ‚µ‚Ä“o˜^
-	_textureHeap.RegistShaderResource(device, _renderTargetTexture);
-	_textureHeap.RegistShaderResource(device, _depthStencilTexture);
+	ShaderResourceViewDesc renderDesc(_renderTargetTexture);
+	ShaderResourceViewDesc depthDesc(_depthStencilTexture);
+
+	_textureHeap.RegistShaderResource(device, _renderTargetTexture, renderDesc);
+	_textureHeap.RegistShaderResource(device, _depthStencilTexture, depthDesc);
 
 	return MYRESULT::SUCCESS;
 }

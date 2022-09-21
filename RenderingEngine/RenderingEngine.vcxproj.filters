@@ -129,6 +129,9 @@
     <ClInclude Include="src\SkySphere.h">
       <Filter>RenderingEngine\Sky</Filter>
     </ClInclude>
+    <ClInclude Include="src\ShaderResourceViewDesc.h">
+      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\OffScreenRender.cpp">
@@ -203,14 +206,17 @@
     <ClCompile Include="src\PhongMaterial.cpp">
       <Filter>RenderingEngine\Material</Filter>
     </ClCompile>
-    <ClCompile Include="src\Geometry.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\SkySphere.cpp">
       <Filter>RenderingEngine\Sky</Filter>
     </ClCompile>
     <ClCompile Include="src\SphereGeometry.cpp">
       <Filter>RenderingEngine\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Geometry.cpp">
+      <Filter>RenderingEngine\Geometry</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderResourceViewDesc.cpp">
+      <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

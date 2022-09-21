@@ -11,6 +11,8 @@ class Texture;
 class ConstantBuffer;
 class UnorderedAccessResource;
 
+struct ShaderResourceViewDesc;
+
 class DescriptorHeapCBV_SRV_UAV
 {
 public:
@@ -102,7 +104,8 @@ public:
 	/// <param name="registerNo">
 	/// 登録するレジスタ番号 デフォルト値:_NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
 	/// </param>
-	void RegistShaderResource(ID3D12Device& device, Texture& texture, const int& registerNo = _NEXT_REGISTER);
+	void RegistShaderResource(
+		ID3D12Device& device, Texture& texture, ShaderResourceViewDesc& desc, const int& registerNo = _NEXT_REGISTER);
 
 	/// <summary>
 	/// アンオーダーアクセスリソース登録

@@ -1,5 +1,6 @@
 #include "OffScreenRender.h"
 #include "RenderingContext.h"
+#include "ShaderResourceViewDesc.h"
 
 MYRESULT OffScreenRender::CreateOffScreenPolygon(
 	ID3D12Device& device, const OffScreenRenderData& offScreenRenderData)
@@ -80,7 +81,8 @@ MYRESULT OffScreenRender::Create(ID3D12Device& device, const OffScreenRenderData
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// テクスチャとして登録
-	_offscreenHeap.RegistShaderResource(device, _offscreenTexture);
+	ShaderResourceViewDesc desc(_offscreenTexture);
+	_offscreenHeap.RegistShaderResource(device, _offscreenTexture, desc);
 
 	// オフスクリーンポリゴン生成
 	result = CreateOffScreenPolygon(device, offScreenRenderData);

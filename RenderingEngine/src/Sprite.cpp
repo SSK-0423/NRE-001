@@ -3,6 +3,7 @@
 #include "Dx12GraphicsEngine.h"
 #include "RenderingContext.h"
 #include "Texture.h"
+#include "ShaderResourceViewDesc.h"
 
 MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 {
@@ -81,7 +82,8 @@ MYRESULT Sprite::CreateTextureResource(
 	else if (spriteData.textures[0] != nullptr) {
 		for (auto tex : spriteData.textures) {
 			if (tex == nullptr) { break; }
-			_textureHeap.RegistShaderResource(device, *tex);
+			ShaderResourceViewDesc desc(*tex);
+			_textureHeap.RegistShaderResource(device, *tex, desc);
 		}
 		_polygon.SetDescriptorHeap(_textureHeap);
 	}

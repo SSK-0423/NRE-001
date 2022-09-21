@@ -1,4 +1,5 @@
 #include "TextureMappingSample.h"
+#include "ShaderResourceViewDesc.h"
 
 #include <iostream>
 
@@ -103,7 +104,7 @@ MYRESULT TextureMappingSample::InitPolygon(Dx12GraphicsEngine& graphicsEngine, A
 MYRESULT TextureMappingSample::InitTexture(Dx12GraphicsEngine& graphicsEngine)
 {
 	ID3D12Device& device = graphicsEngine.Device();
-	
+
 	std::vector<ColorRGBA> _texData(512 * 512);
 	for (auto& color : _texData) {
 		color = ColorRGBA(0.f, 1.f, 1.f, 1.f);
@@ -122,7 +123,8 @@ MYRESULT TextureMappingSample::InitTexture(Dx12GraphicsEngine& graphicsEngine)
 	if (result == MYRESULT::FAILED) { return result; }
 
 	// テクスチャをヒープに登録
-	_textureHeap.RegistShaderResource(device, _texture);
+	ShaderResourceViewDesc desc(_texture);
+	_textureHeap.RegistShaderResource(device, _texture, desc);
 
 	// ポリゴンのディスクリプタヒープセット
 	_square.SetDescriptorHeap(_textureHeap);

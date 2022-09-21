@@ -198,6 +198,7 @@
     <ClInclude Include="src\RootSignature.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShaderLibrary.h" />
+    <ClInclude Include="src\ShaderResourceViewDesc.h" />
     <ClInclude Include="src\Singleton.h" />
     <ClInclude Include="src\SkySphere.h" />
     <ClInclude Include="src\SphereGeometry.h" />
@@ -228,6 +229,7 @@
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShaderResourceViewDesc.cpp" />
     <ClCompile Include="src\SkySphere.cpp" />
     <ClCompile Include="src\SphereGeometry.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
