@@ -40,6 +40,9 @@
     <Filter Include="シェーダー\PBRSample">
       <UniqueIdentifier>{709c1744-9c15-48ad-a88d-6d00785c88cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\SphereMapSample">
+      <UniqueIdentifier>{3faed0bb-5d8a-44ce-b7e2-29fbf70849fd}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">
@@ -178,6 +181,12 @@
     <FxCompile Include="src\MeshPBRPS.hlsl">
       <Filter>シェーダー\MeshDrawSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\SphereSampleVS.hlsl">
+      <Filter>シェーダー\SphereMapSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SphereSamplePS.hlsl">
+      <Filter>シェーダー\SphereMapSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonSampleHeader.hlsli">
@@ -200,6 +209,9 @@
     </None>
     <None Include="src\PBRSampleHeader.hlsli">
       <Filter>シェーダー\PBRSample</Filter>
+    </None>
+    <None Include="src\SphereSampleHeader.hlsli">
+      <Filter>シェーダー\SphereMapSample</Filter>
     </None>
   </ItemGroup>
 </Project>

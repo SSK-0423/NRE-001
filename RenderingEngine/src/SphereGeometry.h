@@ -20,6 +20,9 @@
 #include "EngineUtility.h"
 
 struct SphereGeometryData {
+	unsigned int stackNum;
+	unsigned int sectorNum;
+	float radius;
 	Shader vertexShader;	                            // 頂点シェーダー
 	Shader pixelShader;									// ピクセルシェーダー
 	RootSignatureData rootSignatureData;				// ルートシグネチャ
@@ -41,6 +44,7 @@ struct SphereGeometryData {
 class SphereGeometry {
 public:
 	SphereGeometry();
+	~SphereGeometry();
 
 private:
 	struct SphereVertex {
@@ -52,7 +56,7 @@ private:
 	std::vector<SphereVertex> _vertices;
 	std::vector<unsigned int> _indices;
 
-	void CreateVerticesAndIndicesData();
+	void CreateVerticesAndIndicesData(SphereGeometryData& data);
 
 	VertexBuffer* _vertexBuffer = nullptr;
 	MYRESULT CreateVertexBuffer(ID3D12Device& devic);

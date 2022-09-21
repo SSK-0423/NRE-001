@@ -2,7 +2,7 @@
 #include "Dx12ApplicationImpl.h"
 #include "Dx12GraphicsEngine.h"
 
-const LONG WINDOW_WIDTH = 1280;
+const LONG WINDOW_WIDTH = 720;
 const LONG WINDOW_HEIGHT = 720;
 
 Dx12Application::Dx12Application(Dx12ApplicationImpl& applicationImpl)

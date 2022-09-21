@@ -2,7 +2,9 @@
 #include "SphereGeometry.h"
 
 struct SkySphereData {
-	SphereGeometryData sphereGeometryData;
+	unsigned int stackNum;
+	unsigned int sectorNum;
+	float radius;
 	const std::wstring& texturePath;
 };
 
@@ -20,5 +22,4 @@ public:
 	MYRESULT Create(ID3D12Device& device, SkySphereData& data);
 
 	void Draw(RenderingContext& renderContext);
-
 };

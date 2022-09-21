@@ -206,11 +206,11 @@
     <ClCompile Include="src\Geometry.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
-    <ClCompile Include="src\SphereGeometry.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
     <ClCompile Include="src\SkySphere.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>RenderingEngine\Sky</Filter>
+    </ClCompile>
+    <ClCompile Include="src\SphereGeometry.cpp">
+      <Filter>RenderingEngine\Geometry</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

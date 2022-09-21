@@ -15,9 +15,14 @@ MYRESULT SkySphere::CreateTexture(const std::wstring& texturePath)
 
 MYRESULT SkySphere::Create(ID3D12Device& device, SkySphereData& data)
 {
-	MYRESULT result = sphere.Create(device, data.sphereGeometryData);
+	SphereGeometryData sphereData;
+	sphereData.stackNum = data.stackNum;
+	sphereData.sectorNum = data.sectorNum;
+	sphereData.radius = data.radius;
+
+	MYRESULT result = sphere.Create(device, sphereData);
 	if (result == MYRESULT::FAILED) { return result; }
-	
+
 	result = CreateTexture(data.texturePath);
 	if (result == MYRESULT::FAILED) { return result; }
 
