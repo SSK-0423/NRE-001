@@ -14,10 +14,11 @@
 #include "ConstantBuffer.h"
 #include "Texture.h"
 
-
 #include "RenderingContext.h"
 
 #include "EngineUtility.h"
+
+#include "ShaderResourceViewDesc.h"
 
 struct SphereGeometryData {
 	unsigned int stackNum;
@@ -82,6 +83,6 @@ public:
 		const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
 
 	void SetTexture(
-		ID3D12Device& device, Texture& texture,
+		ID3D12Device& device, Texture& texture, ShaderResourceViewDesc desc,
 		const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
 };

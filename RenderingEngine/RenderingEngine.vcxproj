@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="src\AppWindow.h" />
     <ClInclude Include="src\ConstantBuffer.h" />
+    <ClInclude Include="src\CubeGeometry.h" />
     <ClInclude Include="src\DepthStencilBuffer.h" />
     <ClInclude Include="src\DescriptorHeapDSV.h" />
     <ClInclude Include="src\DescriptorHeapRTV.h" />
@@ -209,6 +210,7 @@
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\ConstantBuffer.cpp" />
+    <ClCompile Include="src\CubeGeometry.cpp" />
     <ClCompile Include="src\DepthStencilBuffer.cpp" />
     <ClCompile Include="src\DescriptorHeapDSV.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />

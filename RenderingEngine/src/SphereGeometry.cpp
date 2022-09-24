@@ -214,10 +214,13 @@ void SphereGeometry::Draw(RenderingContext& renderContext)
 
 void SphereGeometry::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
 {
+	_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
 }
 
-void SphereGeometry::SetTexture(ID3D12Device& device, Texture& texture, const int& registerNo)
+void SphereGeometry::SetTexture(ID3D12Device& device, Texture& texture, 
+	ShaderResourceViewDesc desc, const int& registerNo)
 {
+	_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
 }
 
 size_t SphereGeometryData::GetRenderTargetNum() const

@@ -1,4 +1,5 @@
 #include "SkySphere.h"
+#include "ShaderResourceViewDesc.h"
 
 SkySphere::SkySphere()
 {
@@ -26,7 +27,8 @@ MYRESULT SkySphere::Create(ID3D12Device& device, SkySphereData& data)
 	result = CreateTexture(data.texturePath);
 	if (result == MYRESULT::FAILED) { return result; }
 
-	sphere.SetTexture(device, texture);
+	ShaderResourceViewDesc desc(texture);
+	sphere.SetTexture(device, texture, desc);
 
 	return MYRESULT::SUCCESS;
 }

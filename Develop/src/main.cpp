@@ -8,7 +8,7 @@
 #include "DepthBufferSample.h"
 #include "DrawMeshSample.h"
 #include "PBRSample.h"
-#include "SphereMapSample.h"
+#include "CubeMapSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -34,7 +34,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	PBRSample pbrApp;
 
 	// スフィアマップサンプル
-	SphereMapSample sphereMapApp;
+	CubeMapSample sphereMapApp;
 
 	Dx12Application app(sphereMapApp);
 	if (app.Init() == MYRESULT::FAILED)

@@ -174,7 +174,7 @@
     <ClCompile Include="src\MultiPassRenderingSample.cpp" />
     <ClCompile Include="src\MultiRenderTargetSample.cpp" />
     <ClCompile Include="src\PBRSample.cpp" />
-    <ClCompile Include="src\SphereMapSample.cpp" />
+    <ClCompile Include="src\CubeMapSample.cpp" />
     <ClCompile Include="src\TextureMappingSample.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -187,7 +187,7 @@
     <ClInclude Include="src\MultiPassRenderingSample.h" />
     <ClInclude Include="src\MultiRenderTargetSample.h" />
     <ClInclude Include="src\PBRSample.h" />
-    <ClInclude Include="src\SphereMapSample.h" />
+    <ClInclude Include="src\CubeMapSample.h" />
     <ClInclude Include="src\TextureMappingSample.h" />
   </ItemGroup>
   <ItemGroup>
@@ -196,6 +196,20 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <FxCompile Include="src\CubeMapSamplePS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="src\CubeMapSampleVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
     <FxCompile Include="src\FarPolygonPS.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
@@ -366,6 +380,7 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <None Include="src\CubeMapSampleHeader.hlsli" />
     <None Include="src\DepthBufferSampleHeader.hlsli" />
     <None Include="src\MeshSampleHeader.hlsli" />
     <None Include="src\MultiRenderTargetHeader.hlsli" />

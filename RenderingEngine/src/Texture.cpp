@@ -38,7 +38,7 @@ HRESULT Texture::LoadTextureFromDDSFile(const std::wstring& texturePath)
 	// テクスチャの生データ取得
 	_image = _scratchImage.GetImage(0, 0, 0);
 
-	return E_NOTIMPL;
+	return result;
 }
 
 HRESULT Texture::CreateUploadAndTextureBuffer(ID3D12Device& device)

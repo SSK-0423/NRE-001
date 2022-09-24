@@ -5,6 +5,7 @@ ShaderResourceViewDesc::ShaderResourceViewDesc(Texture& texture, bool isCubeTex)
 	D3D12_SHADER_RESOURCE_VIEW_DESC desc = {};
 	
 	if (isCubeTex) {
+		desc.Format = texture.GetTexMetadata().format;
 		desc.TextureCube.MipLevels = UINT(texture.GetTexMetadata().mipLevels);
 		desc.TextureCube.MostDetailedMip = 0;
 		desc.TextureCube.ResourceMinLODClamp = 0;
