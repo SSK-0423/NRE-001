@@ -8,6 +8,7 @@ cbuffer constBuff : register(b0)
 struct VSOutput
 {
     float4 pos : SV_POSITION;
+    float4 worldPos : POSITION;
     float3 normal : NORMAL;
     float3 reflect : TEXCOORD0;
     float2 uv : TEXCOORD1;

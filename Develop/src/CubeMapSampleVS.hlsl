@@ -11,15 +11,16 @@ VSOutput main(VSInput input)
 {
     VSOutput output;
     output.pos = mul(worldViewProj, input.pos);
+    output.worldPos = mul(world, input.pos);
     
     float4 normal = float4(input.normal.xyz, 0.f);
     output.normal = mul(world, normal);
     output.uv = input.uv;
     
-    float3 eyePos = float3(0, 0, 0);
-    float3 eyeDir = normalize(input.pos.xyz - eyePos);
+    float3 eyePos = eye;
+    float3 eyeDir = normalize(output.worldPos.xyz - eyePos);
     
-    output.reflect = reflect(eyeDir, normalize(input.normal));
+    output.reflect = reflect(eyeDir, normalize(output.normal));
     output.reflect = normalize(output.reflect);
     
     return output;

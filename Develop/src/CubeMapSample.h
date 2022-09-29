@@ -31,6 +31,8 @@ private:
 
 	ConstBuff _cbuffData;
 	ConstantBuffer _constantBuffer;
+	ConstBuff _cubeCbuffData;
+	ConstantBuffer _cubeConstantBuffer;
 	
 	float _angle;
 

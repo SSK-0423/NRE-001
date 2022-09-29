@@ -232,5 +232,13 @@
     <None Include="src\PBR.hlsli">
       <Filter>リソース ファイル\シェーダー</Filter>
     </None>
+    <None Include="ShaderCommon.hlsli">
+      <Filter>リソース ファイル\シェーダー</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="SkyBoxPS.hlsl">
+      <Filter>リソース ファイル\シェーダー</Filter>
+    </FxCompile>
   </ItemGroup>
 </Project>

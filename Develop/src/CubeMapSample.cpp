@@ -47,7 +47,7 @@ MYRESULT CubeMapSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& wind
 	CubeGeometryData cubeData;
 	cubeData.vertexShader = vertexShader;
 	cubeData.pixelShader = pixelShader;
-	cubeData.rootSignatureData = RootSignatureData();
+	cubeData.rootSignatureData = RootSignatureData(D3D12_FILTER_MIN_MAG_MIP_LINEAR);
 	cubeData.inputLayout.resize(3);
 	cubeData.inputLayout[0] = {
 		"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
@@ -73,13 +73,13 @@ MYRESULT CubeMapSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& wind
 	// シザー矩形セット
 	_scissorRect = CD3DX12_RECT(0, 0, window.GetWindowSize().cx, window.GetWindowSize().cy);
 
-
-	result = _cubeTexture.CreateTextureFromDDS(graphicsEngine, L"res/SanFrancisco3/SanFrancisco3_cube.dds");
-	//result = _cubeTexture.CreateTextureFromDDS(graphicsEngine, L"res/yokohama_cube.dds");
+	//result = _cubeTexture.CreateTextureFromDDS(graphicsEngine, L"res/SanFrancisco3/SanFrancisco3_cube.dds");
+	result = _cubeTexture.CreateCubeTextureFromDDS(graphicsEngine, L"res/yokohama_cube.dds");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	ShaderResourceViewDesc desc(_cubeTexture, true);
 	_sphere.SetTexture(graphicsEngine.Device(), _cubeTexture, desc);
+	_cube.SetTexture(graphicsEngine.Device(), _cubeTexture, desc);
 
 	result = SetConstantBuffer(graphicsEngine, window);
 	if (result == MYRESULT::FAILED) { return result; }
@@ -101,7 +101,7 @@ void CubeMapSample::Draw(Dx12GraphicsEngine& graphicsEngine)
 
 	renderContext.SetViewport(_viewport);
 	renderContext.SetScissorRect(_scissorRect);
-	//sphere.Draw(renderContext);
+	_sphere.Draw(renderContext);
 	_cube.Draw(renderContext);
 }
 
@@ -127,7 +127,7 @@ MYRESULT CubeMapSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, Ap
 		XM_PIDIV2,
 		static_cast<float>(window.GetWindowSize().cx) / static_cast<float>(window.GetWindowSize().cy),
 		0.1f,
-		1000.f);
+		10000.f);
 
 	// ワールドビュープロジェクション行列
 	_cbuffData.worldViewProj = XMMatrixIdentity() * _cbuffData.world * _view * _proj;
@@ -136,7 +136,14 @@ MYRESULT CubeMapSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, Ap
 	MYRESULT result = _constantBuffer.Create(graphicsEngine.Device(), &_cbuffData, sizeof(ConstBuff));
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
-	_cube.SetConstantBuffer(graphicsEngine.Device(), _constantBuffer);
+	_cubeCbuffData = _cbuffData;
+	_cubeCbuffData.world = XMMatrixScaling(10000, 10000, 10000);
+	_cubeCbuffData.worldViewProj = XMMatrixIdentity() * _cubeCbuffData.world * _view * _proj;
+
+	result = _cubeConstantBuffer.Create(graphicsEngine.Device(), &_cubeCbuffData, sizeof(ConstBuff));
+	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
+
+	_cube.SetConstantBuffer(graphicsEngine.Device(), _cubeConstantBuffer);
 	_sphere.SetConstantBuffer(graphicsEngine.Device(), _constantBuffer);
 
 	return result;

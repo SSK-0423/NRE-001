@@ -44,14 +44,10 @@ float4 main(VSOutput input) : SV_TARGET
     
     float3 outColor = light.intensity * (diffuse + specular) + ambientColor;
     
-    return float4(outColor, 1.f);
-    
     // 環境マッピング
-    float4 surfaceColor = float4(0.69, 0.69, 0.69, 1.f);
+    return texCube.Sample(smp, input.reflect);
+
+    return texCube.Sample(smp, input.worldPos.xyz);
     
-    return surfaceColor * texCube.Sample(smp, input.reflect);
-
-
-    //float2 v = step(0, sin(25 * input.uv)) * 0.5;
-    //return frac(v.x + v.y) * 2;
+    return float4(outColor, 1.f);
 }
