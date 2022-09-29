@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Dx12GraphicsEngine.h"
 #include "AppWindow.h"
+#include "ShaderResourceViewDesc.h"
 
 #include <iostream>
 
@@ -152,7 +153,9 @@ MYRESULT Application::InitTexture()
 	if (result == MYRESULT::FAILED) { return result; }
 	result = _polygonHeap.Create(device);
 	if (result == MYRESULT::FAILED) { return result; }
-	_polygonHeap.RegistShaderResource(device, _texture);
+
+	ShaderResourceViewDesc desc(_texture);
+	_polygonHeap.RegistShaderResource(device, _texture, desc);
 
 	return MYRESULT::SUCCESS;
 }

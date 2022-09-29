@@ -8,6 +8,7 @@
 #include "DepthBufferSample.h"
 #include "DrawMeshSample.h"
 #include "PBRSample.h"
+#include "CubeMapSample.h"
 
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 {
@@ -32,7 +33,10 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int)
 	// PBRサンプル
 	PBRSample pbrApp;
 
-	Dx12Application app(pbrApp);
+	// スフィアマップサンプル
+	CubeMapSample sphereMapApp;
+
+	Dx12Application app(sphereMapApp);
 	if (app.Init() == MYRESULT::FAILED)
 	{
 		MessageBox(NULL, L"アプリケーションの初期化に失敗しました。", L"エラーメッセージ", MB_OK);

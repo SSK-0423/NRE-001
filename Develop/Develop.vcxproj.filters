@@ -40,6 +40,12 @@
     <Filter Include="シェーダー\PBRSample">
       <UniqueIdentifier>{709c1744-9c15-48ad-a88d-6d00785c88cb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="シェーダー\SphereMapSample">
+      <UniqueIdentifier>{3faed0bb-5d8a-44ce-b7e2-29fbf70849fd}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="シェーダー\CubeMapSample">
+      <UniqueIdentifier>{01f332bd-4f07-4915-99de-4ce1e23d94d5}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Dx12Application.cpp">
@@ -72,6 +78,9 @@
     <ClCompile Include="src\PBRSample.cpp">
       <Filter>SampleApplication</Filter>
     </ClCompile>
+    <ClCompile Include="src\CubeMapSample.cpp">
+      <Filter>SampleApplication</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Dx12Application.h">
@@ -102,6 +111,9 @@
       <Filter>SampleApplication</Filter>
     </ClInclude>
     <ClInclude Include="src\PBRSample.h">
+      <Filter>SampleApplication</Filter>
+    </ClInclude>
+    <ClInclude Include="src\CubeMapSample.h">
       <Filter>SampleApplication</Filter>
     </ClInclude>
   </ItemGroup>
@@ -172,6 +184,18 @@
     <FxCompile Include="src\MeshPBRPS.hlsl">
       <Filter>シェーダー\MeshDrawSample</Filter>
     </FxCompile>
+    <FxCompile Include="src\SphereSampleVS.hlsl">
+      <Filter>シェーダー\SphereMapSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SphereSamplePS.hlsl">
+      <Filter>シェーダー\SphereMapSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\CubeMapSamplePS.hlsl">
+      <Filter>シェーダー\CubeMapSample</Filter>
+    </FxCompile>
+    <FxCompile Include="src\CubeMapSampleVS.hlsl">
+      <Filter>シェーダー\CubeMapSample</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="src\PolygonSampleHeader.hlsli">
@@ -194,6 +218,12 @@
     </None>
     <None Include="src\PBRSampleHeader.hlsli">
       <Filter>シェーダー\PBRSample</Filter>
+    </None>
+    <None Include="src\SphereSampleHeader.hlsli">
+      <Filter>シェーダー\SphereMapSample</Filter>
+    </None>
+    <None Include="src\CubeMapSampleHeader.hlsli">
+      <Filter>シェーダー\CubeMapSample</Filter>
     </None>
   </ItemGroup>
 </Project>

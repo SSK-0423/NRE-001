@@ -1,4 +1,5 @@
 #include "Texture.h"
+using namespace DirectX;
 
 Texture& Texture::operator=(const Texture& inst)
 {
@@ -38,7 +39,7 @@ HRESULT Texture::LoadTextureFromDDSFile(const std::wstring& texturePath)
 	// テクスチャの生データ取得
 	_image = _scratchImage.GetImage(0, 0, 0);
 
-	return E_NOTIMPL;
+	return result;
 }
 
 HRESULT Texture::CreateUploadAndTextureBuffer(ID3D12Device& device)
@@ -80,6 +81,58 @@ HRESULT Texture::CreateUploadAndTextureBuffer(ID3D12Device& device)
 		nullptr,
 		IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
 	if (FAILED(result)) { return result; }
+
+	return result;
+}
+
+HRESULT Texture::CreateUploadAndCubeTextureBuffer(ID3D12Device& device)
+{
+	// アップロード先のバッファー生成
+	CD3DX12_HEAP_PROPERTIES texHeapProp(D3D12_HEAP_TYPE_DEFAULT);
+	CD3DX12_RESOURCE_DESC texResDesc;
+	texResDesc.Dimension = static_cast<D3D12_RESOURCE_DIMENSION>(_metaData.dimension);
+	texResDesc.Alignment = 0;
+	texResDesc.Width = _metaData.width;
+	texResDesc.Height = _metaData.height;
+	texResDesc.DepthOrArraySize = _metaData.arraySize;
+	texResDesc.MipLevels = _metaData.mipLevels;
+	texResDesc.Format = _metaData.format;
+	texResDesc.SampleDesc.Count = 1;
+	texResDesc.SampleDesc.Quality = 0;
+	texResDesc.Layout = D3D12_TEXTURE_LAYOUT_UNKNOWN;
+	texResDesc.Flags = D3D12_RESOURCE_FLAG_NONE;
+
+	HRESULT result = device.CreateCommittedResource(
+		&texHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&texResDesc,
+		D3D12_RESOURCE_STATE_COPY_DEST,
+		nullptr,
+		IID_PPV_ARGS(_textureBuffer.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
+	_subresources.resize(_scratchImage.GetImageCount());
+	for (size_t idx = 0; idx < _scratchImage.GetImageCount(); idx++) {
+		const DirectX::Image img = _scratchImage.GetImages()[idx];
+		_subresources[idx].pData = img.pixels;
+		_subresources[idx].RowPitch = img.rowPitch;
+		_subresources[idx].SlicePitch = img.slicePitch;
+	}
+	
+	auto totalBytes = GetRequiredIntermediateSize(_textureBuffer.Get(), 0, UINT(_subresources.size()));
+
+	// アップロード用の中間バッファー生成
+	CD3DX12_RESOURCE_DESC uploadResDesc = CD3DX12_RESOURCE_DESC::Buffer(totalBytes);
+	CD3DX12_HEAP_PROPERTIES uploadHeapProp = CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD);
+	result = device.CreateCommittedResource(
+		&uploadHeapProp,
+		D3D12_HEAP_FLAG_NONE,
+		&uploadResDesc,
+		D3D12_RESOURCE_STATE_GENERIC_READ,
+		nullptr,
+		IID_PPV_ARGS(_uploadBuffer.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
 
 	return result;
 }
@@ -166,6 +219,52 @@ HRESULT Texture::CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsE
 		cmdAllocator.Reset();
 		renderContext.Reset(cmdAllocator);
 	}
+
+	return result;
+}
+
+HRESULT Texture::CopyCubeTexture(Dx12GraphicsEngine& graphicsEngine)
+{
+	RenderingContext& renderContext = graphicsEngine.GetRenderingContext();
+	ID3D12GraphicsCommandList& commandList = graphicsEngine.CmdList();
+	ID3D12CommandAllocator& cmdAllocator = graphicsEngine.CmdAllocator();
+	ID3D12CommandQueue& cmdQueue = graphicsEngine.CmdQueue();
+
+	UpdateSubresources(
+		&commandList, _textureBuffer.Get(), _uploadBuffer.Get(),
+		0, 0, UINT(_subresources.size()), _subresources.data());
+	auto barrier = CD3DX12_RESOURCE_BARRIER::Transition(
+		_textureBuffer.Get(), D3D12_RESOURCE_STATE_COPY_DEST, D3D12_RESOURCE_STATE_PRESENT);
+	commandList.ResourceBarrier(1, &barrier);
+
+	// フェンス生成
+	Microsoft::WRL::ComPtr<ID3D12Fence> fence = nullptr;
+	UINT fenceVal = 0;
+	HRESULT result = graphicsEngine.Device().CreateFence(
+		fenceVal, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(fence.ReleaseAndGetAddressOf()));
+	if (FAILED(result)) { return result; }
+
+	renderContext.Close();
+
+	// コマンドリスト実行
+	ID3D12CommandList* cmdLists[] = { &commandList };
+	cmdQueue.ExecuteCommandLists(_countof(cmdLists), cmdLists);
+	cmdQueue.Signal(fence.Get(), ++fenceVal);
+	if (fence->GetCompletedValue() != fenceVal) {
+		// イベントハンドル取得
+		auto event = CreateEvent(nullptr, false, false, nullptr);
+
+		fence->SetEventOnCompletion(fenceVal, event);
+
+		// イベントが発生するまで待ち続ける
+		WaitForSingleObject(event, INFINITE);
+
+		// イベントハンドルを閉じる
+		CloseHandle(event);
+	}
+
+	cmdAllocator.Reset();
+	renderContext.Reset(cmdAllocator);
 
 	return result;
 }
@@ -266,4 +365,18 @@ void Texture::CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuff
 	_image = img;
 
 	_metaData.mipLevels = 1;
+}
+
+MYRESULT Texture::CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+{
+	ID3D12Device& device = graphicsEngine.Device();
+
+	// ファイル読み込み
+	if (FAILED(LoadTextureFromDDSFile(texturePath))) { return MYRESULT::FAILED; }
+	// バッファー生成
+	if (FAILED(CreateUploadAndCubeTextureBuffer(device))) { return MYRESULT::FAILED; }
+	// アップロードバッファーの内容をテクスチャバッファーへコピー
+	if (FAILED(CopyCubeTexture(graphicsEngine))) { return MYRESULT::FAILED; }
+
+	return MYRESULT::SUCCESS;
 }

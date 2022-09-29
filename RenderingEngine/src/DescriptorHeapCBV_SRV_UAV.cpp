@@ -5,6 +5,8 @@
 #include "Texture.h"
 #include "ConstantBuffer.h"
 
+#include "ShaderResourceViewDesc.h"
+
 HRESULT DescriptorHeapCBV_SRV_UAV::CreateDescriptorHeap(ID3D12Device& device)
 {
 	D3D12_DESCRIPTOR_HEAP_DESC heapDesc;
@@ -32,7 +34,8 @@ MYRESULT DescriptorHeapCBV_SRV_UAV::Create(ID3D12Device& device)
 }
 
 void DescriptorHeapCBV_SRV_UAV::RegistShaderResource(
-	ID3D12Device& device, Texture& texture, const int& registerNo)
+	ID3D12Device& device, Texture& texture,
+	ShaderResourceViewDesc& desc, const int& registerNo)
 {
 	assert(registerNo < static_cast<int>(_MAX_SRV_DESCRIPTOR_NUM) && registerNo >= _NEXT_REGISTER);
 
@@ -43,13 +46,13 @@ void DescriptorHeapCBV_SRV_UAV::RegistShaderResource(
 	else                                // 指定されたレジスタ
 		handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
 
-	D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-	srvDesc.Format = texture.GetImage().format;
-	srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-	srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-	srvDesc.Texture2D.MipLevels = texture.GetTexMetadata().mipLevels;
+	//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
+	//srvDesc.Format = texture.GetImage().format;
+	//srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+	//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+	//srvDesc.Texture2D.MipLevels = texture.GetTexMetadata().mipLevels;
 
-	device.CreateShaderResourceView(&texture.GetBuffer(), &srvDesc, handle);
+	device.CreateShaderResourceView(&texture.GetBuffer(), &desc.desc, handle);
 
 	_registedSRVNum++;
 }

@@ -175,6 +175,7 @@
   <ItemGroup>
     <ClInclude Include="src\AppWindow.h" />
     <ClInclude Include="src\ConstantBuffer.h" />
+    <ClInclude Include="src\CubeGeometry.h" />
     <ClInclude Include="src\DepthStencilBuffer.h" />
     <ClInclude Include="src\DescriptorHeapDSV.h" />
     <ClInclude Include="src\DescriptorHeapRTV.h" />
@@ -182,6 +183,7 @@
     <ClInclude Include="src\Dx12GraphicsEngine.h" />
     <ClInclude Include="src\EngineUtility.h" />
     <ClInclude Include="src\FBXLoader.h" />
+    <ClInclude Include="src\GeometryImpl.h" />
     <ClInclude Include="src\GraphicsPipelineState.h" />
     <ClInclude Include="src\IMaterial.h" />
     <ClInclude Include="src\IndexBuffer.h" />
@@ -190,13 +192,17 @@
     <ClInclude Include="src\PhongMaterial.h" />
     <ClInclude Include="src\OffScreenRender.h" />
     <ClInclude Include="src\Polygon.h" />
+    <ClInclude Include="src\Geometry.h" />
     <ClInclude Include="src\RenderingContext.h" />
     <ClInclude Include="src\RenderTarget.h" />
     <ClInclude Include="src\RenderTargetBuffer.h" />
     <ClInclude Include="src\RootSignature.h" />
     <ClInclude Include="src\Shader.h" />
     <ClInclude Include="src\ShaderLibrary.h" />
+    <ClInclude Include="src\ShaderResourceViewDesc.h" />
     <ClInclude Include="src\Singleton.h" />
+    <ClInclude Include="src\SkySphere.h" />
+    <ClInclude Include="src\SphereGeometry.h" />
     <ClInclude Include="src\Sprite.h" />
     <ClInclude Include="src\Texture.h" />
     <ClInclude Include="src\VertexBuffer.h" />
@@ -204,6 +210,7 @@
   <ItemGroup>
     <ClCompile Include="src\AppWindow.cpp" />
     <ClCompile Include="src\ConstantBuffer.cpp" />
+    <ClCompile Include="src\CubeGeometry.cpp" />
     <ClCompile Include="src\DepthStencilBuffer.cpp" />
     <ClCompile Include="src\DescriptorHeapDSV.cpp" />
     <ClCompile Include="src\DescriptorHeapRTV.cpp" />
@@ -211,6 +218,7 @@
     <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
     <ClCompile Include="src\EngineUtility.cpp" />
     <ClCompile Include="src\FBXLoader.cpp" />
+    <ClCompile Include="src\Geometry.cpp" />
     <ClCompile Include="src\GraphicsPipelineState.cpp" />
     <ClCompile Include="src\IndexBuffer.cpp" />
     <ClCompile Include="src\FBXMesh.cpp" />
@@ -223,6 +231,9 @@
     <ClCompile Include="src\RenderTargetBuffer.cpp" />
     <ClCompile Include="src\RootSignature.cpp" />
     <ClCompile Include="src\Shader.cpp" />
+    <ClCompile Include="src\ShaderResourceViewDesc.cpp" />
+    <ClCompile Include="src\SkySphere.cpp" />
+    <ClCompile Include="src\SphereGeometry.cpp" />
     <ClCompile Include="src\Sprite.cpp" />
     <ClCompile Include="src\Texture.cpp" />
     <ClCompile Include="src\VertexBuffer.cpp" />
@@ -230,6 +241,24 @@
   <ItemGroup>
     <None Include="src\PBR.hlsli" />
     <None Include="src\PhongReflectionModel.hlsli" />
+    <None Include="src\ShaderCommon.hlsli" />
+    <None Include="src\SkyBoxHeader.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="src\SkyBoxPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="src\SkyBoxVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

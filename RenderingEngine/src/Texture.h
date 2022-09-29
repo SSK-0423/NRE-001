@@ -7,6 +7,7 @@
 
 #pragma comment(lib,"d3d12.lib")
 #pragma comment(lib,"DirectXTex.lib")
+#pragma comment(lib,"dxguid.lib")
 
 #include "Dx12GraphicsEngine.h"
 #include "EngineUtility.h"
@@ -22,6 +23,8 @@ public:
 private:
 	Microsoft::WRL::ComPtr<ID3D12Resource> _uploadBuffer = nullptr;		// 中間バッファー(アップロード元)
 	Microsoft::WRL::ComPtr<ID3D12Resource> _textureBuffer = nullptr;	// テクスチャバッファー(アップロード先)
+
+	std::vector<D3D12_SUBRESOURCE_DATA> _subresources; // キューブテクスチャ用サブリソース
 
 	// ScratchImage::GetImageの戻り値にconstがついているため
 	const DirectX::Image* _image = nullptr;	// テクスチャの生データ
@@ -50,6 +53,13 @@ private:
 	HRESULT CreateUploadAndTextureBuffer(ID3D12Device& device);
 
 	/// <summary>
+	/// 
+	/// </summary>
+	/// <param name="device"></param>
+	/// <returns></returns>
+	HRESULT CreateUploadAndCubeTextureBuffer(ID3D12Device& device);
+
+	/// <summary>
 	/// マップ処理
 	/// </summary>
 	/// <returns></returns>
@@ -62,6 +72,8 @@ private:
 	/// <param name="graphicsEngine">グラフィクスエンジン</param>
 	/// <returns></returns>
 	HRESULT CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine);
+
+	HRESULT CopyCubeTexture(Dx12GraphicsEngine& graphicsEngine);
 
 	void SetTextureData(
 		std::vector<ColorRGBA>& data, const size_t& width, const size_t& height, const DXGI_FORMAT& format);
@@ -106,6 +118,8 @@ public:
 	/// </summary>
 	/// <param name="depthStencilBuffer">デプスステンシルバッファー</param>
 	void CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuffer);
+
+	MYRESULT CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 	/// <summary>
 	/// テクスチャバッファー取得

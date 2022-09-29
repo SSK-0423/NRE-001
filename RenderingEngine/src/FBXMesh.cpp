@@ -1,4 +1,5 @@
 #include "FBXMesh.h"
+#include "ShaderResourceViewDesc.h"
 
 using namespace DirectX;
 
@@ -168,7 +169,8 @@ void FBXMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBu
 
 void FBXMesh::SetTexture(ID3D12Device& device, Texture& texture, const int& registerNo)
 {
-	_descriptorHeap->RegistShaderResource(device, texture, registerNo);
+	ShaderResourceViewDesc desc(texture);
+	_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
 }
 
 MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)
