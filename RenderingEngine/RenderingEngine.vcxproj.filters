@@ -232,12 +232,18 @@
     <None Include="src\PBR.hlsli">
       <Filter>リソース ファイル\シェーダー</Filter>
     </None>
-    <None Include="ShaderCommon.hlsli">
+    <None Include="src\ShaderCommon.hlsli">
+      <Filter>リソース ファイル\シェーダー</Filter>
+    </None>
+    <None Include="src\SkyBoxHeader.hlsli">
       <Filter>リソース ファイル\シェーダー</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="SkyBoxPS.hlsl">
+    <FxCompile Include="src\SkyBoxVS.hlsl">
+      <Filter>リソース ファイル\シェーダー</Filter>
+    </FxCompile>
+    <FxCompile Include="src\SkyBoxPS.hlsl">
       <Filter>リソース ファイル\シェーダー</Filter>
     </FxCompile>
   </ItemGroup>

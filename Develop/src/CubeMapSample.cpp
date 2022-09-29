@@ -39,9 +39,9 @@ MYRESULT CubeMapSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& wind
 	}
 
 	// キューブ生成
-	result = vertexShader.Create(L"src/CubeMapSampleVS.hlsl", "main", "vs_5_0");
+	result = vertexShader.Create(L"../RenderingEngine/src/SkyBoxVS.hlsl", "main", "vs_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
-	result = pixelShader.Create(L"src/CubeMapSamplePS.hlsl", "main", "ps_5_0");
+	result = pixelShader.Create(L"../RenderingEngine/src/SkyBoxPS.hlsl", "main", "ps_5_0");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	CubeGeometryData cubeData;
@@ -73,8 +73,8 @@ MYRESULT CubeMapSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& wind
 	// シザー矩形セット
 	_scissorRect = CD3DX12_RECT(0, 0, window.GetWindowSize().cx, window.GetWindowSize().cy);
 
-	//result = _cubeTexture.CreateTextureFromDDS(graphicsEngine, L"res/SanFrancisco3/SanFrancisco3_cube.dds");
-	result = _cubeTexture.CreateCubeTextureFromDDS(graphicsEngine, L"res/yokohama_cube.dds");
+	result = _cubeTexture.CreateCubeTextureFromDDS(graphicsEngine, L"res/SanFrancisco3/SanFrancisco3_cube.dds");
+	//result = _cubeTexture.CreateCubeTextureFromDDS(graphicsEngine, L"res/yokohama_cube.dds");
 	if (result == MYRESULT::FAILED) { return result; }
 
 	ShaderResourceViewDesc desc(_cubeTexture, true);
@@ -90,9 +90,13 @@ MYRESULT CubeMapSample::Init(Dx12GraphicsEngine& graphicsEngine, AppWindow& wind
 void CubeMapSample::Update(float deltaTime)
 {
 	_angle -= 0.01f;
-	_cbuffData.world = XMMatrixRotationY(_angle);
-	_cbuffData.worldViewProj = XMMatrixIdentity() * _cbuffData.world * _view * _proj;
-	_constantBuffer.UpdateData(&_cbuffData);
+	//_cbuffData.world = XMMatrixRotationY(_angle);
+	//_cbuffData.worldViewProj = XMMatrixIdentity() * _cbuffData.world * _view * _proj;
+	//_constantBuffer.UpdateData(&_cbuffData);
+
+	//_cubeCbuffData.world = XMMatrixRotationY(_angle) * XMMatrixScaling(1000,1000,1000);
+	//_cubeCbuffData.worldViewProj = XMMatrixIdentity() * _cubeCbuffData.world * _view * _proj;
+	//_cubeConstantBuffer.UpdateData(&_cubeCbuffData);
 }
 
 void CubeMapSample::Draw(Dx12GraphicsEngine& graphicsEngine)
@@ -117,7 +121,7 @@ MYRESULT CubeMapSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, Ap
 
 	// カメラ行列
 	XMVECTOR eye = XMVectorSet(0, 1.f, -2.f, 0);
-	XMVECTOR target = XMVectorSet(0, 0.f, 0, 0);
+	XMVECTOR target = XMVectorSet(0, 0.f, 0, 1);
 	XMVECTOR up = XMVectorSet(0, 1, 0, 0);
 	_view = XMMatrixLookAtLH(eye, target, up);
 	XMStoreFloat3(&_cbuffData.eye, eye);
@@ -127,7 +131,7 @@ MYRESULT CubeMapSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, Ap
 		XM_PIDIV2,
 		static_cast<float>(window.GetWindowSize().cx) / static_cast<float>(window.GetWindowSize().cy),
 		0.1f,
-		10000.f);
+		1000.f);
 
 	// ワールドビュープロジェクション行列
 	_cbuffData.worldViewProj = XMMatrixIdentity() * _cbuffData.world * _view * _proj;
@@ -137,7 +141,7 @@ MYRESULT CubeMapSample::SetConstantBuffer(Dx12GraphicsEngine& graphicsEngine, Ap
 	if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
 
 	_cubeCbuffData = _cbuffData;
-	_cubeCbuffData.world = XMMatrixScaling(10000, 10000, 10000);
+	_cubeCbuffData.world = XMMatrixScaling(1000, 1000, 1000);
 	_cubeCbuffData.worldViewProj = XMMatrixIdentity() * _cubeCbuffData.world * _view * _proj;
 
 	result = _cubeConstantBuffer.Create(graphicsEngine.Device(), &_cubeCbuffData, sizeof(ConstBuff));

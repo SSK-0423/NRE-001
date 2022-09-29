@@ -45,9 +45,9 @@ float4 main(VSOutput input) : SV_TARGET
     float3 outColor = light.intensity * (diffuse + specular) + ambientColor;
     
     // 環境マッピング
+    return texCube.Sample(smp, input.worldPos.xyz);
     return texCube.Sample(smp, input.reflect);
 
-    return texCube.Sample(smp, input.worldPos.xyz);
     
     return float4(outColor, 1.f);
 }
