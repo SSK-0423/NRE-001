@@ -28,6 +28,9 @@
     <Filter Include="Graphics">
       <UniqueIdentifier>{869297cf-a935-4701-9f68-0e6a7a38f542}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{d4b5a5cf-a87a-4cec-987a-d44b7f8fe438}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PBR.hlsli">
@@ -130,6 +133,12 @@
     <ClCompile Include="Source\Graphics\Sprite.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\AppWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DX12API\ConstantBuffer.h">
@@ -221,6 +230,12 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\Sprite.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\AppWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Dx12GraphicsEngine.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
