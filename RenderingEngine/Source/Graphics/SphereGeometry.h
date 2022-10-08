@@ -20,69 +20,72 @@
 
 #include "ShaderResourceViewDesc.h"
 
-struct SphereGeometryData {
-	unsigned int stackNum;
-	unsigned int sectorNum;
-	float radius;
-	Shader vertexShader;	                            // 頂点シェーダー
-	Shader pixelShader;									// ピクセルシェーダー
-	RootSignatureData rootSignatureData;				// ルートシグネチャ
-	std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
-	std::array<DXGI_FORMAT, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> colorFormats = {
-	DXGI_FORMAT_R8G8B8A8_UNORM,
-	DXGI_FORMAT_UNKNOWN,
-	DXGI_FORMAT_UNKNOWN,
-	DXGI_FORMAT_UNKNOWN,
-	DXGI_FORMAT_UNKNOWN,
-	DXGI_FORMAT_UNKNOWN,
-	DXGI_FORMAT_UNKNOWN,
-	DXGI_FORMAT_UNKNOWN,
-	};	// レンダーターゲットのカラーフォーマット
+namespace NamelessEngine::Graphics
+{
+	struct SphereGeometryData {
+		unsigned int stackNum;
+		unsigned int sectorNum;
+		float radius;
+		DX12API::Shader vertexShader;	                            // 頂点シェーダー
+		DX12API::Shader pixelShader;									// ピクセルシェーダー
+		DX12API::RootSignatureData rootSignatureData;				// ルートシグネチャ
+		std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
+		std::array<DXGI_FORMAT, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> colorFormats = {
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		DXGI_FORMAT_UNKNOWN,
+		};	// レンダーターゲットのカラーフォーマット
 
-	size_t GetRenderTargetNum() const;
-};
-
-class SphereGeometry {
-public:
-	SphereGeometry();
-	~SphereGeometry();
-
-private:
-	struct SphereVertex {
-		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT3 normal;
-		DirectX::XMFLOAT2 uv;
+		size_t GetRenderTargetNum() const;
 	};
 
-	std::vector<SphereVertex> _vertices;
-	std::vector<unsigned int> _indices;
+	class SphereGeometry {
+	public:
+		SphereGeometry();
+		~SphereGeometry();
 
-	void CreateVerticesAndIndicesData(SphereGeometryData& data);
+	private:
+		struct SphereVertex {
+			DirectX::XMFLOAT3 position;
+			DirectX::XMFLOAT3 normal;
+			DirectX::XMFLOAT2 uv;
+		};
 
-	VertexBuffer* _vertexBuffer = nullptr;
-	MYRESULT CreateVertexBuffer(ID3D12Device& devic);
+		std::vector<SphereVertex> _vertices;
+		std::vector<unsigned int> _indices;
 
-	IndexBuffer* _indexBuffer = nullptr;
-	MYRESULT CreateIndexBuffer(ID3D12Device& device);
+		void CreateVerticesAndIndicesData(SphereGeometryData& data);
 
-	GraphicsPipelineState* _graphicsPipelineState = nullptr;
-	MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, SphereGeometryData& data);
+		DX12API::VertexBuffer* _vertexBuffer = nullptr;
+		Utility::MYRESULT CreateVertexBuffer(ID3D12Device& devic);
 
-	RootSignature* _rootSignature = nullptr;
+		DX12API::IndexBuffer* _indexBuffer = nullptr;
+		Utility::MYRESULT CreateIndexBuffer(ID3D12Device& device);
 
-	DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
-	MYRESULT CreateDescriptorHeap(ID3D12Device& device);
+		DX12API::GraphicsPipelineState* _graphicsPipelineState = nullptr;
+		Utility::MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, SphereGeometryData& data);
 
-public:
-	MYRESULT Create(ID3D12Device& device, SphereGeometryData& data);
+		DX12API::RootSignature* _rootSignature = nullptr;
 
-	void Draw(RenderingContext& renderContext);
+		DX12API::DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
+		Utility::MYRESULT CreateDescriptorHeap(ID3D12Device& device);
 
-	void SetConstantBuffer(
-		ID3D12Device& device, ConstantBuffer& constantBuffer,
-		const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+	public:
+		Utility::MYRESULT Create(ID3D12Device& device, SphereGeometryData& data);
 
-	void SetTexture(
-		ID3D12Device& device, Texture& texture, ShaderResourceViewDesc desc,
-		const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
-};
+		void Draw(DX12API::RenderingContext& renderContext);
+
+		void SetConstantBuffer(
+			ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer,
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+
+		void SetTexture(
+			ID3D12Device& device, DX12API::Texture& texture, DX12API::ShaderResourceViewDesc desc,
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+	};
+}

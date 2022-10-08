@@ -7,14 +7,15 @@
 
 #include "EngineUtility.h"
 
-class Texture;
-class ConstantBuffer;
-class UnorderedAccessResource;
-
-struct ShaderResourceViewDesc;
 
 namespace NamelessEngine::DX12API
 {
+	class Texture;
+	class ConstantBuffer;
+	class UnorderedAccessResource;
+
+	struct ShaderResourceViewDesc;
+	
 	class DescriptorHeapCBV_SRV_UAV
 	{
 	public:

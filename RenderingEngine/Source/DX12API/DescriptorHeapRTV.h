@@ -6,10 +6,11 @@
 
 #include "EngineUtility.h"
 
-class RenderTargetBuffer;
 
 namespace NamelessEngine::DX12API
 {
+	class RenderTargetBuffer;
+	
 	/// <summary>
 	/// レンダーターゲットビュー用のディスクリプタヒープ
 	/// </summary>

@@ -3,6 +3,7 @@
 #include "ConstantBuffer.h"
 
 using namespace Microsoft::WRL;
+using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::DX12API
 {
@@ -10,7 +11,7 @@ namespace NamelessEngine::DX12API
 	{
 		CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_UPLOAD);
 		CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Buffer(
-			Utility::AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT));
+			AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT));
 
 		HRESULT result = device.CreateCommittedResource(
 			&heapProp,
@@ -34,17 +35,17 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT ConstantBuffer::Create(ID3D12Device& device, void* data, const UINT& bufferSize)
+	MYRESULT ConstantBuffer::Create(ID3D12Device& device, void* data, const UINT& bufferSize)
 	{
 		// バッファーサイズ取得
-		_bufferSize = Utility::AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
+		_bufferSize = AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
 		// バッファー生成
-		if (FAILED(CreateConstantBuffer(device, bufferSize))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateConstantBuffer(device, bufferSize))) { return MYRESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapConstantBuffer(data, bufferSize))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(MapConstantBuffer(data, bufferSize))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 }

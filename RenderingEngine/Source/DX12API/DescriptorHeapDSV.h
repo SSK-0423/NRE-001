@@ -7,10 +7,11 @@
 
 #include "EngineUtility.h"
 
-class DepthStencilBuffer;
 
 namespace NamelessEngine::DX12API
 {
+	class DepthStencilBuffer;
+
 	class DescriptorHeapDSV
 	{
 	public:

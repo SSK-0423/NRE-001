@@ -3,11 +3,7 @@
 #include <Windows.h>
 #include <memory>
 
-#include "EngineUtility.h"
-
-class Dx12GraphicsEngine;
-class AppWindow;
-class Dx12ApplicationImpl;
+#include "Dx12ApplicationImpl.h"
 
 /// <summary>
 /// レンダリング開発中のテスト用クラス
@@ -22,7 +18,7 @@ public:
 	/// アプリケーションの初期化
 	/// </summary>
 	/// <returns>成功：MYRESULT::SUCCESS 失敗：MYRESULT::FAILED</returns>
-	MYRESULT Init();
+	NamelessEngine::Utility::MYRESULT Init();
 
 	/// <summary>
 	/// メインループ
@@ -35,7 +31,7 @@ public:
 	void End();
 
 private:
-	Dx12GraphicsEngine& _graphicsEngine;			    // 描画の基礎部分を担当するエンジン
-	std::shared_ptr<AppWindow> _window = nullptr;		// アプリケーションのウィンドウ
+	NamelessEngine::Core::Dx12GraphicsEngine& _graphicsEngine; // 描画の基礎部分を担当するエンジン
+	std::shared_ptr<NamelessEngine::Core::AppWindow> _window = nullptr; // アプリケーションのウィンドウ
 	Dx12ApplicationImpl& _applicationImpl;				// アプリケーションの本体
 };

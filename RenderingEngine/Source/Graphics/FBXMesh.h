@@ -14,12 +14,18 @@
 
 #include "RenderingContext.h"
 
+#include "FBXLoader.h"
+
+#include "Dx12GraphicsEngine.h"
+
 #include "EngineUtility.h"
 
-class FBXLoader;
+
 
 namespace NamelessEngine::Graphics
 {
+	class FBXLoader;
+	
 	/// <summary>
 	/// メッシュ生成用データ
 	/// </summary>
@@ -46,9 +52,9 @@ namespace NamelessEngine::Graphics
 		std::wstring normalName;
 		std::wstring occlusionName;
 
-		Shader vertexShader;	                            // 頂点シェーダー
-		Shader pixelShader;									// ピクセルシェーダー
-		RootSignatureData rootSignatureData;				// ルートシグネチャ
+		DX12API::Shader vertexShader;	                            // 頂点シェーダー
+		DX12API::Shader pixelShader;									// ピクセルシェーダー
+		DX12API::RootSignatureData rootSignatureData;				// ルートシグネチャ
 		std::vector<D3D12_INPUT_ELEMENT_DESC> inputLayout;	// 頂点レイアウト
 		std::array<DXGI_FORMAT, D3D12_SIMULTANEOUS_RENDER_TARGET_COUNT> colorFormats = {
 		DXGI_FORMAT_R8G8B8A8_UNORM,
@@ -76,21 +82,21 @@ namespace NamelessEngine::Graphics
 
 		std::vector<FBXMeshData> _meshDataList;		// メッシュ情報のリスト
 
-		VertexBuffer* _vertexBuffer = nullptr;
+		DX12API::VertexBuffer* _vertexBuffer = nullptr;
 		Utility::MYRESULT CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
-		IndexBuffer* _indexBuffer = nullptr;
+		DX12API::IndexBuffer* _indexBuffer = nullptr;
 		Utility::MYRESULT CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
-		GraphicsPipelineState* _graphicsPipelineState = nullptr;
+		DX12API::GraphicsPipelineState* _graphicsPipelineState = nullptr;
 		Utility::MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& meshData);
 
-		RootSignature* _rootSignature = nullptr;
+		DX12API::RootSignature* _rootSignature = nullptr;
 
 		std::vector<FBXMesh*> _childs;
 
 		// ディスクリプタヒープ
-		DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
+		DX12API::DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
 		Utility::MYRESULT CreateDescriptorHeap(ID3D12Device& device);
 
 		/// <summary>
@@ -102,29 +108,29 @@ namespace NamelessEngine::Graphics
 		/// <summary>
 		///	親子共通の描画処理
 		/// </summary>
-		void CommonDraw(RenderingContext& renderContext);
+		void CommonDraw(DX12API::RenderingContext& renderContext);
 
 		/// <summary>
 		/// 階層メッシュ対応の描画(予定)
 		/// </summary>
 		/// <param name="renderContext"></param>
 		/// <param name="isRootMesh"></param>
-		void Draw(RenderingContext& renderContext, bool isRootMesh);
+		void Draw(DX12API::RenderingContext& renderContext, bool isRootMesh);
 
-		Utility::MYRESULT CreateAsChild(Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData);
+		Utility::MYRESULT CreateAsChild(Core::Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData);
 
 	public:
-		Utility::MYRESULT LoadFBX(Dx12GraphicsEngine& device, FBXMeshCreateData& meshCreateData);
+		Utility::MYRESULT LoadFBX(Core::Dx12GraphicsEngine& device, FBXMeshCreateData& meshCreateData);
 
-		void Draw(RenderingContext& renderContext);
+		void Draw(DX12API::RenderingContext& renderContext);
 
 		void SetConstantBuffer(
-			ID3D12Device& device, ConstantBuffer& constantBuffer,
-			const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+			ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer,
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
 
 		void SetTexture(
-			ID3D12Device& device, Texture& texture,
-			const int& registerNo = DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+			ID3D12Device& device, DX12API::Texture& texture,
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
 
 	};
 }

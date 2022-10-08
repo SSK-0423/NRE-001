@@ -2,16 +2,16 @@
 #include <d3d12.h>
 #include "EngineUtility.h"
 
-class DescriptorHeapRTV;
-class DescriptorHeapDSV;
-class DescriptorHeapCBV_SRV_UAV;
-class VertexBuffer;
-class IndexBuffer;
-class RootSignature;
-class GraphicsPipelineState;
-
 namespace NamelessEngine::DX12API
 {
+	class DescriptorHeapRTV;
+	class DescriptorHeapDSV;
+	class DescriptorHeapCBV_SRV_UAV;
+	class VertexBuffer;
+	class IndexBuffer;
+	class RootSignature;
+	class GraphicsPipelineState;
+	
 	/// <summary>
 	/// レンダリングコンテキストクラス このクラスを介して描画命令を発行する
 	/// </summary>

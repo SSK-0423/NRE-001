@@ -4,6 +4,8 @@
 
 #pragma comment(lib,"d3dcompiler.lib")
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	HRESULT Shader::CompileShader(
@@ -51,23 +53,23 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT Shader::Create(
+	MYRESULT Shader::Create(
 		const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderTypeAndVersion)
 	{
 		// シェーダーをコンパイル
 		if (FAILED(CompileShader(shaderFilePass, entoryPointName, shaderTypeAndVersion))) {
-			return Utility::MYRESULT::FAILED;
+			return MYRESULT::FAILED;
 		}
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT Shader::Create(const ShaderData& shaderData)
+	MYRESULT Shader::Create(const ShaderData& shaderData)
 	{
-		Utility::MYRESULT result =
+		MYRESULT result =
 			Create(shaderData.shaderFilePass, shaderData.entoryPointName, shaderData.shaderType);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == MYRESULT::FAILED) { return result; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 }

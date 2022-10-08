@@ -4,6 +4,8 @@
 #include "DepthStencilBuffer.h"
 
 using namespace DirectX;
+using namespace NamelessEngine::Utility;
+using namespace NamelessEngine::Core;
 
 namespace NamelessEngine::DX12API
 {
@@ -298,39 +300,39 @@ namespace NamelessEngine::DX12API
 		_metaData.dimension = DirectX::TEX_DIMENSION_TEXTURE2D;
 	}
 
-	Utility::MYRESULT Texture::CreateTextureFromWIC(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+	MYRESULT Texture::CreateTextureFromWIC(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ファイル読み込み
-		if (FAILED(LoadTextureFromWICFile(texturePath))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(LoadTextureFromWICFile(texturePath))) { return MYRESULT::FAILED; }
 		// バッファー生成
-		if (FAILED(CreateUploadAndTextureBuffer(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapTexture())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyTexture(device, graphicsEngine))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+	MYRESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ファイル読み込み
-		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return MYRESULT::FAILED; }
 		// バッファー生成
-		if (FAILED(CreateUploadAndTextureBuffer(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapTexture())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyTexture(device, graphicsEngine))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT Texture::CreateTextureFromRGBAData(
+	MYRESULT Texture::CreateTextureFromRGBAData(
 		Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
 		const size_t& width, const size_t& height, const DXGI_FORMAT& format)
 	{
@@ -339,12 +341,12 @@ namespace NamelessEngine::DX12API
 		// テクスチャ生成用データ用意
 		SetTextureData(data, width, height, format);
 		// バッファー生成
-		if (FAILED(CreateUploadAndTextureBuffer(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapTexture())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyTexture(device, graphicsEngine))) { return Utility::MYRESULT::FAILED; }
-		return Utility::MYRESULT::SUCCESS;
+		if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
+		return MYRESULT::SUCCESS;
 	}
 
 	void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer)
@@ -373,18 +375,18 @@ namespace NamelessEngine::DX12API
 		_metaData.mipLevels = 1;
 	}
 
-	Utility::MYRESULT Texture::CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+	MYRESULT Texture::CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ファイル読み込み
-		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return MYRESULT::FAILED; }
 		// バッファー生成
-		if (FAILED(CreateUploadAndCubeTextureBuffer(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndCubeTextureBuffer(device))) { return MYRESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyCubeTexture(graphicsEngine))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CopyCubeTexture(graphicsEngine))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 }

@@ -7,6 +7,8 @@
 
 #include "ShaderResourceViewDesc.h"
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	HRESULT DescriptorHeapCBV_SRV_UAV::CreateDescriptorHeap(ID3D12Device& device)
@@ -24,15 +26,15 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT DescriptorHeapCBV_SRV_UAV::Create(ID3D12Device& device)
+	MYRESULT DescriptorHeapCBV_SRV_UAV::Create(ID3D12Device& device)
 	{
 		// ハンドルのインクリメントサイズ取得
 		_handleIncrimentSize = device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 		// ディスクリプタヒープ生成
-		if (FAILED(CreateDescriptorHeap(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateDescriptorHeap(device))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 	void DescriptorHeapCBV_SRV_UAV::RegistShaderResource(

@@ -1,5 +1,7 @@
 #include "IndexBuffer.h"
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	HRESULT IndexBuffer::CreateIndexBufferAndView(ID3D12Device& device, const std::vector<UINT>& index)
@@ -38,17 +40,17 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT IndexBuffer::Create(ID3D12Device& device, const std::vector<UINT>& index)
+	MYRESULT IndexBuffer::Create(ID3D12Device& device, const std::vector<UINT>& index)
 	{
 		// インデックス数記録
 		_indexNum = static_cast<UINT>(index.size());
 
 		// インデックスバッファーとビュー生成
-		if (FAILED(CreateIndexBufferAndView(device, index))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateIndexBufferAndView(device, index))) { return MYRESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapIndexBuffer(index))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(MapIndexBuffer(index))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 }

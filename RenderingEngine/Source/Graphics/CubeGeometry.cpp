@@ -287,5 +287,4 @@ namespace NamelessEngine::Graphics
 				return idx;
 		}
 	}
-
 }

@@ -84,6 +84,4 @@ namespace NamelessEngine::Core
 
 		return size;
 	}
-
-
 }

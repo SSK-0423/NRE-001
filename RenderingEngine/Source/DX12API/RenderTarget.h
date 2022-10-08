@@ -2,8 +2,17 @@
 
 #include "EngineUtility.h"
 
+#include "Texture.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
+#include "RenderTargetBuffer.h"
+#include "DepthStencilBuffer.h"
+#include "DescriptorHeapRTV.h"
+#include "DescriptorHeapDSV.h"
+
 namespace NamelessEngine::DX12API
 {
+	class RenderingContext;
+
 	struct RenderTargetData
 	{
 		RenderTargetBufferData renderTargetBufferData;	// レンダーターゲットバッファー用データ

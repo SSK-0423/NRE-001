@@ -6,6 +6,7 @@
 #pragma comment(lib,"d3d12.lib")
 
 #include "EngineUtility.h"
+
 namespace NamelessEngine::DX12API
 {
 	/// <summary>

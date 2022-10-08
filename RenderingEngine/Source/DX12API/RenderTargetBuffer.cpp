@@ -1,6 +1,8 @@
 #include "RenderTargetBuffer.h"
 #include "d3dx12.h"
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	RenderTargetBufferData::RenderTargetBufferData(
@@ -13,7 +15,7 @@ namespace NamelessEngine::DX12API
 		clearColor[3] = color[3];
 	}
 
-	Utility::MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, const RenderTargetBufferData& data)
+	MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, const RenderTargetBufferData& data)
 	{
 		CD3DX12_HEAP_PROPERTIES heapProp(D3D12_HEAP_TYPE_DEFAULT);
 		CD3DX12_RESOURCE_DESC resDesc = CD3DX12_RESOURCE_DESC::Tex2D(data.colorFormat, data.width, data.height);
@@ -28,19 +30,19 @@ namespace NamelessEngine::DX12API
 			&clearValue,
 			IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
 
-		if (FAILED(result)) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(result)) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, IDXGISwapChain3& swapchain, const size_t& index)
+	MYRESULT RenderTargetBuffer::Create(ID3D12Device& device, IDXGISwapChain3& swapchain, const size_t& index)
 	{
 		HRESULT result = swapchain.GetBuffer(index, IID_PPV_ARGS(_rtvBuffer.ReleaseAndGetAddressOf()));
-		if (FAILED(result)) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(result)) { return MYRESULT::FAILED; }
 
 		// MipLevel = 1
 		auto resDesc = _rtvBuffer->GetDesc();
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 }

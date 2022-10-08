@@ -9,14 +9,15 @@
 #pragma comment(lib,"DirectXTex.lib")
 #pragma comment(lib,"dxguid.lib")
 
-#include "EngineUtility.h"
+#include "Dx12GraphicsEngine.h"
 
-class Dx12GraphicsEngine;
-class RenderTargetBuffer;
-class DepthStencilBuffer;
+#include "EngineUtility.h"
 
 namespace NamelessEngine::DX12API
 {
+	class RenderTargetBuffer;
+	class DepthStencilBuffer;
+	
 	class Texture {
 	public:
 		Texture() = default;
@@ -74,9 +75,9 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="graphicsEngine">グラフィクスエンジン</param>
 		/// <returns></returns>
-		HRESULT CopyTexture(ID3D12Device& device, Dx12GraphicsEngine& graphicsEngine);
+		HRESULT CopyTexture(ID3D12Device& device, Core::Dx12GraphicsEngine& graphicsEngine);
 
-		HRESULT CopyCubeTexture(Dx12GraphicsEngine& graphicsEngine);
+		HRESULT CopyCubeTexture(Core::Dx12GraphicsEngine& graphicsEngine);
 
 		void SetTextureData(
 			std::vector<Utility::ColorRGBA>& data, const size_t& width, const size_t& height, const DXGI_FORMAT& format);
@@ -88,7 +89,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="graphicsEngine">グラフィクスエンジン</param>
 		/// <param name="texturePath">テクスチャへのパス</param>
 		/// <returns>成功：Utility::MYRESULT::SUCCESS 失敗：Utility::MYRESULT::FAILED</returns>
-		Utility::MYRESULT CreateTextureFromWIC(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+		Utility::MYRESULT CreateTextureFromWIC(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 		/// <summary>
 		/// DDSファイルからテクスチャを生成
@@ -96,7 +97,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="graphicsEngine">グラフィクスエンジン</param>
 		/// <param name="texturePath">テクスチャへのパス</param>
 		/// <returns>成功：Utility::MYRESULT::SUCCESS 失敗：Utility::MYRESULT::FAILED</returns>
-		Utility::MYRESULT CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+		Utility::MYRESULT CreateTextureFromDDS(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 		/// <summary>
 		/// 用意したRGBAデータからテクスチャ生成
@@ -107,7 +108,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="height"></param>
 		/// <returns></returns>
 		Utility::MYRESULT CreateTextureFromRGBAData(
-			Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
+			Core::Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
 			const size_t& width, const size_t& height, const DXGI_FORMAT& format);
 
 		/// <summary>
@@ -122,7 +123,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="depthStencilBuffer">デプスステンシルバッファー</param>
 		void CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuffer);
 
-		Utility::MYRESULT CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+		Utility::MYRESULT CreateCubeTextureFromDDS(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 		/// <summary>
 		/// テクスチャバッファー取得

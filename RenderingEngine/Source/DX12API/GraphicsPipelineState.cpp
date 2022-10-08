@@ -1,15 +1,16 @@
 #include "GraphicsPipelineState.h"
 
+using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::DX12API
 {
-	Utility::MYRESULT GraphicsPipelineState::Create(
+	MYRESULT GraphicsPipelineState::Create(
 		ID3D12Device& device, const D3D12_GRAPHICS_PIPELINE_STATE_DESC& piplineStateDesc)
 	{
 		// グラフィックスパイプラインステート生成
-		if (FAILED(CreateGraphicsPipelineState(device, piplineStateDesc))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateGraphicsPipelineState(device, piplineStateDesc))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 	HRESULT GraphicsPipelineState::CreateGraphicsPipelineState(

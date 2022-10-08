@@ -2,6 +2,8 @@
 #include "d3dx12.h"
 #include <stdio.h>
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	DepthStencilBufferData::DepthStencilBufferData(
@@ -12,7 +14,7 @@ namespace NamelessEngine::DX12API
 	{
 	}
 
-	Utility::MYRESULT DepthStencilBuffer::Create(ID3D12Device& device, const DepthStencilBufferData& data)
+	MYRESULT DepthStencilBuffer::Create(ID3D12Device& device, const DepthStencilBufferData& data)
 	{
 		_depthStencilBufferData = data;
 
@@ -29,8 +31,8 @@ namespace NamelessEngine::DX12API
 			&clearValue,
 			IID_PPV_ARGS(_dsvBuffer.ReleaseAndGetAddressOf()));
 
-		if (FAILED(result)) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(result)) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 }

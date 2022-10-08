@@ -1,5 +1,7 @@
 #include "VertexBuffer.h"
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	HRESULT VertexBuffer::CreateVertexBufferAndView(ID3D12Device& device, const UINT& sizeInBytes, const UINT& stribeInBytes)
@@ -39,17 +41,17 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT VertexBuffer::Create(
+	MYRESULT VertexBuffer::Create(
 		ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes)
 	{
 		// 頂点数記録
 		_vertexNum = sizeInBytes / stribeInBytes;
 
 		// バッファーとビュー生成
-		if (FAILED(CreateVertexBufferAndView(device, sizeInBytes, stribeInBytes))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateVertexBufferAndView(device, sizeInBytes, stribeInBytes))) { return MYRESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapVertexBuffer(vertexData, sizeInBytes))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(MapVertexBuffer(vertexData, sizeInBytes))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 }

@@ -47,10 +47,10 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
+    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
       <Filter>リソース ファイル\Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
+    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
       <Filter>リソース ファイル\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
@@ -236,6 +236,9 @@
     </ClInclude>
     <ClInclude Include="Source\Core\Dx12GraphicsEngine.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NamelessEngine.h">
+      <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

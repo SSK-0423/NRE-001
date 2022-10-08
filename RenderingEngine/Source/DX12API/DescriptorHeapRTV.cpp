@@ -3,6 +3,8 @@
 #include "DescriptorHeapRTV.h"
 #include "RenderTargetBuffer.h"
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	HRESULT DescriptorHeapRTV::CreateDescriptorHeap(ID3D12Device& device)
@@ -20,16 +22,16 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT DescriptorHeapRTV::Create(ID3D12Device& device)
+	MYRESULT DescriptorHeapRTV::Create(ID3D12Device& device)
 	{
 		// ハンドルのインクリメントサイズ取得
 		_handleIncrimentSize =
 			static_cast<SIZE_T>(device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
 
 		// ディスクリプタヒープ生成
-		if (FAILED(CreateDescriptorHeap(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateDescriptorHeap(device))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapRTV::GetNextCPUDescriptorHandle()

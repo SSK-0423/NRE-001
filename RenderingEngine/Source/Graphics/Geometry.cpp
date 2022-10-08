@@ -1,17 +1,22 @@
 #include "Geometry.h"
 
-Geometry::Geometry(GeometryImpl* impl)
-{
-}
+using namespace NamelessEngine::DX12API;
 
-void Geometry::Draw(RenderingContext& renderContext)
+namespace NamelessEngine::Graphics
 {
-}
+	Geometry::Geometry(GeometryImpl* impl)
+	{
+	}
 
-void Geometry::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
-{
-}
+	void Geometry::Draw(DX12API::RenderingContext& renderContext)
+	{
+	}
 
-void Geometry::SetTexture(ID3D12Device& device, Texture& texture, const int& registerNo)
-{
+	void Geometry::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
+	{
+	}
+
+	void Geometry::SetTexture(ID3D12Device& device, Texture& texture, const int& registerNo)
+	{
+	}
 }

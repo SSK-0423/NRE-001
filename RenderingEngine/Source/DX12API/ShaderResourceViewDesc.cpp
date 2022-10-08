@@ -1,4 +1,5 @@
 #include "ShaderResourceViewDesc.h"
+#include "Texture.h"
 
 namespace NamelessEngine::DX12API
 {

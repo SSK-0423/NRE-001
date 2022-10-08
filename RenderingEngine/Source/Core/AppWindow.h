@@ -5,8 +5,8 @@
 namespace NamelessEngine::Core
 {
 	/// <summary>
-/// ウィンドウの設定
-/// </summary>
+	/// ウィンドウの設定
+	/// </summary>
 	struct AppWindowInitData
 	{
 		const TCHAR* windowName;	// ウィンドウ名

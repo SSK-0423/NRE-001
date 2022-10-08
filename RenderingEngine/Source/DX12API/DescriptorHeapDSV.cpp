@@ -1,6 +1,8 @@
 #include "DescriptorHeapDSV.h"
 #include "DepthStencilBuffer.h"
 
+using namespace NamelessEngine::Utility;
+
 namespace NamelessEngine::DX12API
 {
 	HRESULT DescriptorHeapDSV::CreateDescriptorHeap(ID3D12Device& device)
@@ -18,16 +20,16 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	Utility::MYRESULT DescriptorHeapDSV::Create(ID3D12Device& device)
+	MYRESULT DescriptorHeapDSV::Create(ID3D12Device& device)
 	{
 		// ハンドルのインクリメントサイズ取得
 		_handleIncrimentSize =
 			static_cast<SIZE_T>(device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV));
 
 		// ディスクリプタヒープ生成
-		if (FAILED(CreateDescriptorHeap(device))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateDescriptorHeap(device))) { return MYRESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return MYRESULT::SUCCESS;
 	}
 
 	void DescriptorHeapDSV::RegistDescriptor(ID3D12Device& device, DepthStencilBuffer& buffer)
