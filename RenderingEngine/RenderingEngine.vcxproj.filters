@@ -13,9 +13,6 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="リソース ファイル\Shaders">
-      <UniqueIdentifier>{6442e833-4c26-4dd9-bd0e-0d95d6f023e7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="DX12API">
       <UniqueIdentifier>{0f4cc2f4-e394-4f27-998b-4a04c789bb93}</UniqueIdentifier>
     </Filter>
@@ -34,33 +31,36 @@
     <Filter Include="Scene">
       <UniqueIdentifier>{af01264b-0de1-4974-9728-505e77f094e2}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{5f15fab1-aeef-4903-983d-ec9f715ae50c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PBR.hlsli">
-      <Filter>リソース ファイル\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\PhongReflectionModel.hlsli">
-      <Filter>リソース ファイル\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\ShaderCommon.hlsli">
-      <Filter>リソース ファイル\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\SkyBoxHeader.hlsli">
-      <Filter>リソース ファイル\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
-      <Filter>リソース ファイル\Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
-      <Filter>リソース ファイル\Shaders</Filter>
+    <FxCompile Include="Shaders\GeometryPS.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\GeometryVS.hlsl">
-      <Filter>リソース ファイル\Shaders</Filter>
+      <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="Shaders\GeometryPS.hlsl">
-      <Filter>リソース ファイル\Shaders</Filter>
+    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>

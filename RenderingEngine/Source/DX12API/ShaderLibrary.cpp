@@ -4,11 +4,18 @@ using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::DX12API
 {
-	static const TCHAR* SHADER_FOLDER_PASS = L"../Shaders/";
+	static const TCHAR* SHADER_FOLDER_PASS = L"../RenderingEngine/Shaders/";
 	static const UINT BUFFSIZE = 128;
 
 	ShaderLibrary::ShaderLibrary()
 	{
+		_shaderTypeMap[SHADERTYPE::VERTEX] = "vs_5_0";
+		_shaderTypeMap[SHADERTYPE::PIXEL] = "ps_5_0";
+
+		RegistShader(L"GeometryVS", "GeometryVS", SHADERTYPE::VERTEX);
+		RegistShader(L"GeometryPS", "GeometryPS", SHADERTYPE::PIXEL);
+		RegistShader(L"SkyBoxVS", "SkyBoxVS", SHADERTYPE::VERTEX);
+		RegistShader(L"SkyBoxPS", "SkyBoxPS", SHADERTYPE::PIXEL);
 	}
 	ShaderLibrary::~ShaderLibrary()
 	{
@@ -18,14 +25,17 @@ namespace NamelessEngine::DX12API
 		static ShaderLibrary inst;
 		return inst;
 	}
-	void ShaderLibrary::RegistShader(const TCHAR* shaderFileName, const char* entryPointName, const char* shaderType, const std::string& shaderTag)
+	void ShaderLibrary::RegistShader(
+		const TCHAR* shaderFileName, const std::string& shaderTag, 
+		SHADERTYPE shaderType, const char* entryPointName)
 	{
-		Shader shader;
 		TCHAR shaderFilePass[BUFFSIZE];
 		lstrcpyn(shaderFilePass, SHADER_FOLDER_PASS, BUFFSIZE);
 		lstrcat(shaderFilePass, shaderFileName);
+		lstrcat(shaderFilePass, L".hlsl");
 
-		RESULT result = shader.Create(shaderFilePass, entryPointName, shaderType);
+		Shader shader;
+		RESULT result = shader.Create(shaderFilePass, entryPointName, _shaderTypeMap[shaderType]);
 		if (result == RESULT::FAILED) {
 			TCHAR errorMessage[BUFFSIZE];
 			lstrcpyn(errorMessage, L"ShaderCompileFailed FileName \"", BUFFSIZE);
@@ -34,6 +44,7 @@ namespace NamelessEngine::DX12API
 			MessageBoxW(NULL, errorMessage, L"エラーメッセージ", MB_OK);
 		}
 
+		_shaderMap[shaderTag] = shader;
 	}
 	Shader* ShaderLibrary::GetShader(const std::string& shaderTag)
 	{

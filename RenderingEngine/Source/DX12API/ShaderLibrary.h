@@ -6,6 +6,11 @@
 #include "EngineUtility.h"
 
 namespace NamelessEngine::DX12API {
+	enum class SHADERTYPE {
+		VERTEX,
+		PIXEL
+	};
+
 	class ShaderLibrary {
 	private:
 		ShaderLibrary();
@@ -14,14 +19,15 @@ namespace NamelessEngine::DX12API {
 		void operator=(const ShaderLibrary& inst) = delete;
 
 		std::unordered_map<std::string, Shader> _shaderMap;
+		std::unordered_map<SHADERTYPE, const char*> _shaderTypeMap;
 
 	public:
 		static ShaderLibrary& Instance();
 
 		void RegistShader(
-			const TCHAR* shaderFilePass, const char* entoryPointName, 
-			const char* shaderType, const std::string& shaderTag);
-		
+			const TCHAR* shaderFileName, const std::string& shaderTag,
+			SHADERTYPE shaderType, const char* entryPointName = "main");
+
 		Shader* GetShader(const std::string& shaderTag);
 	};
 }
