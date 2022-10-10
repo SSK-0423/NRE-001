@@ -14,7 +14,7 @@ namespace NamelessEngine::Graphics
 		}
 	}
 
-	MYRESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const PolygonData& data)
+	RESULT Polygon::CreateGraphicsPipelineState(ID3D12Device& device, const PolygonData& data)
 	{
 		/// 必要なモノ
 		/// 頂点/ピクセルシェーダー
@@ -22,8 +22,8 @@ namespace NamelessEngine::Graphics
 		/// 頂点レイアウト
 
 		// ルートシグネチャ生成
-		MYRESULT result = _rootSignature.Create(device, data.rootSignatureData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _rootSignature.Create(device, data.rootSignatureData);
+		if (result == RESULT::FAILED) { return result; }
 
 		// ルートシグネチャとシェーダーセット
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
@@ -70,7 +70,7 @@ namespace NamelessEngine::Graphics
 		return _graphicsPipelineState.Create(device, pipelineState);
 	}
 
-	MYRESULT Polygon::Create(ID3D12Device& device, const PolygonData& data)
+	RESULT Polygon::Create(ID3D12Device& device, const PolygonData& data)
 	{
 		_vertexBuffer = data.vertexBuffer;
 		_indexBuffer = data.indexBuffer;

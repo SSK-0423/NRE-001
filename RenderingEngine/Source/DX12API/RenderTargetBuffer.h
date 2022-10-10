@@ -48,8 +48,8 @@ namespace NamelessEngine::DX12API
 		/// </summary>
 		/// <param name="device">デバイス</param>
 		/// <param name="data">レンダーターゲットの設定</param>
-		/// <returns>Utility::MYRESULT::SUCCESS: 成功 Utility::MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Create(ID3D12Device& device, const RenderTargetBufferData& data);
+		/// <returns>Utility::RESULT::SUCCESS: 成功 Utility::RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Create(ID3D12Device& device, const RenderTargetBufferData& data);
 
 		/// <summary>
 		/// フレームバッファ用のレンダーターゲットバッファー生成
@@ -57,8 +57,8 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="swapchain">スワップチェーン</param>
 		/// <param name="index">生成するバッファのインデックス ダブルバッファリングなら0か1</param>
-		/// <returns>Utility::MYRESULT::SUCCESS: 成功 Utility::MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Create(ID3D12Device& device, IDXGISwapChain3& swapchain, const size_t& index);
+		/// <returns>Utility::RESULT::SUCCESS: 成功 Utility::RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Create(ID3D12Device& device, IDXGISwapChain3& swapchain, const size_t& index);
 
 		/// <summary>
 		/// バッファー取得

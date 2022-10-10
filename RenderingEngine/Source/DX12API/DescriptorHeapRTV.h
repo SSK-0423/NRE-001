@@ -40,8 +40,8 @@ namespace NamelessEngine::DX12API
 		/// RTV用ディスクリプタヒープ生成 これを実行することでディスクリプタヒープが扱えるようになる
 		/// </summary>
 		/// <param name="device"></param>
-		/// <returns>Utility::MYRESULT::SUCCESS: 成功 Utility::MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Create(ID3D12Device& device);
+		/// <returns>Utility::RESULT::SUCCESS: 成功 Utility::RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Create(ID3D12Device& device);
 
 		/// <summary>
 		/// CPUのディスクリプタヒープの先頭ハンドルを取得

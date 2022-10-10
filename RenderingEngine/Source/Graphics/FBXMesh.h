@@ -20,8 +20,6 @@
 
 #include "EngineUtility.h"
 
-
-
 namespace NamelessEngine::Graphics
 {
 	class FBXLoader;
@@ -83,13 +81,13 @@ namespace NamelessEngine::Graphics
 		std::vector<FBXMeshData> _meshDataList;		// メッシュ情報のリスト
 
 		DX12API::VertexBuffer* _vertexBuffer = nullptr;
-		Utility::MYRESULT CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData);
+		Utility::RESULT CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
 		DX12API::IndexBuffer* _indexBuffer = nullptr;
-		Utility::MYRESULT CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData);
+		Utility::RESULT CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData);
 
 		DX12API::GraphicsPipelineState* _graphicsPipelineState = nullptr;
-		Utility::MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& meshData);
+		Utility::RESULT CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& meshData);
 
 		DX12API::RootSignature* _rootSignature = nullptr;
 
@@ -97,7 +95,7 @@ namespace NamelessEngine::Graphics
 
 		// ディスクリプタヒープ
 		DX12API::DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
-		Utility::MYRESULT CreateDescriptorHeap(ID3D12Device& device);
+		Utility::RESULT CreateDescriptorHeap(ID3D12Device& device);
 
 		/// <summary>
 		/// マテリアルセット
@@ -117,20 +115,20 @@ namespace NamelessEngine::Graphics
 		/// <param name="isRootMesh"></param>
 		void Draw(DX12API::RenderingContext& renderContext, bool isRootMesh);
 
-		Utility::MYRESULT CreateAsChild(Core::Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData);
+		Utility::RESULT CreateAsChild(Core::Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData);
 
 	public:
-		Utility::MYRESULT LoadFBX(Core::Dx12GraphicsEngine& device, FBXMeshCreateData& meshCreateData);
+		Utility::RESULT LoadFBX(Core::Dx12GraphicsEngine& device, FBXMeshCreateData& meshCreateData);
 
 		void Draw(DX12API::RenderingContext& renderContext);
 
 		void SetConstantBuffer(
 			ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer,
-			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
 
 		void SetTexture(
 			ID3D12Device& device, DX12API::Texture& texture,
-			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::_NEXT_REGISTER);
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
 
 	};
 }

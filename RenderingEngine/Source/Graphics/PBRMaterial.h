@@ -42,16 +42,16 @@ namespace NamelessEngine::Graphics
 		/// ダミーとなる真っ白なテクスチャ生成
 		/// </summary>
 		/// <returns></returns>
-		Utility::MYRESULT CreateDammyTexture(Core::Dx12GraphicsEngine& graphicsEngine);
+		Utility::RESULT CreateDammyTexture(Core::Dx12GraphicsEngine& graphicsEngine);
 
-		Utility::MYRESULT LoadPBRTextures(Core::Dx12GraphicsEngine& graphicsEngine);
+		Utility::RESULT LoadPBRTextures(Core::Dx12GraphicsEngine& graphicsEngine);
 
 	public:
 		/// <summary>
 		/// マテリアルを利用可能な状態にする
 		/// </summary>
 		/// <returns></returns>
-		Utility::MYRESULT Commit();
+		Utility::RESULT Commit();
 
 		void ApplyMaterial(FBXMesh& mesh) override;
 

@@ -63,7 +63,7 @@ namespace NamelessEngine::Graphics
 		/// </summary>
 		/// <param name="device"></param>
 		/// <returns></returns>
-		Utility::MYRESULT CreatePolygon(ID3D12Device& device, SpriteData& spriteData);
+		Utility::RESULT CreatePolygon(ID3D12Device& device, SpriteData& spriteData);
 
 		/// <summary>
 		/// テクスチャリソース生成
@@ -72,7 +72,7 @@ namespace NamelessEngine::Graphics
 		/// <param name="device">デバイス</param>
 		/// <param name="spriteData">スプライトデータ</param>
 		/// <returns></returns>
-		Utility::MYRESULT CreateTextureResource(
+		Utility::RESULT CreateTextureResource(
 			Core::Dx12GraphicsEngine& graphicsEngine, ID3D12Device& device, SpriteData& spriteData);
 
 	public:
@@ -82,7 +82,7 @@ namespace NamelessEngine::Graphics
 		/// <param name="device"></param>
 		/// <param name="spriteData"></param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(Core::Dx12GraphicsEngine& graphcisEngine, SpriteData& spriteData);
+		Utility::RESULT Create(Core::Dx12GraphicsEngine& graphcisEngine, SpriteData& spriteData);
 
 		/// <summary>
 		/// 描画

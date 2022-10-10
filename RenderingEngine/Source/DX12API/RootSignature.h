@@ -115,7 +115,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="data">ルートシグネチャの設定</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device, const RootSignatureData& data);
+		Utility::RESULT Create(ID3D12Device& device, const RootSignatureData& data);
 
 		/// <summary>
 		/// ルートシグネチャ生成
@@ -125,7 +125,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="samplerDescs"></param>
 		/// <param name="samplerNum"></param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(
+		Utility::RESULT Create(
 			ID3D12Device& device, const DescriptorRangeData& descRangeData,
 			const D3D12_STATIC_SAMPLER_DESC& samplerDescs, UINT samplerNum);
 

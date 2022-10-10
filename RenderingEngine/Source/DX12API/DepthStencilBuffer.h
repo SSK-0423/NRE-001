@@ -52,8 +52,8 @@ namespace NamelessEngine::DX12API
 		/// </summary>
 		/// <param name="device">デバイス</param>
 		/// <param name="data">デプスステンシルバッファーの設定</param>
-		/// <returns>MYRESULT::SUCCESS: 成功 MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Create(ID3D12Device& device, const DepthStencilBufferData& data);
+		/// <returns>RESULT::SUCCESS: 成功 RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Create(ID3D12Device& device, const DepthStencilBufferData& data);
 
 		/// <summary>
 		/// バッファー取得

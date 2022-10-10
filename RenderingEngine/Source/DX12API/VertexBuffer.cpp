@@ -41,17 +41,17 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT VertexBuffer::Create(
+	RESULT VertexBuffer::Create(
 		ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes)
 	{
 		// 頂点数記録
 		_vertexNum = sizeInBytes / stribeInBytes;
 
 		// バッファーとビュー生成
-		if (FAILED(CreateVertexBufferAndView(device, sizeInBytes, stribeInBytes))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateVertexBufferAndView(device, sizeInBytes, stribeInBytes))) { return RESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapVertexBuffer(vertexData, sizeInBytes))) { return MYRESULT::FAILED; }
+		if (FAILED(MapVertexBuffer(vertexData, sizeInBytes))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 }

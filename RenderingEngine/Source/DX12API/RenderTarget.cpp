@@ -14,28 +14,28 @@ using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::DX12API
 {
-	MYRESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTargetData)
+	RESULT RenderTarget::Create(ID3D12Device& device, RenderTargetData& renderTargetData)
 	{
 		_renderTargetData = renderTargetData;
 
 		// レンダーターゲット生成
-		MYRESULT result = _renderTargetBuffer.Create(device, renderTargetData.renderTargetBufferData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _renderTargetBuffer.Create(device, renderTargetData.renderTargetBufferData);
+		if (result == RESULT::FAILED) { return result; }
 
 		// レンダーターゲットヒープ生成
 		result = _rtvHeap.Create(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// レンダーターゲットビュー生成
 		_rtvHeap.RegistDescriptor(device, _renderTargetBuffer);
 
 		// デプスステンシルバッファー生成
 		result = _depthStencilBuffer.Create(device, renderTargetData.depthStencilBufferData);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// デプスステンシル用ディスクリプタヒープ生成
 		result = _dsvHeap.Create(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// デプスステンシルビュー生成
 		_dsvHeap.RegistDescriptor(device, _depthStencilBuffer);
@@ -48,7 +48,7 @@ namespace NamelessEngine::DX12API
 
 		// テクスチャ用ヒープ生成
 		result = _textureHeap.Create(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// テクスチャとして登録
 		ShaderResourceViewDesc renderDesc(_renderTargetTexture);
@@ -57,7 +57,7 @@ namespace NamelessEngine::DX12API
 		_textureHeap.RegistShaderResource(device, _renderTargetTexture, renderDesc);
 		_textureHeap.RegistShaderResource(device, _depthStencilTexture, depthDesc);
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	void RenderTarget::BeginRendering(RenderingContext& renderContext, CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect)

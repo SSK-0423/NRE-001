@@ -44,8 +44,8 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="data">バッファーに入れるデータ</param>
 		/// <param name="bufferSize">バッファーサイズ</param>
-		/// <returns>Utility::MYRESULT::SUCCESS: 成功 Utility::MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Create(ID3D12Device& device, void* data, const UINT& bufferSize);
+		/// <returns>Utility::RESULT::SUCCESS: 成功 Utility::RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Create(ID3D12Device& device, void* data, const UINT& bufferSize);
 
 		/// <summary>
 		/// バッファーのGPU上のバーチャルアドレス取得

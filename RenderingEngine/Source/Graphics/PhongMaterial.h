@@ -33,17 +33,17 @@ namespace NamelessEngine::Graphics
 		PhongMaterialBuff _material;
 
 		DX12API::ConstantBuffer _materialCBuffer;
-		Utility::MYRESULT CreateMaterialConstantBuffer(ID3D12Device& device);
+		Utility::RESULT CreateMaterialConstantBuffer(ID3D12Device& device);
 
 		DX12API::Texture _texture;
-		Utility::MYRESULT CreateTexture(Core::Dx12GraphicsEngine& graphicsEngine);
+		Utility::RESULT CreateTexture(Core::Dx12GraphicsEngine& graphicsEngine);
 
 	public:
 		/// <summary>
 		/// マテリアルを利用可能な状態にする
 		/// </summary>
 		/// <returns></returns>
-		Utility::MYRESULT Commit();
+		Utility::RESULT Commit();
 
 		void ApplyMaterial(FBXMesh& mesh) override;
 

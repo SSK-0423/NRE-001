@@ -79,7 +79,7 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT RootSignature::Create(ID3D12Device& device, const RootSignatureData& data)
+	RESULT RootSignature::Create(ID3D12Device& device, const RootSignatureData& data)
 	{
 		// STATIC_SAMPLER_DESC作成
 		SamplerData samplerData = data._samplerData;
@@ -92,15 +92,15 @@ namespace NamelessEngine::DX12API
 		return Create(device, data._descRangeData, samplerDesc, 1);
 	}
 
-	MYRESULT RootSignature::Create(
+	RESULT RootSignature::Create(
 		ID3D12Device& device, const DescriptorRangeData& descRangeData,
 		const D3D12_STATIC_SAMPLER_DESC& samplerDescs, UINT samplerNum)
 	{
 		// ルートシグネチャ生成
 		if (FAILED(CreateRootSignature(device, descRangeData, samplerDescs, samplerNum))) {
-			return MYRESULT::FAILED;
+			return RESULT::FAILED;
 		}
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 }

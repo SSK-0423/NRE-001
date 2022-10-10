@@ -29,7 +29,7 @@ namespace NamelessEngine::Graphics
 		SafetyDelete<RootSignature>(_rootSignature);
 	}
 
-	MYRESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
+	RESULT FBXMesh::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		if (_descriptorHeap != nullptr) { delete _descriptorHeap; }
 
@@ -45,29 +45,29 @@ namespace NamelessEngine::Graphics
 		material.ApplyMaterial(*this);
 	}
 
-	MYRESULT FBXMesh::CreateAsChild(Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData)
+	RESULT FBXMesh::CreateAsChild(Dx12GraphicsEngine& graphicsEngine, FBXMeshData& meshData)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// 頂点バッファ―生成
-		MYRESULT result = CreateVertexBuffer(device, meshData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = CreateVertexBuffer(device, meshData);
+		if (result == RESULT::FAILED) { return result; }
 
 		// インデックスバッファー生成
 		result = CreateIndexBuffer(device, meshData);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// ディスクリプタヒープ生成
 		result = CreateDescriptorHeap(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// マテリアルセット
 		SetMaterial(*meshData.material);
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData& meshCreateData)
+	RESULT FBXMesh::LoadFBX(Dx12GraphicsEngine& graphicsEngine, FBXMeshCreateData& meshCreateData)
 	{
 		// ローダー用意
 		FBXLoader* _fbxLoader = new FBXLoader();
@@ -85,15 +85,15 @@ namespace NamelessEngine::Graphics
 		// FBX読み込み
 		if (!_fbxLoader->Load(_meshDataList, loadData))
 		{
-			return MYRESULT::FAILED;
+			return RESULT::FAILED;
 		}
 
 		// グラフィクスパイプラインステート生成
-		MYRESULT result = CreateGraphicsPipelineState(graphicsEngine.Device(), meshCreateData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = CreateGraphicsPipelineState(graphicsEngine.Device(), meshCreateData);
+		if (result == RESULT::FAILED) { return result; }
 		// ディスクリプタヒープ生成
 		result = CreateDescriptorHeap(graphicsEngine.Device());
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// マテリアルを分けるためにマテリアル毎にFBXMeshを生成
 		_childs.resize(_meshDataList.size());
@@ -101,14 +101,14 @@ namespace NamelessEngine::Graphics
 
 			FBXMesh* child = new FBXMesh();
 			result = child->CreateAsChild(graphicsEngine, _meshDataList[idx]);
-			if (result == MYRESULT::FAILED) { return result; }
+			if (result == RESULT::FAILED) { return result; }
 
 			_childs[idx] = child;
 		}
 
 		delete _fbxLoader;
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	void FBXMesh::CommonDraw(RenderingContext& renderContext)
@@ -178,7 +178,7 @@ namespace NamelessEngine::Graphics
 		_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
 	}
 
-	MYRESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)
+	RESULT FBXMesh::CreateVertexBuffer(ID3D12Device& device, FBXMeshData& meshData)
 	{
 		// 頂点バッファー生成
 		std::vector<FBXMeshVertex>& vertices = meshData.vertices;
@@ -186,14 +186,14 @@ namespace NamelessEngine::Graphics
 		if (_vertexBuffer != nullptr) { delete _vertexBuffer; }
 		_vertexBuffer = new VertexBuffer();
 
-		MYRESULT result = _vertexBuffer->Create(
+		RESULT result = _vertexBuffer->Create(
 			device, &vertices[0], SizeofVector(vertices), sizeof(FBXMeshVertex));
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT FBXMesh::CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData)
+	RESULT FBXMesh::CreateIndexBuffer(ID3D12Device& device, FBXMeshData& meshData)
 	{
 		// インデックスバッファー生成
 		std::vector<unsigned int>& indices = meshData.indices;
@@ -201,20 +201,20 @@ namespace NamelessEngine::Graphics
 		if (_indexBuffer != nullptr) { delete _indexBuffer; }
 		_indexBuffer = new IndexBuffer();
 
-		MYRESULT result = _indexBuffer->Create(device, indices);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _indexBuffer->Create(device, indices);
+		if (result == RESULT::FAILED) { return result; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT FBXMesh::CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& data)
+	RESULT FBXMesh::CreateGraphicsPipelineState(ID3D12Device& device, FBXMeshCreateData& data)
 	{
 		// ルートシグネチャ生成
 		if (_rootSignature != nullptr) delete _rootSignature;
 		_rootSignature = new RootSignature();
 
-		MYRESULT result = _rootSignature->Create(device, data.rootSignatureData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _rootSignature->Create(device, data.rootSignatureData);
+		if (result == RESULT::FAILED) { return result; }
 
 		// ルートシグネチャとシェーダーセット
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};

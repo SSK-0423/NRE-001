@@ -53,23 +53,23 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT Shader::Create(
+	RESULT Shader::Create(
 		const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderTypeAndVersion)
 	{
 		// シェーダーをコンパイル
 		if (FAILED(CompileShader(shaderFilePass, entoryPointName, shaderTypeAndVersion))) {
-			return MYRESULT::FAILED;
+			return RESULT::FAILED;
 		}
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT Shader::Create(const ShaderData& shaderData)
+	RESULT Shader::Create(const ShaderData& shaderData)
 	{
-		MYRESULT result =
+		RESULT result =
 			Create(shaderData.shaderFilePass, shaderData.entoryPointName, shaderData.shaderType);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 }

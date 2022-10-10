@@ -49,7 +49,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="sizeInBytes">バッファーの全サイズ</param>
 		/// <param name="stribeInBytes">１要素辺りのサイズ</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes);
+		Utility::RESULT Create(ID3D12Device& device, void* vertexData, const UINT& sizeInBytes, const UINT& stribeInBytes);
 
 		/// <summary>
 		/// 頂点バッファービュー取得

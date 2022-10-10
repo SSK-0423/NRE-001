@@ -11,7 +11,7 @@ using namespace NamelessEngine::Core;
 
 namespace NamelessEngine::Graphics
 {
-	MYRESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
+	RESULT Sprite::CreatePolygon(ID3D12Device& device, SpriteData& spriteData)
 	{
 		// 四角形ポリゴン
 		std::vector<PolygonVertex> squareVertex(4);
@@ -21,7 +21,7 @@ namespace NamelessEngine::Graphics
 		squareVertex[3] = { {1.f,1.f,0.f},{1.f,0.f} };
 
 		// 頂点バッファー生成
-		MYRESULT result = _vertexBuffer.Create(device, (void*)&squareVertex[0],
+		RESULT result = _vertexBuffer.Create(device, (void*)&squareVertex[0],
 			SizeofVector<PolygonVertex>(squareVertex), sizeof(PolygonVertex));
 
 		// 四角形ポリゴンのインデックスデータ用意
@@ -34,9 +34,9 @@ namespace NamelessEngine::Graphics
 
 		// シェーダー
 		result = _vertexShader.Create(spriteData.vertexShaderData);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 		result = _pixelShader.Create(spriteData.pixelShaderData);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		// ポリゴン生成
 		PolygonData polygonData;
@@ -62,17 +62,17 @@ namespace NamelessEngine::Graphics
 		);
 
 		result = _polygon.Create(device, polygonData);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		return result;
 	}
 
-	MYRESULT Sprite::CreateTextureResource(
+	RESULT Sprite::CreateTextureResource(
 		Core::Dx12GraphicsEngine& graphicsEngine, ID3D12Device& device, SpriteData& spriteData)
 	{
 		// テクスチャ用ヒープ生成
-		MYRESULT result = _textureHeap.Create(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _textureHeap.Create(device);
+		if (result == RESULT::FAILED) { return result; }
 
 		// テクスチャリソース生成
 		// ファイルパスからテクスチャを生成する
@@ -80,7 +80,7 @@ namespace NamelessEngine::Graphics
 			for (auto path : spriteData.texturePaths) {
 				if (path == nullptr) { break; }
 				// 保留
-				result = MYRESULT::FAILED;
+				result = RESULT::FAILED;
 			}
 		}
 
@@ -97,17 +97,17 @@ namespace NamelessEngine::Graphics
 		return result;
 	}
 
-	MYRESULT Sprite::Create(Dx12GraphicsEngine& graphicsEngine, SpriteData& spriteData)
+	RESULT Sprite::Create(Dx12GraphicsEngine& graphicsEngine, SpriteData& spriteData)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ポリゴン生成
-		MYRESULT result = CreatePolygon(device, spriteData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = CreatePolygon(device, spriteData);
+		if (result == RESULT::FAILED) { return result; }
 
 		// テクスチャリソース生成
 		result = CreateTextureResource(graphicsEngine, device, spriteData);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		return result;
 	}

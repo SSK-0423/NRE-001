@@ -4,13 +4,13 @@ using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::DX12API
 {
-	MYRESULT GraphicsPipelineState::Create(
+	RESULT GraphicsPipelineState::Create(
 		ID3D12Device& device, const D3D12_GRAPHICS_PIPELINE_STATE_DESC& piplineStateDesc)
 	{
 		// グラフィックスパイプラインステート生成
-		if (FAILED(CreateGraphicsPipelineState(device, piplineStateDesc))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateGraphicsPipelineState(device, piplineStateDesc))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	HRESULT GraphicsPipelineState::CreateGraphicsPipelineState(

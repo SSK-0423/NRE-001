@@ -20,7 +20,7 @@ namespace NamelessEngine::Core
 		return inst;
 	}
 
-	Utility::MYRESULT Dx12GraphicsEngine::Init(
+	Utility::RESULT Dx12GraphicsEngine::Init(
 		const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight)
 	{
 		assert(windowWidth > 0 && windowHeight > 0);
@@ -32,28 +32,28 @@ namespace NamelessEngine::Core
 
 		// デバッグレイヤー有効
 #ifdef _DEBUG
-		if (FAILED(EnableDebugLayer())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(EnableDebugLayer())) { return Utility::RESULT::FAILED; }
 #endif // DEBUG
 
 		// デバイスとファクトリー生成
-		if (FAILED(CreateDeviceAndDXGIFactory())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateDeviceAndDXGIFactory())) { return Utility::RESULT::FAILED; }
 
 		// コマンドアロケータ、リスト、キュー生成
-		if (FAILED(CreateCommandX())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateCommandX())) { return Utility::RESULT::FAILED; }
 
 		// スワップチェーン生成(ダブルバッファリング用のバッファー生成)
-		if (FAILED(CreateSwapChain(hwnd, windowWidth, windowHeight, _dxgiFactory))) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateSwapChain(hwnd, windowWidth, windowHeight, _dxgiFactory))) { return Utility::RESULT::FAILED; }
 
 		// フェンス生成
-		if (FAILED(CreateFence())) { return Utility::MYRESULT::FAILED; }
+		if (FAILED(CreateFence())) { return Utility::RESULT::FAILED; }
 
 		// フレームバッファ―(最終レンダリング先)生成
-		if (CreateFrameRenderTarget() == Utility::MYRESULT::FAILED) { return Utility::MYRESULT::FAILED; }
+		if (CreateFrameRenderTarget() == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
 
 		// レンダリングコンテキストの初期化
 		_renderContext.Init(*_cmdList.Get());
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
 	HRESULT Dx12GraphicsEngine::EnableDebugLayer()
@@ -321,9 +321,9 @@ namespace NamelessEngine::Core
 		_renderContext.SetScissorRect(scissorRect);
 	}
 
-	Utility::MYRESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
+	Utility::RESULT Dx12GraphicsEngine::CreateFrameRenderTarget()
 	{
-		Utility::MYRESULT result;
+		Utility::RESULT result;
 
 		// ディスクリプタヒープ生成
 		_frameHeap.Create(*_device.Get());
@@ -332,7 +332,7 @@ namespace NamelessEngine::Core
 		for (size_t idx = 0; idx < DOUBLE_BUFFER; idx++) {
 			// 生成
 			result = _frameBuffers[idx].Create(*_device.Get(), *_swapchain.Get(), idx);
-			if (result == Utility::MYRESULT::FAILED) { return result; }
+			if (result == Utility::RESULT::FAILED) { return result; }
 			// 登録
 			_frameHeap.RegistDescriptor(*_device.Get(), _frameBuffers[idx], DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 		}
@@ -341,16 +341,16 @@ namespace NamelessEngine::Core
 		depthStencilBufferData.width = _windowWidth;
 		depthStencilBufferData.height = _windowHeight;
 		result = _depthStencilBuffer.Create(*_device.Get(), depthStencilBufferData);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == Utility::RESULT::FAILED) { return result; }
 
 		// デプスステンシル用ディスクリプタヒープ生成
 		result = _dsvHeap.Create(*_device.Get());
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == Utility::RESULT::FAILED) { return result; }
 
 		// デプスステンシルビュー生成
 		_dsvHeap.RegistDescriptor(*_device.Get(), _depthStencilBuffer);
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
 	DX12API::RenderingContext& Dx12GraphicsEngine::GetRenderingContext()

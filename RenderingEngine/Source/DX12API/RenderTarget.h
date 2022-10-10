@@ -43,7 +43,7 @@ namespace NamelessEngine::DX12API
 		/// </summary>
 		/// <param name="device">デバイス</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device, RenderTargetData& renderTargetData);
+		Utility::RESULT Create(ID3D12Device& device, RenderTargetData& renderTargetData);
 
 		/// <summary>
 		/// レンダリング開始

@@ -67,7 +67,7 @@ namespace NamelessEngine::Graphics
 		/// ポリゴン表示用のパイプラインステート生成
 		/// </summary>
 		/// <returns></returns>
-		Utility::MYRESULT CreateGraphicsPipelineState(ID3D12Device& device, const PolygonData& data);
+		Utility::RESULT CreateGraphicsPipelineState(ID3D12Device& device, const PolygonData& data);
 
 	public:
 		/// <summary>
@@ -76,7 +76,7 @@ namespace NamelessEngine::Graphics
 		/// <param name="device">デバイス</param>
 		/// <param name="data">ポリゴンデータ</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device, const PolygonData& data);
+		Utility::RESULT Create(ID3D12Device& device, const PolygonData& data);
 
 		/// <summary>
 		/// 描画

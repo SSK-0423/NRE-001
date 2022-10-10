@@ -15,7 +15,7 @@ Dx12Application::~Dx12Application()
 {
 }
 
-MYRESULT Dx12Application::Init()
+RESULT Dx12Application::Init()
 {
 	// ウィンドウ初期化
 	_window = std::make_shared<AppWindow>();
@@ -24,12 +24,12 @@ MYRESULT Dx12Application::Init()
 
 	// グラフィクスエンジン初期化
 	SIZE wndSize = _window->GetWindowSize();
-	MYRESULT result = _graphicsEngine.Init(_window->GetHwnd(), wndSize.cx, wndSize.cy);
-	if (result == MYRESULT::FAILED) { return result; }
+	RESULT result = _graphicsEngine.Init(_window->GetHwnd(), wndSize.cx, wndSize.cy);
+	if (result == RESULT::FAILED) { return result; }
 
 	// アプリケーション本体の初期化
 	result = _applicationImpl.Init(_graphicsEngine, *_window.get());
-	if (result == MYRESULT::FAILED) { return result; }
+	if (result == RESULT::FAILED) { return result; }
 
 	return result;
 }

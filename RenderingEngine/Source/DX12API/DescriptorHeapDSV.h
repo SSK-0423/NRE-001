@@ -35,8 +35,8 @@ namespace NamelessEngine::DX12API
 		/// DSV用ディスクリプタヒープ生成 これを実行することでディスクリプタヒープが扱えるようになる
 		/// </summary>
 		/// <param name="device">デバイス</param>
-		/// <returns>MYRESULT::SUCCESS: 成功 MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Create(ID3D12Device& device);
+		/// <returns>RESULT::SUCCESS: 成功 RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Create(ID3D12Device& device);
 
 		/// <summary>
 		/// ディスクリプタヒープハンドルのインクリメントサイズ取得

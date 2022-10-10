@@ -43,7 +43,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="index">インデックスデータ</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device, const std::vector<UINT>& index);
+		Utility::RESULT Create(ID3D12Device& device, const std::vector<UINT>& index);
 
 		/// <summary>
 		/// インデックスバッファービュー取得

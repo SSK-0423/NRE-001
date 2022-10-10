@@ -13,7 +13,7 @@ public:
 	/// <param name="graphicsEngine">グラフィックスエンジン</param>
 	/// <param name="appWindow">ウィンドウ</param>
 	/// <returns></returns>
-	virtual NamelessEngine::Utility::MYRESULT Init(
+	virtual NamelessEngine::Utility::RESULT Init(
 		NamelessEngine::Core::Dx12GraphicsEngine& graphicsEngine,
 		NamelessEngine::Core::AppWindow& appWindow) = 0;
 

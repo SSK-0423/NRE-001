@@ -1,5 +1,5 @@
 #pragma once
-#include "SphereGeometry.h"
+#include "SphereMesh.h"
 
 namespace NamelessEngine::Graphics
 {
@@ -16,12 +16,12 @@ namespace NamelessEngine::Graphics
 		~SkySphere();
 
 	private:
-		SphereGeometry sphere;
+		SphereMesh sphere;
 		DX12API::Texture texture;
-		Utility::MYRESULT CreateTexture(const std::wstring& texturePath);
+		Utility::RESULT CreateTexture(const std::wstring& texturePath);
 
 	public:
-		Utility::MYRESULT Create(ID3D12Device& device, SkySphereData& data);
+		Utility::RESULT Create(ID3D12Device& device, SkySphereData& data);
 
 		void Draw(DX12API::RenderingContext& renderContext);
 	};

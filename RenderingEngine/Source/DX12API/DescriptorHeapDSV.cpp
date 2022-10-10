@@ -20,16 +20,16 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT DescriptorHeapDSV::Create(ID3D12Device& device)
+	RESULT DescriptorHeapDSV::Create(ID3D12Device& device)
 	{
 		// ハンドルのインクリメントサイズ取得
 		_handleIncrimentSize =
 			static_cast<SIZE_T>(device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_DSV));
 
 		// ディスクリプタヒープ生成
-		if (FAILED(CreateDescriptorHeap(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateDescriptorHeap(device))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	void DescriptorHeapDSV::RegistDescriptor(ID3D12Device& device, DepthStencilBuffer& buffer)

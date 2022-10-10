@@ -29,14 +29,14 @@ namespace NamelessEngine::Graphics
 		this->_texture = inst._texture;
 	}
 
-	MYRESULT PhongMaterial::CreateMaterialConstantBuffer(ID3D12Device& device)
+	RESULT PhongMaterial::CreateMaterialConstantBuffer(ID3D12Device& device)
 	{
-		MYRESULT result = _materialCBuffer.Create(device, &_material, sizeof(PhongMaterialBuff));
-		if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
-		return MYRESULT::SUCCESS;
+		RESULT result = _materialCBuffer.Create(device, &_material, sizeof(PhongMaterialBuff));
+		if (result == RESULT::FAILED) { return RESULT::FAILED; }
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT PhongMaterial::CreateTexture(Dx12GraphicsEngine& graphicsEngine)
+	RESULT PhongMaterial::CreateTexture(Dx12GraphicsEngine& graphicsEngine)
 	{
 		// テクスチャがない場合
 		if (_textureName.empty()) {
@@ -47,32 +47,32 @@ namespace NamelessEngine::Graphics
 				color.b = 1.f;
 				color.a = 1.f;
 			}
-			MYRESULT result = _texture.CreateTextureFromRGBAData(
+			RESULT result = _texture.CreateTextureFromRGBAData(
 				graphicsEngine, whiteTexture,
 				_dummyTextureWidth, _dummyTextureHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
 		}
 		// テクスチャがある場合
 		else {
 			std::wstring texturePath = _textureFolderPath + L"/" + _textureName;
-			MYRESULT result = _texture.CreateTextureFromWIC(graphicsEngine, texturePath);
-			if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
+			RESULT result = _texture.CreateTextureFromWIC(graphicsEngine, texturePath);
+			if (result == RESULT::FAILED) { return RESULT::FAILED; }
 		}
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT PhongMaterial::Commit()
+	RESULT PhongMaterial::Commit()
 	{
 		Dx12GraphicsEngine& graphicsEngine = Dx12GraphicsEngine::Instance();
 
 		// コンスタントバッファー生成
-		MYRESULT result = CreateMaterialConstantBuffer(graphicsEngine.Device());
-		if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
+		RESULT result = CreateMaterialConstantBuffer(graphicsEngine.Device());
+		if (result == RESULT::FAILED) { return RESULT::FAILED; }
 
 		// テクスチャ生成
 		result = CreateTexture(graphicsEngine);
-		if (result == MYRESULT::FAILED) { return MYRESULT::FAILED; }
+		if (result == RESULT::FAILED) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	void PhongMaterial::ApplyMaterial(FBXMesh& mesh)

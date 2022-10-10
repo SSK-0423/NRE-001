@@ -38,7 +38,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="piplineStateDesc">グラフィックスパイプラインステート構造体</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device, const D3D12_GRAPHICS_PIPELINE_STATE_DESC& piplineStateDesc);
+		Utility::RESULT Create(ID3D12Device& device, const D3D12_GRAPHICS_PIPELINE_STATE_DESC& piplineStateDesc);
 
 		/// <summary>
 		/// パイプラインステート取得

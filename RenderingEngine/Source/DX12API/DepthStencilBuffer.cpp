@@ -14,7 +14,7 @@ namespace NamelessEngine::DX12API
 	{
 	}
 
-	MYRESULT DepthStencilBuffer::Create(ID3D12Device& device, const DepthStencilBufferData& data)
+	RESULT DepthStencilBuffer::Create(ID3D12Device& device, const DepthStencilBufferData& data)
 	{
 		_depthStencilBufferData = data;
 
@@ -31,8 +31,8 @@ namespace NamelessEngine::DX12API
 			&clearValue,
 			IID_PPV_ARGS(_dsvBuffer.ReleaseAndGetAddressOf()));
 
-		if (FAILED(result)) { return MYRESULT::FAILED; }
+		if (FAILED(result)) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 }

@@ -42,8 +42,8 @@ namespace NamelessEngine::Core
 		/// <param name="windowWidth">ウィンドウ幅</param>
 		/// <param name="windowHeight">ウィンドウ高</param>
 		/// <param name="dxgiFactory">ファクトリー</param>
-		/// <returns>Utility::MYRESULT::SUCCESS: 成功 Utility::MYRESULT::FAILED: 失敗</returns>
-		Utility::MYRESULT Init(const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight);
+		/// <returns>Utility::RESULT::SUCCESS: 成功 Utility::RESULT::FAILED: 失敗</returns>
+		Utility::RESULT Init(const HWND& hwnd, const UINT& windowWidth, const UINT& windowHeight);
 
 	private:
 		// DXGI関連
@@ -151,7 +151,7 @@ namespace NamelessEngine::Core
 		/// フレームバッファ用のレンダーターゲット生成
 		/// </summary>
 		/// <returns></returns>
-		Utility::MYRESULT CreateFrameRenderTarget();
+		Utility::RESULT CreateFrameRenderTarget();
 
 	public:
 		/// <summary>

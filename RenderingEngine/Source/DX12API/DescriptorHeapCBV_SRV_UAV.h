@@ -21,7 +21,7 @@ namespace NamelessEngine::DX12API
 	public:
 		DescriptorHeapCBV_SRV_UAV() = default;
 		~DescriptorHeapCBV_SRV_UAV() = default;
-		static constexpr int _NEXT_REGISTER = -1;
+		static constexpr int NEXT_REGISTER = -1;
 
 	private:
 		static constexpr UINT _MAX_CBV_DESCRIPTOR_NUM = 64;	// 定数バッファーの最大数
@@ -48,7 +48,7 @@ namespace NamelessEngine::DX12API
 		/// </summary>
 		/// <param name="device">デバイス</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(ID3D12Device& device);
+		Utility::RESULT Create(ID3D12Device& device);
 
 		/// <summary>
 		/// GPUのCBV部分のディスクリプタヒープの先頭ハンドルを取得
@@ -94,10 +94,10 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="constantBuffer">コンスタントバッファ―</param>
 		/// <param name="registerNo">
-		/// 登録するレジスタ番号 デフォルト値:_NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
+		/// 登録するレジスタ番号 デフォルト値:NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
 		/// </param>
 		void RegistConstantBuffer(
-			ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo = _NEXT_REGISTER);
+			ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo = NEXT_REGISTER);
 
 		/// <summary>
 		/// シェーダーリソース(テクスチャ)登録
@@ -105,10 +105,10 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="texture">テクスチャ</param>
 		/// <param name="registerNo">
-		/// 登録するレジスタ番号 デフォルト値:_NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
+		/// 登録するレジスタ番号 デフォルト値:NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
 		/// </param>
 		void RegistShaderResource(
-			ID3D12Device& device, Texture& texture, ShaderResourceViewDesc& desc, const int& registerNo = _NEXT_REGISTER);
+			ID3D12Device& device, Texture& texture, ShaderResourceViewDesc& desc, const int& registerNo = NEXT_REGISTER);
 
 		/// <summary>
 		/// アンオーダーアクセスリソース登録
@@ -116,11 +116,11 @@ namespace NamelessEngine::DX12API
 		/// <param name="device">デバイス</param>
 		/// <param name="unorderedAccessResource">アンオーダーアクセスリソース</param>
 		/// <param name="registerNo">
-		/// 登録するレジスタ番号 デフォルト値:_NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
+		/// 登録するレジスタ番号 デフォルト値:NEXT_REGISTER(-1) 現在登録されているリソース数の次のレジスタを使用
 		/// </param>
 		void RegistUnorderedAccessResource(
 			ID3D12Device& device, UnorderedAccessResource& unorderedAccessResource,
-			const int& registerNo = _NEXT_REGISTER);
+			const int& registerNo = NEXT_REGISTER);
 
 		/// <summary>
 		/// コンスタントバッファーが登録されているか

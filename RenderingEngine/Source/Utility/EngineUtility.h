@@ -9,25 +9,25 @@ namespace NamelessEngine::Utility
 	/// <summary>
 /// ŠÖ”‚Ì¬Œ÷/¸”s
 /// </summary>
-	enum class MYRESULT
+	enum class RESULT
 	{
 		SUCCESS,	//¬Œ÷
 		FAILED		//¸”s
 	};
 
 	/// <summary>
-	/// MYRESULTŒ^‚Ìˆø”‚ª¬Œ÷‚ğ•\‚µ‚Ä‚¢‚é‚©’²‚×‚é
+	/// RESULTŒ^‚Ìˆø”‚ª¬Œ÷‚ğ•\‚µ‚Ä‚¢‚é‚©’²‚×‚é
 	/// </summary>
 	/// <param name="result">ŠÖ”‚ÌÀsŒ‹‰Ê</param>
-	/// <returns>true: MYRESULT::SUCCESS false: MYRESULT::FAILED</returns>
-	inline bool IsResultSuccess(MYRESULT result) { return result == MYRESULT::SUCCESS; }
+	/// <returns>true: RESULT::SUCCESS false: RESULT::FAILED</returns>
+	inline bool IsResultSuccess(RESULT result) { return result == RESULT::SUCCESS; }
 
 	/// <summary>
-	/// MYRESULTŒ^‚Ìˆø”‚ª¸”s‚ğ•\‚µ‚Ä‚¢‚é‚©’²‚×‚é
+	/// RESULTŒ^‚Ìˆø”‚ª¸”s‚ğ•\‚µ‚Ä‚¢‚é‚©’²‚×‚é
 	/// </summary>
 	/// <param name="result">ŠÖ”‚ÌÀsŒ‹‰Ê</param>
-	/// <returns>true: MYRESULT::FAILED false: MYRESULT::SUCCESS</returns>
-	inline bool IsResultFailed(MYRESULT result) { return result == MYRESULT::FAILED; }
+	/// <returns>true: RESULT::FAILED false: RESULT::SUCCESS</returns>
+	inline bool IsResultFailed(RESULT result) { return result == RESULT::FAILED; }
 
 	/// <summary>
 	/// HRESULTŒ^‚Ìˆø”‚ª¸”s‚ğ•\‚µ‚Ä‚¢‚é‚©’²‚×‚é
@@ -41,7 +41,7 @@ namespace NamelessEngine::Utility
 	/// </summary>
 	/// <param name="result">ŠÖ”‚ÌÀsŒ‹‰Ê</param>
 	/// <returns></returns>
-	inline MYRESULT ReturnFailed(HRESULT result) { if (FAILED(result)) return MYRESULT::FAILED; }
+	inline RESULT ReturnFailed(HRESULT result) { if (FAILED(result)) return RESULT::FAILED; }
 
 	/// <summary>
 	/// 

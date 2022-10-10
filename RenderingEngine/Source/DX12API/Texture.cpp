@@ -300,39 +300,39 @@ namespace NamelessEngine::DX12API
 		_metaData.dimension = DirectX::TEX_DIMENSION_TEXTURE2D;
 	}
 
-	MYRESULT Texture::CreateTextureFromWIC(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+	RESULT Texture::CreateTextureFromWIC(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ファイル読み込み
-		if (FAILED(LoadTextureFromWICFile(texturePath))) { return MYRESULT::FAILED; }
+		if (FAILED(LoadTextureFromWICFile(texturePath))) { return RESULT::FAILED; }
 		// バッファー生成
-		if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndTextureBuffer(device))) { return RESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
+		if (FAILED(MapTexture())) { return RESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
+		if (FAILED(CopyTexture(device, graphicsEngine))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+	RESULT Texture::CreateTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ファイル読み込み
-		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return MYRESULT::FAILED; }
+		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return RESULT::FAILED; }
 		// バッファー生成
-		if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndTextureBuffer(device))) { return RESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
+		if (FAILED(MapTexture())) { return RESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
+		if (FAILED(CopyTexture(device, graphicsEngine))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT Texture::CreateTextureFromRGBAData(
+	RESULT Texture::CreateTextureFromRGBAData(
 		Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
 		const size_t& width, const size_t& height, const DXGI_FORMAT& format)
 	{
@@ -341,12 +341,12 @@ namespace NamelessEngine::DX12API
 		// テクスチャ生成用データ用意
 		SetTextureData(data, width, height, format);
 		// バッファー生成
-		if (FAILED(CreateUploadAndTextureBuffer(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndTextureBuffer(device))) { return RESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapTexture())) { return MYRESULT::FAILED; }
+		if (FAILED(MapTexture())) { return RESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyTexture(device, graphicsEngine))) { return MYRESULT::FAILED; }
-		return MYRESULT::SUCCESS;
+		if (FAILED(CopyTexture(device, graphicsEngine))) { return RESULT::FAILED; }
+		return RESULT::SUCCESS;
 	}
 
 	void Texture::CreateTextureFromRenderTarget(RenderTargetBuffer& renderTargetBuffer)
@@ -375,18 +375,18 @@ namespace NamelessEngine::DX12API
 		_metaData.mipLevels = 1;
 	}
 
-	MYRESULT Texture::CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
+	RESULT Texture::CreateCubeTextureFromDDS(Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// ファイル読み込み
-		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return MYRESULT::FAILED; }
+		if (FAILED(LoadTextureFromDDSFile(texturePath))) { return RESULT::FAILED; }
 		// バッファー生成
-		if (FAILED(CreateUploadAndCubeTextureBuffer(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateUploadAndCubeTextureBuffer(device))) { return RESULT::FAILED; }
 		// アップロードバッファーの内容をテクスチャバッファーへコピー
-		if (FAILED(CopyCubeTexture(graphicsEngine))) { return MYRESULT::FAILED; }
+		if (FAILED(CopyCubeTexture(graphicsEngine))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 }

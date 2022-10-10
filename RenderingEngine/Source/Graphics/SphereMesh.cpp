@@ -1,4 +1,4 @@
-#include "SphereGeometry.h"
+#include "SphereMesh.h"
 
 using namespace NamelessEngine::Utility;
 using namespace NamelessEngine::DX12API;
@@ -7,11 +7,11 @@ namespace NamelessEngine::Graphics
 {
 	constexpr float PI = DirectX::XM_PI;
 
-	SphereGeometry::SphereGeometry()
+	SphereMesh::SphereMesh()
 	{
 	}
 
-	SphereGeometry::~SphereGeometry()
+	SphereMesh::~SphereMesh()
 	{
 		SafetyDelete<VertexBuffer>(_vertexBuffer);
 		SafetyDelete<IndexBuffer>(_indexBuffer);
@@ -19,7 +19,7 @@ namespace NamelessEngine::Graphics
 		SafetyDelete<RootSignature>(_rootSignature);
 	}
 
-	void SphereGeometry::CreateVerticesAndIndicesData(SphereGeometryData& data)
+	void SphereMesh::CreateVerticesAndIndicesData(SphereMeshData& data)
 	{
 		unsigned int stackNum = data.stackNum;
 		unsigned int sectorNum = data.sectorNum;
@@ -99,37 +99,37 @@ namespace NamelessEngine::Graphics
 		}
 	}
 
-	MYRESULT SphereGeometry::CreateVertexBuffer(ID3D12Device& device)
+	RESULT SphereMesh::CreateVertexBuffer(ID3D12Device& device)
 	{
 		if (_vertexBuffer != nullptr) { delete _vertexBuffer; }
 		_vertexBuffer = new VertexBuffer();
 
-		MYRESULT result = _vertexBuffer->Create(
+		RESULT result = _vertexBuffer->Create(
 			device, &_vertices[0], SizeofVector(_vertices), sizeof(SphereVertex));
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT SphereGeometry::CreateIndexBuffer(ID3D12Device& device)
+	RESULT SphereMesh::CreateIndexBuffer(ID3D12Device& device)
 	{
 		if (_indexBuffer != nullptr) { delete _indexBuffer; }
 		_indexBuffer = new IndexBuffer();
 
-		MYRESULT result = _indexBuffer->Create(device, _indices);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _indexBuffer->Create(device, _indices);
+		if (result == RESULT::FAILED) { return result; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	MYRESULT SphereGeometry::CreateGraphicsPipelineState(ID3D12Device& device, SphereGeometryData& data)
+	RESULT SphereMesh::CreateGraphicsPipelineState(ID3D12Device& device, SphereMeshData& data)
 	{
 		// ルートシグネチャ生成
 		if (_rootSignature != nullptr) delete _rootSignature;
 		_rootSignature = new RootSignature();
 
-		MYRESULT result = _rootSignature->Create(device, data.rootSignatureData);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = _rootSignature->Create(device, data.rootSignatureData);
+		if (result == RESULT::FAILED) { return result; }
 
 		// ルートシグネチャとシェーダーセット
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
@@ -178,7 +178,7 @@ namespace NamelessEngine::Graphics
 		return _graphicsPipelineState->Create(device, pipelineState);
 	}
 
-	MYRESULT SphereGeometry::CreateDescriptorHeap(ID3D12Device& device)
+	RESULT SphereMesh::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		if (_descriptorHeap != nullptr) { delete _descriptorHeap; }
 
@@ -187,26 +187,26 @@ namespace NamelessEngine::Graphics
 		return _descriptorHeap->Create(device);
 	}
 
-	MYRESULT SphereGeometry::Create(ID3D12Device& device, SphereGeometryData& data)
+	RESULT SphereMesh::Create(ID3D12Device& device, SphereMeshData& data)
 	{
 		CreateVerticesAndIndicesData(data);
 
-		MYRESULT result = CreateVertexBuffer(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		RESULT result = CreateVertexBuffer(device);
+		if (result == RESULT::FAILED) { return result; }
 
 		result = CreateIndexBuffer(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		result = CreateGraphicsPipelineState(device, data);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
 		result = CreateDescriptorHeap(device);
-		if (result == MYRESULT::FAILED) { return result; }
+		if (result == RESULT::FAILED) { return result; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
-	void SphereGeometry::Draw(RenderingContext& renderContext)
+	void SphereMesh::Draw(RenderingContext& renderContext)
 	{
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_graphicsPipelineState);
@@ -217,18 +217,18 @@ namespace NamelessEngine::Graphics
 		renderContext.DrawIndexedInstanced(_indexBuffer->GetIndexNum(), 1);
 	}
 
-	void SphereGeometry::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
+	void SphereMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
 	{
 		_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
 	}
 
-	void SphereGeometry::SetTexture(ID3D12Device& device, Texture& texture,
+	void SphereMesh::SetTexture(ID3D12Device& device, Texture& texture,
 		ShaderResourceViewDesc desc, const int& registerNo)
 	{
 		_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
 	}
 
-	size_t SphereGeometryData::GetRenderTargetNum() const
+	size_t SphereMeshData::GetRenderTargetNum() const
 	{
 		for (size_t idx = 0; idx < colorFormats.size(); idx++)
 		{

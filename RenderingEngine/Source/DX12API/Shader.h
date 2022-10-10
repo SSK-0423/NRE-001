@@ -60,14 +60,14 @@ namespace NamelessEngine::DX12API
 		/// <param name="entoryPointName">シェーダーのエントリ関数名</param>
 		/// <param name="shaderType">シェーダーの種類_モデル</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderType);
+		Utility::RESULT Create(const TCHAR* shaderFilePass, const char* entoryPointName, const char* shaderType);
 
 		/// <summary>
 		/// シェーダー生成
 		/// </summary>
 		/// <param name="shaderData">シェーダーデータ</param>
 		/// <returns></returns>
-		Utility::MYRESULT Create(const ShaderData& shaderData);
+		Utility::RESULT Create(const ShaderData& shaderData);
 
 		/// <summary>
 		/// シェーダー取得

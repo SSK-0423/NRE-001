@@ -26,26 +26,26 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT DescriptorHeapCBV_SRV_UAV::Create(ID3D12Device& device)
+	RESULT DescriptorHeapCBV_SRV_UAV::Create(ID3D12Device& device)
 	{
 		// ハンドルのインクリメントサイズ取得
 		_handleIncrimentSize = device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV);
 
 		// ディスクリプタヒープ生成
-		if (FAILED(CreateDescriptorHeap(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateDescriptorHeap(device))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	void DescriptorHeapCBV_SRV_UAV::RegistShaderResource(
 		ID3D12Device& device, Texture& texture,
 		ShaderResourceViewDesc& desc, const int& registerNo)
 	{
-		assert(registerNo < static_cast<int>(_MAX_SRV_DESCRIPTOR_NUM) && registerNo >= _NEXT_REGISTER);
+		assert(registerNo < static_cast<int>(_MAX_SRV_DESCRIPTOR_NUM) && registerNo >= NEXT_REGISTER);
 
 		auto handle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		if (registerNo == _NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
+		if (registerNo == NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
 			handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(_registedSRVNum) + _MAX_CBV_DESCRIPTOR_NUM);
 		else                                // 指定されたレジスタ
 			handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
@@ -64,11 +64,11 @@ namespace NamelessEngine::DX12API
 	void DescriptorHeapCBV_SRV_UAV::RegistConstantBuffer(
 		ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
 	{
-		assert(registerNo < static_cast<int>(_MAX_CBV_DESCRIPTOR_NUM) && registerNo >= _NEXT_REGISTER);
+		assert(registerNo < static_cast<int>(_MAX_CBV_DESCRIPTOR_NUM) && registerNo >= NEXT_REGISTER);
 
 		auto handle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 
-		if (registerNo == _NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
+		if (registerNo == NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
 			handle.ptr += _handleIncrimentSize * _registedCBVNum;
 		else                                // 指定されたレジスタ
 			handle.ptr += _handleIncrimentSize * registerNo;
@@ -86,7 +86,7 @@ namespace NamelessEngine::DX12API
 	void DescriptorHeapCBV_SRV_UAV::RegistUnorderedAccessResource(
 		ID3D12Device& device, UnorderedAccessResource& unorderedAccessResource, const int& registerNo)
 	{
-		assert(registerNo < static_cast<int>(_MAX_CBV_DESCRIPTOR_NUM) && registerNo >= _NEXT_REGISTER);
+		assert(registerNo < static_cast<int>(_MAX_CBV_DESCRIPTOR_NUM) && registerNo >= NEXT_REGISTER);
 		// Todo:必要になったら実装
 	}
 }

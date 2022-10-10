@@ -30,6 +30,9 @@
     <ClCompile Include="Source\Core\main.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="Source\SampleApp\PBRSample.cpp">
+      <Filter>SampleApp\PBRSample</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Dx12Application.h">

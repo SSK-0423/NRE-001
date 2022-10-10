@@ -88,16 +88,16 @@ namespace NamelessEngine::DX12API
 		/// </summary>
 		/// <param name="graphicsEngine">グラフィクスエンジン</param>
 		/// <param name="texturePath">テクスチャへのパス</param>
-		/// <returns>成功：Utility::MYRESULT::SUCCESS 失敗：Utility::MYRESULT::FAILED</returns>
-		Utility::MYRESULT CreateTextureFromWIC(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+		/// <returns>成功：Utility::RESULT::SUCCESS 失敗：Utility::RESULT::FAILED</returns>
+		Utility::RESULT CreateTextureFromWIC(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 		/// <summary>
 		/// DDSファイルからテクスチャを生成
 		/// </summary>
 		/// <param name="graphicsEngine">グラフィクスエンジン</param>
 		/// <param name="texturePath">テクスチャへのパス</param>
-		/// <returns>成功：Utility::MYRESULT::SUCCESS 失敗：Utility::MYRESULT::FAILED</returns>
-		Utility::MYRESULT CreateTextureFromDDS(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+		/// <returns>成功：Utility::RESULT::SUCCESS 失敗：Utility::RESULT::FAILED</returns>
+		Utility::RESULT CreateTextureFromDDS(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 		/// <summary>
 		/// 用意したRGBAデータからテクスチャ生成
@@ -107,7 +107,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="width"></param>
 		/// <param name="height"></param>
 		/// <returns></returns>
-		Utility::MYRESULT CreateTextureFromRGBAData(
+		Utility::RESULT CreateTextureFromRGBAData(
 			Core::Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
 			const size_t& width, const size_t& height, const DXGI_FORMAT& format);
 
@@ -123,7 +123,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="depthStencilBuffer">デプスステンシルバッファー</param>
 		void CreateTextureFromDepthStencil(DepthStencilBuffer& depthStencilBuffer);
 
-		Utility::MYRESULT CreateCubeTextureFromDDS(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
+		Utility::RESULT CreateCubeTextureFromDDS(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePath);
 
 		/// <summary>
 		/// テクスチャバッファー取得

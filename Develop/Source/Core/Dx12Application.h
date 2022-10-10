@@ -17,8 +17,8 @@ public:
 	/// <summary>
 	/// アプリケーションの初期化
 	/// </summary>
-	/// <returns>成功：MYRESULT::SUCCESS 失敗：MYRESULT::FAILED</returns>
-	NamelessEngine::Utility::MYRESULT Init();
+	/// <returns>成功：RESULT::SUCCESS 失敗：RESULT::FAILED</returns>
+	NamelessEngine::Utility::RESULT Init();
 
 	/// <summary>
 	/// メインループ

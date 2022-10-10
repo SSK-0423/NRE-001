@@ -35,17 +35,17 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT ConstantBuffer::Create(ID3D12Device& device, void* data, const UINT& bufferSize)
+	RESULT ConstantBuffer::Create(ID3D12Device& device, void* data, const UINT& bufferSize)
 	{
 		// バッファーサイズ取得
 		_bufferSize = AlignmentedSize(bufferSize, D3D12_TEXTURE_DATA_PITCH_ALIGNMENT);
 
 		// バッファー生成
-		if (FAILED(CreateConstantBuffer(device, bufferSize))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateConstantBuffer(device, bufferSize))) { return RESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapConstantBuffer(data, bufferSize))) { return MYRESULT::FAILED; }
+		if (FAILED(MapConstantBuffer(data, bufferSize))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 }

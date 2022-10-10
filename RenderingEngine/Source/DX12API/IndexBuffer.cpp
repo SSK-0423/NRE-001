@@ -40,17 +40,17 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT IndexBuffer::Create(ID3D12Device& device, const std::vector<UINT>& index)
+	RESULT IndexBuffer::Create(ID3D12Device& device, const std::vector<UINT>& index)
 	{
 		// インデックス数記録
 		_indexNum = static_cast<UINT>(index.size());
 
 		// インデックスバッファーとビュー生成
-		if (FAILED(CreateIndexBufferAndView(device, index))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateIndexBufferAndView(device, index))) { return RESULT::FAILED; }
 		// マップ処理
-		if (FAILED(MapIndexBuffer(index))) { return MYRESULT::FAILED; }
+		if (FAILED(MapIndexBuffer(index))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 }

@@ -1,12 +1,12 @@
-#include "CubeGeometry.h"
+#include "CubeMesh.h"
 
 namespace NamelessEngine::Graphics
 {
-	CubeGeometry::CubeGeometry()
+	CubeMesh::CubeMesh()
 	{
 	}
 
-	CubeGeometry::~CubeGeometry()
+	CubeMesh::~CubeMesh()
 	{
 		Utility::SafetyDelete<DX12API::VertexBuffer>(_vertexBuffer);
 		Utility::SafetyDelete<DX12API::IndexBuffer>(_indexBuffer);
@@ -14,7 +14,7 @@ namespace NamelessEngine::Graphics
 		Utility::SafetyDelete<DX12API::RootSignature>(_rootSignature);
 	}
 
-	void CubeGeometry::CreateVertexAttributesAndIndicesData(CubeGeometryData& data)
+	void CubeMesh::CreateVertexAttributesAndIndicesData(CubeMeshData& data)
 	{
 		std::vector<DirectX::XMFLOAT3> vertices = {
 			// positiveX
@@ -149,37 +149,37 @@ namespace NamelessEngine::Graphics
 		_indices = indices;
 	}
 
-	Utility::MYRESULT CubeGeometry::CreateVertexBuffer(ID3D12Device& device)
+	Utility::RESULT CubeMesh::CreateVertexBuffer(ID3D12Device& device)
 	{
 		if (_vertexBuffer != nullptr) { delete _vertexBuffer; }
 		_vertexBuffer = new DX12API::VertexBuffer();
 
-		Utility::MYRESULT result = _vertexBuffer->Create(
+		Utility::RESULT result = _vertexBuffer->Create(
 			device, &_vertices[0], Utility::SizeofVector(_vertices), sizeof(CubeVertex));
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == Utility::RESULT::FAILED) { return result; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT CubeGeometry::CreateIndexBuffer(ID3D12Device& device)
+	Utility::RESULT CubeMesh::CreateIndexBuffer(ID3D12Device& device)
 	{
 		if (_indexBuffer != nullptr) { delete _indexBuffer; }
 		_indexBuffer = new DX12API::IndexBuffer();
 
-		Utility::MYRESULT result = _indexBuffer->Create(device, _indices);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		Utility::RESULT result = _indexBuffer->Create(device, _indices);
+		if (result == Utility::RESULT::FAILED) { return result; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT CubeGeometry::CreateGraphicsPipelineState(ID3D12Device& device, CubeGeometryData& data)
+	Utility::RESULT CubeMesh::CreateGraphicsPipelineState(ID3D12Device& device, CubeMeshData& data)
 	{
 		// ルートシグネチャ生成
 		if (_rootSignature != nullptr) delete _rootSignature;
 		_rootSignature = new DX12API::RootSignature();
 
-		Utility::MYRESULT result = _rootSignature->Create(device, data.rootSignatureData);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		Utility::RESULT result = _rootSignature->Create(device, data.rootSignatureData);
+		if (result == Utility::RESULT::FAILED) { return result; }
 
 		// ルートシグネチャとシェーダーセット
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
@@ -228,7 +228,7 @@ namespace NamelessEngine::Graphics
 		return _graphicsPipelineState->Create(device, pipelineState);
 	}
 
-	Utility::MYRESULT CubeGeometry::CreateDescriptorHeap(ID3D12Device& device)
+	Utility::RESULT CubeMesh::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		if (_descriptorHeap != nullptr) { delete _descriptorHeap; }
 
@@ -237,26 +237,26 @@ namespace NamelessEngine::Graphics
 		return _descriptorHeap->Create(device);
 	}
 
-	Utility::MYRESULT CubeGeometry::Create(ID3D12Device& device, CubeGeometryData& data)
+	Utility::RESULT CubeMesh::Create(ID3D12Device& device, CubeMeshData& data)
 	{
 		CreateVertexAttributesAndIndicesData(data);
 
-		Utility::MYRESULT result = CreateVertexBuffer(device);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		Utility::RESULT result = CreateVertexBuffer(device);
+		if (result == Utility::RESULT::FAILED) { return result; }
 
 		result = CreateIndexBuffer(device);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == Utility::RESULT::FAILED) { return result; }
 
 		result = CreateGraphicsPipelineState(device, data);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == Utility::RESULT::FAILED) { return result; }
 
 		result = CreateDescriptorHeap(device);
-		if (result == Utility::MYRESULT::FAILED) { return result; }
+		if (result == Utility::RESULT::FAILED) { return result; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
-	void CubeGeometry::Draw(DX12API::RenderingContext& renderContext)
+	void CubeMesh::Draw(DX12API::RenderingContext& renderContext)
 	{
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_graphicsPipelineState);
@@ -267,19 +267,19 @@ namespace NamelessEngine::Graphics
 		renderContext.DrawIndexedInstanced(_indexBuffer->GetIndexNum(), 1);
 	}
 
-	void CubeGeometry::SetConstantBuffer(ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer, const int& registerNo)
+	void CubeMesh::SetConstantBuffer(ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer, const int& registerNo)
 	{
 		_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
 	}
 
-	void CubeGeometry::SetTexture(
+	void CubeMesh::SetTexture(
 		ID3D12Device& device, DX12API::Texture& texture,
 		DX12API::ShaderResourceViewDesc desc, const int& registerNo)
 	{
 		_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
 	}
 
-	size_t CubeGeometryData::GetRenderTargetNum() const
+	size_t CubeMeshData::GetRenderTargetNum() const
 	{
 		for (size_t idx = 0; idx < colorFormats.size(); idx++)
 		{

@@ -31,6 +31,9 @@
     <Filter Include="Core">
       <UniqueIdentifier>{d4b5a5cf-a87a-4cec-987a-d44b7f8fe438}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{af01264b-0de1-4974-9728-505e77f094e2}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PBR.hlsli">
@@ -51,6 +54,12 @@
       <Filter>リソース ファイル\Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SkyBoxPS.hlsl">
+      <Filter>リソース ファイル\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GeometryVS.hlsl">
+      <Filter>リソース ファイル\Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GeometryPS.hlsl">
       <Filter>リソース ファイル\Shaders</Filter>
     </FxCompile>
   </ItemGroup>
@@ -103,7 +112,7 @@
     <ClCompile Include="Source\DX12API\ShaderResourceViewDesc.cpp">
       <Filter>DX12API</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\CubeGeometry.cpp">
+    <ClCompile Include="Source\Graphics\CubeMesh.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\FBXLoader.cpp">
@@ -127,7 +136,7 @@
     <ClCompile Include="Source\Graphics\SkySphere.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\SphereGeometry.cpp">
+    <ClCompile Include="Source\Graphics\SphereMesh.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\Sprite.cpp">
@@ -138,6 +147,27 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Actor.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Transform.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SkyBox.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\MeshRenderer.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Mesh.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\ShaderLibrary.cpp">
+      <Filter>DX12API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -195,7 +225,7 @@
     <ClInclude Include="Source\Utility\Singleton.h">
       <Filter>Utility</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\CubeGeometry.h">
+    <ClInclude Include="Source\Graphics\CubeMesh.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\FBXLoader.h">
@@ -225,7 +255,7 @@
     <ClInclude Include="Source\Graphics\SkySphere.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\SphereGeometry.h">
+    <ClInclude Include="Source\Graphics\SphereMesh.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Sprite.h">
@@ -239,6 +269,39 @@
     </ClInclude>
     <ClInclude Include="Source\NamelessEngine.h">
       <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Transform.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Colider.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\AudioSource.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Actor.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\ECSimage.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SkyBox.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\MeshRenderer.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Mesh.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\ShaderLibrary.h">
+      <Filter>DX12API</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

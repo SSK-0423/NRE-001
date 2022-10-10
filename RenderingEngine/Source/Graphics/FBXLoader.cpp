@@ -309,7 +309,7 @@ namespace NamelessEngine::Graphics
 		// テクスチャフォルダへのパスセット
 		phongMaterial->SetTextureFolderPath(textureFolderPath);
 		// マテリアルを利用可能な状態にする
-		if (phongMaterial->Commit() == Utility::MYRESULT::FAILED) { return false; }
+		if (phongMaterial->Commit() == Utility::RESULT::FAILED) { return false; }
 
 		// マテリアルリストに登録
 		_materials[material->GetName()] = phongMaterial;
@@ -332,7 +332,7 @@ namespace NamelessEngine::Graphics
 		pbrMaterial->SetTextureName(PBRTEXTURETYPE::NORMAL, normalTextureName);
 		pbrMaterial->SetTextureName(PBRTEXTURETYPE::OCCULUSION, occulusionTextureName);
 		// マテリアルを利用可能にする
-		if (pbrMaterial->Commit() == Utility::MYRESULT::FAILED) { return false; }
+		if (pbrMaterial->Commit() == Utility::RESULT::FAILED) { return false; }
 		// マテリアルリストに登録
 		_materials[material->GetName()] = pbrMaterial;
 

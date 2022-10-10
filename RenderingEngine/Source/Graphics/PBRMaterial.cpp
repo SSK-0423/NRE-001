@@ -20,7 +20,7 @@ namespace NamelessEngine::Graphics
 	{
 	}
 
-	Utility::MYRESULT PBRMaterial::CreateDammyTexture(Dx12GraphicsEngine& graphicsEngine)
+	Utility::RESULT PBRMaterial::CreateDammyTexture(Dx12GraphicsEngine& graphicsEngine)
 	{
 		// 白色データ用意
 		std::vector<ColorRGBA> colorData(_dummyTextureWidth * _dummyTextureHeight);
@@ -30,14 +30,14 @@ namespace NamelessEngine::Graphics
 			color.b = 1.f;
 		}
 
-		Utility::MYRESULT result = _dummyTexture.CreateTextureFromRGBAData(
+		Utility::RESULT result = _dummyTexture.CreateTextureFromRGBAData(
 			graphicsEngine, colorData, _dummyTextureWidth, _dummyTextureHeight, DXGI_FORMAT_R32G32B32A32_FLOAT);
-		if (result == Utility::MYRESULT::FAILED) { return Utility::MYRESULT::FAILED; }
+		if (result == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT PBRMaterial::LoadPBRTextures(Dx12GraphicsEngine& graphicsEngine)
+	Utility::RESULT PBRMaterial::LoadPBRTextures(Dx12GraphicsEngine& graphicsEngine)
 	{
 		// テクスチャ読み込み
 		for (auto& texName : _pbrTextureNames) {
@@ -47,13 +47,13 @@ namespace NamelessEngine::Graphics
 				std::wstring texturePath = _textureFolderPath + L"/" + texName.second;
 				// DDSファイル
 				if (GetExtension(texName.second) == L"dds") {
-					Utility::MYRESULT result = _pbrTextures[texName.first]->CreateTextureFromDDS(graphicsEngine, texturePath);
-					if (result == Utility::MYRESULT::FAILED) { return Utility::MYRESULT::SUCCESS; }
+					Utility::RESULT result = _pbrTextures[texName.first]->CreateTextureFromDDS(graphicsEngine, texturePath);
+					if (result == Utility::RESULT::FAILED) { return Utility::RESULT::SUCCESS; }
 				}
 				// それ以外
 				else {
-					Utility::MYRESULT result = _pbrTextures[texName.first]->CreateTextureFromWIC(graphicsEngine, texturePath);
-					if (result == Utility::MYRESULT::FAILED) { return Utility::MYRESULT::SUCCESS; }
+					Utility::RESULT result = _pbrTextures[texName.first]->CreateTextureFromWIC(graphicsEngine, texturePath);
+					if (result == Utility::RESULT::FAILED) { return Utility::RESULT::SUCCESS; }
 				}
 			}
 			// 指定されていない場合
@@ -62,22 +62,22 @@ namespace NamelessEngine::Graphics
 			}
 		}
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
-	Utility::MYRESULT PBRMaterial::Commit()
+	Utility::RESULT PBRMaterial::Commit()
 	{
 		Dx12GraphicsEngine& graphicsEngine = Dx12GraphicsEngine::Instance();
 
 		// ダミーテクスチャ生成
-		Utility::MYRESULT result = CreateDammyTexture(graphicsEngine);
-		if (result == Utility::MYRESULT::FAILED) { return Utility::MYRESULT::FAILED; }
+		Utility::RESULT result = CreateDammyTexture(graphicsEngine);
+		if (result == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
 
 		// PBRテクスチャ読み込み
 		result = LoadPBRTextures(graphicsEngine);
-		if (result == Utility::MYRESULT::FAILED) { return Utility::MYRESULT::FAILED; }
+		if (result == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
 
-		return Utility::MYRESULT::SUCCESS;
+		return Utility::RESULT::SUCCESS;
 	}
 
 	void PBRMaterial::ApplyMaterial(FBXMesh& mesh)

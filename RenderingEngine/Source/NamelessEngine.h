@@ -30,9 +30,10 @@
 // Graphics
 #include "Graphics/Geometry.h"
 #include "Graphics/GeometryImpl.h"
-#include "Graphics/CubeGeometry.h"
-#include "Graphics/SphereGeometry.h"
+#include "Graphics/CubeMesh.h"
+#include "Graphics/SphereMesh.h"
 #include "Graphics/SkySphere.h"
+#include "Graphics/SkyBox.h"
 #include "Graphics/Polygon.h"
 #include "Graphics/Sprite.h"
 
@@ -49,3 +50,9 @@
 // Utility
 #include "Utility/Singleton.h"
 #include "Utility/EngineUtility.h"
+
+// Scene
+#include "Scene/Scene.h"
+#include "Scene/Camera.h"
+
+#include "Actor.h"

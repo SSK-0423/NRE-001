@@ -22,16 +22,16 @@ namespace NamelessEngine::DX12API
 		return result;
 	}
 
-	MYRESULT DescriptorHeapRTV::Create(ID3D12Device& device)
+	RESULT DescriptorHeapRTV::Create(ID3D12Device& device)
 	{
 		// ハンドルのインクリメントサイズ取得
 		_handleIncrimentSize =
 			static_cast<SIZE_T>(device.GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV));
 
 		// ディスクリプタヒープ生成
-		if (FAILED(CreateDescriptorHeap(device))) { return MYRESULT::FAILED; }
+		if (FAILED(CreateDescriptorHeap(device))) { return RESULT::FAILED; }
 
-		return MYRESULT::SUCCESS;
+		return RESULT::SUCCESS;
 	}
 
 	D3D12_CPU_DESCRIPTOR_HANDLE DescriptorHeapRTV::GetNextCPUDescriptorHandle()
