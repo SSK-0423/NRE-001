@@ -303,5 +303,8 @@
     <ClInclude Include="Source\DX12API\ShaderLibrary.h">
       <Filter>DX12API</Filter>
     </ClInclude>
+    <ClInclude Include="Source\DX12API\InputLayout.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

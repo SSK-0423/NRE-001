@@ -46,6 +46,8 @@
 
 // Component
 #include "Component/IComponent.h"
+#include "Component/Transform.h"
+#include "Component/MeshRenderer.h"
 
 // Utility
 #include "Utility/Singleton.h"

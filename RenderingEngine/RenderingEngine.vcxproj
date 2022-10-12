@@ -112,6 +112,7 @@
     <ClInclude Include="Source\DX12API\DescriptorHeapRTV.h" />
     <ClInclude Include="Source\DX12API\GraphicsPipelineState.h" />
     <ClInclude Include="Source\DX12API\IndexBuffer.h" />
+    <ClInclude Include="Source\DX12API\InputLayout.h" />
     <ClInclude Include="Source\DX12API\RenderingContext.h" />
     <ClInclude Include="Source\DX12API\RenderTarget.h" />
     <ClInclude Include="Source\DX12API\RenderTargetBuffer.h" />
