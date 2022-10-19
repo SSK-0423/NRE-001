@@ -44,10 +44,14 @@
 #include "Graphics/PBRMaterial.h"
 #include "Graphics/PhongMaterial.h"
 
+#include "Graphics/IRenderer.h"
+#include "Graphics/PBRRenderer.h"
+
 // Component
+#include "Component/Actor.h"
 #include "Component/IComponent.h"
 #include "Component/Transform.h"
-#include "Component/MeshRenderer.h"
+#include "Component/Mesh.h"
 
 // Utility
 #include "Utility/Singleton.h"
@@ -56,5 +60,3 @@
 // Scene
 #include "Scene/Scene.h"
 #include "Scene/Camera.h"
-
-#include "Actor.h"

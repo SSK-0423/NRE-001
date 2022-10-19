@@ -160,14 +160,17 @@
     <ClCompile Include="Source\Graphics\SkyBox.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Component\MeshRenderer.cpp">
-      <Filter>Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Mesh.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DX12API\ShaderLibrary.cpp">
       <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Mesh.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Camera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\PBRRenderer.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -294,17 +297,23 @@
     <ClInclude Include="Source\Graphics\SkyBox.h">
       <Filter>Graphics</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Component\MeshRenderer.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Mesh.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Source\DX12API\ShaderLibrary.h">
       <Filter>DX12API</Filter>
     </ClInclude>
     <ClInclude Include="Source\DX12API\InputLayout.h">
       <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\IRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\PBRRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Mesh.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\IMesh.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

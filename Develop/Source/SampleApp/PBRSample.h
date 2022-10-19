@@ -12,6 +12,5 @@ public:
 	void Final();
 
 private:
-	NamelessEngine::Actor sphere;
-	NamelessEngine::Actor skyBox;
+	NamelessEngine::Scene::Scene* _scene = nullptr;
 };

@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Component\Actor.cpp" />
-    <ClCompile Include="Source\Component\MeshRenderer.cpp" />
+    <ClCompile Include="Source\Component\Mesh.cpp" />
     <ClCompile Include="Source\Component\Transform.cpp" />
     <ClCompile Include="Source\Core\AppWindow.cpp" />
     <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp" />
@@ -84,14 +84,15 @@
     <ClCompile Include="Source\Graphics\FBXLoader.cpp" />
     <ClCompile Include="Source\Graphics\FBXMesh.cpp" />
     <ClCompile Include="Source\Graphics\Geometry.cpp" />
-    <ClCompile Include="Source\Graphics\Mesh.cpp" />
     <ClCompile Include="Source\Graphics\PBRMaterial.cpp" />
+    <ClCompile Include="Source\Graphics\PBRRenderer.cpp" />
     <ClCompile Include="Source\Graphics\PhongMaterial.cpp" />
     <ClCompile Include="Source\Graphics\Polygon.cpp" />
     <ClCompile Include="Source\Graphics\SkyBox.cpp" />
     <ClCompile Include="Source\Graphics\SkySphere.cpp" />
     <ClCompile Include="Source\Graphics\SphereMesh.cpp" />
     <ClCompile Include="Source\Graphics\Sprite.cpp" />
+    <ClCompile Include="Source\Scene\Camera.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Utility\EngineUtility.cpp" />
   </ItemGroup>
@@ -99,9 +100,9 @@
     <ClInclude Include="Source\Component\AudioSource.h" />
     <ClInclude Include="Source\Component\Colider.h" />
     <ClInclude Include="Source\Component\Actor.h" />
-    <ClInclude Include="Source\Component\MeshRenderer.h" />
     <ClInclude Include="Source\Component\ECSimage.h" />
     <ClInclude Include="Source\Component\IComponent.h" />
+    <ClInclude Include="Source\Component\Mesh.h" />
     <ClInclude Include="Source\Component\Transform.h" />
     <ClInclude Include="Source\Core\AppWindow.h" />
     <ClInclude Include="Source\Core\Dx12GraphicsEngine.h" />
@@ -128,8 +129,10 @@
     <ClInclude Include="Source\Graphics\Geometry.h" />
     <ClInclude Include="Source\Graphics\GeometryImpl.h" />
     <ClInclude Include="Source\Graphics\IMaterial.h" />
-    <ClInclude Include="Source\Graphics\Mesh.h" />
+    <ClInclude Include="Source\Graphics\IMesh.h" />
+    <ClInclude Include="Source\Graphics\IRenderer.h" />
     <ClInclude Include="Source\Graphics\PBRMaterial.h" />
+    <ClInclude Include="Source\Graphics\PBRRenderer.h" />
     <ClInclude Include="Source\Graphics\PhongMaterial.h" />
     <ClInclude Include="Source\Graphics\Polygon.h" />
     <ClInclude Include="Source\Graphics\SkyBox.h" />

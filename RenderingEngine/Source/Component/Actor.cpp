@@ -1,6 +1,5 @@
 #include "Actor.h"
 
-
 namespace NamelessEngine
 {
 	Actor::Actor()
@@ -8,6 +7,9 @@ namespace NamelessEngine
 	}
 	Actor::~Actor()
 	{
+		for (auto component : _components) {
+			delete component;
+		}
 	}
 
 	void Actor::Update(float deltaTime)
@@ -17,32 +19,10 @@ namespace NamelessEngine
 		}
 	}
 
-	void Actor::Draw()
+	void Actor::Draw(DX12API::RenderingContext& renderContext)
 	{
 		for (auto component : _components) {
-			component->Draw();
+			component->Draw(renderContext);
 		}
-	}
-	
-	template<class T>
-	T* Actor::GetComponent()
-	{
-		for (auto component: _components) {
-			if (typeid(component) == typeid(T)) {
-				return component;
-			}
-		}
-
-		return nullptr;
-	}
-	template<class T, class ...K>
-	void Actor::AddComponent(K ...k)
-	{
-		for (auto component : _components) {
-			if (typeid(component) == typeid(T))
-				return;
-		}
-
-		_components.push_back(new T(k...));
 	}
 }

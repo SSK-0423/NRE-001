@@ -1,5 +1,7 @@
 #include "CubeMesh.h"
 
+using namespace NamelessEngine::Component;
+
 namespace NamelessEngine::Graphics
 {
 	CubeMesh::CubeMesh()
@@ -8,14 +10,12 @@ namespace NamelessEngine::Graphics
 
 	CubeMesh::~CubeMesh()
 	{
-		Utility::SafetyDelete<DX12API::VertexBuffer>(_vertexBuffer);
-		Utility::SafetyDelete<DX12API::IndexBuffer>(_indexBuffer);
-		Utility::SafetyDelete<DX12API::GraphicsPipelineState>(_graphicsPipelineState);
-		Utility::SafetyDelete<DX12API::RootSignature>(_rootSignature);
 	}
 
-	void CubeMesh::CreateVertexAttributesAndIndicesData(CubeMeshData& data)
+	Component::MeshData CubeMesh::CreateMeshData()
 	{
+		MeshData meshData;
+
 		std::vector<DirectX::XMFLOAT3> vertices = {
 			// positiveX
 			DirectX::XMFLOAT3(0.5,-0.5, -0.5),
@@ -119,11 +119,11 @@ namespace NamelessEngine::Graphics
 			DirectX::XMFLOAT2(1, 1)      //右上
 		};
 
-		_vertices.resize(vertices.size());
+		meshData.vertices.resize(vertices.size());
 		for (size_t idx = 0; idx < vertices.size(); idx++) {
-			_vertices[idx].position = vertices[idx];
-			_vertices[idx].normal = normals[idx];
-			_vertices[idx].uv = uv[idx];
+			meshData.vertices[idx].position = vertices[idx];
+			meshData.vertices[idx].normal = normals[idx];
+			meshData.vertices[idx].uv = uv[idx];
 		}
 
 		std::vector<unsigned int> indices = {
@@ -146,145 +146,8 @@ namespace NamelessEngine::Graphics
 			20,22,23,
 			20,23,21
 		};
-		_indices = indices;
-	}
+		meshData.indices = indices;
 
-	Utility::RESULT CubeMesh::CreateVertexBuffer(ID3D12Device& device)
-	{
-		if (_vertexBuffer != nullptr) { delete _vertexBuffer; }
-		_vertexBuffer = new DX12API::VertexBuffer();
-
-		Utility::RESULT result = _vertexBuffer->Create(
-			device, &_vertices[0], Utility::SizeofVector(_vertices), sizeof(CubeVertex));
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		return Utility::RESULT::SUCCESS;
-	}
-
-	Utility::RESULT CubeMesh::CreateIndexBuffer(ID3D12Device& device)
-	{
-		if (_indexBuffer != nullptr) { delete _indexBuffer; }
-		_indexBuffer = new DX12API::IndexBuffer();
-
-		Utility::RESULT result = _indexBuffer->Create(device, _indices);
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		return Utility::RESULT::SUCCESS;
-	}
-
-	Utility::RESULT CubeMesh::CreateGraphicsPipelineState(ID3D12Device& device, CubeMeshData& data)
-	{
-		// ルートシグネチャ生成
-		if (_rootSignature != nullptr) delete _rootSignature;
-		_rootSignature = new DX12API::RootSignature();
-
-		Utility::RESULT result = _rootSignature->Create(device, data.rootSignatureData);
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		// ルートシグネチャとシェーダーセット
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
-		pipelineState.pRootSignature = &_rootSignature->GetRootSignature();
-		pipelineState.VS = CD3DX12_SHADER_BYTECODE(&data.vertexShader.GetShader());
-		pipelineState.PS = CD3DX12_SHADER_BYTECODE(&data.pixelShader.GetShader());
-
-		// サンプルマスク設定
-		pipelineState.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-		// ブレンド
-		pipelineState.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-
-		// ラスタライズ設定
-		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
-
-		// インプットレイアウトの設定
-		pipelineState.InputLayout.pInputElementDescs = &data.inputLayout[0];
-		pipelineState.InputLayout.NumElements = static_cast<UINT>(data.inputLayout.size());
-		pipelineState.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
-		pipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-		// デプスステンシル設定
-		pipelineState.DepthStencilState.DepthEnable = true;
-		pipelineState.DepthStencilState.StencilEnable = false;
-		pipelineState.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-		pipelineState.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-		pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-
-		// レンダーターゲットの設定
-		pipelineState.NumRenderTargets = data.GetRenderTargetNum();
-
-		for (size_t idx = 0; idx < pipelineState.NumRenderTargets; idx++)
-		{
-			pipelineState.RTVFormats[idx] = data.colorFormats[idx];
-		}
-
-		// アンチエイリアシングのためのサンプル数設定
-		pipelineState.SampleDesc.Count = 1;	    // サンプリングは1ピクセルにつき1
-		pipelineState.SampleDesc.Quality = 0;	// クオリティは最低
-
-		// グラフィックスパイプラインステート生成
-		if (_graphicsPipelineState != nullptr) delete _graphicsPipelineState;
-		_graphicsPipelineState = new DX12API::GraphicsPipelineState();
-		return _graphicsPipelineState->Create(device, pipelineState);
-	}
-
-	Utility::RESULT CubeMesh::CreateDescriptorHeap(ID3D12Device& device)
-	{
-		if (_descriptorHeap != nullptr) { delete _descriptorHeap; }
-
-		_descriptorHeap = new DX12API::DescriptorHeapCBV_SRV_UAV();
-
-		return _descriptorHeap->Create(device);
-	}
-
-	Utility::RESULT CubeMesh::Create(ID3D12Device& device, CubeMeshData& data)
-	{
-		CreateVertexAttributesAndIndicesData(data);
-
-		Utility::RESULT result = CreateVertexBuffer(device);
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		result = CreateIndexBuffer(device);
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		result = CreateGraphicsPipelineState(device, data);
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		result = CreateDescriptorHeap(device);
-		if (result == Utility::RESULT::FAILED) { return result; }
-
-		return Utility::RESULT::SUCCESS;
-	}
-
-	void CubeMesh::Draw(DX12API::RenderingContext& renderContext)
-	{
-		renderContext.SetGraphicsRootSignature(*_rootSignature);
-		renderContext.SetPipelineState(*_graphicsPipelineState);
-		renderContext.SetDescriptorHeap(*_descriptorHeap);
-		renderContext.SetVertexBuffer(0, *_vertexBuffer);
-		renderContext.SetIndexBuffer(*_indexBuffer);
-		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderContext.DrawIndexedInstanced(_indexBuffer->GetIndexNum(), 1);
-	}
-
-	void CubeMesh::SetConstantBuffer(ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer, const int& registerNo)
-	{
-		_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
-	}
-
-	void CubeMesh::SetTexture(
-		ID3D12Device& device, DX12API::Texture& texture,
-		DX12API::ShaderResourceViewDesc desc, const int& registerNo)
-	{
-		_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
-	}
-
-	size_t CubeMeshData::GetRenderTargetNum() const
-	{
-		for (size_t idx = 0; idx < colorFormats.size(); idx++)
-		{
-			if (colorFormats[idx] == DXGI_FORMAT_UNKNOWN)
-				return idx;
-		}
+		return meshData;
 	}
 }

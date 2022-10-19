@@ -17,7 +17,7 @@ namespace NamelessEngine::Graphics
 
 	private:
 		SphereMesh sphere;
-		DX12API::Texture texture;
+		//DX12API::Texture texture;
 		Utility::RESULT CreateTexture(const std::wstring& texturePath);
 
 	public:

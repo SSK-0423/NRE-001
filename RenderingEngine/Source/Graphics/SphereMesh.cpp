@@ -1,7 +1,6 @@
 #include "SphereMesh.h"
 
-using namespace NamelessEngine::Utility;
-using namespace NamelessEngine::DX12API;
+using namespace NamelessEngine::Component;
 
 namespace NamelessEngine::Graphics
 {
@@ -13,17 +12,12 @@ namespace NamelessEngine::Graphics
 
 	SphereMesh::~SphereMesh()
 	{
-		SafetyDelete<VertexBuffer>(_vertexBuffer);
-		SafetyDelete<IndexBuffer>(_indexBuffer);
-		SafetyDelete<GraphicsPipelineState>(_graphicsPipelineState);
-		SafetyDelete<RootSignature>(_rootSignature);
 	}
 
-	void SphereMesh::CreateVerticesAndIndicesData(SphereMeshData& data)
+	Component::MeshData SphereMesh::CreateMeshData(unsigned int stackNum, unsigned int sectorNum, float radius)
 	{
-		unsigned int stackNum = data.stackNum;
-		unsigned int sectorNum = data.sectorNum;
-		float radius = data.radius;
+		MeshData meshData;
+
 		float lengthInv = 1.f / radius;
 
 		float sectorStep = 2.f * PI / static_cast<float>(sectorNum);
@@ -32,7 +26,7 @@ namespace NamelessEngine::Graphics
 		float sectorAngle = 0.f;
 		float stackAngle = 0.f;
 
-		_vertices.resize((static_cast<size_t>(stackNum) + 1) * (static_cast<size_t>(sectorNum) + 1));
+		meshData.vertices.resize((static_cast<size_t>(stackNum) + 1) * (static_cast<size_t>(sectorNum) + 1));
 
 		// k1--k1+1
 		// |  / |
@@ -52,7 +46,7 @@ namespace NamelessEngine::Graphics
 				float x = xz * cosf(sectorAngle);
 				float z = xz * sinf(sectorAngle);
 
-				SphereVertex vertex;
+				MeshVertex vertex;
 				vertex.position = DirectX::XMFLOAT3(x, y, z);
 
 				// 法線計算
@@ -69,7 +63,7 @@ namespace NamelessEngine::Graphics
 				float v = static_cast<float>(stack) / stackNum;
 				vertex.uv = DirectX::XMFLOAT2(u, v);
 
-				_vertices[stack * (static_cast<size_t>(sectorNum) + 1) + sector] = vertex;
+				meshData.vertices[stack * (static_cast<size_t>(sectorNum) + 1) + sector] = vertex;
 			}
 		}
 		unsigned int k1 = 0;
@@ -84,157 +78,19 @@ namespace NamelessEngine::Graphics
 				// セクターごとに2つの三角形が必要
 				// k1 => k2 => k1+1 下端も
 				if (stack != 0) {
-					_indices.push_back(k1);
-					_indices.push_back(k2);
-					_indices.push_back(k1 + 1);
+					meshData.indices.push_back(k1);
+					meshData.indices.push_back(k2);
+					meshData.indices.push_back(k1 + 1);
 				}
 
 				// k1+1 => k2 => k2+1 上端も
 				if (stack != (stackNum - 1)) {
-					_indices.push_back(k1 + 1);
-					_indices.push_back(k2);
-					_indices.push_back(k2 + 1);
+					meshData.indices.push_back(k1 + 1);
+					meshData.indices.push_back(k2);
+					meshData.indices.push_back(k2 + 1);
 				}
 			}
 		}
+		return meshData;
 	}
-
-	RESULT SphereMesh::CreateVertexBuffer(ID3D12Device& device)
-	{
-		if (_vertexBuffer != nullptr) { delete _vertexBuffer; }
-		_vertexBuffer = new VertexBuffer();
-
-		RESULT result = _vertexBuffer->Create(
-			device, &_vertices[0], SizeofVector(_vertices), sizeof(SphereVertex));
-		if (result == RESULT::FAILED) { return result; }
-
-		return RESULT::SUCCESS;
-	}
-
-	RESULT SphereMesh::CreateIndexBuffer(ID3D12Device& device)
-	{
-		if (_indexBuffer != nullptr) { delete _indexBuffer; }
-		_indexBuffer = new IndexBuffer();
-
-		RESULT result = _indexBuffer->Create(device, _indices);
-		if (result == RESULT::FAILED) { return result; }
-
-		return RESULT::SUCCESS;
-	}
-
-	RESULT SphereMesh::CreateGraphicsPipelineState(ID3D12Device& device, SphereMeshData& data)
-	{
-		// ルートシグネチャ生成
-		if (_rootSignature != nullptr) delete _rootSignature;
-		_rootSignature = new RootSignature();
-
-		RESULT result = _rootSignature->Create(device, data.rootSignatureData);
-		if (result == RESULT::FAILED) { return result; }
-
-		// ルートシグネチャとシェーダーセット
-		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
-		pipelineState.pRootSignature = &_rootSignature->GetRootSignature();
-		pipelineState.VS = CD3DX12_SHADER_BYTECODE(&data.vertexShader.GetShader());
-		pipelineState.PS = CD3DX12_SHADER_BYTECODE(&data.pixelShader.GetShader());
-
-		// サンプルマスク設定
-		pipelineState.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
-
-		// ブレンド
-		pipelineState.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
-
-		// ラスタライズ設定
-		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
-
-		// インプットレイアウトの設定
-		pipelineState.InputLayout.pInputElementDescs = &data.inputLayout[0];
-		pipelineState.InputLayout.NumElements = static_cast<UINT>(data.inputLayout.size());
-		pipelineState.IBStripCutValue = D3D12_INDEX_BUFFER_STRIP_CUT_VALUE_DISABLED;
-		pipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
-
-		// デプスステンシル設定
-		pipelineState.DepthStencilState.DepthEnable = true;
-		pipelineState.DepthStencilState.StencilEnable = false;
-		pipelineState.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-		pipelineState.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-		pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
-
-		// レンダーターゲットの設定
-		pipelineState.NumRenderTargets = data.GetRenderTargetNum();
-
-		for (size_t idx = 0; idx < pipelineState.NumRenderTargets; idx++)
-		{
-			pipelineState.RTVFormats[idx] = data.colorFormats[idx];
-		}
-
-		// アンチエイリアシングのためのサンプル数設定
-		pipelineState.SampleDesc.Count = 1;	    // サンプリングは1ピクセルにつき1
-		pipelineState.SampleDesc.Quality = 0;	// クオリティは最低
-
-		// グラフィックスパイプラインステート生成
-		if (_graphicsPipelineState != nullptr) delete _graphicsPipelineState;
-		_graphicsPipelineState = new GraphicsPipelineState();
-		return _graphicsPipelineState->Create(device, pipelineState);
-	}
-
-	RESULT SphereMesh::CreateDescriptorHeap(ID3D12Device& device)
-	{
-		if (_descriptorHeap != nullptr) { delete _descriptorHeap; }
-
-		_descriptorHeap = new DescriptorHeapCBV_SRV_UAV();
-
-		return _descriptorHeap->Create(device);
-	}
-
-	RESULT SphereMesh::Create(ID3D12Device& device, SphereMeshData& data)
-	{
-		CreateVerticesAndIndicesData(data);
-
-		RESULT result = CreateVertexBuffer(device);
-		if (result == RESULT::FAILED) { return result; }
-
-		result = CreateIndexBuffer(device);
-		if (result == RESULT::FAILED) { return result; }
-
-		result = CreateGraphicsPipelineState(device, data);
-		if (result == RESULT::FAILED) { return result; }
-
-		result = CreateDescriptorHeap(device);
-		if (result == RESULT::FAILED) { return result; }
-
-		return RESULT::SUCCESS;
-	}
-
-	void SphereMesh::Draw(RenderingContext& renderContext)
-	{
-		renderContext.SetGraphicsRootSignature(*_rootSignature);
-		renderContext.SetPipelineState(*_graphicsPipelineState);
-		renderContext.SetDescriptorHeap(*_descriptorHeap);
-		renderContext.SetVertexBuffer(0, *_vertexBuffer);
-		renderContext.SetIndexBuffer(*_indexBuffer);
-		renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		renderContext.DrawIndexedInstanced(_indexBuffer->GetIndexNum(), 1);
-	}
-
-	void SphereMesh::SetConstantBuffer(ID3D12Device& device, ConstantBuffer& constantBuffer, const int& registerNo)
-	{
-		_descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
-	}
-
-	void SphereMesh::SetTexture(ID3D12Device& device, Texture& texture,
-		ShaderResourceViewDesc desc, const int& registerNo)
-	{
-		_descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
-	}
-
-	size_t SphereMeshData::GetRenderTargetNum() const
-	{
-		for (size_t idx = 0; idx < colorFormats.size(); idx++)
-		{
-			if (colorFormats[idx] == DXGI_FORMAT_UNKNOWN)
-				return idx;
-		}
-	}
-
 }

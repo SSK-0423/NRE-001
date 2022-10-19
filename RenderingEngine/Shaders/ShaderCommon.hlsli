@@ -1,9 +1,13 @@
 cbuffer Uniforms : register(b0)
 {
-    matrix world;
     matrix view;
-    matrix worldViewProj;
-    float3 eye;
+    matrix proj;
+    float3 eyePos;
+};
+
+cbuffer Transform : register(b1)
+{
+    matrix world;
 };
 
 struct VertexInput

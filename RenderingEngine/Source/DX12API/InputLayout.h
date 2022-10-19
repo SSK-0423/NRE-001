@@ -16,7 +16,7 @@ namespace NamelessEngine::DX12API {
 			if (inputElementDescs.size() == 0) {
 				nullptr;
 			}
-			inputElementDescs.data();
+			return inputElementDescs.data();
 		}
 
 		UINT GetSize() {

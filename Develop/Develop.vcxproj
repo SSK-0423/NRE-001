@@ -177,11 +177,13 @@
     <ClCompile Include="Source\Core\Dx12Application.cpp" />
     <ClCompile Include="Source\Core\main.cpp" />
     <ClCompile Include="Source\SampleApp\PBRSample.cpp" />
+    <ClCompile Include="Source\SampleApp\PBRScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\Core\Dx12Application.h" />
     <ClInclude Include="Source\Core\Dx12ApplicationImpl.h" />
     <ClInclude Include="Source\SampleApp\PBRSample.h" />
+    <ClInclude Include="Source\SampleApp\PBRScene.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

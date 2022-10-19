@@ -1,34 +1,26 @@
 #include "PBRSample.h"
-#include "ShaderLibrary.h"
+#include "PBRScene.h"
 
 using namespace NamelessEngine::Component;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Core;
+using namespace NamelessEngine::Utility;
 
 NamelessEngine::Utility::RESULT PBRSample::Init(NamelessEngine::Core::Dx12GraphicsEngine& graphicsEngine, NamelessEngine::Core::AppWindow& window)
 {
-    ShaderLibrary& library = ShaderLibrary::Instance();
-    Shader* shader = library.GetShader("GeometryVS");
-
-    sphere.AddComponent<Transform>();
-    sphere.AddComponent<MeshRenderer>();
-
-    skyBox.AddComponent<Transform>();
-    skyBox.AddComponent<MeshRenderer>();
-
-    return NamelessEngine::Utility::RESULT::SUCCESS;
+    _scene = new PBRScene();
+    RESULT result =  _scene->Init();
+    return result;
 }
 
 void PBRSample::Update(float deltaTime)
 {
-    sphere.Update(deltaTime);
-    skyBox.Update(deltaTime);
+    _scene->Update(deltaTime);
 }
 
 void PBRSample::Draw(NamelessEngine::Core::Dx12GraphicsEngine& graphicsEngine)
 {
-    sphere.Draw();
-    skyBox.Draw();
+    _scene->Draw();
 }
 
 void PBRSample::Final()
