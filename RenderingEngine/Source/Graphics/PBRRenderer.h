@@ -3,13 +3,19 @@
 #include "GraphicsPipelineState.h"
 #include "RootSignature.h"
 
+#include <d3dx12.h>
+
 namespace NamelessEngine::Graphics {
 	class PBRRenderer : public IRenderer {
 	public:
-		PBRRenderer();
+		PBRRenderer(unsigned int window_width, unsigned int window_height);
 		~PBRRenderer();
 
 	private:
+		// ビューポート
+		CD3DX12_VIEWPORT _viewport;
+		// シザー矩形
+		CD3DX12_RECT _scissorRect;
 		// ルートシグネチャ
 		DX12API::RootSignature* _rootSignature = nullptr;
 		// パイプライン

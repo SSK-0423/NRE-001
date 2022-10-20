@@ -11,15 +11,21 @@ using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::Graphics
 {
-	PBRRenderer::PBRRenderer()
+	PBRRenderer::PBRRenderer(unsigned int window_width, unsigned int window_height)
 	{
 		Utility::RESULT result = CreateGraphicsPipelineState(Dx12GraphicsEngine::Instance().Device());
 		if (result == Utility::RESULT::FAILED) {
 			MessageBox(NULL, L"PBRレンダラーパイプライン生成失敗", L"エラーメッセージ", MB_OK);
 		}
+
+		_scissorRect = CD3DX12_RECT(0, 0, window_width, window_height);
+		_viewport = CD3DX12_VIEWPORT(
+			0.f, 0.f, static_cast<FLOAT>(window_width), static_cast<FLOAT>(window_height));
 	}
 	PBRRenderer::~PBRRenderer()
 	{
+		SafetyDelete<GraphicsPipelineState>(_graphicsPipelineState);
+		SafetyDelete<RootSignature>(_rootSignature);
 	}
 	Utility::RESULT PBRRenderer::CreateGraphicsPipelineState(ID3D12Device& device)
 	{
@@ -27,7 +33,11 @@ namespace NamelessEngine::Graphics
 		if (_rootSignature != nullptr) delete _rootSignature;
 		_rootSignature = new DX12API::RootSignature();
 
-		Utility::RESULT result = _rootSignature->Create(device, RootSignatureData());
+		RootSignatureData rootSigData;
+		rootSigData._descRangeData.cbvDescriptorNum = 2;
+		rootSigData._descRangeData.srvDescriptorNum = 1; // base,metal,rough,ao,normal,cubetex
+
+		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
 
 		// ルートシグネチャとシェーダーセット
@@ -77,6 +87,8 @@ namespace NamelessEngine::Graphics
 	void PBRRenderer::Render(std::vector<Actor*>& _meshActors, std::vector<Actor*>& _guiActors)
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
+		renderContext.SetViewport(_viewport);
+		renderContext.SetScissorRect(_scissorRect);
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_graphicsPipelineState);
 

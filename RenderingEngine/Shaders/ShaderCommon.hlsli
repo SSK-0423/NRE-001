@@ -19,7 +19,8 @@ struct VertexInput
 
 struct VertexOutput
 {
-    float3 position : SV_Position;
-    float3 normal;
-    float2 uv;
+    float4 position : SV_POSITION;
+    float3 normal : NORMAL;
+    float2 uv : TEXCOORD;
+    float3 eyePosition : POSITION;
 };

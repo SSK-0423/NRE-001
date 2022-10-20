@@ -10,7 +10,7 @@ using namespace NamelessEngine::Utility;
 namespace NamelessEngine::Component
 {
 	Transform::Transform()
-		: position(0.f, 0.f, 0.f), rotation(0.f, 0.f, 0.f), scale(0.f, 0.f, 0.f)
+		: position(0.f, 0.f, 0.f), eularAngle(0.f, 0.f, 0.f), scale(1.f, 1.f, 1.f)
 	{
 		RESULT result = _buffer.Create(
 			Dx12GraphicsEngine::Instance().Device(), (void*)&_bufferData, sizeof(TransformCBuff));
@@ -31,7 +31,7 @@ namespace NamelessEngine::Component
 	{
 		XMMATRIX translation = XMMatrixTranslation(position.x, position.y, position.z);
 		XMMATRIX scaling = XMMatrixScaling(scale.x, scale.y, scale.z);
-		XMMATRIX rotation = XMMatrixIdentity();
+		XMMATRIX rotation = XMMatrixRotationY(eularAngle.y);
 		XMMATRIX matrix = rotation * translation * scaling;
 
 		return matrix;

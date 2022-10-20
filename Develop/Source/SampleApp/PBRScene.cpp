@@ -3,7 +3,8 @@
 
 using namespace NamelessEngine;
 
-PBRScene::PBRScene() : Scene(new NamelessEngine::Graphics::PBRRenderer())
+PBRScene::PBRScene(unsigned int window_width, unsigned int window_height)
+	: Scene(new NamelessEngine::Graphics::PBRRenderer(window_width, window_height))
 {
 }
 
@@ -15,14 +16,16 @@ NamelessEngine::Utility::RESULT PBRScene::Init()
 {
 	ID3D12Device& device = Core::Dx12GraphicsEngine::Instance().Device();
 	Component::MeshData meshData = Graphics::CubeMesh::CreateMeshData();
+	Component::MeshData sphereData = Graphics::SphereMesh::CreateMeshData(100, 100, 0.5);
 
 	Actor* cubeActor = new Actor();
-	cubeActor->AddComponent<Component::Mesh>()->Create(device, meshData);
 	cubeActor->AddComponent<Component::Transform>();
+	cubeActor->AddComponent<Component::Mesh>()->Create(device, sphereData);
 
-	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(device, _camera.GetConstantBuffer());
+	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(device, _camera.GetConstantBuffer(), 0);
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(
-		device, cubeActor->GetComponent<Component::Transform>()->GetConstantBuffer());
+		device, cubeActor->GetComponent<Component::Transform>()->GetConstantBuffer(), 1);
+	cubeActor->GetComponent<Component::Transform>()->position.z = 1;
 	_meshActors.push_back(cubeActor);
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;

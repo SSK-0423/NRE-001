@@ -8,6 +8,8 @@ namespace NamelessEngine::Graphics {
 	/// </summary>
 	class IRenderer {
 	public:
+		IRenderer() {}
+		virtual ~IRenderer() {}
 		virtual void Render(std::vector<Actor*>& _meshActors, std::vector<Actor*>& _guiActors) = 0;
 	};
 }

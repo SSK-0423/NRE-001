@@ -21,7 +21,7 @@ namespace NamelessEngine::Component
 
 	public:
 		DirectX::XMFLOAT3 position;
-		DirectX::XMFLOAT3 rotation;
+		DirectX::XMFLOAT3 eularAngle;
 		DirectX::XMFLOAT3 scale;
 
 		void Update(float deltaTime);

@@ -28,10 +28,12 @@ namespace NamelessEngine::Scene
 
 	DirectX::XMMATRIX NamelessEngine::Scene::Camera::ViewMatrix()
 	{
-		DirectX::XMVECTOR eye = DirectX::XMVectorSet(_eyePos.x, _eyePos.y, _eyePos.z, 0.f);
-		DirectX::XMVECTOR up = DirectX::XMVectorSet(_upDir.x, _upDir.y, _upDir.z, 0.f);
-		DirectX::XMVECTOR dir = DirectX::XMVectorSet(_eyeDir.x, _eyeDir.y, _eyeDir.z, 0.f);
-		return DirectX::XMMatrixLookToLH(eye, up, dir);
+		DirectX::XMFLOAT3 target(0, 0, 0);
+		//return DirectX::XMMatrixLookAtLH(
+		//	DirectX::XMLoadFloat3(&_eyePos), DirectX::XMLoadFloat3(&target), DirectX::XMLoadFloat3(&_upDir));
+
+		return DirectX::XMMatrixLookToLH(
+			DirectX::XMLoadFloat3(&_eyePos),DirectX::XMLoadFloat3(&_eyeDir),DirectX::XMLoadFloat3(&_upDir));
 	}
 
 	void Camera::Update(float deltaTime)
