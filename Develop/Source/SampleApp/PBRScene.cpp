@@ -20,12 +20,12 @@ NamelessEngine::Utility::RESULT PBRScene::Init()
 
 	Actor* cubeActor = new Actor();
 	cubeActor->AddComponent<Component::Transform>();
-	cubeActor->AddComponent<Component::Mesh>()->Create(device, sphereData);
+	cubeActor->AddComponent<Component::Mesh>()->Create(device, meshData);
 
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(device, _camera.GetConstantBuffer(), 0);
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(
 		device, cubeActor->GetComponent<Component::Transform>()->GetConstantBuffer(), 1);
-	cubeActor->GetComponent<Component::Transform>()->position.z = 1;
+	cubeActor->GetComponent<Component::Transform>()->position.z = 3;
 	_meshActors.push_back(cubeActor);
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;
@@ -33,6 +33,9 @@ NamelessEngine::Utility::RESULT PBRScene::Init()
 
 void PBRScene::Update(float deltaTime)
 {
+	//_camera.SetRotateY(45);
+	_camera.MoveForward(-0.1f);
+
 	_camera.Update(deltaTime);
 
 	if (!_meshActors.empty()) {

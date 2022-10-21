@@ -31,10 +31,22 @@ namespace NamelessEngine::Component
 	{
 		XMMATRIX translation = XMMatrixTranslation(position.x, position.y, position.z);
 		XMMATRIX scaling = XMMatrixScaling(scale.x, scale.y, scale.z);
-		XMMATRIX rotation = XMMatrixRotationY(eularAngle.y);
+		XMMATRIX rotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&eularAngle));
 		XMMATRIX matrix = rotation * translation * scaling;
 
 		return matrix;
+	}
+	DirectX::XMMATRIX Transform::GetTranslationMatrix()
+	{
+		return XMMatrixTranslation(position.x, position.y, position.z);
+	}
+	DirectX::XMMATRIX Transform::GetRotationXYZMatrix()
+	{
+		return XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&eularAngle));
+	}
+	DirectX::XMMATRIX Transform::GetScallingMatrix()
+	{
+		return XMMatrixScaling(scale.x, scale.y, scale.z);
 	}
 	DX12API::ConstantBuffer& Transform::GetConstantBuffer()
 	{

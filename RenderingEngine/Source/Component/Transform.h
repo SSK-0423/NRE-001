@@ -28,6 +28,10 @@ namespace NamelessEngine::Component
 		void Draw(DX12API::RenderingContext& renderContext);
 
 		DirectX::XMMATRIX GetTransformMatrix();
+		DirectX::XMMATRIX GetTranslationMatrix();
+		DirectX::XMMATRIX GetRotationXYZMatrix();
+		DirectX::XMMATRIX GetScallingMatrix();
+		
 		DX12API::ConstantBuffer& GetConstantBuffer();
 	};
 }

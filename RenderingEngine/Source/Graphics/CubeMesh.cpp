@@ -18,34 +18,34 @@ namespace NamelessEngine::Graphics
 
 		std::vector<DirectX::XMFLOAT3> vertices = {
 			// positiveX
-			DirectX::XMFLOAT3(0.5,-0.5, -0.5),
+			DirectX::XMFLOAT3(0.5,-0.5, -0.5),	//0
 			DirectX::XMFLOAT3(0.5, 0.5, -0.5),
 			DirectX::XMFLOAT3(0.5,-0.5,  0.5),
 			DirectX::XMFLOAT3(0.5, 0.5,  0.5),
 			// negativeX
-			DirectX::XMFLOAT3(-0.5,-0.5,-0.5),
+			DirectX::XMFLOAT3(-0.5,-0.5,-0.5),	//4
 			DirectX::XMFLOAT3(-0.5, 0.5,-0.5),
 			DirectX::XMFLOAT3(-0.5,-0.5, 0.5),
 			DirectX::XMFLOAT3(-0.5, 0.5, 0.5),
 
 			// positiveY
-			DirectX::XMFLOAT3(-0.5, 0.5,-0.5),
+			DirectX::XMFLOAT3(-0.5, 0.5,-0.5),	//8
 			DirectX::XMFLOAT3(0.5, 0.5,-0.5),
 			DirectX::XMFLOAT3(-0.5, 0.5, 0.5),
 			DirectX::XMFLOAT3(0.5, 0.5, 0.5),
 			// negativeY
-			DirectX::XMFLOAT3(-0.5,-0.5,-0.5),
+			DirectX::XMFLOAT3(-0.5,-0.5,-0.5),	//12
 			DirectX::XMFLOAT3(0.5,-0.5,-0.5),
 			DirectX::XMFLOAT3(-0.5,-0.5, 0.5),
 			DirectX::XMFLOAT3(0.5,-0.5, 0.5),
 
 			// positiveZ
-			DirectX::XMFLOAT3(-0.5,-0.5, 0.5),
+			DirectX::XMFLOAT3(-0.5,-0.5, 0.5),	//16
 			DirectX::XMFLOAT3(0.5,-0.5, 0.5),
 			DirectX::XMFLOAT3(-0.5, 0.5, 0.5),
 			DirectX::XMFLOAT3(0.5, 0.5, 0.5),
 			// negativeZ
-			DirectX::XMFLOAT3(-0.5,-0.5,-0.5),
+			DirectX::XMFLOAT3(-0.5,-0.5,-0.5),	//20
 			DirectX::XMFLOAT3(0.5,-0.5,-0.5),
 			DirectX::XMFLOAT3(-0.5, 0.5,-0.5),
 			DirectX::XMFLOAT3(0.5, 0.5,-0.5),
@@ -129,19 +129,19 @@ namespace NamelessEngine::Graphics
 		std::vector<unsigned int> indices = {
 			// positiveX
 			0,1,2,
-			0,2,3,
+			1,3,2,
 			// negativeX
-			4,5,7,
-			4,7,6,
+			5,4,6,
+			5,6,7,
 			// positiveY
 			8,10,11,
 			8,11,9,
 			// negativeY
-			12,14,15,
-			12,15,13,
+			12,13,15,
+			15,14,12,
 			// positiveZ
-			16,18,19,
-			16,19,17,
+			16,17,19,
+			19,18,16,
 			// negativeZ
 			20,22,23,
 			20,23,21
