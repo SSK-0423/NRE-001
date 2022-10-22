@@ -25,7 +25,7 @@ NamelessEngine::Utility::RESULT PBRScene::Init()
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(device, _camera.GetConstantBuffer(), 0);
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(
 		device, cubeActor->GetComponent<Component::Transform>()->GetConstantBuffer(), 1);
-	cubeActor->GetComponent<Component::Transform>()->position.z = 3;
+	cubeActor->GetComponent<Component::Transform>()->SetPosition(0.f, 0.f, 3.f);
 	_meshActors.push_back(cubeActor);
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;
@@ -33,8 +33,9 @@ NamelessEngine::Utility::RESULT PBRScene::Init()
 
 void PBRScene::Update(float deltaTime)
 {
-	//_camera.SetRotateY(45);
-	_camera.MoveForward(-0.1f);
+	//_camera.GetTransform().MoveForward(0.001f);
+	//_camera.GetTransform().MoveRight(0.001f);
+	//_camera.GetTransform().MoveUp(0.001f);
 
 	_camera.Update(deltaTime);
 

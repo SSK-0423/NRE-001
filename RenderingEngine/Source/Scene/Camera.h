@@ -9,13 +9,6 @@ namespace NamelessEngine::Scene {
 		Camera();
 		~Camera();
 	private:
-		DirectX::XMFLOAT3 _forward;
-		DirectX::XMFLOAT3 _right;
-		DirectX::XMFLOAT3 _up;
-
-		DirectX::XMFLOAT3 _eyePos;
-		DirectX::XMFLOAT3 _upDir;
-		DirectX::XMFLOAT3 _eyeDir;
 		DirectX::XMMATRIX ViewMatrix();
 
 		float _fov;
@@ -37,14 +30,6 @@ namespace NamelessEngine::Scene {
 	public:
 		void Update(float deltaTime);
 		DX12API::ConstantBuffer& GetConstantBuffer();
-
-		void MoveForward(float distance);
-		void RotateX(float eularAngle);
-		void RotateY(float eularAngle);
-		void RotateZ(float eularAngle);
-		void SetRotateX(float eularAngle);
-		void SetRotateY(float eularAngle);
-		void SetRotateZ(float eularAngle);
-
+		Component::Transform& GetTransform();
 	};
 }
