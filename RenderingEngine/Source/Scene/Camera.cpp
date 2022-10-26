@@ -38,6 +38,7 @@ namespace NamelessEngine::Scene
 
 	void Camera::Update(float deltaTime)
 	{
+		_transform.Update(deltaTime);
 		_bufferData.eyePosition = _transform.Position();
 		_bufferData.projection = ProjectionMatrix();
 		_bufferData.view = ViewMatrix();

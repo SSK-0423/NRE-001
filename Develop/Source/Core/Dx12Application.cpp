@@ -7,7 +7,7 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Utility;
 
 Dx12Application::Dx12Application(Dx12ApplicationImpl& applicationImpl)
-	: _graphicsEngine(Dx12GraphicsEngine::Instance()), _applicationImpl(applicationImpl)
+	: _graphicsEngine(Dx12GraphicsEngine::Instance()), _applicationImpl(applicationImpl), _input(Input::Instance())
 {
 }
 
@@ -31,6 +31,9 @@ RESULT Dx12Application::Init()
 	result = _applicationImpl.Init(_graphicsEngine, *_window.get());
 	if (result == RESULT::FAILED) { return result; }
 
+	result = _input.Init(*_window.get());
+	if (result == RESULT::FAILED) { return result; }
+
 	return result;
 }
 
@@ -42,6 +45,9 @@ void Dx12Application::Run()
 	// ゲームループ
 	while (_window->DispatchWindowMessage())
 	{
+		// キーマウス入力情報の更新
+		_input.Update();
+
 		// いずれエンジン(フレームワーク側)に吸収させる？？？？
 		_applicationImpl.Update(0.f);
 

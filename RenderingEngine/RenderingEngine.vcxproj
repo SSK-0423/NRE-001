@@ -64,6 +64,7 @@
     <ClCompile Include="Source\Component\Transform.cpp" />
     <ClCompile Include="Source\Core\AppWindow.cpp" />
     <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Core\Input.cpp" />
     <ClCompile Include="Source\DX12API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\DX12API\DepthStencilBuffer.cpp" />
     <ClCompile Include="Source\DX12API\DescriptorHeapCBV_SRV_UAV.cpp" />
@@ -106,6 +107,7 @@
     <ClInclude Include="Source\Component\Transform.h" />
     <ClInclude Include="Source\Core\AppWindow.h" />
     <ClInclude Include="Source\Core\Dx12GraphicsEngine.h" />
+    <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\DX12API\ConstantBuffer.h" />
     <ClInclude Include="Source\DX12API\DepthStencilBuffer.h" />
     <ClInclude Include="Source\DX12API\DescriptorHeapCBV_SRV_UAV.h" />

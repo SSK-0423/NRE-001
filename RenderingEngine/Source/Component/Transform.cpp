@@ -28,8 +28,8 @@ namespace NamelessEngine::Component
 	{
 		// フォワード/ライト/アップベクトル計算
 		XMStoreFloat3(&_forward, XMVector3Transform(XMLoadFloat3(&FORWARD), GetRotationXYZMatrix()));
-		XMStoreFloat3(&_forward, XMVector3Transform(XMLoadFloat3(&RIGHT), GetRotationXYZMatrix()));
-		XMStoreFloat3(&_forward, XMVector3Transform(XMLoadFloat3(&UP), GetRotationXYZMatrix()));
+		XMStoreFloat3(&_right, XMVector3Transform(XMLoadFloat3(&RIGHT), GetRotationXYZMatrix()));
+		XMStoreFloat3(&_up, XMVector3Transform(XMLoadFloat3(&UP), GetRotationXYZMatrix()));
 
 		_bufferData.world = GetTransformMatrix();
 		_buffer.UpdateData(&_bufferData);

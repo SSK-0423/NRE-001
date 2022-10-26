@@ -3,6 +3,7 @@
 // Core
 #include "Core/AppWindow.h"
 #include "Core/Dx12GraphicsEngine.h"
+#include "Core/Input.h"
 
 // DX12API
 #include "DX12API/Texture.h"

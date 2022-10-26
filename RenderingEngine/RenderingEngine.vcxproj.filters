@@ -172,6 +172,9 @@
     <ClCompile Include="Source\Graphics\PBRRenderer.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Core\Input.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DX12API\ConstantBuffer.h">
@@ -314,6 +317,9 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\IMesh.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Input.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
