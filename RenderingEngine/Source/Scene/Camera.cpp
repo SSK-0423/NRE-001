@@ -5,10 +5,12 @@
 using namespace NamelessEngine::Core;
 using namespace DirectX;
 
+float NamelessEngine::Scene::Camera::_aspect = 1.f;
+
 namespace NamelessEngine::Scene
 {
 	Scene::Camera::Camera() :
-		_fov(XM_PIDIV2), _aspect(1.f), _near(0.1f), _far(100.f)
+		_fov(XM_PIDIV2), _near(0.1f), _far(100.f)
 	{
 		Utility::RESULT result =
 			_buffer.Create(Dx12GraphicsEngine::Instance().Device(), &_bufferData, sizeof(CameraCBuff));
@@ -52,5 +54,9 @@ namespace NamelessEngine::Scene
 	Component::Transform& Camera::GetTransform()
 	{
 		return _transform;
+	}
+	void Camera::Resize(float width, float height)
+	{
+		_aspect = width / height;
 	}
 }

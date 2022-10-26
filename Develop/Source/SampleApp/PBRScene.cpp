@@ -22,15 +22,13 @@ NamelessEngine::Utility::RESULT PBRScene::Init()
 
 	Actor* cubeActor = new Actor();
 	cubeActor->AddComponent<Component::Transform>();
-	cubeActor->AddComponent<Component::Mesh>()->Create(device, meshData);
+	cubeActor->AddComponent<Component::Mesh>()->Create(device, sphereData);
 
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(device, _camera.GetConstantBuffer(), 0);
 	cubeActor->GetComponent<Component::Mesh>()->SetConstantBuffer(
 		device, cubeActor->GetComponent<Component::Transform>()->GetConstantBuffer(), 1);
 	cubeActor->GetComponent<Component::Transform>()->SetPosition(0.f, 0.f, 3.f);
 	_meshActors.push_back(cubeActor);
-
-	_camera.GetTransform().SetEularAngle(0, 45, 0);
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;
 }

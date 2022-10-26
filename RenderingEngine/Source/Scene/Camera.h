@@ -12,7 +12,7 @@ namespace NamelessEngine::Scene {
 		DirectX::XMMATRIX ViewMatrix();
 
 		float _fov;
-		float _aspect;
+		static float _aspect;
 		float _near;
 		float _far;
 		DirectX::XMMATRIX ProjectionMatrix();
@@ -31,5 +31,6 @@ namespace NamelessEngine::Scene {
 		void Update(float deltaTime);
 		DX12API::ConstantBuffer& GetConstantBuffer();
 		Component::Transform& GetTransform();
+		static void Resize(float width, float height);
 	};
 }

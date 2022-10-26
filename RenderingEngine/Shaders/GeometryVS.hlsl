@@ -8,6 +8,7 @@ VertexOutput main(VertexInput input)
     output.normal = mul(world, float4(input.normal, 0.f));
     output.uv = input.uv;
     output.eyePosition = eyePos;
+    output.worldPosition = mul(world, float4(input.position, 1.f));
     
     return output;
 }

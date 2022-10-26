@@ -1,4 +1,5 @@
 #include "AppWindow.h"
+#include "Camera.h"
 #include <cassert>
 
 namespace NamelessEngine::Core
@@ -21,10 +22,19 @@ namespace NamelessEngine::Core
 	/// <returns></returns>
 	LRESULT WindowProcedure(HWND hwnd, UINT msg, WPARAM wparam, LPARAM lparam)
 	{
+		switch (msg)
+		{
 		// ウィンドウが破棄されたら呼ばれる
-		if (msg == WM_DESTROY) {
+		case WM_DESTROY:
 			PostQuitMessage(0);	// OSにアプリの終了を通知
 			return 0;
+		// ウィンドウサイズが変更されたら呼ばれる
+		case WM_SIZE:
+			// TODO: もっといい実装考える
+			NamelessEngine::Scene::Camera::Resize(LOWORD(lparam), HIWORD(lparam));
+			return 0;
+		default:
+			break;
 		}
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}

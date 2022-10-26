@@ -1,7 +1,7 @@
 #include "Dx12Application.h"
 
-const LONG WINDOW_WIDTH = 720;
-const LONG WINDOW_HEIGHT = 720;
+const LONG WINDOW_WIDTH = 1024;
+const LONG WINDOW_HEIGHT = 768;
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Utility;

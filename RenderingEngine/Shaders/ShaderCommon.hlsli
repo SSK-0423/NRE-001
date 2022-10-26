@@ -23,4 +23,5 @@ struct VertexOutput
     float3 normal : NORMAL;
     float2 uv : TEXCOORD;
     float3 eyePosition : POSITION;
+    float3 worldPosition : POSITION1;
 };
