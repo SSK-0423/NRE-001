@@ -29,22 +29,12 @@
 #include "DX12API/GraphicsPipelineState.h"
 
 // Graphics
-#include "Graphics/Geometry.h"
-#include "Graphics/GeometryImpl.h"
 #include "Graphics/CubeMesh.h"
 #include "Graphics/SphereMesh.h"
 #include "Graphics/SkySphere.h"
 #include "Graphics/SkyBox.h"
 #include "Graphics/Polygon.h"
 #include "Graphics/Sprite.h"
-
-#include "Graphics/FBXLoader.h"
-#include "Graphics/FBXMesh.h"
-
-#include "Graphics/IMaterial.h"
-#include "Graphics/PBRMaterial.h"
-#include "Graphics/PhongMaterial.h"
-
 #include "Graphics/IRenderer.h"
 #include "Graphics/PBRRenderer.h"
 
@@ -52,6 +42,7 @@
 #include "Component/Actor.h"
 #include "Component/IComponent.h"
 #include "Component/Transform.h"
+#include "Component/Material.h"
 #include "Component/Mesh.h"
 
 // Utility

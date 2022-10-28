@@ -1,10 +1,4 @@
 // PBR用のシェーダー
-Texture2D baseColor : register(t0);
-Texture2D roughness : register(t1);
-Texture2D metallic : register(t2);
-Texture2D normal : register(t3);
-Texture2D occlusion : register(t4); // オクルージョンの使い方はわからない⇒多分係数としてかける形だと思う
-
 sampler smp : register(s0);
 
 static const float PI = 3.141592f;

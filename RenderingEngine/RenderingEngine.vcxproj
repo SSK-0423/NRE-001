@@ -20,7 +20,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\PBR.hlsli" />
-    <None Include="Shaders\PhongReflectionModel.hlsli" />
     <None Include="Shaders\ShaderCommon.hlsli" />
     <None Include="Shaders\SkyBoxHeader.hlsli" />
   </ItemGroup>
@@ -60,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\Component\Actor.cpp" />
+    <ClCompile Include="Source\Component\Material.cpp" />
     <ClCompile Include="Source\Component\Mesh.cpp" />
     <ClCompile Include="Source\Component\Transform.cpp" />
     <ClCompile Include="Source\Core\AppWindow.cpp" />
@@ -82,12 +82,7 @@
     <ClCompile Include="Source\DX12API\Texture.cpp" />
     <ClCompile Include="Source\DX12API\VertexBuffer.cpp" />
     <ClCompile Include="Source\Graphics\CubeMesh.cpp" />
-    <ClCompile Include="Source\Graphics\FBXLoader.cpp" />
-    <ClCompile Include="Source\Graphics\FBXMesh.cpp" />
-    <ClCompile Include="Source\Graphics\Geometry.cpp" />
-    <ClCompile Include="Source\Graphics\PBRMaterial.cpp" />
     <ClCompile Include="Source\Graphics\PBRRenderer.cpp" />
-    <ClCompile Include="Source\Graphics\PhongMaterial.cpp" />
     <ClCompile Include="Source\Graphics\Polygon.cpp" />
     <ClCompile Include="Source\Graphics\SkyBox.cpp" />
     <ClCompile Include="Source\Graphics\SkySphere.cpp" />
@@ -103,6 +98,7 @@
     <ClInclude Include="Source\Component\Actor.h" />
     <ClInclude Include="Source\Component\ECSimage.h" />
     <ClInclude Include="Source\Component\IComponent.h" />
+    <ClInclude Include="Source\Component\Material.h" />
     <ClInclude Include="Source\Component\Mesh.h" />
     <ClInclude Include="Source\Component\Transform.h" />
     <ClInclude Include="Source\Core\AppWindow.h" />
@@ -126,16 +122,8 @@
     <ClInclude Include="Source\DX12API\Texture.h" />
     <ClInclude Include="Source\DX12API\VertexBuffer.h" />
     <ClInclude Include="Source\Graphics\CubeMesh.h" />
-    <ClInclude Include="Source\Graphics\FBXLoader.h" />
-    <ClInclude Include="Source\Graphics\FBXMesh.h" />
-    <ClInclude Include="Source\Graphics\Geometry.h" />
-    <ClInclude Include="Source\Graphics\GeometryImpl.h" />
-    <ClInclude Include="Source\Graphics\IMaterial.h" />
-    <ClInclude Include="Source\Graphics\IMesh.h" />
     <ClInclude Include="Source\Graphics\IRenderer.h" />
-    <ClInclude Include="Source\Graphics\PBRMaterial.h" />
     <ClInclude Include="Source\Graphics\PBRRenderer.h" />
-    <ClInclude Include="Source\Graphics\PhongMaterial.h" />
     <ClInclude Include="Source\Graphics\Polygon.h" />
     <ClInclude Include="Source\Graphics\SkyBox.h" />
     <ClInclude Include="Source\Graphics\SkySphere.h" />

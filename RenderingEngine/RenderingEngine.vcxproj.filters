@@ -39,9 +39,6 @@
     <None Include="Shaders\PBR.hlsli">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="Shaders\PhongReflectionModel.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\ShaderCommon.hlsli">
       <Filter>Shaders</Filter>
     </None>
@@ -115,21 +112,6 @@
     <ClCompile Include="Source\Graphics\CubeMesh.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\FBXLoader.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\FBXMesh.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\Geometry.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\PBRMaterial.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
-    <ClCompile Include="Source\Graphics\PhongMaterial.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\Polygon.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -174,6 +156,9 @@
     </ClCompile>
     <ClCompile Include="Source\Core\Input.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Material.cpp">
+      <Filter>Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -232,27 +217,6 @@
       <Filter>Utility</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\CubeMesh.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\FBXLoader.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\FBXMesh.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\Geometry.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\GeometryImpl.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\IMaterial.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\PBRMaterial.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\PhongMaterial.h">
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\Polygon.h">
@@ -315,11 +279,11 @@
     <ClInclude Include="Source\Component\Mesh.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Graphics\IMesh.h">
-      <Filter>Graphics</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Core\Input.h">
       <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Material.h">
+      <Filter>Component</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

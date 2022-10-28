@@ -34,8 +34,8 @@ namespace NamelessEngine::Graphics
 		_rootSignature = new DX12API::RootSignature();
 
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 2;
-		rootSigData._descRangeData.srvDescriptorNum = 1; // base,metal,rough,ao,normal,cubetex
+		rootSigData._descRangeData.cbvDescriptorNum = 3;
+		rootSigData._descRangeData.srvDescriptorNum = 1;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
