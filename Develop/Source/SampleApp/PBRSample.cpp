@@ -8,7 +8,7 @@ using namespace NamelessEngine::Utility;
 
 NamelessEngine::Utility::RESULT PBRSample::Init(NamelessEngine::Core::Dx12GraphicsEngine& graphicsEngine, NamelessEngine::Core::AppWindow& window)
 {
-	_scene = new PBRScene(window.GetWindowSize().cx, window.GetWindowSize().cy);
+	_scene = new PBRScene();
 	RESULT result = _scene->Init();
 	return result;
 }

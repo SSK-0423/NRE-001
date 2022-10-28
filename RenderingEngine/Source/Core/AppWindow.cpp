@@ -2,6 +2,8 @@
 #include "Camera.h"
 #include <cassert>
 
+HWND NamelessEngine::Core::AppWindow::_hwnd;
+
 namespace NamelessEngine::Core
 {
 	AppWindowInitData::AppWindowInitData(const TCHAR* name, LONG width, LONG height)
@@ -24,11 +26,11 @@ namespace NamelessEngine::Core
 	{
 		switch (msg)
 		{
-		// ウィンドウが破棄されたら呼ばれる
+			// ウィンドウが破棄されたら呼ばれる
 		case WM_DESTROY:
 			PostQuitMessage(0);	// OSにアプリの終了を通知
 			return 0;
-		// ウィンドウサイズが変更されたら呼ばれる
+			// ウィンドウサイズが変更されたら呼ばれる
 		case WM_SIZE:
 			// TODO: もっといい実装考える
 			NamelessEngine::Scene::Camera::Resize(LOWORD(lparam), HIWORD(lparam));

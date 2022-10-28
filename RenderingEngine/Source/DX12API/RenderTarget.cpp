@@ -27,7 +27,8 @@ namespace NamelessEngine::DX12API
 		if (result == RESULT::FAILED) { return result; }
 
 		// レンダーターゲットビュー生成
-		_rtvHeap.RegistDescriptor(device, _renderTargetBuffer);
+		_rtvHeap.RegistDescriptor(
+			device, _renderTargetBuffer, _renderTargetData.renderTargetBufferData.colorFormat);
 
 		// デプスステンシルバッファー生成
 		result = _depthStencilBuffer.Create(device, renderTargetData.depthStencilBufferData);
@@ -135,10 +136,9 @@ namespace NamelessEngine::DX12API
 		// ビューポート、シザー矩形セット
 		renderContext.SetViewport(viewport);
 		renderContext.SetScissorRect(scissorRect);
-
 	}
 
-	void RenderTarget::EndMultiRendering(RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext, CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect)
+	void RenderTarget::EndMultiRendering(RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext)
 	{
 		for (size_t idx = 0; idx < length; idx++)
 		{
@@ -149,5 +149,4 @@ namespace NamelessEngine::DX12API
 				D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE);
 		}
 	}
-
 }

@@ -6,8 +6,8 @@ using namespace NamelessEngine;
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Component;
 
-PBRScene::PBRScene(unsigned int window_width, unsigned int window_height)
-	: Scene(new NamelessEngine::Graphics::PBRRenderer(window_width, window_height))
+PBRScene::PBRScene()
+	: Scene(new NamelessEngine::Graphics::PBRRenderer())
 {
 }
 

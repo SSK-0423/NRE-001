@@ -24,6 +24,7 @@
 #include "DX12API/RenderingContext.h"
 
 #include "DX12API/Shader.h"
+#include "DX12API/ShaderLibrary.h"
 
 #include "DX12API/RootSignature.h"
 #include "DX12API/GraphicsPipelineState.h"
@@ -37,6 +38,9 @@
 #include "Graphics/Sprite.h"
 #include "Graphics/IRenderer.h"
 #include "Graphics/PBRRenderer.h"
+
+#include "Graphics/RenderPass.h"
+#include "Graphics/GBufferPass.h"
 
 // Component
 #include "Component/Actor.h"

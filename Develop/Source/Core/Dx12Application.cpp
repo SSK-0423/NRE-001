@@ -7,7 +7,8 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Utility;
 
 Dx12Application::Dx12Application(Dx12ApplicationImpl& applicationImpl)
-	: _graphicsEngine(Dx12GraphicsEngine::Instance()), _applicationImpl(applicationImpl), _input(Input::Instance())
+	: _graphicsEngine(Dx12GraphicsEngine::Instance()),
+	_applicationImpl(applicationImpl), _input(Input::Instance())
 {
 }
 
@@ -18,7 +19,7 @@ Dx12Application::~Dx12Application()
 RESULT Dx12Application::Init()
 {
 	// ウィンドウ初期化
-	_window = std::make_shared<AppWindow>();
+	_window = std::make_unique<AppWindow>();
 	AppWindowInitData initData(TEXT("レンダリングエンジン開発"), WINDOW_WIDTH, WINDOW_HEIGHT);
 	_window->CreateAppWindow(initData);
 
@@ -41,7 +42,7 @@ void Dx12Application::Run()
 {
 	// ウィンドウが作成されていないならその時点で終了
 	if (_window == nullptr) { return; }
-
+	
 	// ゲームループ
 	while (_window->DispatchWindowMessage())
 	{

@@ -90,10 +90,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="renderTargets"></param>
 		/// <param name="length"></param>
 		/// <param name="renderContext"></param>
-		/// <param name="viewport"></param>
-		/// <param name="scissorRect"></param>
 		static void EndMultiRendering(
-			RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext,
-			CD3DX12_VIEWPORT& viewport, CD3DX12_RECT& scissorRect);
+			RenderTarget* renderTargets, const size_t& length, RenderingContext& renderContext);
 	};
 }

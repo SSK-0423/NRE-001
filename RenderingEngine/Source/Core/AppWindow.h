@@ -24,6 +24,12 @@ namespace NamelessEngine::Core
 	public:
 		AppWindow() = default;
 		~AppWindow() = default;
+
+	private:
+		static HWND _hwnd;
+		WNDCLASSEX _wndClassEx;
+
+	public:
 		/// <summary>
 		/// ウィンドウ生成
 		/// </summary>
@@ -36,20 +42,16 @@ namespace NamelessEngine::Core
 		/// <returns>true: アプリ続行 false: アプリ終了</returns>
 		bool DispatchWindowMessage();
 
-	private:
-		HWND _hwnd;
-		WNDCLASSEX _wndClassEx;
-	public:
 		/// <summary>
 		/// ウィンドウハンドル取得
 		/// </summary>
 		/// <returns>ウィンドウハンドル</returns>
-		HWND& GetHwnd() { return _hwnd; }
+		static HWND& GetHwnd() { return _hwnd; }
 
 		/// <summary>
 		/// ウィンドウサイズ取得
 		/// </summary>
 		/// <returns>成功: ウィンドウサイズ 失敗: 縦横0のサイズを返す</returns>
-		SIZE GetWindowSize();
+		static SIZE GetWindowSize();
 	};
 }
