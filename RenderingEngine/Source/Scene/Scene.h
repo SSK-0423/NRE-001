@@ -1,29 +1,33 @@
 #pragma once
-#include "Actor.h"
-#include "IRenderer.h"
 #include "EngineUtility.h"
 #include <vector>
+#include <memory>
+
+namespace NamelessEngine
+{
+	class Actor;
+}
 
 namespace NamelessEngine::Scene {
+	class Camera;
+
 	class Scene {
 	public:
-		Scene(Graphics::IRenderer* renderer);
+		Scene();
 		virtual ~Scene();
 
 	protected:
 		std::vector<Actor*> _meshActors;
 		std::vector<Actor*> _guiActors;
 		
-		Graphics::IRenderer* _renderer;
-
+		std::unique_ptr<Camera> _camera;
 	public:
-		/// <summary>
-		/// シーンの初期化(アクターの追加)などを行う
-		/// </summary>
-		/// <returns></returns>
-		virtual Utility::RESULT Init() = 0;
+		Utility::RESULT Init();
+		virtual Utility::RESULT ImplInit() = 0;
 		virtual void Update(float deltaTime) = 0;
-		virtual void Draw() = 0;
 		virtual void Final() = 0;
+		std::vector<Actor*>& GetMeshActors();
+		std::vector<Actor*>& GetGUIActors();
+		Camera& GetCamera();
 	};
 }

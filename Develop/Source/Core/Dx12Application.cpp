@@ -29,10 +29,10 @@ RESULT Dx12Application::Init()
 	if (result == RESULT::FAILED) { return result; }
 
 	// アプリケーション本体の初期化
-	result = _applicationImpl.Init(_graphicsEngine, *_window.get());
+	result = _applicationImpl.Init(_graphicsEngine, *_window);
 	if (result == RESULT::FAILED) { return result; }
 
-	result = _input.Init(*_window.get());
+	result = _input.Init(*_window);
 	if (result == RESULT::FAILED) { return result; }
 
 	return result;

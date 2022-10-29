@@ -1,6 +1,10 @@
 #pragma once
-#include "Actor.h"
 #include <vector>
+#include "EngineUtility.h"
+
+namespace NamelessEngine::Scene {
+	class Scene;
+}
 
 namespace NamelessEngine::Graphics {
 	/// <summary>
@@ -10,6 +14,7 @@ namespace NamelessEngine::Graphics {
 	public:
 		IRenderer() {}
 		virtual ~IRenderer() {}
-		virtual void Render(std::vector<Actor*>& _meshActors, std::vector<Actor*>& _guiActors) = 0;
+		virtual Utility::RESULT Init() = 0;
+		virtual void Render(Scene::Scene& scene) = 0;
 	};
 }

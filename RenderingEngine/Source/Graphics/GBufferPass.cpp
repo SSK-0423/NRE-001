@@ -19,26 +19,6 @@ namespace NamelessEngine::Graphics
 	GBufferPass::GBufferPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState())
 	{
-		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
-
-		RESULT result = CreateRootSignature(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"ルートシグネチャ生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateGraphicsPipelineState(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"グラフィクスパイプライン生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateRenderTarget(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
-		}
-
-		SIZE windowSize = AppWindow::GetWindowSize();
-
-		_viewport = CD3DX12_VIEWPORT(
-			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
-		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
 	}
 	GBufferPass::~GBufferPass()
 	{
@@ -93,7 +73,8 @@ namespace NamelessEngine::Graphics
 
 		_renderTargets[GBUFFER_TYPE::COLOR] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::NORMAL] = std::make_unique<DX12API::RenderTarget>();
-		_renderTargets[GBUFFER_TYPE::METALLIC_ROUGHNESS] = std::make_unique<DX12API::RenderTarget>();
+		_renderTargets[GBUFFER_TYPE::WORLD_POS] = std::make_unique<DX12API::RenderTarget>();
+		_renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT] = std::make_unique<DX12API::RenderTarget>();
 
 		RESULT result = _renderTargets[GBUFFER_TYPE::COLOR]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
@@ -101,8 +82,11 @@ namespace NamelessEngine::Graphics
 		result = _renderTargets[GBUFFER_TYPE::NORMAL]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
+		result = _renderTargets[GBUFFER_TYPE::WORLD_POS]->Create(device, data);
+		if (result == RESULT::FAILED) { return result; }
+
 		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-		result = _renderTargets[GBUFFER_TYPE::METALLIC_ROUGHNESS]->Create(device, data);
+		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
 		return result;
@@ -110,6 +94,31 @@ namespace NamelessEngine::Graphics
 	Texture& GBufferPass::GetGBuffer(GBUFFER_TYPE type)
 	{
 		return _renderTargets[type]->GetRenderTargetTexture();
+	}
+	Utility::RESULT GBufferPass::Init()
+	{
+		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
+
+		RESULT result = CreateRootSignature(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"ルートシグネチャ生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateGraphicsPipelineState(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"グラフィクスパイプライン生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateRenderTarget(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
+		}
+
+		SIZE windowSize = AppWindow::GetWindowSize();
+
+		_viewport = CD3DX12_VIEWPORT(
+			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
+		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
+
+		return result;
 	}
 	Utility::RESULT GBufferPass::CreateGraphicsPipelineState(ID3D12Device& device)
 	{
@@ -144,10 +153,11 @@ namespace NamelessEngine::Graphics
 		pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 		// レンダーターゲットの設定
-		pipelineState.NumRenderTargets = 3;
+		pipelineState.NumRenderTargets = 4;
 		pipelineState.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// カラー
 		pipelineState.RTVFormats[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// 法線
-		pipelineState.RTVFormats[2] = DXGI_FORMAT_R8G8B8A8_UNORM;	// メタリック/ラフネス
+		pipelineState.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// ワールド座標
+		pipelineState.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;	// メタリック/ラフネス/リフレクション
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1

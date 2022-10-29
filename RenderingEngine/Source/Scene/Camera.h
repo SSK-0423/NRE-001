@@ -2,6 +2,7 @@
 #include <DirectXMath.h>
 #include "ConstantBuffer.h"
 #include "Transform.h"
+#include "EngineUtility.h"
 
 namespace NamelessEngine::Scene {
 	class Camera {
@@ -28,6 +29,7 @@ namespace NamelessEngine::Scene {
 		Component::Transform _transform;
 
 	public:
+		Utility::RESULT Init();
 		void Update(float deltaTime);
 		DX12API::ConstantBuffer& GetConstantBuffer();
 		Component::Transform& GetTransform();

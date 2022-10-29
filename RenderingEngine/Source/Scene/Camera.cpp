@@ -12,11 +12,6 @@ namespace NamelessEngine::Scene
 	Scene::Camera::Camera() :
 		_fov(XM_PIDIV2), _near(0.1f), _far(100.f)
 	{
-		Utility::RESULT result =
-			_buffer.Create(Dx12GraphicsEngine::Instance().Device(), &_bufferData, sizeof(CameraCBuff));
-		if (result == Utility::RESULT::FAILED) {
-			MessageBox(NULL, L"カメラのコンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
-		}
 	}
 
 	Scene::Camera::~Camera()
@@ -36,6 +31,13 @@ namespace NamelessEngine::Scene
 
 		return XMMatrixLookToLH(
 			XMLoadFloat3(&eyePos), XMLoadFloat3(&eyeDir), XMLoadFloat3(&up));
+	}
+
+	Utility::RESULT Camera::Init()
+	{
+		return _buffer.Create(
+			Dx12GraphicsEngine::Instance().Device(), &_bufferData, sizeof(CameraCBuff));
+	
 	}
 
 	void Camera::Update(float deltaTime)

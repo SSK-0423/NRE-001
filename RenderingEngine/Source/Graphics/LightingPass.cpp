@@ -3,6 +3,7 @@
 
 #include "RenderTarget.h"
 #include "Texture.h"
+#include "ConstantBuffer.h"
 #include "ShaderResourceViewDesc.h"
 #include "RootSignature.h"
 #include "GraphicsPipelineState.h"
@@ -15,36 +16,14 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
+constexpr UINT CUBETEX_INDEX = 4;
+
 namespace NamelessEngine::Graphics
 {
 	LightingPass::LightingPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
-		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV())
+		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer())
 	{
-		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
-
-		RESULT result = CreateRootSignature(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"ルートシグネチャ生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateGraphicsPipelineState(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"グラフィクスパイプライン生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateRenderTarget(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateDescriptorHeap(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
-		}
-
-		SIZE windowSize = AppWindow::GetWindowSize();
-
-		_viewport = CD3DX12_VIEWPORT(
-			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
-		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
 	}
 
 	LightingPass::~LightingPass()
@@ -54,7 +33,8 @@ namespace NamelessEngine::Graphics
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 1;
-		rootSigData._descRangeData.srvDescriptorNum = 3;
+		// カラー、法線、キューブマップUV、メタリック・ラフネス、キューブテクスチャ
+		rootSigData._descRangeData.srvDescriptorNum = 5;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
@@ -103,9 +83,47 @@ namespace NamelessEngine::Graphics
 	{
 		return Utility::RESULT::SUCCESS;
 	}
+	Utility::RESULT LightingPass::CreateParamBuffer(ID3D12Device& device)
+	{
+		return _paramBuffer->Create(device, &_paramData, sizeof(ParameterCBuff));
+	}
 	Utility::RESULT LightingPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		return _descriptorHeap->Create(device);
+	}
+
+	Utility::RESULT LightingPass::Init()
+	{
+		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
+
+		RESULT result = CreateRootSignature(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"ルートシグネチャ生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateGraphicsPipelineState(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"グラフィクスパイプライン生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateRenderTarget(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateDescriptorHeap(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateParamBuffer(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
+		}
+
+		SIZE windowSize = AppWindow::GetWindowSize();
+
+		_viewport = CD3DX12_VIEWPORT(
+			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
+		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
+
+		return result;
 	}
 
 	void LightingPass::Render()
@@ -124,8 +142,14 @@ namespace NamelessEngine::Graphics
 	void LightingPass::SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture)
 	{
 		ShaderResourceViewDesc desc(texture);
-		// 0: カラー, 1:法線, 2:メタリック・ラフネス
+		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, static_cast<int>(type));
+	}
+	void LightingPass::SetCubeTexture(DX12API::Texture& texture)
+	{
+		ShaderResourceViewDesc desc(texture, true);
+		_descriptorHeap->RegistShaderResource(
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX);
 	}
 }

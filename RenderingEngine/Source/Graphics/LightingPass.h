@@ -2,6 +2,7 @@
 #include <memory>
 #include <unordered_map>
 #include <d3dx12.h>
+#include <DirectXMath.h>
 #include "EngineUtility.h"
 
 namespace NamelessEngine::DX12API {
@@ -9,6 +10,7 @@ namespace NamelessEngine::DX12API {
 	class RootSignature;
 	class GraphicsPipelineState;
 	class Texture;
+	class ConstantBuffer;
 	class DescriptorHeapCBV_SRV_UAV;
 }
 
@@ -21,6 +23,11 @@ namespace NamelessEngine::Graphics {
 		~LightingPass();
 
 	private:
+		struct ParameterCBuff {
+			DirectX::XMFLOAT3 eyePosition;
+		};
+		ParameterCBuff _paramData;
+
 		CD3DX12_VIEWPORT _viewport;
 		CD3DX12_RECT _scissorRect;
 		
@@ -33,11 +40,16 @@ namespace NamelessEngine::Graphics {
 		
 		std::unordered_map<GBUFFER_TYPE, DX12API::Texture&> _gbuffers;
 
+		std::unique_ptr<DX12API::ConstantBuffer> _paramBuffer;
+		Utility::RESULT CreateParamBuffer(ID3D12Device& device);
+
 		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _descriptorHeap = nullptr;
 		Utility::RESULT CreateDescriptorHeap(ID3D12Device& device);
 
 	public:
+		Utility::RESULT Init();
 		void Render();
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
+		void SetCubeTexture(DX12API::Texture& texture);
 	};
 }

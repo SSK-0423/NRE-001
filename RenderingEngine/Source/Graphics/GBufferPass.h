@@ -20,7 +20,8 @@ namespace NamelessEngine::Graphics {
 	enum class GBUFFER_TYPE {
 		COLOR = 0,
 		NORMAL,
-		METALLIC_ROUGHNESS,
+		WORLD_POS,
+		METAL_ROUGH_REFLECT,
 		GBUFFER_TYPE_NUM,
 	};
 
@@ -41,6 +42,7 @@ namespace NamelessEngine::Graphics {
 
 		std::unordered_map<GBUFFER_TYPE, std::unique_ptr<DX12API::RenderTarget>> _renderTargets;
 	public:
+		Utility::RESULT Init();
 		void Render(std::vector<Actor*>& actors);
 		DX12API::Texture& GetGBuffer(GBUFFER_TYPE type);
 	};

@@ -1,6 +1,6 @@
 #pragma once
 #include <DirectXMath.h>
-
+#include <Windows.h>
 #include "IComponent.h"
 
 namespace NamelessEngine {
@@ -30,6 +30,7 @@ namespace NamelessEngine::Component {
 			DirectX::XMFLOAT4 baseColor;
 			float metallic;
 			float roughness;
+			BOOL useReflection;
 		};
 		MaterialCBuff _materialData;
 
@@ -42,6 +43,7 @@ namespace NamelessEngine::Component {
 		void SetBaseColor(float r, float g, float b, float a = 1);
 		void SetMetallic(float metallic);
 		void SetRoughness(float roughness);
+		void SetUseReflection(BOOL useReflection);
 
 		DX12API::ConstantBuffer& GetConstantBuffer();
 	};

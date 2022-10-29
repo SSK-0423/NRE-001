@@ -2,8 +2,20 @@
 #include "IRenderer.h"
 #include "GBufferPass.h"
 #include "LightingPass.h"
+#include "EngineUtility.h"
 
 #include <d3dx12.h>
+#include <memory>
+
+namespace NamelessEngine {
+	namespace DX12API {
+		class Texture;
+	}
+	namespace Scene {
+		class Camera;
+		class Scene;
+	}
+}
 
 namespace NamelessEngine::Graphics {
 	class PBRRenderer : public IRenderer {
@@ -14,7 +26,10 @@ namespace NamelessEngine::Graphics {
 	private:
 		GBufferPass _gbufferPass;
 		LightingPass _lightingPass;
+		std::unique_ptr<DX12API::Texture> _cubeTexture;
+
 	public:
-		void Render(std::vector<Actor*>& _meshActors, std::vector<Actor*>& _guiActors);
+		Utility::RESULT Init() override;
+		void Render(Scene::Scene& scene) override;
 	};
 }
