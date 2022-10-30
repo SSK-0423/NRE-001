@@ -18,8 +18,6 @@ PBRScene::~PBRScene()
 
 Utility::RESULT PBRScene::ImplInit()
 {
-	_camera->GetTransform().SetPosition(0, 1.f, 2.f);
-
 	ID3D12Device& device = Core::Dx12GraphicsEngine::Instance().Device();
 	MeshData meshData = Graphics::CubeMesh::CreateMeshData();
 	MeshData sphereData = Graphics::SphereMesh::CreateMeshData(100, 100, 0.5);

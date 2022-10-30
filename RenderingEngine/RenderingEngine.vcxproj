@@ -78,6 +78,13 @@
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Component\Actor.cpp" />
     <ClCompile Include="Source\Component\Material.cpp" />
     <ClCompile Include="Source\Component\Mesh.cpp" />
@@ -116,6 +123,14 @@
     <ClCompile Include="Source\Utility\EngineUtility.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
     <ClInclude Include="Source\Component\AudioSource.h" />
     <ClInclude Include="Source\Component\Colider.h" />
     <ClInclude Include="Source\Component\Actor.h" />
@@ -233,7 +248,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Scene;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Utility;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Graphics;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\DX12API;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Core;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -280,7 +295,7 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Scene;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Utility;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Graphics;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\DX12API;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Core;C:\DirectX12\NamelessRenderingEngine_001\RenderingEngine\Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>

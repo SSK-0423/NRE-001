@@ -64,8 +64,8 @@ namespace NamelessEngine::Graphics
 		data.depthStencilBufferData.height = windowSize.cy;
 
 		data.renderTargetBufferData.clearColor[0] = 0.f;
-		data.renderTargetBufferData.clearColor[1] = 0.f;
-		data.renderTargetBufferData.clearColor[2] = 0.f;
+		data.renderTargetBufferData.clearColor[1] = 1.f;
+		data.renderTargetBufferData.clearColor[2] = 1.f;
 		data.renderTargetBufferData.clearColor[3] = 1.f; 
 		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		data.renderTargetBufferData.width = windowSize.cx;
