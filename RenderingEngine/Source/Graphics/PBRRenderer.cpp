@@ -8,6 +8,7 @@
 #include "Texture.h"
 
 #include "Scene.h"
+#include "Camera.h"
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
@@ -43,8 +44,15 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 		_lightingPass.SetCubeTexture(*_cubeTexture);
 	}
+	void PBRRenderer::Update(float deltatime)
+	{
+	}
 	void PBRRenderer::Render(Scene::Scene& scene)
 	{
+		// バッファ更新
+		_lightingPass.SetEyePosition(scene.GetCamera().GetTransform().Position());
+		_lightingPass.UpdateParamData();
+
 		// 1. GBuffer出力パス
 		_gbufferPass.Render(scene.GetMeshActors());
 		// 2. ライティングパス

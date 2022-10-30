@@ -29,6 +29,7 @@ NamelessEngine::Utility::RESULT PBRSample::Init(
 void PBRSample::Update(float deltaTime)
 {
 	_scene->Update(deltaTime);
+	_renderer->Update(deltaTime);
 }
 
 void PBRSample::Draw(NamelessEngine::Core::Dx12GraphicsEngine& graphicsEngine)

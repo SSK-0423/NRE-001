@@ -85,8 +85,9 @@ namespace NamelessEngine::Graphics
 		result = _renderTargets[GBUFFER_TYPE::WORLD_POS]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
-		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data);
+		RenderTargetData data2 = data;
+		data2.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data2);
 		if (result == RESULT::FAILED) { return result; }
 
 		return result;

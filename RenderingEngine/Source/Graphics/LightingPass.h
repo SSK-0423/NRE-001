@@ -48,8 +48,10 @@ namespace NamelessEngine::Graphics {
 
 	public:
 		Utility::RESULT Init();
+		void UpdateParamData();
 		void Render();
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
 		void SetCubeTexture(DX12API::Texture& texture);
+		void SetEyePosition(DirectX::XMFLOAT3 eyePos);
 	};
 }

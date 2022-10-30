@@ -15,6 +15,7 @@ namespace NamelessEngine::Graphics {
 		IRenderer() {}
 		virtual ~IRenderer() {}
 		virtual Utility::RESULT Init() = 0;
+		virtual void Update(float deltatime) = 0;
 		virtual void Render(Scene::Scene& scene) = 0;
 	};
 }

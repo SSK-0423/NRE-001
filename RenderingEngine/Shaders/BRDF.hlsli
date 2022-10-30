@@ -1,4 +1,5 @@
 static const float PI = 3.141592f;
+static const float EPSILON = 0.0001f;
 
 // Schlickによるフレネル項の近似式
 // cos_in 入射角のコサイン
@@ -15,7 +16,7 @@ float3 SchlickFresnel(float3 baseColor, float metallic, float2 uv, float VH)
 float Beckman(float roughness, float2 uv, float NH)
 {
     float alpha = roughness;
-    alpha = 0.001f;
+    alpha = max(EPSILON, roughness);
     float alpha2 = pow(alpha, 2);
     float cos4 = pow(NH, 4);
     float tan_mn2 = (1.f - pow(NH, 2)) / pow(NH, 2);
@@ -43,23 +44,23 @@ float3 normalizeLambert(float3 baseColor)
 // Cook-TorranceやKarisモデルの派生元
 float3 TorranceSparrow(float D, float G, float3 Fr, float cos_o, float cos_i)
 {
-    return (D * G * Fr) / (4.f * cos_o * cos_i);
+    return (D * G * Fr) / (4.f * cos_o * cos_i + EPSILON);
 }
 
 // Cook-Torranceモデル
-float3 CookTorrance(float roughness, float2 uv, float3 normal, float3 halfVec,float3 view, float light)
+float3 CookTorrance(
+    float3 baseColor, float metallic, float roughness, float2 uv, float3 N, float3 H, float3 V, float3 L)
 {
-    float NH = dot(normal, halfVec);
-    float NV = dot(normal, view);
-    float NL = dot(normal, light);
-    float VH = dot(view, halfVec);
+    float NH = saturate(dot(N, H));
+    float NV = saturate(dot(N, V));
+    float NL = saturate(dot(N, L));
+    float VH = saturate(dot(V, H));
     
-    return float3(0, 0, 0);
-    //float D = Beckman(input.uv, input.NH);
-    //float G2 = Vcavity(input.NH, input.NV, input.NL, input.VH);
-    //float3 Fr = SchlickFresnel(input.uv, input.VH);
-    //float cos_o = input.NL; // 出射方向のコサイン
-    //float cos_i = input.NV; // 入射方向のコサイン
+    float D = Beckman(roughness, uv, NH);
+    float G2 = Vcavity(NH, NV, NL, VH);
+    float3 Fr = SchlickFresnel(baseColor, metallic, uv, VH);
+    float cos_o = NL; // 出射方向のコサイン
+    float cos_i = NV; // 入射方向のコサイン
     
-    //return TorranceSparrow(D, G2, Fr, cos_o, cos_i);
+    return TorranceSparrow(D, G2, Fr, cos_o, cos_i);
 }

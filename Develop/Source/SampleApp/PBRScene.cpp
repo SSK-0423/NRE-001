@@ -18,6 +18,8 @@ PBRScene::~PBRScene()
 
 Utility::RESULT PBRScene::ImplInit()
 {
+	_camera->GetTransform().SetPosition(0, 1.f, 2.f);
+
 	ID3D12Device& device = Core::Dx12GraphicsEngine::Instance().Device();
 	MeshData meshData = Graphics::CubeMesh::CreateMeshData();
 	MeshData sphereData = Graphics::SphereMesh::CreateMeshData(100, 100, 0.5);
@@ -34,7 +36,8 @@ Utility::RESULT PBRScene::ImplInit()
 		device, cubeActor->GetComponent<Material>()->GetConstantBuffer(), 2);
 
 	cubeActor->GetComponent<Material>()->SetBaseColor(0.f, 1.f, 0.f);
-	cubeActor->GetComponent<Material>()->SetRoughness(1.f);
+	cubeActor->GetComponent<Material>()->SetRoughness(0.1f);
+	cubeActor->GetComponent<Material>()->SetMetallic(0.5f);
 	cubeActor->GetComponent<Material>()->SetUseReflection(true);
 	cubeActor->GetComponent<Transform>()->SetPosition(0.f, 0.f, 3.f);
 

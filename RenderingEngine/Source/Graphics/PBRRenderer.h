@@ -30,6 +30,7 @@ namespace NamelessEngine::Graphics {
 
 	public:
 		Utility::RESULT Init() override;
+		void Update(float deltatime) override;
 		void Render(Scene::Scene& scene) override;
 	};
 }

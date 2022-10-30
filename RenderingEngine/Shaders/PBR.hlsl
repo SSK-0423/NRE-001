@@ -21,11 +21,38 @@ struct DirectionalLight
     float intensity;
 };
 
+struct PointLight
+{
+    float3 pos;
+    float3 color;
+};
+
 struct VertexOut
 {
     float4 position : SV_POSITION;
     float2 uv : TEXCOORD;
 };
+
+// 拡散反射
+float3 lambert(float3 lightDir, float3 lightColor, float3 normal, float3 diffuseColor)
+{
+    return diffuseColor * saturate(dot(lightDir, normal)) * lightColor;
+}
+
+// 鏡面反射
+float3 phongSpecular(float3 lightDir, float3 lightColor, float3 normal, float3 specularColor, float3 eyeDir, float alpha)
+{
+    float3 ref = -reflect(lightDir, normal);
+    ref = normalize(ref);
+    
+    // 視線ベクトルと反射ベクトルのなす角のn乗
+    return specularColor * pow(saturate(dot(eyeDir, ref)), alpha) * lightColor;
+}
+
+float3 ambient(float ambientIntensity, float3 ambientColor)
+{
+    return ambientIntensity * ambientColor;
+}
 
 VertexOut VSMain(uint id : SV_VertexID)
 {
@@ -44,37 +71,99 @@ VertexOut VSMain(uint id : SV_VertexID)
 
 float4 PSMain(VertexOut input) : SV_Target
 {
+    float divY = 5;
+    float step = 1.f / divY;
+    
+    // デバッグ情報表示
+    // カラー
+    if (input.uv.x < step)
+    {
+        if (input.uv.y < step)
+        {
+            float3 color = colorMap.Sample(smp, input.uv * divY).rgb;
+            if (color.r == 0 && color.g == 0 && color.b == 0)
+            {
+                return float4(0.5, 0.5, 0.5, 1.f);
+            }
+            return float4(color, 1.f);
+        }
+        // 法線
+        if (input.uv.y < step * 2 && input.uv.y > step)
+        {
+            float3 color = normalMap.Sample(smp, input.uv * divY).rgb;
+            if (color.r == 0 && color.g == 0 && color.b == 0)
+            {
+                return float4(0.5, 0.5, 0.5, 1.f);
+            }
+            return float4(color, 1.f);
+        }
+        // 位置
+        if (input.uv.y < step * 3 && input.uv.y > step * 2)
+        {
+            float3 color = positionMap.Sample(smp, input.uv * divY).rgb;
+            if (color.r == 0 && color.g == 0 && color.b == 0)
+            {
+                return float4(0.5, 0.5, 0.5, 1.f);
+            }
+            return float4(color, 1.f);
+        }
+        // メタリック・ラフネス...
+        if (input.uv.y < step * 4 && input.uv.y > step * 3)
+        {
+            float color = metalRoughReflectMap.Sample(smp, input.uv * divY).r;
+            return float4(color, color, color, 1.f);
+        }
+        if (input.uv.y < step * 5 && input.uv.y > step * 4)
+        {
+            float color = metalRoughReflectMap.Sample(smp, input.uv * divY).g;
+            return float4(color, color, color, 1.f);
+        }
+        
+    }
+    
     DirectionalLight light;
+    light.direction = normalize(float3(0, 1, 1));
+    light.intensity = 5.0f;
     light.color = float3(1, 1, 1);
-    light.direction = float3(-10, -10, -10);
-    light.intensity = 10.f;
+    
+    PointLight pointLight;
+    pointLight.pos = float3(0, 50, 100);
+    pointLight.color = float3(1, 1, 1);
     
     float2 uv = input.uv;
     float3 color = colorMap.Sample(smp, uv).rgb;
     float3 normal = normalMap.Sample(smp, uv).rgb;
+    float3 pos = positionMap.Sample(smp, uv).rgb;
     float metallic = metalRoughReflectMap.Sample(smp, uv).r;
     float roughness = metalRoughReflectMap.Sample(smp, uv).g;
-    float useReflectin = metalRoughReflectMap.Sample(smp, uv).b;
+    float useReflection = metalRoughReflectMap.Sample(smp, uv).b;
     
-    //// BRDFの計算に必要な要素計算
-    //float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
-    //float3 L = normalize(light.direction); // 光の入射方向
-    //float3 V = normalize(eye - input.pos.xyz); // 視線方向
-    //float3 R = normalize(reflect(L, N)); // 光の反射方向
+    
+    // BRDFの計算に必要な要素計算
+    float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
+    float3 L = normalize(light.direction); // 光の入射方向
+    float3 V = normalize(eyePos - pos); // 視線方向
+    float3 R = normalize(reflect(L, N)); // 光の反射方向
     //// マイクロサーフェース上の法線
     //// ライトベクトルと視線ベクトルの中間ベクトル(ハーフベクトル)
-    //float3 H = normalize(V + L);
+    float3 H = normalize(V + L);
+
+    float3 cubeUV = -reflect(V, normal);
+    float3 skyLight = texCube.Sample(smp, cubeUV);
     
+    //float3 d = lambert(L, pointLight.color, N, color);
+    //float3 s = phongSpecular(L, pointLight.color, N, float3(0.3, 0.3, 0.3), V, 8);
+    //float3 a = ambient(0.01, color * 0.5);
+    //return float4(d + s + a, 1.f);
+    
+    float3 diffuseColor = normalizeLambert(color) * (1.f - metallic);
+    float3 specularColor = CookTorrance(color, metallic, roughness, uv, N, H, V, L);
+    // Li(x,ω) * BRDF * cosθ
+    float3 outColor = light.color.rgb * (diffuseColor + specularColor) * dot(N, L) * light.intensity;
+    
+    return float4(outColor, 1.f);
+}
     //float NH = saturate(dot(N, H)); //   
     //float NV = saturate(dot(N, V)); //  
     //float NL = saturate(dot(N, L)); //  入射方向のcos
     //float VH = saturate(dot(V, H)); //  出射方向のcos
-    
-    
-    float3 diffuseColor = normalizeLambert(color);
-    //float3 specularColor = CookTorrance();
-    
-    float3 outColor = light.color * (diffuseColor);
-    
-    return float4(outColor.rgb, 1.f);
-}

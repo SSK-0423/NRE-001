@@ -25,9 +25,43 @@ namespace NamelessEngine::Graphics
 		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer())
 	{
 	}
-
 	LightingPass::~LightingPass()
 	{
+	}
+
+	Utility::RESULT LightingPass::Init()
+	{
+		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
+
+		RESULT result = CreateRootSignature(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"ルートシグネチャ生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateGraphicsPipelineState(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"グラフィクスパイプライン生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateRenderTarget(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateDescriptorHeap(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		result = CreateParamBuffer(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
+		}
+		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, 0);
+
+		SIZE windowSize = AppWindow::GetWindowSize();
+
+		_viewport = CD3DX12_VIEWPORT(
+			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
+		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
+
+		return result;
 	}
 	Utility::RESULT LightingPass::CreateRootSignature(ID3D12Device& device)
 	{
@@ -92,40 +126,10 @@ namespace NamelessEngine::Graphics
 		return _descriptorHeap->Create(device);
 	}
 
-	Utility::RESULT LightingPass::Init()
+	void LightingPass::UpdateParamData()
 	{
-		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
-
-		RESULT result = CreateRootSignature(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"ルートシグネチャ生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateGraphicsPipelineState(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"グラフィクスパイプライン生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateRenderTarget(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateDescriptorHeap(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateParamBuffer(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
-		}
-
-		SIZE windowSize = AppWindow::GetWindowSize();
-
-		_viewport = CD3DX12_VIEWPORT(
-			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
-		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
-
-		return result;
+		_paramBuffer->UpdateData(&_paramData);
 	}
-
 	void LightingPass::Render()
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
@@ -151,5 +155,9 @@ namespace NamelessEngine::Graphics
 		ShaderResourceViewDesc desc(texture, true);
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX);
+	}
+	void LightingPass::SetEyePosition(DirectX::XMFLOAT3 eyePos)
+	{
+		_paramData.eyePosition = eyePos;
 	}
 }
