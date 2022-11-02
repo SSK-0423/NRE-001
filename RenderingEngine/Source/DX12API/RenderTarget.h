@@ -17,6 +17,7 @@ namespace NamelessEngine::DX12API
 	{
 		RenderTargetBufferData renderTargetBufferData;	// レンダーターゲットバッファー用データ
 		DepthStencilBufferData depthStencilBufferData;	// デプスステンシルバッファー用データ
+		bool useDepth;
 	};
 
 	/// <summary>

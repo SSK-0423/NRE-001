@@ -1,7 +1,11 @@
+TextureCube texCube : register(t0);
+sampler smp : register(s0);
+
 cbuffer Uniforms : register(b0)
 {
     matrix view;
     matrix proj;
+    matrix viewProj;
     float3 eyePos;
 };
 
@@ -46,7 +50,7 @@ struct PixelOutput
 VertexOutput VSMain(VertexInput input)
 {
     VertexOutput output;
-    matrix worldViewProj = mul(proj, mul(view, world));
+    matrix worldViewProj = mul(viewProj, world);
     output.position = mul(worldViewProj, float4(input.position, 1.f));
     output.normal = normalize(mul(world, float4(input.normal, 0.f)));
     output.uv = input.uv;

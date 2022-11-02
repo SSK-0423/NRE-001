@@ -1,4 +1,7 @@
 #include "Dx12Application.h"
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
+#include "imgui_impl_win32.h"
 
 const LONG WINDOW_WIDTH = 1024;
 const LONG WINDOW_HEIGHT = 768;
@@ -31,9 +34,25 @@ RESULT Dx12Application::Init()
 	// アプリケーション本体の初期化
 	result = _applicationImpl.Init(_graphicsEngine, *_window);
 	if (result == RESULT::FAILED) { return result; }
-
+	
+	// 入力システム初期化
 	result = _input.Init(*_window);
 	if (result == RESULT::FAILED) { return result; }
+
+	// Imgui初期化
+	if (ImGui::CreateContext() == nullptr) {
+		return RESULT::FAILED;
+	}
+	if (!ImGui_ImplWin32_Init(_window->GetHwnd())) {
+		return RESULT::FAILED;
+	}
+	ImGui_ImplDX12_Init(
+		&_graphicsEngine.Device(),
+		3,
+		DXGI_FORMAT_R8G8B8A8_UNORM,
+		*_graphicsEngine.GetImguiDescriptorHeap().GetDescriptorHeapAddress(),
+		_graphicsEngine.GetImguiDescriptorHeap().GetCPUDescriptorHandleForHeapStart(),
+		_graphicsEngine.GetImguiDescriptorHeap().GetGPUDescriptorHandleForHeapStart());
 
 	return result;
 }

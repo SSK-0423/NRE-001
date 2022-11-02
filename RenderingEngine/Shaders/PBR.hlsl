@@ -4,8 +4,9 @@ Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
 Texture2D positionMap : register(t2);
 Texture2D metalRoughReflectMap : register(t3);
+Texture2D depthMap : register(t4);
 
-TextureCube texCube : register(t4);
+TextureCube texCube : register(t5);
 
 sampler smp : register(s0);
 
@@ -27,7 +28,7 @@ struct PointLight
     float3 color;
 };
 
-struct VertexOut
+struct VertexOutput
 {
     float4 position : SV_POSITION;
     float2 uv : TEXCOORD;
@@ -54,12 +55,12 @@ float3 ambient(float ambientIntensity, float3 ambientColor)
     return ambientIntensity * ambientColor;
 }
 
-VertexOut VSMain(uint id : SV_VertexID)
+VertexOutput VSMain(uint id : SV_VertexID)
 {
     float x = (id >> 1) * 2.0 - 1.0; // -1, -1, 1, 1
     float y = 1.0 - (id & 1) * 2.0; //  1, -1, 1, -1
     
-    VertexOut output;
+    VertexOutput output;
     output.position = float4(x, y, 0, 1.f);
     
     float u = (id >> 1);
@@ -69,7 +70,7 @@ VertexOut VSMain(uint id : SV_VertexID)
     return output;
 }
 
-float4 PSMain(VertexOut input) : SV_Target
+float4 PSMain(VertexOutput input) : SV_Target
 {
     float divY = 5;
     float step = 1.f / divY;
@@ -110,7 +111,7 @@ float4 PSMain(VertexOut input) : SV_Target
         // メタリック・ラフネス...
         if (input.uv.y < step * 4 && input.uv.y > step * 3)
         {
-            float color = metalRoughReflectMap.Sample(smp, input.uv * divY).r;
+            float color = depthMap.Sample(smp, input.uv * divY).r;
             return float4(color, color, color, 1.f);
         }
         if (input.uv.y < step * 5 && input.uv.y > step * 4)
@@ -122,7 +123,7 @@ float4 PSMain(VertexOut input) : SV_Target
     }
     
     DirectionalLight light;
-    light.direction = normalize(float3(0, 1, 1));
+    light.direction = normalize(float3(1, 1, -1));
     light.intensity = 5.0f;
     light.color = float3(1, 1, 1);
     
@@ -137,29 +138,24 @@ float4 PSMain(VertexOut input) : SV_Target
     float metallic = metalRoughReflectMap.Sample(smp, uv).r;
     float roughness = metalRoughReflectMap.Sample(smp, uv).g;
     float useReflection = metalRoughReflectMap.Sample(smp, uv).b;
-    
-    
+
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
     float3 L = normalize(light.direction); // 光の入射方向
     float3 V = normalize(eyePos - pos); // 視線方向
     float3 R = normalize(reflect(L, N)); // 光の反射方向
-    //// マイクロサーフェース上の法線
-    //// ライトベクトルと視線ベクトルの中間ベクトル(ハーフベクトル)
+    // マイクロサーフェース上の法線
+    // ライトベクトルと視線ベクトルの中間ベクトル(ハーフベクトル)
     float3 H = normalize(V + L);
 
     float3 cubeUV = -reflect(V, normal);
     float3 skyLight = texCube.Sample(smp, cubeUV);
     
-    //float3 d = lambert(L, pointLight.color, N, color);
-    //float3 s = phongSpecular(L, pointLight.color, N, float3(0.3, 0.3, 0.3), V, 8);
-    //float3 a = ambient(0.01, color * 0.5);
-    //return float4(d + s + a, 1.f);
-    
-    float3 diffuseColor = normalizeLambert(color) * (1.f - metallic);
-    float3 specularColor = CookTorrance(color, metallic, roughness, uv, N, H, V, L);
+    float3 diffuseColor = saturate(normalizeLambert(color) * (1.f - metallic));
+    float3 specularColor = saturate(CookTorrance(color, metallic, roughness, uv, N, H, V, L));
     // Li(x,ω) * BRDF * cosθ
     float3 outColor = light.color.rgb * (diffuseColor + specularColor) * dot(N, L) * light.intensity;
+    //outColor += metallic * skyLight;
     
     return float4(outColor, 1.f);
 }

@@ -48,7 +48,11 @@ namespace NamelessEngine::Core {
 		float GetMouseYMovement();
 		float GetMouseWheelMovement();
 
+		void ViewMouseCursor();
+
 	private:
+		HWND _hwnd;
+
 		// IDirectInput8インターフェース
 		LPDIRECTINPUT8 _directInputInterface = nullptr;
 		// キーボード用デバイス

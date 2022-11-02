@@ -29,7 +29,8 @@ namespace NamelessEngine::Graphics
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
 
-		RenderTarget renderTargets[static_cast<UINT>(GBUFFER_TYPE::GBUFFER_TYPE_NUM)];
+		// 深度はカラーのレンダーターゲットに含まれているのでレンダーターゲット数は-1する
+		RenderTarget renderTargets[static_cast<UINT>(GBUFFER_TYPE::GBUFFER_TYPE_NUM) - 1];
 		for (size_t index = 0; index < _countof(renderTargets); index++) {
 			renderTargets[index] = *_renderTargets[static_cast<GBUFFER_TYPE>(index)];
 		}
@@ -64,12 +65,13 @@ namespace NamelessEngine::Graphics
 		data.depthStencilBufferData.height = windowSize.cy;
 
 		data.renderTargetBufferData.clearColor[0] = 0.f;
-		data.renderTargetBufferData.clearColor[1] = 1.f;
-		data.renderTargetBufferData.clearColor[2] = 1.f;
-		data.renderTargetBufferData.clearColor[3] = 1.f; 
+		data.renderTargetBufferData.clearColor[1] = 0.f;
+		data.renderTargetBufferData.clearColor[2] = 0.f;
+		data.renderTargetBufferData.clearColor[3] = 1.f;
 		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		data.renderTargetBufferData.width = windowSize.cx;
 		data.renderTargetBufferData.height = windowSize.cy;
+		data.useDepth = true;	// 深度は一つでよいのでカラー出力のレンダーターゲットのみで使用する
 
 		_renderTargets[GBUFFER_TYPE::COLOR] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::NORMAL] = std::make_unique<DX12API::RenderTarget>();
@@ -79,21 +81,24 @@ namespace NamelessEngine::Graphics
 		RESULT result = _renderTargets[GBUFFER_TYPE::COLOR]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
+		data.useDepth = false;
 		result = _renderTargets[GBUFFER_TYPE::NORMAL]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
 		result = _renderTargets[GBUFFER_TYPE::WORLD_POS]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
-		RenderTargetData data2 = data;
-		data2.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
-		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data2);
+		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
+		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
 		return result;
 	}
 	Texture& GBufferPass::GetGBuffer(GBUFFER_TYPE type)
 	{
+		if (type == GBUFFER_TYPE::DEPTH) {
+			return _renderTargets[GBUFFER_TYPE::COLOR]->GetDepthStencilTexture();
+		}
 		return _renderTargets[type]->GetRenderTargetTexture();
 	}
 	Utility::RESULT GBufferPass::Init()

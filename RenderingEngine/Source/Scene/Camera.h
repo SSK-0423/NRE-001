@@ -21,6 +21,7 @@ namespace NamelessEngine::Scene {
 		struct CameraCBuff {
 			DirectX::XMMATRIX view;
 			DirectX::XMMATRIX projection;
+			DirectX::XMMATRIX viewProj;
 			DirectX::XMFLOAT3 eyePosition;
 		};
 		CameraCBuff _bufferData;

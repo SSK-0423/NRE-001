@@ -6,6 +6,8 @@
 #include "DescriptorHeapRTV.h"
 #include "DepthStencilBuffer.h"
 #include "DescriptorHeapDSV.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
+
 #include <d3d12.h>
 #include <dxgi1_4.h>
 #include <d3dx12.h>
@@ -146,11 +148,15 @@ namespace NamelessEngine::Core
 		DX12API::DepthStencilBuffer _depthStencilBuffer;		    // デプスステンシルバッファー
 		DX12API::DescriptorHeapDSV _dsvHeap;					    // デプスステンシル用ヒープ
 
+		DX12API::DescriptorHeapCBV_SRV_UAV _imguiHeap;
+
 		/// <summary>
 		/// フレームバッファ用のレンダーターゲット生成
 		/// </summary>
 		/// <returns></returns>
 		Utility::RESULT CreateFrameRenderTarget();
+
+		Utility::RESULT CreateImguiDescriptorHeap();
 
 	public:
 		/// <summary>
@@ -158,6 +164,8 @@ namespace NamelessEngine::Core
 		/// </summary>
 		/// <returns></returns>
 		DX12API::RenderingContext& GetRenderingContext();
+
+		DX12API::DescriptorHeapCBV_SRV_UAV& GetImguiDescriptorHeap();
 	};
 }
 

@@ -51,6 +51,22 @@ namespace NamelessEngine::DX12API
 		Utility::RESULT Create(ID3D12Device& device);
 
 		/// <summary>
+		/// GPUのディスクリプタヒープの先頭ハンドルを取得
+		/// </summary>
+		/// <returns></returns>
+		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandleForHeapStart() {
+			return _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+		}
+
+		/// <summary>
+		/// CPUのディスクリプタヒープの先頭ハンドル取得
+		/// </summary>
+		/// <returns></returns>
+		D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandleForHeapStart() {
+			return _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		}
+
+		/// <summary>
 		/// GPUのCBV部分のディスクリプタヒープの先頭ハンドルを取得
 		/// </summary>
 		/// <returns>GPUのCBV部分のディスクリプタヒープの先頭ハンドル</returns>

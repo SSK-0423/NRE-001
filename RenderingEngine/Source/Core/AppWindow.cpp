@@ -1,8 +1,11 @@
 #include "AppWindow.h"
 #include "Camera.h"
+#include "imgui_impl_win32.h"
 #include <cassert>
 
 HWND NamelessEngine::Core::AppWindow::_hwnd;
+
+extern LRESULT ImGui_ImplWin32_WndProcHandler(HWND, UINT, WPARAM, LPARAM);
 
 namespace NamelessEngine::Core
 {
@@ -38,6 +41,7 @@ namespace NamelessEngine::Core
 		default:
 			break;
 		}
+		ImGui_ImplWin32_WndProcHandler(hwnd, msg, wparam, lparam);
 		return DefWindowProc(hwnd, msg, wparam, lparam);
 	}
 

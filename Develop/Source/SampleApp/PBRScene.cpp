@@ -59,12 +59,23 @@ void PBRScene::Update(float deltaTime)
 	if (input.GetKeyboradState(DIK_D) == BUTTON_STATE::HOLD) {
 		_camera->GetTransform().MoveRight(0.01f);
 	}
+	if (input.GetKeyboradState(DIK_UPARROW) == BUTTON_STATE::HOLD) {
+		_camera->GetTransform().Rotation(-0.01f, 0.f, 0.f);
+	}
+	if (input.GetKeyboradState(DIK_DOWNARROW) == BUTTON_STATE::HOLD) {
+		_camera->GetTransform().Rotation(0.01f, 0.f, 0.f);
+	}
+	if (input.GetKeyboradState(DIK_RIGHTARROW) == BUTTON_STATE::HOLD) {
+		_camera->GetTransform().Rotation(0.f, 0.01f, 0.f);
+	}
+	if (input.GetKeyboradState(DIK_LEFTARROW) == BUTTON_STATE::HOLD) {
+		_camera->GetTransform().Rotation(0.f, -0.01f, 0.f);
+	}
+	//float sensitive = 0.001f;
+	//float moveX = input.GetMouseXMovement() * sensitive;
+	//float moveY = input.GetMouseYMovement() * sensitive;
 
-	float sensitive = 0.001f;
-	float moveX = input.GetMouseXMovement() * sensitive;
-	float moveY = input.GetMouseYMovement() * sensitive;
-
-	_camera->GetTransform().Rotation(moveY, moveX, 0);
+	//_camera->GetTransform().Rotation(moveY, moveX, 0);
 
 	_camera->Update(deltaTime);
 

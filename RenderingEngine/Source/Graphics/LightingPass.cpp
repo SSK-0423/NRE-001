@@ -16,13 +16,14 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
-constexpr UINT CUBETEX_INDEX = 4;
+constexpr UINT CUBETEX_INDEX = 5;
 
 namespace NamelessEngine::Graphics
 {
 	LightingPass::LightingPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
-		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer())
+		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer()),
+		_renderTarget(new RenderTarget())
 	{
 	}
 	LightingPass::~LightingPass()
@@ -67,8 +68,8 @@ namespace NamelessEngine::Graphics
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 1;
-		// カラー、法線、キューブマップUV、メタリック・ラフネス、キューブテクスチャ
-		rootSigData._descRangeData.srvDescriptorNum = 5;
+		// カラー、法線、位置、メタリック・ラフネス、深度、キューブテクスチャ
+		rootSigData._descRangeData.srvDescriptorNum = 6;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
@@ -115,7 +116,15 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT LightingPass::CreateRenderTarget(ID3D12Device& device)
 	{
-		return Utility::RESULT::SUCCESS;
+		SIZE windowSize = AppWindow::GetWindowSize();
+
+		RenderTargetData data;
+		data.renderTargetBufferData.width = windowSize.cx;
+		data.renderTargetBufferData.height = windowSize.cy;
+		data.depthStencilBufferData.width = windowSize.cx;
+		data.depthStencilBufferData.height = windowSize.cy;
+
+		return _renderTarget->Create(device, data);
 	}
 	Utility::RESULT LightingPass::CreateParamBuffer(ID3D12Device& device)
 	{
@@ -133,20 +142,22 @@ namespace NamelessEngine::Graphics
 	void LightingPass::Render()
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
+
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
 
-		Dx12GraphicsEngine::Instance().SetFrameRenderTarget(_viewport, _scissorRect);
+		_renderTarget->BeginRendering(renderContext, _viewport, _scissorRect);
 		{
 			renderContext.SetDescriptorHeap(*_descriptorHeap);
 			renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			renderContext.DrawInstanced(4, 1, 0, 0);
 		}
+		_renderTarget->EndRendering(renderContext);
 	}
 	void LightingPass::SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture)
 	{
 		ShaderResourceViewDesc desc(texture);
-		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス
+		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス, 4: 深度
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, static_cast<int>(type));
 	}
@@ -159,5 +170,9 @@ namespace NamelessEngine::Graphics
 	void LightingPass::SetEyePosition(DirectX::XMFLOAT3 eyePos)
 	{
 		_paramData.eyePosition = eyePos;
+	}
+	DX12API::Texture& LightingPass::GetOffscreenTexture()
+	{
+		return _renderTarget->GetRenderTargetTexture();
 	}
 }

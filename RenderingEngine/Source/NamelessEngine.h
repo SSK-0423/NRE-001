@@ -41,6 +41,8 @@
 
 #include "Graphics/RenderPass.h"
 #include "Graphics/GBufferPass.h"
+#include "Graphics/LightingPass.h"
+#include "Graphics/SkyBoxPass.h"
 
 // Component
 #include "Component/Actor.h"

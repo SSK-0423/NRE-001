@@ -14,12 +14,12 @@ namespace NamelessEngine::DX12API
 
 		RegistShader(L"GeometryVS", "GeometryVS", SHADERTYPE::VERTEX);
 		RegistShader(L"GeometryPS", "GeometryPS", SHADERTYPE::PIXEL);
-		RegistShader(L"SkyBoxVS", "SkyBoxVS", SHADERTYPE::VERTEX);
-		RegistShader(L"SkyBoxPS", "SkyBoxPS", SHADERTYPE::PIXEL);
 		RegistShader(L"GBuffer", "GBufferVS", SHADERTYPE::VERTEX, "VSMain");
 		RegistShader(L"GBuffer", "GBufferPS", SHADERTYPE::PIXEL, "PSMain");
 		RegistShader(L"PBR", "PBRVS", SHADERTYPE::VERTEX, "VSMain");
 		RegistShader(L"PBR", "PBRPS", SHADERTYPE::PIXEL, "PSMain");
+		RegistShader(L"SkyBox", "SkyBoxVS", SHADERTYPE::VERTEX, "VSMain");
+		RegistShader(L"SkyBox", "SkyBoxPS", SHADERTYPE::PIXEL, "PSMain");
 	};
 	ShaderLibrary::~ShaderLibrary()
 	{

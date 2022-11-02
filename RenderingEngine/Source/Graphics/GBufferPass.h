@@ -22,6 +22,8 @@ namespace NamelessEngine::Graphics {
 		NORMAL,
 		WORLD_POS,
 		METAL_ROUGH_REFLECT,
+		// カラーのレンダーターゲットに深度データが入っているのでそれを扱う
+		DEPTH = 4,	
 		GBUFFER_TYPE_NUM,
 	};
 

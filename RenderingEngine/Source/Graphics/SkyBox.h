@@ -1,14 +1,23 @@
 #pragma once
 
-#include "d3dx12.h"
+#include <d3dx12.h>
+#include <memory>
+#include <string>
 
-#include "CubeMesh.h"
-#include "Texture.h"
-
-#include "Dx12GraphicsEngine.h"
-
-#include "RenderingContext.h"
 #include "EngineUtility.h"
+
+namespace NamelessEngine {
+	namespace Core {
+		class Dx12GraphicsEngine;
+	}
+	namespace DX12API {
+		class RenderingContext;
+		class Texture;
+	}
+	namespace Component {
+		class Mesh;
+	}
+}
 
 namespace NamelessEngine::Graphics {
 	class SkyBox {
@@ -16,8 +25,8 @@ namespace NamelessEngine::Graphics {
 		SkyBox();
 		~SkyBox();
 	private:
-		CubeMesh _cube;
-		DX12API::Texture _cubeTexture;
+		std::unique_ptr<DX12API::Texture> _cubeTexture;
+		std::unique_ptr<Component::Mesh> _cubeMesh;
 
 	public:
 		Utility::RESULT Create(Core::Dx12GraphicsEngine& graphicsEngine, const std::wstring& texturePass);

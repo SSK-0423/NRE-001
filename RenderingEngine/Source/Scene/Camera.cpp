@@ -10,7 +10,7 @@ float NamelessEngine::Scene::Camera::_aspect = 1.f;
 namespace NamelessEngine::Scene
 {
 	Scene::Camera::Camera() :
-		_fov(XM_PIDIV2), _near(0.1f), _far(100.f)
+		_fov(XM_PIDIV2), _near(0.1f), _far(1000.f)
 	{
 	}
 
@@ -37,7 +37,7 @@ namespace NamelessEngine::Scene
 	{
 		return _buffer.Create(
 			Dx12GraphicsEngine::Instance().Device(), &_bufferData, sizeof(CameraCBuff));
-	
+
 	}
 
 	void Camera::Update(float deltaTime)
@@ -46,6 +46,7 @@ namespace NamelessEngine::Scene
 		_bufferData.eyePosition = _transform.Position();
 		_bufferData.projection = ProjectionMatrix();
 		_bufferData.view = ViewMatrix();
+		_bufferData.viewProj = _bufferData.view * _bufferData.projection;
 		_buffer.UpdateData(&_bufferData);
 	}
 

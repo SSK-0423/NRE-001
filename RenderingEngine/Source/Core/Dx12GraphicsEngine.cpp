@@ -1,4 +1,9 @@
 #include "Dx12GraphicsEngine.h"
+
+#include "imgui.h"
+#include "imgui_impl_dx12.h"
+#include "imgui_impl_win32.h"
+
 #include <vector>
 #include <wrl.h>
 #include <string>
@@ -50,6 +55,9 @@ namespace NamelessEngine::Core
 		// フレームバッファ―(最終レンダリング先)生成
 		if (CreateFrameRenderTarget() == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
 
+		// Imgui用のディスクリプタヒープ生成
+		if (CreateImguiDescriptorHeap() == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
+		
 		// レンダリングコンテキストの初期化
 		_renderContext.Init(*_cmdList.Get());
 
@@ -250,10 +258,19 @@ namespace NamelessEngine::Core
 		_renderContext.ClearDepthStencilView(
 			dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
 			depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
+		
+		// Imgui描画前準備
+		ImGui_ImplDX12_NewFrame();
+		ImGui_ImplWin32_NewFrame();
+		ImGui::NewFrame();
 	}
 
 	void Dx12GraphicsEngine::EndDraw()
 	{
+		// Imguiの描画
+		_renderContext.SetDescriptorHeap(_imguiHeap);
+		ImGui_ImplDX12_RenderDrawData(ImGui::GetDrawData(), _cmdList.Get());
+
 		// 描画対象のバッファーを示すインデックス取得
 		auto bbIdx = _swapchain->GetCurrentBackBufferIndex();
 
@@ -353,9 +370,18 @@ namespace NamelessEngine::Core
 		return Utility::RESULT::SUCCESS;
 	}
 
+	Utility::RESULT Dx12GraphicsEngine::CreateImguiDescriptorHeap()
+	{
+		return _imguiHeap.Create(*_device.Get());
+	}
+
 	DX12API::RenderingContext& Dx12GraphicsEngine::GetRenderingContext()
 	{
 		return _renderContext;
+	}
+	DX12API::DescriptorHeapCBV_SRV_UAV& Dx12GraphicsEngine::GetImguiDescriptorHeap()
+	{
+		return _imguiHeap;
 	}
 }
 

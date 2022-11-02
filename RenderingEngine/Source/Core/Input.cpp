@@ -33,6 +33,8 @@ namespace NamelessEngine::Core
 
 	RESULT Input::Init(AppWindow& window)
 	{
+		_hwnd = window.GetHwnd();
+
 		// IDirectInputインターフェース生成
 		HRESULT result = DirectInput8Create(
 			GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&_directInputInterface, NULL);
@@ -72,7 +74,7 @@ namespace NamelessEngine::Core
 		result = _mouse->SetDataFormat(&c_dfDIMouse);
 		if (FAILED(result)) { return result; }
 		// 協調モード設定
-		result = _mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_EXCLUSIVE);
+		result = _mouse->SetCooperativeLevel(hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 		if (FAILED(result)) { return result; }
 		// マウスの入力読み取り開始
 		result = _mouse->Acquire();
@@ -173,6 +175,13 @@ namespace NamelessEngine::Core
 	float Input::GetMouseWheelMovement()
 	{
 		return _mouseWheelMovement;
+	}
+
+	void Input::ViewMouseCursor()
+	{
+		HRESULT result = _mouse->SetCooperativeLevel(_hwnd, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+		result = _mouse->Acquire();
+		result = _mouse->Poll();
 	}
 
 }
