@@ -1,36 +1,36 @@
-#include "LightingPass.h"
-#include "GBufferPass.h"
+#include "BlendPass.h"
 
+#include "ShaderResourceViewDesc.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
+#include "GraphicsPipelineState.h"
+#include "RootSignature.h"
+#include "ShaderLibrary.h"
 #include "RenderTarget.h"
 #include "Texture.h"
-#include "ConstantBuffer.h"
-#include "ShaderResourceViewDesc.h"
-#include "RootSignature.h"
-#include "GraphicsPipelineState.h"
-#include "ShaderLibrary.h"
-#include "InputLayout.h"
 
 #include "Dx12GraphicsEngine.h"
 
+constexpr UINT SKYBOXTEX_INDEX = 0;
+constexpr UINT LIGHTEDTEX_INDEX = 1;
+constexpr UINT DEPTHTEX_INDEX = 2;
+
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
+using namespace NamelessEngine::Graphics;
 using namespace NamelessEngine::Utility;
-
-constexpr UINT CUBETEX_INDEX = 5;
 
 namespace NamelessEngine::Graphics
 {
-	LightingPass::LightingPass()
+	BlendPass::BlendPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
-		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer()),
-		_renderTarget(new RenderTarget())
+		_renderTarget(new RenderTarget()), _descriptorHeap(new DescriptorHeapCBV_SRV_UAV())
 	{
 	}
-	LightingPass::~LightingPass()
+	BlendPass::~BlendPass()
 	{
 	}
 
-	Utility::RESULT LightingPass::Init()
+	Utility::RESULT BlendPass::Init()
 	{
 		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
 
@@ -50,38 +50,30 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
-		result = CreateParamBuffer(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, 0);
 
 		SIZE windowSize = AppWindow::GetWindowSize();
-
-		_viewport = CD3DX12_VIEWPORT(
-			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
+		_viewport = CD3DX12_VIEWPORT(0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
 		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
 
 		return result;
 	}
-	Utility::RESULT LightingPass::CreateRootSignature(ID3D12Device& device)
+	Utility::RESULT BlendPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 1;
-		// カラー、法線、位置、メタリック・ラフネス、深度、キューブテクスチャ
-		rootSigData._descRangeData.srvDescriptorNum = 6;
+		// キューブテクスチャ、ライティング済みテクスチャ
+		rootSigData._descRangeData.srvDescriptorNum = 3;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
 		return Utility::RESULT::SUCCESS;
 	}
-	Utility::RESULT LightingPass::CreateGraphicsPipelineState(ID3D12Device& device)
+	Utility::RESULT BlendPass::CreateGraphicsPipelineState(ID3D12Device& device)
 	{
 		// ルートシグネチャとシェーダーセット
 		D3D12_GRAPHICS_PIPELINE_STATE_DESC pipelineState = {};
 		pipelineState.pRootSignature = &_rootSignature->GetRootSignature();
-		pipelineState.VS = CD3DX12_SHADER_BYTECODE(&ShaderLibrary::Instance().GetShader("PBRVS")->GetShader());
-		pipelineState.PS = CD3DX12_SHADER_BYTECODE(&ShaderLibrary::Instance().GetShader("PBRPS")->GetShader());
+		pipelineState.VS = CD3DX12_SHADER_BYTECODE(&ShaderLibrary::Instance().GetShader("BlendVS")->GetShader());
+		pipelineState.PS = CD3DX12_SHADER_BYTECODE(&ShaderLibrary::Instance().GetShader("BlendPS")->GetShader());
 
 		// サンプルマスク設定
 		pipelineState.SampleMask = D3D12_DEFAULT_SAMPLE_MASK;
@@ -111,7 +103,7 @@ namespace NamelessEngine::Graphics
 
 		return _pipelineState->Create(device, pipelineState);
 	}
-	Utility::RESULT LightingPass::CreateRenderTarget(ID3D12Device& device)
+	Utility::RESULT BlendPass::CreateRenderTarget(ID3D12Device& device)
 	{
 		SIZE windowSize = AppWindow::GetWindowSize();
 
@@ -124,52 +116,43 @@ namespace NamelessEngine::Graphics
 
 		return _renderTarget->Create(device, data);
 	}
-	Utility::RESULT LightingPass::CreateParamBuffer(ID3D12Device& device)
-	{
-		return _paramBuffer->Create(device, &_paramData, sizeof(ParameterCBuff));
-	}
-	Utility::RESULT LightingPass::CreateDescriptorHeap(ID3D12Device& device)
+	Utility::RESULT BlendPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		return _descriptorHeap->Create(device);
 	}
-
-	void LightingPass::UpdateParamData()
-	{
-		_paramBuffer->UpdateData(&_paramData);
-	}
-	void LightingPass::Render()
+	void BlendPass::Render()
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
 
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
 
-		_renderTarget->BeginRendering(renderContext, _viewport, _scissorRect);
+		Dx12GraphicsEngine::Instance().SetFrameRenderTarget(_viewport, _scissorRect);
 		{
 			renderContext.SetDescriptorHeap(*_descriptorHeap);
 			renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			renderContext.DrawInstanced(4, 1, 0, 0);
 		}
-		_renderTarget->EndRendering(renderContext);
 	}
-	void LightingPass::SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture)
+	void BlendPass::SetRenderedSkyBoxTexture(DX12API::Texture& texture)
 	{
-		ShaderResourceViewDesc desc(texture);
-		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス, 4: 深度
+		ShaderResourceViewDesc desc(texture, false);
 		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, static_cast<int>(type));
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, SKYBOXTEX_INDEX);
 	}
-	void LightingPass::SetCubeTexture(DX12API::Texture& texture)
+	void BlendPass::SetLightedTexture(DX12API::Texture& texture)
 	{
-		ShaderResourceViewDesc desc(texture, true);
+		ShaderResourceViewDesc desc(texture, false);
 		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX);
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, LIGHTEDTEX_INDEX);
 	}
-	void LightingPass::SetEyePosition(DirectX::XMFLOAT3 eyePos)
+	void BlendPass::SetDepthTexture(DX12API::Texture& texture)
 	{
-		_paramData.eyePosition = eyePos;
+		ShaderResourceViewDesc desc(texture, false);
+		_descriptorHeap->RegistShaderResource(
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, DEPTHTEX_INDEX);
 	}
-	DX12API::Texture& LightingPass::GetOffscreenTexture()
+	DX12API::Texture& BlendPass::GetOffscreenTexture()
 	{
 		return _renderTarget->GetRenderTargetTexture();
 	}

@@ -3,6 +3,7 @@
 #include "GBufferPass.h"
 #include "LightingPass.h"
 #include "SkyBoxPass.h"
+#include "BlendPass.h"
 
 #include "EngineUtility.h"
 
@@ -29,6 +30,7 @@ namespace NamelessEngine::Graphics {
 		GBufferPass _gbufferPass;
 		LightingPass _lightingPass;
 		SkyBoxPass _skyBoxPass;
+		BlendPass _blendPass;
 		std::unique_ptr<DX12API::Texture> _cubeTexture;
 
 		// ImGuiƒpƒ‰ƒ[ƒ^

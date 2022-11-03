@@ -72,55 +72,59 @@ VertexOutput VSMain(uint id : SV_VertexID)
 
 float4 PSMain(VertexOutput input) : SV_Target
 {
-    float divY = 5;
+    float divY = 6;
     float step = 1.f / divY;
     
     // デバッグ情報表示
     // カラー
-    if (input.uv.x < step)
-    {
-        if (input.uv.y < step)
-        {
-            float3 color = colorMap.Sample(smp, input.uv * divY).rgb;
-            if (color.r == 0 && color.g == 0 && color.b == 0)
-            {
-                return float4(0.5, 0.5, 0.5, 1.f);
-            }
-            return float4(color, 1.f);
-        }
-        // 法線
-        if (input.uv.y < step * 2 && input.uv.y > step)
-        {
-            float3 color = normalMap.Sample(smp, input.uv * divY).rgb;
-            if (color.r == 0 && color.g == 0 && color.b == 0)
-            {
-                return float4(0.5, 0.5, 0.5, 1.f);
-            }
-            return float4(color, 1.f);
-        }
-        // 位置
-        if (input.uv.y < step * 3 && input.uv.y > step * 2)
-        {
-            float3 color = positionMap.Sample(smp, input.uv * divY).rgb;
-            if (color.r == 0 && color.g == 0 && color.b == 0)
-            {
-                return float4(0.5, 0.5, 0.5, 1.f);
-            }
-            return float4(color, 1.f);
-        }
-        // メタリック・ラフネス...
-        if (input.uv.y < step * 4 && input.uv.y > step * 3)
-        {
-            float color = depthMap.Sample(smp, input.uv * divY).r;
-            return float4(color, color, color, 1.f);
-        }
-        if (input.uv.y < step * 5 && input.uv.y > step * 4)
-        {
-            float color = metalRoughReflectMap.Sample(smp, input.uv * divY).g;
-            return float4(color, color, color, 1.f);
-        }
-        
-    }
+    //if (input.uv.x < step)
+    //{
+    //    if (input.uv.y < step)
+    //    {
+    //        float3 color = colorMap.Sample(smp, input.uv * divY).rgb;
+    //        if (color.r == 0 && color.g == 0 && color.b == 0)
+    //        {
+    //            return float4(0.5, 0.5, 0.5, 1.f);
+    //        }
+    //        return float4(color, 1.f);
+    //    }
+    //    // 法線
+    //    if (input.uv.y < step * 2 && input.uv.y > step)
+    //    {
+    //        float3 color = normalMap.Sample(smp, input.uv * divY).rgb;
+    //        if (color.r == 0 && color.g == 0 && color.b == 0)
+    //        {
+    //            return float4(0.5, 0.5, 0.5, 1.f);
+    //        }
+    //        return float4(color, 1.f);
+    //    }
+    //    // 位置
+    //    if (input.uv.y < step * 3 && input.uv.y > step * 2)
+    //    {
+    //        float3 color = positionMap.Sample(smp, input.uv * divY).rgb;
+    //        if (color.r == 0 && color.g == 0 && color.b == 0)
+    //        {
+    //            return float4(0.5, 0.5, 0.5, 1.f);
+    //        }
+    //        return float4(color, 1.f);
+    //    }
+    //    // メタリック・ラフネス...
+    //    if (input.uv.y < step * 4 && input.uv.y > step * 3)
+    //    {
+    //        float color = metalRoughReflectMap.Sample(smp, input.uv * divY).r;
+    //        return float4(color, color, color, 1.f);
+    //    }
+    //    if (input.uv.y < step * 5 && input.uv.y > step * 4)
+    //    {
+    //        float color = metalRoughReflectMap.Sample(smp, input.uv * divY).g;
+    //        return float4(color, color, color, 1.f);
+    //    }
+    //    if (input.uv.y < step * 6 && input.uv.y > step * 5)
+    //    {
+    //        float color = depthMap.Sample(smp, input.uv * divY).r;
+    //        return float4(color, color, color, 1.f);
+    //    }
+    //}
     
     DirectionalLight light;
     light.direction = normalize(float3(1, 1, -1));

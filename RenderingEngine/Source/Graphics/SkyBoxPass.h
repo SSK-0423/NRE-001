@@ -30,11 +30,6 @@ namespace NamelessEngine::Graphics {
 		SkyBoxPass();
 		~SkyBoxPass();
 	private:
-		struct ParameterCBuff {
-			DirectX::XMFLOAT3 eyePosition;
-		};
-		ParameterCBuff _paramData;
-
 		CD3DX12_VIEWPORT _viewport;
 		CD3DX12_RECT _scissorRect;
 		std::unique_ptr<DX12API::RootSignature> _rootSignature = nullptr;
@@ -46,9 +41,6 @@ namespace NamelessEngine::Graphics {
 		std::unique_ptr<DX12API::RenderTarget> _renderTarget = nullptr;
 		Utility::RESULT CreateRenderTarget(ID3D12Device& device);
 
-		std::unique_ptr<DX12API::ConstantBuffer> _paramBuffer;
-		Utility::RESULT CreateParamBuffer(ID3D12Device& device);
-
 		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _descriptorHeap = nullptr;
 		Utility::RESULT CreateDescriptorHeap(ID3D12Device& deivce);
 
@@ -58,9 +50,8 @@ namespace NamelessEngine::Graphics {
 	public:
 		Utility::RESULT Init();
 		void Render();
-		void UpdateParamData();
 		void SetCubeTexture(DX12API::Texture& texture);
-		void SetLightedTexture(DX12API::Texture& texture);
 		void SetCamera(Scene::Camera& camera);
+		DX12API::Texture& GetOffscreenTexture();
 	};
 }

@@ -20,6 +20,8 @@ namespace NamelessEngine::DX12API
 		RegistShader(L"PBR", "PBRPS", SHADERTYPE::PIXEL, "PSMain");
 		RegistShader(L"SkyBox", "SkyBoxVS", SHADERTYPE::VERTEX, "VSMain");
 		RegistShader(L"SkyBox", "SkyBoxPS", SHADERTYPE::PIXEL, "PSMain");
+		RegistShader(L"Blend", "BlendVS", SHADERTYPE::VERTEX, "VSMain");
+		RegistShader(L"Blend", "BlendPS", SHADERTYPE::PIXEL, "PSMain");
 	};
 	ShaderLibrary::~ShaderLibrary()
 	{

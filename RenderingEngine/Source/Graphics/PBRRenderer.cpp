@@ -40,6 +40,14 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 		result = _skyBoxPass.Init();
 		if (result == RESULT::FAILED) { return result; }
+		result = _blendPass.Init();
+		if (result == RESULT::FAILED) { return result; }
+
+		// キューブテクスチャ生成
+		_cubeTexture = std::make_unique<DX12API::Texture>();
+		result = _cubeTexture->CreateCubeTextureFromDDS(
+			Dx12GraphicsEngine::Instance(), L"res/SanFrancisco3/SanFrancisco3_cube.dds");
+		if (result == RESULT::FAILED) { return result; }
 
 		// ライティングパスにGBufferをセット
 		for (size_t index = 0; index < static_cast<size_t>(GBUFFER_TYPE::GBUFFER_TYPE_NUM); index++) {
@@ -47,18 +55,14 @@ namespace NamelessEngine::Graphics
 				static_cast<GBUFFER_TYPE>(index),
 				_gbufferPass.GetGBuffer(static_cast<GBUFFER_TYPE>(index)));
 		}
-		// スカイボックスパスにライティングパスのオフスクリーンテクスチャセット
-		_skyBoxPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
+		_lightingPass.SetCubeTexture(*_cubeTexture);
 
+		_skyBoxPass.SetCubeTexture(*_cubeTexture);
 		_skyBoxPass.SetCamera(scene.GetCamera());
 
-		// キューブテクスチャ生成
-		_cubeTexture = std::make_unique<DX12API::Texture>();
-		result = _cubeTexture->CreateCubeTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/SanFrancisco3/SanFrancisco3_cube.dds");
-		if (result == RESULT::FAILED) { return result; }
-		_lightingPass.SetCubeTexture(*_cubeTexture);
-		_skyBoxPass.SetCubeTexture(*_cubeTexture);
+		_blendPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
+		_blendPass.SetRenderedSkyBoxTexture(_skyBoxPass.GetOffscreenTexture());
+		_blendPass.SetDepthTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::DEPTH));
 	}
 	void PBRRenderer::Update(float deltatime, Scene::Scene& scene)
 	{
@@ -94,6 +98,8 @@ namespace NamelessEngine::Graphics
 		_lightingPass.Render();
 		// 3. スカイボックスパス
 		_skyBoxPass.Render();
+		// 4. 最終パス？
+		_blendPass.Render();
 
 		// 3. ポストエフェクトパス
 		// _postEffectPass.Render(_meshActors);

@@ -37,6 +37,9 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{1f73caf8-6279-433f-9e37-e1f203de869d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders\RenderPassShader">
+      <UniqueIdentifier>{651debfb-ca41-491e-a195-a71983a89418}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\ShaderCommon.hlsli">
@@ -46,7 +49,7 @@
       <Filter>Shaders</Filter>
     </None>
     <None Include="Shaders\BRDF.hlsli">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\RenderPassShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -63,13 +66,16 @@
       <Filter>Shaders</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\GBuffer.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\PBR.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\SkyBox.hlsl">
-      <Filter>Shaders</Filter>
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Blend.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
   </ItemGroup>
   <ItemGroup>
@@ -203,6 +209,9 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\SkyBoxPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\BlendPass.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -364,6 +373,9 @@
       <Filter>imgui</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\SkyBoxPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\BlendPass.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>

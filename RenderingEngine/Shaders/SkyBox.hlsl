@@ -1,5 +1,4 @@
 TextureCube texCube : register(t0);
-Texture2D lightedMap : register(t1);
 
 sampler smp : register(s0);
 

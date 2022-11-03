@@ -25,7 +25,6 @@ using namespace NamelessEngine::Scene;
 using namespace NamelessEngine::Utility;
 
 constexpr UINT CUBETEX_INDEX = 0;
-constexpr UINT LIGHTEDTEX_INDEX = 1;
 
 constexpr UINT CAMERA_BUFFER_INDEX = 0;
 constexpr UINT TRANSFORM_BUFFER_INDEX = 1;
@@ -35,7 +34,7 @@ namespace NamelessEngine::Graphics
 	SkyBoxPass::SkyBoxPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
 		_renderTarget(new RenderTarget()), _descriptorHeap(new DescriptorHeapCBV_SRV_UAV()),
-		_paramBuffer(new ConstantBuffer()), _skyBox(new Mesh()), _transform(new Transform())
+		_skyBox(new Mesh()), _transform(new Transform())
 	{
 	}
 	SkyBoxPass::~SkyBoxPass()
@@ -62,10 +61,6 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
-		result = CreateParamBuffer(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
-		}
 		MeshData data = CubeMesh::CreateMeshData();
 		result = _skyBox->Create(device, data);
 		if (result == RESULT::FAILED) {
@@ -76,12 +71,9 @@ namespace NamelessEngine::Graphics
 		_skyBox->SetConstantBuffer(
 			Dx12GraphicsEngine::Instance().Device(), _transform->GetConstantBuffer(), TRANSFORM_BUFFER_INDEX);
 
-		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, 0);
-
 		SIZE windowSize = AppWindow::GetWindowSize();
 
-		_viewport = CD3DX12_VIEWPORT(
-			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
+		_viewport = CD3DX12_VIEWPORT(0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
 		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
 
 		return result;
@@ -113,11 +105,8 @@ namespace NamelessEngine::Graphics
 		pipelineState.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
 
 		// デプスステンシル設定
-		pipelineState.DepthStencilState.DepthEnable = true;
+		pipelineState.DepthStencilState.DepthEnable = false;
 		pipelineState.DepthStencilState.StencilEnable = false;
-		pipelineState.DepthStencilState.DepthWriteMask = D3D12_DEPTH_WRITE_MASK_ALL;
-		pipelineState.DepthStencilState.DepthFunc = D3D12_COMPARISON_FUNC_LESS;
-		pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 		// レンダーターゲットの設定
 		pipelineState.NumRenderTargets = 1;
@@ -142,11 +131,16 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT SkyBoxPass::CreateRenderTarget(ID3D12Device& device)
 	{
-		return Utility::RESULT::SUCCESS;
-	}
-	Utility::RESULT SkyBoxPass::CreateParamBuffer(ID3D12Device& device)
-	{
-		return _paramBuffer->Create(device, &_paramData, sizeof(ParameterCBuff));
+		SIZE windowSize = AppWindow::GetWindowSize();
+
+		RenderTargetData data;
+		data.renderTargetBufferData.width = windowSize.cx;
+		data.renderTargetBufferData.height = windowSize.cy;
+		data.depthStencilBufferData.width = windowSize.cx;
+		data.depthStencilBufferData.height = windowSize.cy;
+		data.useDepth = false;
+
+		return _renderTarget->Create(device, data);
 	}
 	Utility::RESULT SkyBoxPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
@@ -161,16 +155,12 @@ namespace NamelessEngine::Graphics
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
 
-		Dx12GraphicsEngine::Instance().SetFrameRenderTarget(_viewport, _scissorRect);
+		_renderTarget->BeginRendering(renderContext, _viewport, _scissorRect);
 		{
 			_skyBox->Draw(renderContext);
 		}
+		_renderTarget->EndRendering(renderContext);
 	}
-	void SkyBoxPass::UpdateParamData()
-	{
-		_paramBuffer->UpdateData(&_paramData);
-	}
-
 	void SkyBoxPass::SetCubeTexture(DX12API::Texture& texture)
 	{
 		ShaderResourceViewDesc desc(texture, true);
@@ -180,19 +170,15 @@ namespace NamelessEngine::Graphics
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX
 		);
 	}
-	void SkyBoxPass::SetLightedTexture(DX12API::Texture& texture)
-	{
-		ShaderResourceViewDesc desc(texture, false);
-		_skyBox->SetTexture(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, LIGHTEDTEX_INDEX);
-		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, LIGHTEDTEX_INDEX);
-	}
 	void SkyBoxPass::SetCamera(Scene::Camera& camera)
 	{
 		_skyBox->SetConstantBuffer(
 			Dx12GraphicsEngine::Instance().Device(), camera.GetConstantBuffer(), CAMERA_BUFFER_INDEX);
 		_descriptorHeap->RegistConstantBuffer(
 			Dx12GraphicsEngine::Instance().Device(), camera.GetConstantBuffer(), CAMERA_BUFFER_INDEX);
+	}
+	DX12API::Texture& SkyBoxPass::GetOffscreenTexture()
+	{
+		return _renderTarget->GetRenderTargetTexture();
 	}
 }
