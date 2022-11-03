@@ -22,6 +22,7 @@
     <None Include="Shaders\BRDF.hlsli" />
     <None Include="Shaders\ShaderCommon.hlsli" />
     <None Include="Shaders\SkyBoxHeader.hlsli" />
+    <None Include="Shaders\ToneMapping.hlsli" />
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\Blend.hlsl">
