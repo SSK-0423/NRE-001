@@ -159,6 +159,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 specularColor = saturate(CookTorrance(color, metallic, roughness, uv, N, H, V, L));
     // Li(x,É÷) * BRDF * cosÉ∆
     float3 outColor = light.color.rgb * (diffuseColor + specularColor) * dot(N, L) * light.intensity;
+    //outColor += metallic * skyLight;
     
     return float4(outColor, 1.f);
 }

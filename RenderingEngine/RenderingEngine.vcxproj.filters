@@ -51,9 +51,6 @@
     <None Include="Shaders\BRDF.hlsli">
       <Filter>Shaders\RenderPassShader</Filter>
     </None>
-    <None Include="Shaders\ToneMapping.hlsli">
-      <Filter>Shaders\RenderPassShader</Filter>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <FxCompile Include="Shaders\GeometryPS.hlsl">

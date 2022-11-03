@@ -46,7 +46,7 @@ namespace NamelessEngine::Graphics
 		// キューブテクスチャ生成
 		_cubeTexture = std::make_unique<DX12API::Texture>();
 		result = _cubeTexture->CreateCubeTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01_cube.dds");
+			Dx12GraphicsEngine::Instance(), L"res/SanFrancisco3/SanFrancisco3_cube.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		// ライティングパスにGBufferをセット
@@ -80,7 +80,7 @@ namespace NamelessEngine::Graphics
 	{
 		// Imguiレンダー
 		{
-			ImGui::SetNextWindowPos(ImVec2(650, 0));
+			ImGui::SetNextWindowPos(ImVec2(634, 0));
 			ImGui::Begin("Physically Based Rendering", 0, ImGuiWindowFlags_NoMove);
 			ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
 
@@ -98,7 +98,12 @@ namespace NamelessEngine::Graphics
 		_lightingPass.Render();
 		// 3. スカイボックスパス
 		_skyBoxPass.Render();
-		// 4. ライティング結果とスカイボックス描画結果を合成する
+		// 4. 最終パス？
 		_blendPass.Render();
+
+		// 3. ポストエフェクトパス
+		// _postEffectPass.Render(_meshActors);
+		// 4. GUIパス
+		// _guiPass.Render(_guiActors);
 	}
 }
