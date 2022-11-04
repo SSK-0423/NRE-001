@@ -25,6 +25,12 @@ namespace NamelessEngine::Graphics {
 		DirectX::XMFLOAT3 eyePosition;
 		int brdfModel;
 	};
+	struct DirectionalLight {
+		// Imgui側から値を変更したいのでfloat配列を用いる
+		DirectX::XMFLOAT3 color;
+		float intensity;
+		DirectX::XMFLOAT3 direction;
+	};
 
 	class LightingPass {
 	public:
@@ -33,6 +39,7 @@ namespace NamelessEngine::Graphics {
 
 	private:
 		LightingParam _paramData;
+		DirectionalLight _directionalLight;
 
 		CD3DX12_VIEWPORT _viewport;
 		CD3DX12_RECT _scissorRect;
@@ -47,7 +54,8 @@ namespace NamelessEngine::Graphics {
 		std::unordered_map<GBUFFER_TYPE, DX12API::Texture&> _gbuffers;
 
 		std::unique_ptr<DX12API::ConstantBuffer> _paramBuffer;
-		Utility::RESULT CreateParamBuffer(ID3D12Device& device);
+		std::unique_ptr<DX12API::ConstantBuffer> _directionalLightBuffer;
+		Utility::RESULT CreateBuffer(ID3D12Device& device);
 
 		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _descriptorHeap = nullptr;
 		Utility::RESULT CreateDescriptorHeap(ID3D12Device& device);
@@ -55,13 +63,9 @@ namespace NamelessEngine::Graphics {
 	public:
 		Utility::RESULT Init();
 		void UpdateParamData(LightingParam& param);
+		void UpdateDirectionalLight(DirectionalLight& directionalLight);
 		void Render();
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
-		void SetCubeTexture(DX12API::Texture& texture);
-		void SetIBLTextures(
-			DX12API::Texture& environment, DX12API::Texture& specularLD,
-			DX12API::Texture& diffuseLD, DX12API::Texture& dfg);
-		void SetEyePosition(DirectX::XMFLOAT3 eyePos);
 		DX12API::Texture& GetOffscreenTexture();
 	};
 }

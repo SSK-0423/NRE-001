@@ -14,17 +14,11 @@ cbuffer Parameter : register(b0)
     int brdfModel;
 };
 
-struct DirectionalLight
+cbuffer LightBuffer : register(b1)
 {
-    float3 color;
-    float3 direction;
-    float intensity;
-};
-
-struct PointLight
-{
-    float3 pos;
-    float3 color;
+    float3 dLightColor : packoffset(c0);
+    float dLightintensity : packoffset(c0.w);
+    float3 dLightdirection : packoffset(c1);
 };
 
 struct VertexOutput
@@ -104,14 +98,9 @@ float4 PSMain(VertexOutput input) : SV_Target
     //    }
     //}
     
-    DirectionalLight light;
-    light.direction = normalize(float3(1, 1, -1));
-    light.intensity = 5.0f;
-    light.color = float3(1, 1, 1);
-    
-    PointLight pointLight;
-    pointLight.pos = float3(0, 50, 100);
-    pointLight.color = float3(1, 1, 1);
+    //directionalLight.direction = normalize(float3(1, 1, -1));
+    //directionalLight.intensity = 5.0f;
+    //directionalLight.color = float3(1, 1, 1);
     
     float2 uv = input.uv;
     float3 color = colorMap.Sample(smp, uv).rgb;
@@ -123,7 +112,7 @@ float4 PSMain(VertexOutput input) : SV_Target
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
-    float3 L = normalize(light.direction); // 光の入射方向
+    float3 L = normalize(normalize(dLightdirection)); // 光の入射方向
     float3 V = normalize(eyePos - pos); // 視線方向
     float3 R = normalize(reflect(L, N)); // 光の反射方向
     // マイクロサーフェース上の法線
@@ -142,7 +131,7 @@ float4 PSMain(VertexOutput input) : SV_Target
         specularColor = saturate(GGXModel(color, metallic, roughness, uv, N, H, V, L));
     }
     // Li(x,ω) * BRDF * cosθ
-    float3 outColor = light.color.rgb * (diffuseColor + specularColor) * dot(N, L) * light.intensity;
+    float3 outColor = dLightColor * (diffuseColor + specularColor) * dot(N, L) * dLightintensity;
     
     return float4(outColor, 1.f);
 }

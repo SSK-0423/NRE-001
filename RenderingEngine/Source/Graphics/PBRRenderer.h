@@ -44,8 +44,12 @@ namespace NamelessEngine::Graphics {
 		float _roughness;
 		float _metallic;
 
-		//
+		// ライティングパスで使用するバッファの構造体
 		LightingParam _lightingParam;
+		DirectionalLight _directionalLight;
+		float _dLightColor[3];
+		float _dLightDirection[3];
+		
 		//
 		IBLParam _iblParam;
 

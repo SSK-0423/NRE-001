@@ -16,16 +16,15 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
-constexpr UINT ENVIRONMENT_INDEX = 5;
-constexpr UINT SPECULAR_LD_INDEX = 6;
-constexpr UINT DIFFUSE_LD_INDEX = 7;
-constexpr UINT DFG_INDEX = 8;
+constexpr UINT LIGHTING_PARAM_INDEX = 0;
+constexpr UINT DIRECTIONAL_LIGHT_INDEX = 1;
 
 namespace NamelessEngine::Graphics
 {
 	LightingPass::LightingPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
-		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer()),
+		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()),
+		_paramBuffer(new ConstantBuffer()), _directionalLightBuffer(new ConstantBuffer()),
 		_renderTarget(new RenderTarget())
 	{
 	}
@@ -53,11 +52,12 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
-		result = CreateParamBuffer(device);
+		result = CreateBuffer(device);
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
 		}
-		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, 0);
+		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, LIGHTING_PARAM_INDEX);
+		_descriptorHeap->RegistConstantBuffer(device, *_directionalLightBuffer, DIRECTIONAL_LIGHT_INDEX);
 
 		SIZE windowSize = AppWindow::GetWindowSize();
 
@@ -71,8 +71,8 @@ namespace NamelessEngine::Graphics
 	Utility::RESULT LightingPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 1;
-		// カラー、法線、位置、メタリック・ラフネス、深度、キューブテクスチャ
+		rootSigData._descRangeData.cbvDescriptorNum = 2;
+		// カラー、法線、位置、メタリック・ラフネス、深度
 		rootSigData._descRangeData.srvDescriptorNum = 5;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
@@ -128,9 +128,12 @@ namespace NamelessEngine::Graphics
 
 		return _renderTarget->Create(device, data);
 	}
-	Utility::RESULT LightingPass::CreateParamBuffer(ID3D12Device& device)
+	Utility::RESULT LightingPass::CreateBuffer(ID3D12Device& device)
 	{
-		return _paramBuffer->Create(device, &_paramData, sizeof(LightingParam));
+		RESULT result = _paramBuffer->Create(device, &_paramData, sizeof(LightingParam));
+		if (result == RESULT::FAILED) { return result; }
+
+		return _directionalLightBuffer->Create(device, &_directionalLight, sizeof(DirectionalLight));
 	}
 	Utility::RESULT LightingPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
@@ -141,6 +144,11 @@ namespace NamelessEngine::Graphics
 	{
 		_paramData = param;
 		_paramBuffer->UpdateData(&_paramData);
+	}
+	void LightingPass::UpdateDirectionalLight(DirectionalLight& directionalLight)
+	{
+		_directionalLight = directionalLight;
+		_directionalLightBuffer->UpdateData(&_directionalLight);
 	}
 	void LightingPass::Render()
 	{
@@ -163,16 +171,6 @@ namespace NamelessEngine::Graphics
 		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス, 4: 深度
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, static_cast<int>(type));
-	}
-	void LightingPass::SetCubeTexture(DX12API::Texture& texture)
-	{
-		ShaderResourceViewDesc desc(texture, true);
-		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, ENVIRONMENT_INDEX);
-	}
-	void LightingPass::SetEyePosition(DirectX::XMFLOAT3 eyePos)
-	{
-		_paramData.eyePosition = eyePos;
 	}
 	DX12API::Texture& LightingPass::GetOffscreenTexture()
 	{

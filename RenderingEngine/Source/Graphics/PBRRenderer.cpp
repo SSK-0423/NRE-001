@@ -73,7 +73,7 @@ namespace NamelessEngine::Graphics
 			_lightingPass.SetGBuffer(static_cast<GBUFFER_TYPE>(index), gbuffer);
 			_iblPass.SetGBuffer(static_cast<GBUFFER_TYPE>(index), gbuffer);
 		}
-		
+
 		_iblPass.SetIBLTextures(*_specularLD, *_diffuseLD, *_DFG);
 		_iblPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
 
@@ -88,6 +88,14 @@ namespace NamelessEngine::Graphics
 	{
 		_lightingParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_lightingPass.UpdateParamData(_lightingParam);
+		
+		_directionalLight.color.x = _dLightColor[0];
+		_directionalLight.color.y = _dLightColor[1];
+		_directionalLight.color.z = _dLightColor[2];
+		_directionalLight.direction.x = _dLightDirection[0];
+		_directionalLight.direction.y = _dLightDirection[1];
+		_directionalLight.direction.z = _dLightDirection[2];
+		_lightingPass.UpdateDirectionalLight(_directionalLight);
 
 		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_iblPass.UpdateParamData(_iblParam);
@@ -105,15 +113,20 @@ namespace NamelessEngine::Graphics
 		{
 			ImGui::SetNextWindowPos(ImVec2(650, 0));
 			ImGui::Begin("Physically Based Rendering", 0, ImGuiWindowFlags_NoMove);
-			ImGui::SetWindowSize(ImVec2(400, 500), ImGuiCond_::ImGuiCond_FirstUseEver);
+			ImGui::SetWindowSize(ImVec2(375, AppWindow::GetWindowSize().cy), ImGuiCond_Once);
 
-			// ラフネス
+			// GBufferパス関連
 			ImGui::ColorPicker3("BaseColor", _baseColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
 			ImGui::SliderFloat("Roughness", &_roughness, 0.f, 1.f);
 			ImGui::SliderFloat("Metallic", &_metallic, 0.f, 1.f);
+			// ライティングパス関連
+			ImGui::ColorPicker3("LightColor", _dLightColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
+			ImGui::SliderFloat3("LightDirection", _dLightDirection, -1.f, 1.f);
+			ImGui::SliderFloat("LightIntensity", &_directionalLight.intensity, 0.f, 10.f);
 			ImGui::RadioButton("CookTorrance", &_lightingParam.brdfModel, 0);
 			ImGui::SameLine();
-			ImGui::RadioButton("GGX", &_lightingParam.brdfModel, 1);
+			ImGui::RadioButton("GGX(Trowbridge-Reitz)", &_lightingParam.brdfModel, 1);
+			// IBLパス関連
 			ImGui::SliderFloat("IBL_Intensity", &_iblParam.lightIntensity, 0.f, 10.f);
 			ImGui::End();
 			ImGui::Render();
