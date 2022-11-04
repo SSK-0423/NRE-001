@@ -26,8 +26,8 @@ namespace NamelessEngine::Graphics
 	void GBufferPass::Render(std::vector<Actor*>& actors)
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
-		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
+		renderContext.SetGraphicsRootSignature(*_rootSignature);
 
 		// 深度はカラーのレンダーターゲットに含まれているのでレンダーターゲット数は-1する
 		RenderTarget renderTargets[static_cast<UINT>(GBUFFER_TYPE::GBUFFER_TYPE_NUM) - 1];

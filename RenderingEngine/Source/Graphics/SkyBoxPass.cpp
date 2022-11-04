@@ -152,8 +152,8 @@ namespace NamelessEngine::Graphics
 		_transform->Update(0.f);
 
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
-		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
+		renderContext.SetGraphicsRootSignature(*_rootSignature);
 
 		_renderTarget->BeginRendering(renderContext, _viewport, _scissorRect);
 		{

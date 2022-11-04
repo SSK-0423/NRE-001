@@ -114,6 +114,7 @@ namespace NamelessEngine::Graphics
 			ImGui::RadioButton("CookTorrance", &_lightingParam.brdfModel, 0);
 			ImGui::SameLine();
 			ImGui::RadioButton("GGX", &_lightingParam.brdfModel, 1);
+			ImGui::SliderFloat("IBL_Intensity", &_iblParam.lightIntensity, 0.f, 10.f);
 			ImGui::End();
 			ImGui::Render();
 		}

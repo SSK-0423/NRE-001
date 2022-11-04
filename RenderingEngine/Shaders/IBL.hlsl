@@ -6,9 +6,9 @@ Texture2D positionMap : register(t2);
 Texture2D metalRoughReflectMap : register(t3);
 
 Texture2D lightedMap : register(t4);
-TextureCube specularLD : register(t5); // HDR
-TextureCube diffuseLD : register(t6); // HDR
-Texture2D dfgMap : register(t7);
+Texture2D dfgMap : register(t5);
+TextureCube specularLD : register(t6); // HDR
+TextureCube diffuseLD : register(t7); // HDR
 
 sampler smp : register(s0);
 
@@ -17,6 +17,7 @@ static const int MIP_COUNT = 3;
 cbuffer Parameter : register(b0)
 {
     float3 eyePos;
+    float lightIntensity;
 };
 
 struct VertexOutput
@@ -55,9 +56,8 @@ float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, flo
     float3 specLD = Reinhard(specularLD.SampleLevel(smp, specDir, mipLevel).rgb);
     
     // テクスチャの範囲外参照を防ぐ
-    float2 DFG = dfgMap.SampleLevel(smp, float2(saturate(NV), roughness), 0.f);
+    float2 DFG = dfgMap.SampleLevel(smp, float2(saturate(NV), roughness), 0.f).rg;
     
-    return float3(DFG, 0.f);
     return specLD * (f0 * DFG.x + DFG.y);
 }
 
@@ -97,9 +97,8 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 diffuse = IBLDiffuse(N) * kd;
     float3 specular = IBLSpecualr(dot(N, V), N, R, ks, roughness, MIP_COUNT);
     
-    float3 outColor = specular; /*+ lightedMap.Sample(smp, input.uv).rgb*/;
+    float3 outColor = (diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb;
     
-    return float4(dfgMap.Sample(smp, input.uv).rgb, 1.f);
     return float4(outColor, 1.f);
 
 }

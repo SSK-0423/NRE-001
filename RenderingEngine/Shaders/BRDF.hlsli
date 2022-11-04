@@ -30,9 +30,10 @@ float GGX(float roughness, float NH)
 {
     float alpha = pow(roughness, 2);
     float alpha2 = pow(alpha, 2);
-    float cos2 = pow(NH, 4);
+    float cos2 = pow(NH, 2);
+    float temp = pow(cos2 * (alpha2 - 1.f) + 1, 2);
     
-    return alpha2 / max(EPSILON, (PI * pow(cos2 * (alpha2 - 1.f) + 1.f, 2)));
+    return alpha2 / max(EPSILON, PI * temp);
 }
 
 // マイクロファセット
@@ -47,10 +48,17 @@ float Vcavity(float NH, float NV, float NL, float VH)
 
 float Smith(float roughness, float NL, float NV)
 {
-    float tanIn = sqrt(1.f / max(EPSILON, pow(NL, 2)) - 1.f);
-    float tanOut = sqrt(1.f / max(EPSILON, pow(NV, 2)) - 1.f);
-    float lambdaIn = (-1.f + sqrt(1.f + pow(roughness * tanIn, 2))) / 2.f;
-    float lambdaOut = (-1.f + sqrt(1.f + pow(roughness * tanIn, 2))) / 2.f;
+    float cos2Out = NV * NV;
+    float cos2In = NL * NL;
+    
+    float tan2In = (1.f + cos2In) / cos2In;
+    float tan2Out = (1.f + cos2Out) / cos2Out;
+    
+    float alpha2In = 1.f / (pow(roughness, 2) * tan2In);
+    float alpha2Out = 1.f / (pow(roughness, 2) * tan2Out);
+    
+    float lambdaIn = (-1.f + sqrt(1.f + 1.f / alpha2In)) * 0.5f;
+    float lambdaOut = (-1.f + sqrt(1.f + 1.f / alpha2Out)) * 0.5f;
     
     return 1.f / (1.f + lambdaIn, lambdaOut);
 }

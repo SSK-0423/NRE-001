@@ -124,8 +124,8 @@ namespace NamelessEngine::Graphics
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
 
-		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
+		renderContext.SetGraphicsRootSignature(*_rootSignature);
 
 		Dx12GraphicsEngine::Instance().SetFrameRenderTarget(_viewport, _scissorRect);
 		{

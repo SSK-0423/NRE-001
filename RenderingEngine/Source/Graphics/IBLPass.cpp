@@ -17,9 +17,9 @@ using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
 constexpr UINT LIGHTED_INDEX = 4;
-constexpr UINT SPECULAR_LD_INDEX = 5;
-constexpr UINT DIFFUSE_LD_INDEX = 6;
-constexpr UINT DFG_INDEX = 7;
+constexpr UINT DFG_INDEX = 5;
+constexpr UINT SPECULAR_LD_INDEX = 6;
+constexpr UINT DIFFUSE_LD_INDEX = 7;
 
 namespace NamelessEngine::Graphics
 {
@@ -145,8 +145,8 @@ namespace NamelessEngine::Graphics
 	{
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
 
-		renderContext.SetGraphicsRootSignature(*_rootSignature);
 		renderContext.SetPipelineState(*_pipelineState);
+		renderContext.SetGraphicsRootSignature(*_rootSignature);
 
 		_renderTarget->BeginRendering(renderContext, _viewport, _scissorRect);
 		{
@@ -185,7 +185,7 @@ namespace NamelessEngine::Graphics
 
 		ShaderResourceViewDesc dfgDesc(dfg, false);
 		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), dfg, diffDesc, DFG_INDEX);
+			Dx12GraphicsEngine::Instance().Device(), dfg, dfgDesc, DFG_INDEX);
 	}
 	DX12API::Texture& IBLPass::GetOffscreenTexture()
 	{

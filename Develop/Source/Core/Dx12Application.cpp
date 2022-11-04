@@ -53,7 +53,9 @@ RESULT Dx12Application::Init()
 		*_graphicsEngine.GetImguiDescriptorHeap().GetDescriptorHeapAddress(),
 		_graphicsEngine.GetImguiDescriptorHeap().GetCPUDescriptorHandleForHeapStart(),
 		_graphicsEngine.GetImguiDescriptorHeap().GetGPUDescriptorHandleForHeapStart());
-
+	// Atlasフォントのリビルド？
+	//ImGui::GetIO().Fonts->Build();
+	//ImGui_ImplDX12_InvalidateDeviceObjects();
 	return result;
 }
 
