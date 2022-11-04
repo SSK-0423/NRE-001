@@ -38,36 +38,59 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 		result = _lightingPass.Init();
 		if (result == RESULT::FAILED) { return result; }
+		result = _iblPass.Init();
+		if (result == RESULT::FAILED) { return result; }
 		result = _skyBoxPass.Init();
 		if (result == RESULT::FAILED) { return result; }
 		result = _blendPass.Init();
 		if (result == RESULT::FAILED) { return result; }
 
 		// キューブテクスチャ生成
-		_cubeTexture = std::make_unique<DX12API::Texture>();
-		result = _cubeTexture->CreateCubeTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01_cube.dds");
+		_environment = std::make_unique<DX12API::Texture>();
+		result = _environment->CreateCubeTextureFromDDS(
+			Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01EnvHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
-		// ライティングパスにGBufferをセット
-		for (size_t index = 0; index < static_cast<size_t>(GBUFFER_TYPE::GBUFFER_TYPE_NUM); index++) {
-			_lightingPass.SetGBuffer(
-				static_cast<GBUFFER_TYPE>(index),
-				_gbufferPass.GetGBuffer(static_cast<GBUFFER_TYPE>(index)));
-		}
-		_lightingPass.SetCubeTexture(*_cubeTexture);
+		_specularLD = std::make_unique<DX12API::Texture>();
+		result = _specularLD->CreateCubeTextureFromDDS(
+			Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01SpecularHDR.dds");
+		if (result == RESULT::FAILED) { return result; }
 
-		_skyBoxPass.SetCubeTexture(*_cubeTexture);
+		_diffuseLD = std::make_unique<DX12API::Texture>();
+		result = _diffuseLD->CreateCubeTextureFromDDS(
+			Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01DiffuseHDR.dds");
+		if (result == RESULT::FAILED) { return result; }
+
+		_DFG = std::make_unique<DX12API::Texture>();
+		result = _DFG->CreateTextureFromDDS(
+			Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01Brdf.dds");
+		if (result == RESULT::FAILED) { return result; }
+
+		// 各レンダリングパスに必要なリソースをセット
+		for (size_t index = 0; index < static_cast<size_t>(GBUFFER_TYPE::GBUFFER_TYPE_NUM); index++) {
+
+			Texture& gbuffer = _gbufferPass.GetGBuffer(static_cast<GBUFFER_TYPE>(index));
+			_lightingPass.SetGBuffer(static_cast<GBUFFER_TYPE>(index), gbuffer);
+			_iblPass.SetGBuffer(static_cast<GBUFFER_TYPE>(index), gbuffer);
+		}
+		
+		_iblPass.SetIBLTextures(*_specularLD, *_diffuseLD, *_DFG);
+		_iblPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
+
+		_skyBoxPass.SetCubeTexture(*_environment);
 		_skyBoxPass.SetCamera(scene.GetCamera());
 
-		_blendPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
+		_blendPass.SetLightedTexture(_iblPass.GetOffscreenTexture());
 		_blendPass.SetRenderedSkyBoxTexture(_skyBoxPass.GetOffscreenTexture());
 		_blendPass.SetDepthTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::DEPTH));
 	}
 	void PBRRenderer::Update(float deltatime, Scene::Scene& scene)
 	{
-		_lightingPass.SetEyePosition(scene.GetCamera().GetTransform().Position());
-		_lightingPass.UpdateParamData();
+		_lightingParam.eyePosition = scene.GetCamera().GetTransform().Position();
+		_lightingPass.UpdateParamData(_lightingParam);
+
+		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
+		_iblPass.UpdateParamData(_iblParam);
 
 		for (auto meshActor : scene.GetMeshActors()) {
 			Material* material = meshActor->GetComponent<Material>();
@@ -88,6 +111,9 @@ namespace NamelessEngine::Graphics
 			ImGui::ColorPicker3("BaseColor", _baseColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
 			ImGui::SliderFloat("Roughness", &_roughness, 0.f, 1.f);
 			ImGui::SliderFloat("Metallic", &_metallic, 0.f, 1.f);
+			ImGui::RadioButton("CookTorrance", &_lightingParam.brdfModel, 0);
+			ImGui::SameLine();
+			ImGui::RadioButton("GGX", &_lightingParam.brdfModel, 1);
 			ImGui::End();
 			ImGui::Render();
 		}
@@ -96,9 +122,11 @@ namespace NamelessEngine::Graphics
 		_gbufferPass.Render(scene.GetMeshActors());
 		// 2. ライティングパス
 		_lightingPass.Render();
-		// 3. スカイボックスパス
+		// 3. IBLパス
+		_iblPass.Render();
+		// 4. スカイボックスパス
 		_skyBoxPass.Render();
-		// 4. ライティング結果とスカイボックス描画結果を合成する
+		// 5. ライティング結果とスカイボックス描画結果を合成する
 		_blendPass.Render();
 	}
 }

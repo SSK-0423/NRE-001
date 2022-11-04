@@ -50,22 +50,35 @@ namespace NamelessEngine::DX12API
 	}
 
 	void DescriptorHeapRTV::RegistDescriptor(
-		ID3D12Device& device, RenderTargetBuffer& buffer, DXGI_FORMAT format)
+		ID3D12Device& device, RenderTargetBuffer& buffer, DXGI_FORMAT format, bool isCubeMap)
 	{
 		auto handle = _rtvHeap->GetCPUDescriptorHandleForHeapStart();
 		handle.ptr += _registedRTVNum * _handleIncrimentSize;
 
-		// レンダーターゲットビュー設定
-		D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
+		if (isCubeMap) {
+			for (size_t index = 0; index < 6; index++) {
+				D3D12_RENDER_TARGET_VIEW_DESC rtvDesc{};
+				rtvDesc.Format = format;
+				rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2DARRAY;
+				rtvDesc.Texture2DArray.FirstArraySlice = index;
+				rtvDesc.Texture2DArray.ArraySize = 1;
 
-		rtvDesc.Format = format;
-		rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
+				// ん？？？
+				// 登録済みのディスクリプタ数をインクリメント
+				_registedRTVNum++;
+			}
+		}
+		else {
+			D3D12_RENDER_TARGET_VIEW_DESC rtvDesc = {};
 
-		// レンダーターゲットビュー生成
-		device.CreateRenderTargetView(&buffer.GetBuffer(), &rtvDesc, handle);
+			rtvDesc.Format = format;
+			rtvDesc.ViewDimension = D3D12_RTV_DIMENSION_TEXTURE2D;
 
-		// 登録済みのディスクリプタ数をインクリメント
-		_registedRTVNum++;
+			// レンダーターゲットビュー生成
+			device.CreateRenderTargetView(&buffer.GetBuffer(), &rtvDesc, handle);
+			// 登録済みのディスクリプタ数をインクリメント
+			_registedRTVNum++;
+		}
 	}
 
 }

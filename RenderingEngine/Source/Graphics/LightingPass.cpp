@@ -16,7 +16,10 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
-constexpr UINT CUBETEX_INDEX = 5;
+constexpr UINT ENVIRONMENT_INDEX = 5;
+constexpr UINT SPECULAR_LD_INDEX = 6;
+constexpr UINT DIFFUSE_LD_INDEX = 7;
+constexpr UINT DFG_INDEX = 8;
 
 namespace NamelessEngine::Graphics
 {
@@ -64,12 +67,13 @@ namespace NamelessEngine::Graphics
 
 		return result;
 	}
+
 	Utility::RESULT LightingPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 1;
 		// カラー、法線、位置、メタリック・ラフネス、深度、キューブテクスチャ
-		rootSigData._descRangeData.srvDescriptorNum = 6;
+		rootSigData._descRangeData.srvDescriptorNum = 5;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
@@ -126,15 +130,16 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT LightingPass::CreateParamBuffer(ID3D12Device& device)
 	{
-		return _paramBuffer->Create(device, &_paramData, sizeof(ParameterCBuff));
+		return _paramBuffer->Create(device, &_paramData, sizeof(LightingParam));
 	}
 	Utility::RESULT LightingPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		return _descriptorHeap->Create(device);
 	}
 
-	void LightingPass::UpdateParamData()
+	void LightingPass::UpdateParamData(LightingParam& param)
 	{
+		_paramData = param;
 		_paramBuffer->UpdateData(&_paramData);
 	}
 	void LightingPass::Render()
@@ -163,7 +168,7 @@ namespace NamelessEngine::Graphics
 	{
 		ShaderResourceViewDesc desc(texture, true);
 		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX);
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, ENVIRONMENT_INDEX);
 	}
 	void LightingPass::SetEyePosition(DirectX::XMFLOAT3 eyePos)
 	{

@@ -6,13 +6,12 @@ Texture2D positionMap : register(t2);
 Texture2D metalRoughReflectMap : register(t3);
 Texture2D depthMap : register(t4);
 
-TextureCube texCube : register(t5);
-
 sampler smp : register(s0);
 
 cbuffer Parameter : register(b0)
 {
     float3 eyePos;
+    int brdfModel;
 };
 
 struct DirectionalLight
@@ -33,27 +32,6 @@ struct VertexOutput
     float4 position : SV_POSITION;
     float2 uv : TEXCOORD;
 };
-
-// 拡散反射
-float3 lambert(float3 lightDir, float3 lightColor, float3 normal, float3 diffuseColor)
-{
-    return diffuseColor * saturate(dot(lightDir, normal)) * lightColor;
-}
-
-// 鏡面反射
-float3 phongSpecular(float3 lightDir, float3 lightColor, float3 normal, float3 specularColor, float3 eyeDir, float alpha)
-{
-    float3 ref = -reflect(lightDir, normal);
-    ref = normalize(ref);
-    
-    // 視線ベクトルと反射ベクトルのなす角のn乗
-    return specularColor * pow(saturate(dot(eyeDir, ref)), alpha) * lightColor;
-}
-
-float3 ambient(float ambientIntensity, float3 ambientColor)
-{
-    return ambientIntensity * ambientColor;
-}
 
 VertexOutput VSMain(uint id : SV_VertexID)
 {
@@ -151,12 +129,18 @@ float4 PSMain(VertexOutput input) : SV_Target
     // マイクロサーフェース上の法線
     // ライトベクトルと視線ベクトルの中間ベクトル(ハーフベクトル)
     float3 H = normalize(V + L);
-
-    float3 cubeUV = -reflect(V, normal);
-    float3 skyLight = texCube.Sample(smp, cubeUV);
     
     float3 diffuseColor = saturate(normalizeLambert(color) * (1.f - metallic));
-    float3 specularColor = saturate(CookTorrance(color, metallic, roughness, uv, N, H, V, L));
+    
+    float3 specularColor = float3(0.f, 0.f, 0.f);
+    if (brdfModel == COOK_TORRANCE)
+    {
+        specularColor = saturate(CookTorrance(color, metallic, roughness, uv, N, H, V, L));
+    }
+    else if (brdfModel == GGX_MODEL)
+    {
+        specularColor = saturate(GGXModel(color, metallic, roughness, uv, N, H, V, L));
+    }
     // Li(x,ω) * BRDF * cosθ
     float3 outColor = light.color.rgb * (diffuseColor + specularColor) * dot(N, L) * light.intensity;
     

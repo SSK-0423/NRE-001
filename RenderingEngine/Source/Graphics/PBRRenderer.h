@@ -4,6 +4,7 @@
 #include "LightingPass.h"
 #include "SkyBoxPass.h"
 #include "BlendPass.h"
+#include "IBLPass.h"
 
 #include "EngineUtility.h"
 
@@ -29,14 +30,24 @@ namespace NamelessEngine::Graphics {
 	private:
 		GBufferPass _gbufferPass;
 		LightingPass _lightingPass;
+		IBLPass _iblPass;
 		SkyBoxPass _skyBoxPass;
 		BlendPass _blendPass;
-		std::unique_ptr<DX12API::Texture> _cubeTexture;
+
+		std::unique_ptr<DX12API::Texture> _environment;
+		std::unique_ptr<DX12API::Texture> _specularLD;
+		std::unique_ptr<DX12API::Texture> _diffuseLD;
+		std::unique_ptr<DX12API::Texture> _DFG;
 
 		// ImGuiÉpÉâÉÅÅ[É^
 		float _baseColor[3];
 		float _roughness;
 		float _metallic;
+
+		//
+		LightingParam _lightingParam;
+		//
+		IBLParam _iblParam;
 
 	public:
 		Utility::RESULT Init(Scene::Scene& scene) override;

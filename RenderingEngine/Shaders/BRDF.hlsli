@@ -1,5 +1,7 @@
 static const float PI = 3.141592f;
 static const float EPSILON = 0.0001f;
+static const int COOK_TORRANCE = 0;
+static const int GGX_MODEL = 1;
 
 // Schlickによるフレネル項の近似式
 // cos_in 入射角のコサイン
@@ -13,15 +15,24 @@ float3 SchlickFresnel(float3 baseColor, float metallic, float2 uv, float VH)
 
 // 法線分布関数
 // Beckman分布
-float Beckman(float roughness, float2 uv, float NH)
+float Beckman(float roughness, float VH)
 {
-    float alpha = roughness;
+    float alpha = pow(roughness, 2);
     alpha = max(EPSILON, roughness);
     float alpha2 = pow(alpha, 2);
-    float cos4 = pow(NH, 4);
-    float tan_mn2 = (1.f - pow(NH, 2)) / pow(NH, 2);
+    float cos4 = pow(VH, 4);
+    float tan_mn2 = (1.f - pow(VH, 2)) / pow(VH, 2);
     
     return (1.f / (alpha2 * cos4)) * exp(-tan_mn2 / alpha2);
+}
+// GGX
+float GGX(float roughness, float NH)
+{
+    float alpha = pow(roughness, 2);
+    float alpha2 = pow(alpha, 2);
+    float cos2 = pow(NH, 4);
+    
+    return alpha2 / max(EPSILON, (PI * pow(cos2 * (alpha2 - 1.f) + 1.f, 2)));
 }
 
 // マイクロファセット
@@ -32,6 +43,16 @@ float Beckman(float roughness, float2 uv, float NH)
 float Vcavity(float NH, float NV, float NL, float VH)
 {
     return min(1.f, min(2.f * NH * NV / VH, 2.f * NH * NL / VH));
+}
+
+float Smith(float roughness, float NL, float NV)
+{
+    float tanIn = sqrt(1.f / max(EPSILON, pow(NL, 2)) - 1.f);
+    float tanOut = sqrt(1.f / max(EPSILON, pow(NV, 2)) - 1.f);
+    float lambdaIn = (-1.f + sqrt(1.f + pow(roughness * tanIn, 2))) / 2.f;
+    float lambdaOut = (-1.f + sqrt(1.f + pow(roughness * tanIn, 2))) / 2.f;
+    
+    return 1.f / (1.f + lambdaIn, lambdaOut);
 }
 
 // 正規化ランバート
@@ -56,8 +77,26 @@ float3 CookTorrance(
     float NL = saturate(dot(N, L));
     float VH = saturate(dot(V, H));
     
-    float D = Beckman(roughness, uv, NH);
+    float D = Beckman(roughness, NH);
     float G2 = Vcavity(NH, NV, NL, VH);
+    float3 Fr = SchlickFresnel(baseColor, metallic, uv, VH);
+    float cos_o = NL; // 出射方向のコサイン
+    float cos_i = NV; // 入射方向のコサイン
+    
+    return TorranceSparrow(D, G2, Fr, cos_o, cos_i);
+}
+
+// GGXモデル
+float3 GGXModel(
+    float3 baseColor, float metallic, float roughness, float2 uv, float3 N, float3 H, float3 V, float3 L)
+{
+    float NH = saturate(dot(N, H));
+    float NV = saturate(dot(N, V));
+    float NL = saturate(dot(N, L));
+    float VH = saturate(dot(V, H));
+    
+    float D = GGX(roughness, NH);
+    float G2 = Smith(roughness, NL, NV);
     float3 Fr = SchlickFresnel(baseColor, metallic, uv, VH);
     float cos_o = NL; // 出射方向のコサイン
     float cos_i = NV; // 入射方向のコサイン

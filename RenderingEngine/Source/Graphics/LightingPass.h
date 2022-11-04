@@ -17,27 +17,33 @@ namespace NamelessEngine::DX12API {
 namespace NamelessEngine::Graphics {
 	enum class GBUFFER_TYPE;
 
+	enum class BRDF_MODEL {
+		COOK_TORRANCE,
+		GGX,
+	};
+	struct LightingParam {
+		DirectX::XMFLOAT3 eyePosition;
+		int brdfModel;
+	};
+
 	class LightingPass {
 	public:
 		LightingPass();
 		~LightingPass();
 
 	private:
-		struct ParameterCBuff {
-			DirectX::XMFLOAT3 eyePosition;
-		};
-		ParameterCBuff _paramData;
+		LightingParam _paramData;
 
 		CD3DX12_VIEWPORT _viewport;
 		CD3DX12_RECT _scissorRect;
-		
+
 		std::unique_ptr<DX12API::RootSignature> _rootSignature = nullptr;
 		Utility::RESULT CreateRootSignature(ID3D12Device& device);
 		std::unique_ptr<DX12API::GraphicsPipelineState> _pipelineState = nullptr;
 		Utility::RESULT CreateGraphicsPipelineState(ID3D12Device& device);
 		std::unique_ptr<DX12API::RenderTarget> _renderTarget;
 		Utility::RESULT CreateRenderTarget(ID3D12Device& device);
-		
+
 		std::unordered_map<GBUFFER_TYPE, DX12API::Texture&> _gbuffers;
 
 		std::unique_ptr<DX12API::ConstantBuffer> _paramBuffer;
@@ -48,10 +54,13 @@ namespace NamelessEngine::Graphics {
 
 	public:
 		Utility::RESULT Init();
-		void UpdateParamData();
+		void UpdateParamData(LightingParam& param);
 		void Render();
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
 		void SetCubeTexture(DX12API::Texture& texture);
+		void SetIBLTextures(
+			DX12API::Texture& environment, DX12API::Texture& specularLD,
+			DX12API::Texture& diffuseLD, DX12API::Texture& dfg);
 		void SetEyePosition(DirectX::XMFLOAT3 eyePos);
 		DX12API::Texture& GetOffscreenTexture();
 	};

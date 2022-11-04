@@ -80,6 +80,9 @@
     <FxCompile Include="Shaders\Blend.hlsl">
       <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\IBL.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DX12API\ConstantBuffer.cpp">
@@ -215,6 +218,12 @@
       <Filter>Graphics</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\BlendPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\CubeRenderTarget.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\IBLPass.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
@@ -379,6 +388,12 @@
       <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\BlendPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\CubeRenderTarget.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\IBLPass.h">
       <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>

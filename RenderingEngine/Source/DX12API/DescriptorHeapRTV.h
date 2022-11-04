@@ -10,7 +10,7 @@
 namespace NamelessEngine::DX12API
 {
 	class RenderTargetBuffer;
-	
+
 	/// <summary>
 	/// レンダーターゲットビュー用のディスクリプタヒープ
 	/// </summary>
@@ -84,6 +84,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="buffer">レンダーターゲットバッファー</param>
 		/// <param name="format">レンダーターゲットのフォーマット デフォルト値: DXGI_FORMAT_R8G8B8A8_UNORM</param>
 		void RegistDescriptor(
-			ID3D12Device& device, RenderTargetBuffer& buffer, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM);
+			ID3D12Device& device, RenderTargetBuffer& buffer, DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM,
+			bool isCubeMap = false);
 	};
 }
