@@ -27,9 +27,9 @@ namespace NamelessEngine::Graphics {
 	};
 	struct DirectionalLight {
 		// Imgui側から値を変更したいのでfloat配列を用いる
-		DirectX::XMFLOAT3 color;
+		float color[3];
 		float intensity;
-		DirectX::XMFLOAT3 direction;
+		float direction[3];
 	};
 
 	class LightingPass {

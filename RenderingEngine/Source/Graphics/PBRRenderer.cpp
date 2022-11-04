@@ -88,13 +88,7 @@ namespace NamelessEngine::Graphics
 	{
 		_lightingParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_lightingPass.UpdateParamData(_lightingParam);
-		
-		_directionalLight.color.x = _dLightColor[0];
-		_directionalLight.color.y = _dLightColor[1];
-		_directionalLight.color.z = _dLightColor[2];
-		_directionalLight.direction.x = _dLightDirection[0];
-		_directionalLight.direction.y = _dLightDirection[1];
-		_directionalLight.direction.z = _dLightDirection[2];
+
 		_lightingPass.UpdateDirectionalLight(_directionalLight);
 
 		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
@@ -120,8 +114,8 @@ namespace NamelessEngine::Graphics
 			ImGui::SliderFloat("Roughness", &_roughness, 0.f, 1.f);
 			ImGui::SliderFloat("Metallic", &_metallic, 0.f, 1.f);
 			// ライティングパス関連
-			ImGui::ColorPicker3("LightColor", _dLightColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
-			ImGui::SliderFloat3("LightDirection", _dLightDirection, -1.f, 1.f);
+			ImGui::ColorPicker3("LightColor", _directionalLight.color, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
+			ImGui::SliderFloat3("LightDirection", _directionalLight.direction, -1.f, 1.f);
 			ImGui::SliderFloat("LightIntensity", &_directionalLight.intensity, 0.f, 10.f);
 			ImGui::RadioButton("CookTorrance", &_lightingParam.brdfModel, 0);
 			ImGui::SameLine();
