@@ -55,7 +55,7 @@ float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, flo
     float3 specLD = Reinhard(specularLD.SampleLevel(smp, specDir, mipLevel).rgb);
     
     // テクスチャの範囲外参照を防ぐ
-    float2 DFG = dfgMap.SampleLevel(smp, float2(0.5f, 0.5f),0.f);
+    float2 DFG = dfgMap.SampleLevel(smp, float2(saturate(NV), roughness), 0.f);
     
     return float3(DFG, 0.f);
     return specLD * (f0 * DFG.x + DFG.y);
