@@ -46,3 +46,6 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 - DirectXMath
 - Dear ImGUI
 
+# Used Tools
+- IBL Baker
+
