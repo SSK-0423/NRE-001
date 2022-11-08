@@ -1,11 +1,14 @@
 # Nameless Renderer
-Physically Based Renderer with DirectX12 for Studying Photorealistic Rendering
+Physically Based Renderer with DirectX12 made for learning and trying rendering techniques
 
-## Rendering Image
-### IBL Only
+# Rendering Image
+## IBL
 ![ibl rendering image](https://user-images.githubusercontent.com/83057130/200493259-90e801bd-6809-41f4-a060-72980351ae37.PNG)
-
-## Feature
+## Cook-Torrance
+![cook-torrance rendering image](https://user-images.githubusercontent.com/83057130/200494726-da110b85-6b7c-4043-90a4-14613881d5d5.PNG)
+## Trowbridge-Reitz(GGX)
+![ggx rendering image](https://user-images.githubusercontent.com/83057130/200494759-bb96bf09-fb69-43c5-9201-f47ba7526c27.PNG)
+# Feature
 - Deferred Rendering
   1. GBuffer
   2. Directional Lighting
@@ -27,16 +30,19 @@ Physically Based Renderer with DirectX12 for Studying Photorealistic Rendering
 - Light Source
   - Directional Light
 
-## Future Work
+# Future Work
 - [ ] FBX Loader
 - [ ] glTF Loader
 - [ ] Disney BRDF
+- [ ] Shadow Mapping
 
-## References
+# References
 - Direct3D 12 ゲームグラフィックス実践ガイド Pocol著 https://gihyo.jp/book/2021/978-4-297-12365-9
 - DirectX 12の魔導書 3Dレンダリングの基礎からMMDモデルを踊らせるまで　川野 竜一 著 https://www.shoeisha.co.jp/book/detail/9784798161938
 
-## API & Library
+# API & Libraries
 - DirectX12
 - DirectXTex
 - DirectXMath
+- Dear ImGUI
+
