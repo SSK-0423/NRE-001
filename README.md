@@ -2,7 +2,8 @@
 Physically Based Renderer with DirectX12 for Studying Photorealistic Rendering
 
 ## Rendering Image
-![rendering image](https://user-images.githubusercontent.com/83057130/200484927-5bb3747d-829a-41c7-975f-0e48cc539b7a.png)
+### IBL Only
+![ibl rendering image](https://user-images.githubusercontent.com/83057130/200493259-90e801bd-6809-41f4-a060-72980351ae37.PNG)
 
 ## Feature
 - Deferred Rendering
