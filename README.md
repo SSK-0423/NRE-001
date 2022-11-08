@@ -24,7 +24,7 @@ Physically Based Renderer with DirectX12 for Studying Photorealistic Rendering
   - Directional Light
 
 ## Rendering Image
-レンダリング画像貼る
+![rendering image](https://user-images.githubusercontent.com/83057130/200484927-5bb3747d-829a-41c7-975f-0e48cc539b7a.png)
 
 ## Future Work
 - [ ] FBX Loader
