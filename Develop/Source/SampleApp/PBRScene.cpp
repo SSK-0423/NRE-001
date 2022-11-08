@@ -19,27 +19,60 @@ PBRScene::~PBRScene()
 Utility::RESULT PBRScene::ImplInit()
 {
 	ID3D12Device& device = Core::Dx12GraphicsEngine::Instance().Device();
-	MeshData meshData = Graphics::CubeMesh::CreateMeshData();
-	MeshData sphereData = Graphics::SphereMesh::CreateMeshData(100, 100, 0.5);
 
-	Actor* cubeActor = new Actor();
-	cubeActor->AddComponent<Transform>();
-	cubeActor->AddComponent<Mesh>()->Create(device, sphereData);
-	cubeActor->AddComponent<Material>();
+	float sphereRadius = 0.5f;
+	unsigned int stackNum = 16;
+	unsigned int sectorNum = 32;
+	MeshData sphereData = Graphics::SphereMesh::CreateMeshData(100, 100, sphereRadius);
 
-	cubeActor->GetComponent<Mesh>()->SetConstantBuffer(device, _camera->GetConstantBuffer(), 0);
-	cubeActor->GetComponent<Mesh>()->SetConstantBuffer(
-		device, cubeActor->GetComponent<Transform>()->GetConstantBuffer(), 1);
-	cubeActor->GetComponent<Mesh>()->SetConstantBuffer(
-		device, cubeActor->GetComponent<Material>()->GetConstantBuffer(), 2);
+	// ラフネス0.2刻み メタリック0.5刻み
+	float roughnessStep = 0.2f;
+	float metallicStep = 0.5f;
+	int width = 1.f / roughnessStep + 1.f;
+	int height = 1.f / metallicStep + 1.f;
+	_meshActors.resize(static_cast<size_t>(width) * static_cast<size_t>(height));
 
-	cubeActor->GetComponent<Material>()->SetBaseColor(0.f, 1.f, 0.f);
-	cubeActor->GetComponent<Material>()->SetRoughness(0.1f);
-	cubeActor->GetComponent<Material>()->SetMetallic(0.5f);
-	cubeActor->GetComponent<Material>()->SetUseReflection(true);
-	cubeActor->GetComponent<Transform>()->SetPosition(0.f, 0.f, 3.f);
+	for (size_t h = 0; h < height; h++) {
+		for (size_t w = 0; w < width; w++) {
+			_meshActors[width * h + w] = new Actor();
+			// コンポーネント追加
+			_meshActors[width * h + w]->AddComponent<Transform>();
+			_meshActors[width * h + w]->AddComponent<Mesh>()->Create(device, sphereData);
+			_meshActors[width * h + w]->AddComponent<Material>();
+			// リソースセット
+			_meshActors[width * h + w]->GetComponent<Mesh>()->SetConstantBuffer(device, _camera->GetConstantBuffer(), 0);
+			_meshActors[width * h + w]->GetComponent<Mesh>()->SetConstantBuffer(
+				device, _meshActors[width * h + w]->GetComponent<Transform>()->GetConstantBuffer(), 1);
+			_meshActors[width * h + w]->GetComponent<Mesh>()->SetConstantBuffer(
+				device, _meshActors[width * h + w]->GetComponent<Material>()->GetConstantBuffer(), 2);
+			// マテリアルセット
+			_meshActors[width * h + w]->GetComponent<Material>()->SetBaseColor(0.69f, 0.69f, 0.69f);
+			_meshActors[width * h + w]->GetComponent<Material>()->SetRoughness(
+				roughnessStep * static_cast<float>(w));
+			_meshActors[width * h + w]->GetComponent<Material>()->SetMetallic(
+				metallicStep * static_cast<float>(h));
+			_meshActors[width * h + w]->GetComponent<Transform>()->SetPosition(
+				2.2f * sphereRadius * static_cast<float>(w), -2.2f * sphereRadius * static_cast<float>(h), 5.f);
+		}
+	}
 
-	_meshActors.push_back(cubeActor);
+	Actor* actor = new Actor();
+	actor->AddComponent<Transform>();
+	actor->AddComponent<Mesh>()->Create(device, sphereData);
+	actor->AddComponent<Material>();
+
+	actor->GetComponent<Mesh>()->SetConstantBuffer(device, _camera->GetConstantBuffer(), 0);
+	actor->GetComponent<Mesh>()->SetConstantBuffer(
+		device, actor->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	actor->GetComponent<Mesh>()->SetConstantBuffer(
+		device, actor->GetComponent<Material>()->GetConstantBuffer(), 2);
+
+	actor->GetComponent<Material>()->SetBaseColor(0.f, 1.f, 0.f);
+	actor->GetComponent<Material>()->SetRoughness(0.1f);
+	actor->GetComponent<Material>()->SetMetallic(0.5f);
+	actor->GetComponent<Transform>()->SetPosition(0.f, 0.f, 3.f);
+
+	_meshActors.push_back(actor);
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;
 }
@@ -58,6 +91,12 @@ void PBRScene::Update(float deltaTime)
 	}
 	if (input.GetKeyboradState(DIK_D) == BUTTON_STATE::HOLD) {
 		_camera->GetTransform().MoveRight(0.01f);
+	}
+	if (input.GetKeyboradState(DIK_SPACE) == BUTTON_STATE::HOLD) {
+		_camera->GetTransform().MoveUp(0.01f);
+	}
+	if (input.GetKeyboradState(DIK_LSHIFT) == BUTTON_STATE::HOLD) {
+		_camera->GetTransform().MoveUp(-0.01f);
 	}
 	if (input.GetKeyboradState(DIK_UPARROW) == BUTTON_STATE::HOLD) {
 		_camera->GetTransform().Rotation(-0.01f, 0.f, 0.f);

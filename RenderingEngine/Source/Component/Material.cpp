@@ -16,7 +16,6 @@ namespace NamelessEngine::Component
 		_materialData.baseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
 		_materialData.metallic = 0.f;
 		_materialData.roughness = 0.f;
-		_materialData.useReflection = false;
 
 		RESULT result = _buffer->Create(
 			Dx12GraphicsEngine::Instance().Device(), (void*)&_materialData, sizeof(MaterialCBuff));
@@ -43,10 +42,6 @@ namespace NamelessEngine::Component
 	void Material::SetRoughness(float roughness)
 	{
 		_materialData.roughness = roughness;
-	}
-	void Material::SetUseReflection(BOOL useReflection)
-	{
-		_materialData.useReflection = useReflection;
 	}
 	DX12API::ConstantBuffer& Material::GetConstantBuffer()
 	{

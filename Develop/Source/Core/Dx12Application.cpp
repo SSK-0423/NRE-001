@@ -3,8 +3,8 @@
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
 
-const LONG WINDOW_WIDTH = 1024;
-const LONG WINDOW_HEIGHT = 768;
+const LONG WINDOW_WIDTH = 1280;
+const LONG WINDOW_HEIGHT = 800;
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Utility;
@@ -23,7 +23,7 @@ RESULT Dx12Application::Init()
 {
 	// ウィンドウ初期化
 	_window = std::make_unique<AppWindow>();
-	AppWindowInitData initData(TEXT("レンダリングエンジン開発"), WINDOW_WIDTH, WINDOW_HEIGHT);
+	AppWindowInitData initData(TEXT("Nameless Renderer"), WINDOW_WIDTH, WINDOW_HEIGHT);
 	_window->CreateAppWindow(initData);
 
 	// グラフィクスエンジン初期化

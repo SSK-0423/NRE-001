@@ -12,12 +12,15 @@ TextureCube diffuseLD : register(t7); // HDR
 
 sampler smp : register(s0);
 
-static const int MIP_COUNT = 3;
+static const int MIP_COUNT = 11;
+static const float EPSILON = 0.0001f;
+
 
 cbuffer Parameter : register(b0)
 {
-    float3 eyePos;
-    float lightIntensity;
+    float3 eyePos : packoffset(c0);
+    float lightIntensity : packoffset(c0.w);
+    bool isIblOnly : packoffset(c1);
 };
 
 struct VertexOutput
@@ -35,7 +38,7 @@ float RoughnessToMipLeval(float roughness, float mipCount)
 // オフスペキュラーを考慮した反射方向を求める
 float3 GetSpecularDir(float3 N, float3 R, float roughness)
 {
-    float smoothness = saturate(1 - roughness);
+    float smoothness = saturate(1.f - roughness);
     float lerpFactor = smoothness * (sqrt(smoothness) + roughness);
     
     return lerp(N, R, lerpFactor);
@@ -49,16 +52,17 @@ float3 IBLDiffuse(float3 N)
 // スペキュラーのIBLを取得
 float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, float mipCount)
 {
-    float a = roughness * roughness;
-    float3 specDir = GetSpecularDir(N, R, roughness);
+    float a = pow(roughness, 2.f);
+    float3 specDir = GetSpecularDir(N, R, a);
     
     float mipLevel = RoughnessToMipLeval(roughness, mipCount);
     float3 specLD = Reinhard(specularLD.SampleLevel(smp, specDir, mipLevel).rgb);
     
+    float2 dfgUV = float2(min(roughness, 1.f - EPSILON), NV);
     // テクスチャの範囲外参照を防ぐ
-    float2 DFG = dfgMap.SampleLevel(smp, float2(saturate(NV), roughness), 0.f).rg;
+    float2 DFG = dfgMap.SampleLevel(smp, dfgUV, 0.f).rg;
     
-    return specLD * (f0 * DFG.x + DFG.y);
+    return specLD * (f0 * DFG.r + DFG.g);
 }
 
 VertexOutput VSMain(uint id : SV_VertexID)
@@ -83,21 +87,24 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 normal = normalMap.Sample(smp, uv).rgb;
     float3 pos = positionMap.Sample(smp, uv).rgb;
     float metallic = metalRoughReflectMap.Sample(smp, uv).r;
-    float roughness = metalRoughReflectMap.Sample(smp, uv).g;
-    float useReflection = metalRoughReflectMap.Sample(smp, uv).b;
+    float roughness = max(metalRoughReflectMap.Sample(smp, uv).g, EPSILON);
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
-    float3 V = normalize(eyePos - pos); // 視線方向
-    float3 R = normalize(-reflect(V, N)); // 光の反射方向
+    float3 V = normalize(pos - eyePos); // 視線方向
+    float3 R = normalize(reflect(V, N)); // 光の反射方向
 
     float3 kd = color * (1.f - metallic);
     float3 ks = color * metallic;
     
-    float3 diffuse = IBLDiffuse(N) * kd;
-    float3 specular = IBLSpecualr(dot(N, V), N, R, ks, roughness, MIP_COUNT);
+    //return float4(isIblOnly, isIblOnly, isIblOnly,1.f);
     
-    float3 outColor = (diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb;
+    float3 diffuse = IBLDiffuse(N) * kd;
+    // フレネル使った邦画良い
+    
+    float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
+    
+    float3 outColor = (diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
     
     return float4(outColor, 1.f);
 

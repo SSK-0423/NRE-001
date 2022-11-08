@@ -10,8 +10,8 @@ sampler smp : register(s0);
 
 cbuffer Parameter : register(b0)
 {
-    float3 eyePos;
-    int brdfModel;
+    float3 eyePos : packoffset(c0);
+    int brdfModel : packoffset(c0.w);
 };
 
 cbuffer LightBuffer : register(b1)
@@ -114,7 +114,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
     float3 L = normalize(normalize(dLightdirection)); // 光の入射方向
     float3 V = normalize(eyePos - pos); // 視線方向
-    float3 R = normalize(reflect(L, N)); // 光の反射方向
+    float3 R = normalize(-reflect(L, N)); // 光の反射方向
     // マイクロサーフェース上の法線
     // ライトベクトルと視線ベクトルの中間ベクトル(ハーフベクトル)
     float3 H = normalize(V + L);

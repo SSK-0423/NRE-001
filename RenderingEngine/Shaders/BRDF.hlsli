@@ -1,5 +1,5 @@
 static const float PI = 3.141592f;
-static const float EPSILON = 0.0001f;
+static const float EPSILON = 0.00001f;
 static const int COOK_TORRANCE = 0;
 static const int GGX_MODEL = 1;
 

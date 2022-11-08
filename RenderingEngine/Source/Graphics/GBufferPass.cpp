@@ -88,7 +88,6 @@ namespace NamelessEngine::Graphics
 		result = _renderTargets[GBUFFER_TYPE::WORLD_POS]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
-		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
@@ -163,7 +162,7 @@ namespace NamelessEngine::Graphics
 		pipelineState.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// カラー
 		pipelineState.RTVFormats[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// 法線
 		pipelineState.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// ワールド座標
-		pipelineState.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;	// メタリック/ラフネス/リフレクション
+		pipelineState.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// メタリック/ラフネス/リフレクション
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1

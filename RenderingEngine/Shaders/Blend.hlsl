@@ -30,6 +30,9 @@ float4 PSMain(VertexOutput input) : SV_Target
     uint blend = depthMap.Sample(smp, input.uv).r;
     float3 skyColor = skyMap.Sample(smp, input.uv).rgb;
     float3 lightedColor = lightedMap.Sample(smp, input.uv).rgb;
+    
+    //return float4(lightedColor, 1.f);
+    
     float3 outColor = skyColor * blend + lightedColor * (1 - blend);
     if (skyColor.r > 1.f || skyColor.g > 1.f || skyColor.b > 1.f)
     {

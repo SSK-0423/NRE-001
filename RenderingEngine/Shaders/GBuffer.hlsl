@@ -16,10 +16,9 @@ cbuffer Transform : register(b1)
 
 cbuffer Material : register(b2)
 {
-    float4 baseColor;
-    float metallic;
-    float roughness;
-    bool useReflection;
+    float4 baseColor : packoffset(c0);
+    float metallic : packoffset(c1.x);
+    float roughness : packoffset(c1.y);
 };
 
 struct VertexInput
@@ -65,7 +64,7 @@ PixelOutput PSMain(VertexOutput input)
     PixelOutput output;
     output.color = baseColor;
     output.normal = float4(input.normal, 1.f);
-    output.metalRough = float4(metallic, roughness, useReflection, 0.f);
+    output.metalRough = float4(metallic, roughness, 0.f, 0.f);
     output.pos = float4(input.worldPosition, 1.f);
     return output;
 }

@@ -20,6 +20,7 @@ namespace NamelessEngine::Graphics {
 	struct IBLParam {
 		DirectX::XMFLOAT3 eyePosition;
 		float lightIntensity;
+		bool isIBLOnly;
 	};
 
 	class IBLPass {
