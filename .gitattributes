@@ -1,3 +1,5 @@
 'Develop/res/' filter=lfs diff=lfs merge=lfs -text
 'Develop/res/*' filter=lfs diff=lfs merge=lfs -text
 'Develop/res/clarens_night_01_4k_cube.hdr' filter=lfs diff=lfs merge=lfs -text
+Develop/res/IBL/iblDiffuseHDR.dds filter=lfs diff=lfs merge=lfs -text
+Develop/res/IBL/iblSpecularHDR.dds filter=lfs diff=lfs merge=lfs -text
