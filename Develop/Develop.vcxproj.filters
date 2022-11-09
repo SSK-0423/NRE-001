@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Core">
+      <UniqueIdentifier>{f2f57e6e-f50b-42e5-884b-16e77eca0fd9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SampleApp">
+      <UniqueIdentifier>{eac97b09-41f2-4c28-b368-e0380ba06ef8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SampleApp\PBRSample">
+      <UniqueIdentifier>{e5bfb12f-536b-406e-ae48-1761c0b47e6e}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Core\Dx12Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SampleApp\PBRSample.cpp">
+      <Filter>SampleApp\PBRSample</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SampleApp\PBRScene.cpp">
+      <Filter>SampleApp\PBRSample</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\Core\Dx12Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Dx12ApplicationImpl.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SampleApp\PBRSample.h">
+      <Filter>SampleApp\PBRSample</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SampleApp\PBRScene.h">
+      <Filter>SampleApp\PBRSample</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

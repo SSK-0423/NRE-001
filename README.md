@@ -48,4 +48,3 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 
 # Used Tools
 - IBL Baker
-
