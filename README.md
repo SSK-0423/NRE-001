@@ -42,9 +42,9 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 
 # API & Libraries
 - DirectX12
-- DirectXTex
-- DirectXMath
-- Dear ImGUI
+- DirectXTex https://github.com/Microsoft/DirectXTex
+- DirectXMath https://github.com/microsoft/DirectXMath
+- Dear ImGUI https://github.com/ocornut/imgui
 
 # Used Tools
-- IBL Baker
+- IBL Baker https://github.com/derkreature/IBLBaker
