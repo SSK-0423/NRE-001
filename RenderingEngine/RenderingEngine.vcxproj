@@ -18,6 +18,215 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Shaders\BRDF.hlsli" />
+    <None Include="Shaders\ShaderCommon.hlsli" />
+    <None Include="Shaders\SkyBoxHeader.hlsli" />
+    <None Include="Shaders\ToneMapping.hlsli" />
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="Shaders\Blend.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\GBuffer.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\GeometryPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\GeometryVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+    </FxCompile>
+    <FxCompile Include="Shaders\IBL.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\PBR.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyBox.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="imgui\imgui.cpp" />
+    <ClCompile Include="imgui\imgui_demo.cpp" />
+    <ClCompile Include="imgui\imgui_draw.cpp" />
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp" />
+    <ClCompile Include="imgui\imgui_impl_win32.cpp" />
+    <ClCompile Include="imgui\imgui_tables.cpp" />
+    <ClCompile Include="imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Source\Component\Actor.cpp" />
+    <ClCompile Include="Source\Component\Material.cpp" />
+    <ClCompile Include="Source\Component\Mesh.cpp" />
+    <ClCompile Include="Source\Component\Transform.cpp" />
+    <ClCompile Include="Source\Core\AppWindow.cpp" />
+    <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp" />
+    <ClCompile Include="Source\Core\Input.cpp" />
+    <ClCompile Include="Source\DX12API\ConstantBuffer.cpp" />
+    <ClCompile Include="Source\DX12API\CubeRenderTarget.cpp" />
+    <ClCompile Include="Source\DX12API\DepthStencilBuffer.cpp" />
+    <ClCompile Include="Source\DX12API\DescriptorHeapCBV_SRV_UAV.cpp" />
+    <ClCompile Include="Source\DX12API\DescriptorHeapDSV.cpp" />
+    <ClCompile Include="Source\DX12API\DescriptorHeapRTV.cpp" />
+    <ClCompile Include="Source\DX12API\GraphicsPipelineState.cpp" />
+    <ClCompile Include="Source\DX12API\IndexBuffer.cpp" />
+    <ClCompile Include="Source\DX12API\RenderingContext.cpp" />
+    <ClCompile Include="Source\DX12API\RenderTarget.cpp" />
+    <ClCompile Include="Source\DX12API\RenderTargetBuffer.cpp" />
+    <ClCompile Include="Source\DX12API\RootSignature.cpp" />
+    <ClCompile Include="Source\DX12API\Shader.cpp" />
+    <ClCompile Include="Source\DX12API\ShaderLibrary.cpp" />
+    <ClCompile Include="Source\DX12API\ShaderResourceViewDesc.cpp" />
+    <ClCompile Include="Source\DX12API\Texture.cpp" />
+    <ClCompile Include="Source\DX12API\VertexBuffer.cpp" />
+    <ClCompile Include="Source\Graphics\BlendPass.cpp" />
+    <ClCompile Include="Source\Graphics\CubeMesh.cpp" />
+    <ClCompile Include="Source\Graphics\GBufferPass.cpp" />
+    <ClCompile Include="Source\Graphics\IBLPass.cpp" />
+    <ClCompile Include="Source\Graphics\LightingPass.cpp" />
+    <ClCompile Include="Source\Graphics\PBRRenderer.cpp" />
+    <ClCompile Include="Source\Graphics\Polygon.cpp" />
+    <ClCompile Include="Source\Graphics\RenderPass.cpp" />
+    <ClCompile Include="Source\Graphics\SkyBox.cpp" />
+    <ClCompile Include="Source\Graphics\SkyBoxPass.cpp" />
+    <ClCompile Include="Source\Graphics\SkySphere.cpp" />
+    <ClCompile Include="Source\Graphics\SphereMesh.cpp" />
+    <ClCompile Include="Source\Graphics\Sprite.cpp" />
+    <ClCompile Include="Source\Scene\Camera.cpp" />
+    <ClCompile Include="Source\Scene\Scene.cpp" />
+    <ClCompile Include="Source\Utility\EngineUtility.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="imgui\imconfig.h" />
+    <ClInclude Include="imgui\imgui.h" />
+    <ClInclude Include="imgui\imgui_impl_dx12.h" />
+    <ClInclude Include="imgui\imgui_impl_win32.h" />
+    <ClInclude Include="imgui\imgui_internal.h" />
+    <ClInclude Include="imgui\imstb_rectpack.h" />
+    <ClInclude Include="imgui\imstb_textedit.h" />
+    <ClInclude Include="imgui\imstb_truetype.h" />
+    <ClInclude Include="Source\Component\AudioSource.h" />
+    <ClInclude Include="Source\Component\Colider.h" />
+    <ClInclude Include="Source\Component\Actor.h" />
+    <ClInclude Include="Source\Component\ECSimage.h" />
+    <ClInclude Include="Source\Component\IComponent.h" />
+    <ClInclude Include="Source\Component\Material.h" />
+    <ClInclude Include="Source\Component\Mesh.h" />
+    <ClInclude Include="Source\Component\Transform.h" />
+    <ClInclude Include="Source\Core\AppWindow.h" />
+    <ClInclude Include="Source\Core\Dx12GraphicsEngine.h" />
+    <ClInclude Include="Source\Core\Input.h" />
+    <ClInclude Include="Source\DX12API\ConstantBuffer.h" />
+    <ClInclude Include="Source\DX12API\CubeRenderTarget.h" />
+    <ClInclude Include="Source\DX12API\DepthStencilBuffer.h" />
+    <ClInclude Include="Source\DX12API\DescriptorHeapCBV_SRV_UAV.h" />
+    <ClInclude Include="Source\DX12API\DescriptorHeapDSV.h" />
+    <ClInclude Include="Source\DX12API\DescriptorHeapRTV.h" />
+    <ClInclude Include="Source\DX12API\GraphicsPipelineState.h" />
+    <ClInclude Include="Source\DX12API\IndexBuffer.h" />
+    <ClInclude Include="Source\DX12API\InputLayout.h" />
+    <ClInclude Include="Source\DX12API\RenderingContext.h" />
+    <ClInclude Include="Source\DX12API\RenderTarget.h" />
+    <ClInclude Include="Source\DX12API\RenderTargetBuffer.h" />
+    <ClInclude Include="Source\DX12API\RootSignature.h" />
+    <ClInclude Include="Source\DX12API\Shader.h" />
+    <ClInclude Include="Source\DX12API\ShaderLibrary.h" />
+    <ClInclude Include="Source\DX12API\ShaderResourceViewDesc.h" />
+    <ClInclude Include="Source\DX12API\Texture.h" />
+    <ClInclude Include="Source\DX12API\VertexBuffer.h" />
+    <ClInclude Include="Source\Graphics\BlendPass.h" />
+    <ClInclude Include="Source\Graphics\CubeMesh.h" />
+    <ClInclude Include="Source\Graphics\GBufferPass.h" />
+    <ClInclude Include="Source\Graphics\IBLPass.h" />
+    <ClInclude Include="Source\Graphics\IRenderer.h" />
+    <ClInclude Include="Source\Graphics\LightingPass.h" />
+    <ClInclude Include="Source\Graphics\RenderPass.h" />
+    <ClInclude Include="Source\Graphics\PBRRenderer.h" />
+    <ClInclude Include="Source\Graphics\Polygon.h" />
+    <ClInclude Include="Source\Graphics\SkyBox.h" />
+    <ClInclude Include="Source\Graphics\SkyBoxPass.h" />
+    <ClInclude Include="Source\Graphics\SkySphere.h" />
+    <ClInclude Include="Source\Graphics\SphereMesh.h" />
+    <ClInclude Include="Source\Graphics\Sprite.h" />
+    <ClInclude Include="Source\NamelessEngine.h" />
+    <ClInclude Include="Source\Scene\Camera.h" />
+    <ClInclude Include="Source\Scene\Scene.h" />
+    <ClInclude Include="Source\Utility\EngineUtility.h" />
+    <ClInclude Include="Source\Utility\Singleton.h" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
@@ -90,7 +299,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -114,6 +324,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -135,7 +346,8 @@
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -159,6 +371,7 @@
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <AdditionalIncludeDirectories>$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
@@ -172,94 +385,6 @@
       <AdditionalLibraryDirectories>$(ProjectDir)DirectXTex\Bin\Desktop_2019\x64\Release;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\lib\vs2019\x64\release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Lib>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClInclude Include="src\AppWindow.h" />
-    <ClInclude Include="src\ConstantBuffer.h" />
-    <ClInclude Include="src\CubeGeometry.h" />
-    <ClInclude Include="src\DepthStencilBuffer.h" />
-    <ClInclude Include="src\DescriptorHeapDSV.h" />
-    <ClInclude Include="src\DescriptorHeapRTV.h" />
-    <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h" />
-    <ClInclude Include="src\Dx12GraphicsEngine.h" />
-    <ClInclude Include="src\EngineUtility.h" />
-    <ClInclude Include="src\FBXLoader.h" />
-    <ClInclude Include="src\GeometryImpl.h" />
-    <ClInclude Include="src\GraphicsPipelineState.h" />
-    <ClInclude Include="src\IMaterial.h" />
-    <ClInclude Include="src\IndexBuffer.h" />
-    <ClInclude Include="src\FBXMesh.h" />
-    <ClInclude Include="src\PBRMaterial.h" />
-    <ClInclude Include="src\PhongMaterial.h" />
-    <ClInclude Include="src\OffScreenRender.h" />
-    <ClInclude Include="src\Polygon.h" />
-    <ClInclude Include="src\Geometry.h" />
-    <ClInclude Include="src\RenderingContext.h" />
-    <ClInclude Include="src\RenderTarget.h" />
-    <ClInclude Include="src\RenderTargetBuffer.h" />
-    <ClInclude Include="src\RootSignature.h" />
-    <ClInclude Include="src\Shader.h" />
-    <ClInclude Include="src\ShaderLibrary.h" />
-    <ClInclude Include="src\ShaderResourceViewDesc.h" />
-    <ClInclude Include="src\Singleton.h" />
-    <ClInclude Include="src\SkySphere.h" />
-    <ClInclude Include="src\SphereGeometry.h" />
-    <ClInclude Include="src\Sprite.h" />
-    <ClInclude Include="src\Texture.h" />
-    <ClInclude Include="src\VertexBuffer.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\AppWindow.cpp" />
-    <ClCompile Include="src\ConstantBuffer.cpp" />
-    <ClCompile Include="src\CubeGeometry.cpp" />
-    <ClCompile Include="src\DepthStencilBuffer.cpp" />
-    <ClCompile Include="src\DescriptorHeapDSV.cpp" />
-    <ClCompile Include="src\DescriptorHeapRTV.cpp" />
-    <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp" />
-    <ClCompile Include="src\Dx12GraphicsEngine.cpp" />
-    <ClCompile Include="src\EngineUtility.cpp" />
-    <ClCompile Include="src\FBXLoader.cpp" />
-    <ClCompile Include="src\Geometry.cpp" />
-    <ClCompile Include="src\GraphicsPipelineState.cpp" />
-    <ClCompile Include="src\IndexBuffer.cpp" />
-    <ClCompile Include="src\FBXMesh.cpp" />
-    <ClCompile Include="src\OffScreenRender.cpp" />
-    <ClCompile Include="src\PBRMaterial.cpp" />
-    <ClCompile Include="src\PhongMaterial.cpp" />
-    <ClCompile Include="src\Polygon.cpp" />
-    <ClCompile Include="src\RenderingContext.cpp" />
-    <ClCompile Include="src\RenderTarget.cpp" />
-    <ClCompile Include="src\RenderTargetBuffer.cpp" />
-    <ClCompile Include="src\RootSignature.cpp" />
-    <ClCompile Include="src\Shader.cpp" />
-    <ClCompile Include="src\ShaderResourceViewDesc.cpp" />
-    <ClCompile Include="src\SkySphere.cpp" />
-    <ClCompile Include="src\SphereGeometry.cpp" />
-    <ClCompile Include="src\Sprite.cpp" />
-    <ClCompile Include="src\Texture.cpp" />
-    <ClCompile Include="src\VertexBuffer.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\PBR.hlsli" />
-    <None Include="src\PhongReflectionModel.hlsli" />
-    <None Include="src\ShaderCommon.hlsli" />
-    <None Include="src\SkyBoxHeader.hlsli" />
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="src\SkyBoxPS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-    <FxCompile Include="src\SkyBoxVS.hlsl">
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">5.0</ShaderModel>
-      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
-      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
-    </FxCompile>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

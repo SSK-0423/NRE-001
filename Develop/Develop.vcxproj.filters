@@ -13,217 +13,42 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="シェーダー">
-      <UniqueIdentifier>{e5cff7cd-0474-4cad-b7bd-f483ce21601a}</UniqueIdentifier>
+    <Filter Include="Core">
+      <UniqueIdentifier>{f2f57e6e-f50b-42e5-884b-16e77eca0fd9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="シェーダー\PolygonSample">
-      <UniqueIdentifier>{564ebf4b-66bb-4dab-9670-fc91b12868e4}</UniqueIdentifier>
+    <Filter Include="SampleApp">
+      <UniqueIdentifier>{eac97b09-41f2-4c28-b368-e0380ba06ef8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="シェーダー\TextureMapSample">
-      <UniqueIdentifier>{204249df-8d95-4c5a-b68c-bd6a3ec5601e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\MultiPassRenderingSample">
-      <UniqueIdentifier>{3c4b1109-2c99-4988-8a10-c55218da26d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\MultiRenderTargetSample">
-      <UniqueIdentifier>{d9235384-2ee9-4d24-a725-dd10be3b1776}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\DepthBufferSample">
-      <UniqueIdentifier>{845daa14-6e07-464a-9830-2abf63f0dd2a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="SampleApplication">
-      <UniqueIdentifier>{3b3f0cf1-7f1b-4696-a467-aeed2af0237b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\MeshDrawSample">
-      <UniqueIdentifier>{607c0744-33e3-4d7c-8a92-569dad5ed898}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\PBRSample">
-      <UniqueIdentifier>{709c1744-9c15-48ad-a88d-6d00785c88cb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\SphereMapSample">
-      <UniqueIdentifier>{3faed0bb-5d8a-44ce-b7e2-29fbf70849fd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="シェーダー\CubeMapSample">
-      <UniqueIdentifier>{01f332bd-4f07-4915-99de-4ce1e23d94d5}</UniqueIdentifier>
+    <Filter Include="SampleApp\PBRSample">
+      <UniqueIdentifier>{e5bfb12f-536b-406e-ae48-1761c0b47e6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Dx12Application.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\Core\Dx12Application.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\main.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\Core\main.cpp">
+      <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="src\Application.cpp">
-      <Filter>ソース ファイル</Filter>
+    <ClCompile Include="Source\SampleApp\PBRSample.cpp">
+      <Filter>SampleApp\PBRSample</Filter>
     </ClCompile>
-    <ClCompile Include="src\DrawPolygonSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\TextureMappingSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MultiPassRenderingSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\MultiRenderTargetSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthBufferSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DrawMeshSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PBRSample.cpp">
-      <Filter>SampleApplication</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CubeMapSample.cpp">
-      <Filter>SampleApplication</Filter>
+    <ClCompile Include="Source\SampleApp\PBRScene.cpp">
+      <Filter>SampleApp\PBRSample</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Dx12Application.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\Core\Dx12Application.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Dx12ApplicationImpl.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\Core\Dx12ApplicationImpl.h">
+      <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="src\Application.h">
-      <Filter>ヘッダー ファイル</Filter>
+    <ClInclude Include="Source\SampleApp\PBRSample.h">
+      <Filter>SampleApp\PBRSample</Filter>
     </ClInclude>
-    <ClInclude Include="src\DrawPolygonSample.h">
-      <Filter>SampleApplication</Filter>
+    <ClInclude Include="Source\SampleApp\PBRScene.h">
+      <Filter>SampleApp\PBRSample</Filter>
     </ClInclude>
-    <ClInclude Include="src\TextureMappingSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MultiPassRenderingSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="src\MultiRenderTargetSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DepthBufferSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DrawMeshSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PBRSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CubeMapSample.h">
-      <Filter>SampleApplication</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <FxCompile Include="src\PolygonSamplePixel.hlsl">
-      <Filter>シェーダー\PolygonSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\PolygonSampleVertex.hlsl">
-      <Filter>シェーダー\PolygonSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\TextureMapSampleVertex.hlsl">
-      <Filter>シェーダー\TextureMapSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\TextureMapSamplePixel.hlsl">
-      <Filter>シェーダー\TextureMapSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\FarPolygonPS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\FarPolygonVS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\NearPolygonPS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\NearPolygonVS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\SpritePS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\SpriteVS.hlsl">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MeshPS.hlsl">
-      <Filter>シェーダー\MeshDrawSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MeshVS.hlsl">
-      <Filter>シェーダー\MeshDrawSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\OffscreenPixelShader.hlsl">
-      <Filter>シェーダー\MultiPassRenderingSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\OffscreenVertexShader.hlsl">
-      <Filter>シェーダー\MultiPassRenderingSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MultiRenderTargetFirstPixel.hlsl">
-      <Filter>シェーダー\MultiRenderTargetSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MultiRenderTargetFirstVertex.hlsl">
-      <Filter>シェーダー\MultiRenderTargetSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MultiRenderTargetPixel.hlsl">
-      <Filter>シェーダー\MultiRenderTargetSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MultiRenderTargetVertex.hlsl">
-      <Filter>シェーダー\MultiRenderTargetSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\PBRSampleVS.hlsl">
-      <Filter>シェーダー\PBRSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\PBRSamplePS.hlsl">
-      <Filter>シェーダー\PBRSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MeshPBRVS.hlsl">
-      <Filter>シェーダー\MeshDrawSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\MeshPBRPS.hlsl">
-      <Filter>シェーダー\MeshDrawSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\SphereSampleVS.hlsl">
-      <Filter>シェーダー\SphereMapSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\SphereSamplePS.hlsl">
-      <Filter>シェーダー\SphereMapSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\CubeMapSamplePS.hlsl">
-      <Filter>シェーダー\CubeMapSample</Filter>
-    </FxCompile>
-    <FxCompile Include="src\CubeMapSampleVS.hlsl">
-      <Filter>シェーダー\CubeMapSample</Filter>
-    </FxCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\PolygonSampleHeader.hlsli">
-      <Filter>シェーダー\PolygonSample</Filter>
-    </None>
-    <None Include="src\TextureMapSampleHeader.hlsli">
-      <Filter>シェーダー\TextureMapSample</Filter>
-    </None>
-    <None Include="src\OffscreenHeader.hlsli">
-      <Filter>シェーダー\MultiPassRenderingSample</Filter>
-    </None>
-    <None Include="src\MultiRenderTargetHeader.hlsli">
-      <Filter>シェーダー\MultiRenderTargetSample</Filter>
-    </None>
-    <None Include="src\DepthBufferSampleHeader.hlsli">
-      <Filter>シェーダー\DepthBufferSample</Filter>
-    </None>
-    <None Include="src\MeshSampleHeader.hlsli">
-      <Filter>シェーダー\MeshDrawSample</Filter>
-    </None>
-    <None Include="src\PBRSampleHeader.hlsli">
-      <Filter>シェーダー\PBRSample</Filter>
-    </None>
-    <None Include="src\SphereSampleHeader.hlsli">
-      <Filter>シェーダー\SphereMapSample</Filter>
-    </None>
-    <None Include="src\CubeMapSampleHeader.hlsli">
-      <Filter>シェーダー\CubeMapSample</Filter>
-    </None>
   </ItemGroup>
 </Project>

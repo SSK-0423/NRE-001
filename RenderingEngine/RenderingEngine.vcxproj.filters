@@ -13,238 +13,388 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="リソース ファイル\シェーダー">
-      <UniqueIdentifier>{e2a86667-1e25-4d55-a090-b91dad48792c}</UniqueIdentifier>
+    <Filter Include="DX12API">
+      <UniqueIdentifier>{0f4cc2f4-e394-4f27-998b-4a04c789bb93}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CoreAPI%28DirectX12Wrapper%29">
-      <UniqueIdentifier>{2256e66e-ae22-42f5-be74-6e8d63a19d9c}</UniqueIdentifier>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{e93183ba-f077-451f-b94b-7ae8bc94afa0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingEngine">
-      <UniqueIdentifier>{3dfba933-98d8-4552-8611-567565eb43b1}</UniqueIdentifier>
+    <Filter Include="Component">
+      <UniqueIdentifier>{29f9a1d2-bfcd-4de7-b1f5-5a25a6cbf909}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingEngine\FBX">
-      <UniqueIdentifier>{1360d64a-0d15-4ed9-93b2-280c5f3206a3}</UniqueIdentifier>
+    <Filter Include="Graphics">
+      <UniqueIdentifier>{869297cf-a935-4701-9f68-0e6a7a38f542}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingEngine\Material">
-      <UniqueIdentifier>{0ae7543a-9342-4206-8f1c-688a140090c0}</UniqueIdentifier>
+    <Filter Include="Core">
+      <UniqueIdentifier>{d4b5a5cf-a87a-4cec-987a-d44b7f8fe438}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingEngine\Geometry">
-      <UniqueIdentifier>{52d170de-97eb-45db-bc94-e04824e864a1}</UniqueIdentifier>
+    <Filter Include="Scene">
+      <UniqueIdentifier>{af01264b-0de1-4974-9728-505e77f094e2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderingEngine\Sky">
-      <UniqueIdentifier>{d01bd533-3eea-442a-99d7-319cada3f5f6}</UniqueIdentifier>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{5f15fab1-aeef-4903-983d-ec9f715ae50c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="imgui">
+      <UniqueIdentifier>{1f73caf8-6279-433f-9e37-e1f203de869d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders\RenderPassShader">
+      <UniqueIdentifier>{651debfb-ca41-491e-a195-a71983a89418}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\Singleton.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\EngineUtility.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\OffScreenRender.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderLibrary.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ConstantBuffer.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DepthStencilBuffer.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DescriptorHeapCBV_SRV_UAV.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DescriptorHeapDSV.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\DescriptorHeapRTV.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GraphicsPipelineState.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IndexBuffer.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderingContext.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderTargetBuffer.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RootSignature.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Shader.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Texture.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\VertexBuffer.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FBXLoader.h">
-      <Filter>RenderingEngine\FBX</Filter>
-    </ClInclude>
-    <ClInclude Include="src\FBXMesh.h">
-      <Filter>RenderingEngine\FBX</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Dx12GraphicsEngine.h">
-      <Filter>RenderingEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\AppWindow.h">
-      <Filter>RenderingEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Polygon.h">
-      <Filter>RenderingEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Sprite.h">
-      <Filter>RenderingEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\RenderTarget.h">
-      <Filter>RenderingEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PhongMaterial.h">
-      <Filter>RenderingEngine\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="src\IMaterial.h">
-      <Filter>RenderingEngine\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="src\PBRMaterial.h">
-      <Filter>RenderingEngine\Material</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Geometry.h">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\GeometryImpl.h">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SphereGeometry.h">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClInclude>
-    <ClInclude Include="src\SkySphere.h">
-      <Filter>RenderingEngine\Sky</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ShaderResourceViewDesc.h">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClInclude>
-    <ClInclude Include="src\CubeGeometry.h">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ClCompile Include="src\OffScreenRender.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ConstantBuffer.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DepthStencilBuffer.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DescriptorHeapCBV_SRV_UAV.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DescriptorHeapDSV.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\DescriptorHeapRTV.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\GraphicsPipelineState.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\IndexBuffer.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderingContext.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderTargetBuffer.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RootSignature.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Shader.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Texture.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\VertexBuffer.cpp">
-      <Filter>CoreAPI%28DirectX12Wrapper%29</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FBXLoader.cpp">
-      <Filter>RenderingEngine\FBX</Filter>
-    </ClCompile>
-    <ClCompile Include="src\FBXMesh.cpp">
-      <Filter>RenderingEngine\FBX</Filter>
-    </ClCompile>
-    <ClCompile Include="src\EngineUtility.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\AppWindow.cpp">
-      <Filter>RenderingEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Dx12GraphicsEngine.cpp">
-      <Filter>RenderingEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Polygon.cpp">
-      <Filter>RenderingEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Sprite.cpp">
-      <Filter>RenderingEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\RenderTarget.cpp">
-      <Filter>RenderingEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PBRMaterial.cpp">
-      <Filter>RenderingEngine\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="src\PhongMaterial.cpp">
-      <Filter>RenderingEngine\Material</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SkySphere.cpp">
-      <Filter>RenderingEngine\Sky</Filter>
-    </ClCompile>
-    <ClCompile Include="src\SphereGeometry.cpp">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Geometry.cpp">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ShaderResourceViewDesc.cpp">
-      <Filter>ソース ファイル</Filter>
-    </ClCompile>
-    <ClCompile Include="src\CubeGeometry.cpp">
-      <Filter>RenderingEngine\Geometry</Filter>
-    </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\PhongReflectionModel.hlsli">
-      <Filter>リソース ファイル\シェーダー</Filter>
+    <None Include="Shaders\ShaderCommon.hlsli">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\PBR.hlsli">
-      <Filter>リソース ファイル\シェーダー</Filter>
+    <None Include="Shaders\SkyBoxHeader.hlsli">
+      <Filter>Shaders</Filter>
     </None>
-    <None Include="src\ShaderCommon.hlsli">
-      <Filter>リソース ファイル\シェーダー</Filter>
+    <None Include="Shaders\BRDF.hlsli">
+      <Filter>Shaders\RenderPassShader</Filter>
     </None>
-    <None Include="src\SkyBoxHeader.hlsli">
-      <Filter>リソース ファイル\シェーダー</Filter>
+    <None Include="Shaders\ToneMapping.hlsli">
+      <Filter>Shaders\RenderPassShader</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="src\SkyBoxVS.hlsl">
-      <Filter>リソース ファイル\シェーダー</Filter>
+    <FxCompile Include="Shaders\GeometryPS.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
-    <FxCompile Include="src\SkyBoxPS.hlsl">
-      <Filter>リソース ファイル\シェーダー</Filter>
+    <FxCompile Include="Shaders\GeometryVS.hlsl">
+      <Filter>Shaders</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
+      <Filter>Shaders</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\GBuffer.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\PBR.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\SkyBox.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Blend.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\IBL.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\DX12API\ConstantBuffer.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\DepthStencilBuffer.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\DescriptorHeapCBV_SRV_UAV.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\DescriptorHeapDSV.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\DescriptorHeapRTV.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\GraphicsPipelineState.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\IndexBuffer.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\RenderingContext.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\RenderTarget.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\RenderTargetBuffer.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\RootSignature.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\Shader.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\Texture.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\VertexBuffer.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Utility\EngineUtility.cpp">
+      <Filter>Utility</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\ShaderResourceViewDesc.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\CubeMesh.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Polygon.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SkySphere.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SphereMesh.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\Sprite.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\AppWindow.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Actor.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Scene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Transform.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SkyBox.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\ShaderLibrary.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Mesh.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\Camera.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\PBRRenderer.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Input.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\Material.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\RenderPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\GBufferPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\LightingPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_demo.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_draw.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_dx12.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_impl_win32.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_tables.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="imgui\imgui_widgets.cpp">
+      <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\SkyBoxPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\BlendPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\DX12API\CubeRenderTarget.cpp">
+      <Filter>DX12API</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\IBLPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Source\DX12API\ConstantBuffer.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\DepthStencilBuffer.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\DescriptorHeapCBV_SRV_UAV.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\DescriptorHeapDSV.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\DescriptorHeapRTV.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\GraphicsPipelineState.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\IndexBuffer.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\RenderingContext.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\RenderTarget.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\RenderTargetBuffer.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\RootSignature.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\Shader.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\Texture.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\VertexBuffer.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\EngineUtility.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\ShaderResourceViewDesc.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\IComponent.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Utility\Singleton.h">
+      <Filter>Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\CubeMesh.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Polygon.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SkySphere.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SphereMesh.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\Sprite.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\AppWindow.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Dx12GraphicsEngine.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\NamelessEngine.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Transform.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Colider.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\AudioSource.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Actor.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Camera.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\Scene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\ECSimage.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SkyBox.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\ShaderLibrary.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\InputLayout.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\IRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\PBRRenderer.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Mesh.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Input.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\Material.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\RenderPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GBufferPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\LightingPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imconfig.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_dx12.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_impl_win32.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imgui_internal.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_rectpack.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_textedit.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="imgui\imstb_truetype.h">
+      <Filter>imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\SkyBoxPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\BlendPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\DX12API\CubeRenderTarget.h">
+      <Filter>DX12API</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\IBLPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
