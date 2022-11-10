@@ -33,7 +33,7 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 # Future Work
 - [ ] FBX Loader
 - [ ] glTF Loader
-- [ ] Disney BRDF
+- [ ] Specular BRDF like Unreal Engine 4
 - [ ] Shadow Mapping
 
 # References
