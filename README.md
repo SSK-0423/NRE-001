@@ -31,7 +31,6 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
   - Directional Light
 
 # Future Work
-- [ ] FBX Loader
 - [ ] glTF Loader
 - [ ] Specular BRDF like Unreal Engine 4
 - [ ] Shadow Mapping
