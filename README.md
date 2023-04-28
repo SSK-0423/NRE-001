@@ -1,7 +1,7 @@
 # Nameless Renderer
 Physically Based Renderer with DirectX12 made for learning and trying rendering techniques
 
-# Rendering Image
+# Gallery
 ## IBL
 ![ibl rendering image](https://user-images.githubusercontent.com/83057130/200493259-90e801bd-6809-41f4-a060-72980351ae37.PNG)
 ## Cook-Torrance
