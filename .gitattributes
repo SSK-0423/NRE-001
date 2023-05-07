@@ -1,7 +1,4 @@
-'Develop/res/' filter=lfs diff=lfs merge=lfs -text
-'Develop/res/*' filter=lfs diff=lfs merge=lfs -text
-'Develop/res/clarens_night_01_4k_cube.hdr' filter=lfs diff=lfs merge=lfs -text
-Develop/res/IBL/iblDiffuseHDR.dds filter=lfs diff=lfs merge=lfs -text
-Develop/res/IBL/iblSpecularHDR.dds filter=lfs diff=lfs merge=lfs -text
-Develop/res/IBL/iblEnvHDR.dds filter=lfs diff=lfs merge=lfs -text
-'RenderingEngine/Assets/*' filter=lfs diff=lfs merge=lfs -text
+'RenderingEngine/Assets/IBL/*' filter=lfs diff=lfs merge=lfs -text
+'RenderingEngine/Assets/IBL/iblSpecularHDR.dds' filter=lfs diff=lfs merge=lfs -text
+'RenderingEngine/Assets/IBL/iblDiffuseHDR.dds' filter=lfs diff=lfs merge=lfs -text
+'RenderingEngine/Assets/IBL/iblEnvHDR.dds' filter=lfs diff=lfs merge=lfs -text
