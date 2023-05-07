@@ -51,7 +51,7 @@ namespace NamelessEngine::Graphics
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 3;
-		rootSigData._descRangeData.srvDescriptorNum = 1;
+		rootSigData._descRangeData.srvDescriptorNum = 3;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }

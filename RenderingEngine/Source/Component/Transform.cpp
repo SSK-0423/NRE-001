@@ -43,7 +43,7 @@ namespace NamelessEngine::Component
 		XMMATRIX translation = XMMatrixTranslation(_position.x, _position.y, _position.z);
 		XMMATRIX scaling = XMMatrixScaling(_scale.x, _scale.y, _scale.z);
 		XMMATRIX rotation = XMMatrixRotationRollPitchYawFromVector(XMLoadFloat3(&_eularAngle));
-		XMMATRIX matrix = rotation * translation * scaling;
+		XMMATRIX matrix = scaling * rotation * translation;
 
 		return matrix;
 	}

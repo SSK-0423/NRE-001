@@ -1,4 +1,7 @@
-TextureCube texCube : register(t0);
+Texture2D baseColorMap : register(t0);
+Texture2D metallicMap : register(t1);
+Texture2D roughnessMap : register(t2);
+
 sampler smp : register(s0);
 
 cbuffer Uniforms : register(b0)
@@ -62,9 +65,9 @@ VertexOutput VSMain(VertexInput input)
 PixelOutput PSMain(VertexOutput input)
 {
     PixelOutput output;
-    output.color = baseColor;
+    output.color = baseColorMap.Sample(smp, input.uv);
     output.normal = float4(input.normal, 1.f);
-    output.metalRough = float4(metallic, roughness, 0.f, 0.f);
+    output.metalRough = float4(metallicMap.Sample(smp, input.uv).r, roughnessMap.Sample(smp, input.uv).r, 0.f, 0.f);
     output.pos = float4(input.worldPosition, 1.f);
     return output;
 }

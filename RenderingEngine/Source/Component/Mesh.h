@@ -5,6 +5,7 @@
 #pragma comment(lib,"dxgi.lib")
 
 #include "IComponent.h"
+#include "Material.h"
 
 #include "VertexBuffer.h"
 #include "IndexBuffer.h"
@@ -29,10 +30,10 @@ namespace NamelessEngine::Component {
 		std::vector<unsigned int> indices;
 	};
 
-	class Mesh : public IComponent {
+	class SubMesh {
 	public:
-		Mesh();
-		~Mesh();
+		SubMesh();
+		~SubMesh();
 	private:
 		DX12API::VertexBuffer* _vertexBuffer = nullptr;
 		DX12API::IndexBuffer* _indexBuffer = nullptr;
@@ -44,7 +45,7 @@ namespace NamelessEngine::Component {
 
 	public:
 		Utility::RESULT Create(ID3D12Device& device, MeshData& data);
-		Utility::RESULT Create(ID3D12Device& device, std::vector<MeshData> data);
+
 		void Update(float deltatime);
 		void Draw(DX12API::RenderingContext& renderContext);
 
@@ -53,7 +54,38 @@ namespace NamelessEngine::Component {
 			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
 		void SetTexture(
 			ID3D12Device& device, DX12API::Texture& texture,
-			DX12API::ShaderResourceViewDesc desc, 
+			DX12API::ShaderResourceViewDesc desc,
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
+
+		const DX12API::VertexBuffer& GetVertexBuffer() { return *_vertexBuffer; }
+		const DX12API::IndexBuffer& GetIndexBuffer() { return *_indexBuffer; }
+		DX12API::DescriptorHeapCBV_SRV_UAV* GetDescriptorHeap() { return _descriptorHeap; }
+
+	};
+
+	class Mesh : public IComponent {
+	public:
+		Mesh();
+		~Mesh();
+	private:
+		std::vector<SubMesh> _submeshes;
+		std::vector<Material> _materials;
+
+	public:
+		Utility::RESULT Create(ID3D12Device& device, MeshData& data);
+		Utility::RESULT CreateSphere(ID3D12Device& device, unsigned int stackNum, unsigned int sectorNum, float radius);
+		Utility::RESULT CreateCube(ID3D12Device& device);
+		Utility::RESULT CreateFromGLB(ID3D12Device& device, const std::string& path);
+
+		void Update(float deltatime);
+		void Draw(DX12API::RenderingContext& renderContext);
+
+		void SetConstantBuffer(
+			ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer,
+			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
+		void SetTexture(
+			ID3D12Device& device, DX12API::Texture& texture,
+			DX12API::ShaderResourceViewDesc desc,
 			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
 
 	};

@@ -28,7 +28,7 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 
 		MeshData data = CubeMesh::CreateMeshData();
-		result = _cubeMesh->Create(graphicsEngine.Device(), data);
+		result = _cubeMesh->CreateCube(graphicsEngine.Device());
 		if (result == RESULT::FAILED) { return result; }
 
 		ShaderResourceViewDesc desc(*_cubeTexture, true);

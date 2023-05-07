@@ -50,28 +50,28 @@ namespace NamelessEngine::Graphics
 		//result = _environment->CreateCubeTextureFromDDS(
 		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01EnvHDR.dds");
 		result = _environment->CreateCubeTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/IBL/iblEnvHDR.dds");
+			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblEnvHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		_specularLD = std::make_unique<DX12API::Texture>();
 		//result = _specularLD->CreateCubeTextureFromDDS(
 		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01SpecularHDR.dds");
 		result = _specularLD->CreateCubeTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/IBL/iblSpecularHDR.dds");
+			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblSpecularHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		_diffuseLD = std::make_unique<DX12API::Texture>();
 		//result = _diffuseLD->CreateCubeTextureFromDDS(
 		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01DiffuseHDR.dds");
 		result = _diffuseLD->CreateCubeTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/IBL/iblDiffuseHDR.dds");
+			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblDiffuseHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		_DFG = std::make_unique<DX12API::Texture>();
 		//result = _DFG->CreateTextureFromDDS(
 		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01Brdf.dds");
 		result = _DFG->CreateTextureFromDDS(
-			Dx12GraphicsEngine::Instance(), L"res/IBL/iblBrdf.dds");
+			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblBrdf.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		// 各レンダリングパスに必要なリソースをセット
@@ -103,11 +103,11 @@ namespace NamelessEngine::Graphics
 		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_iblPass.UpdateParamData(_iblParam);
 
-
 		Material* material = scene.GetMeshActors()[scene.GetMeshActors().size() - 1]->GetComponent<Material>();
-		material->SetBaseColor(_baseColor[0], _baseColor[1], _baseColor[2]);
-		material->SetRoughness(_roughness);
-		material->SetMetallic(_metallic);
+		material->baseColor = DirectX::XMFLOAT4(_baseColor[0], _baseColor[1], _baseColor[2], 1.f);
+		material->roughness = _roughness;
+		material->metallic = _metallic;
+		material->Build();
 	}
 	void PBRRenderer::Render(Scene::Scene& scene)
 	{

@@ -55,9 +55,9 @@ namespace NamelessEngine::DX12API
 	}
 
 	void RenderingContext::ClearRenderTarget(
-		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const Utility::ColorRGBA& color, const UINT& numRects, const D3D12_RECT* rects)
+		D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const DirectX::XMFLOAT4& color, const UINT& numRects, const D3D12_RECT* rects)
 	{
-		float clearColor[4] = { color.r,color.g, color.b, color.a };
+		float clearColor[4] = { color.x,color.y, color.z, color.w };
 		_cmdList->ClearRenderTargetView(rtvHandle, clearColor, numRects, rects);
 	}
 

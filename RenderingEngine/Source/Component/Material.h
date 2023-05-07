@@ -6,6 +6,7 @@
 namespace NamelessEngine {
 	namespace DX12API {
 		class ConstantBuffer;
+		class Texture;
 		class RenderingContext;
 	}
 }
@@ -20,28 +21,36 @@ namespace NamelessEngine::Component {
 		TYPE_NUM
 	};
 
-	class Material : public IComponent {
+	struct Material : public IComponent {
 	public:
 		Material();
 		~Material();
 
-	private:
 		struct MaterialCBuff {
 			DirectX::XMFLOAT4 baseColor;
 			float metallic;
 			float roughness;
 		};
-		MaterialCBuff _materialData;
+		
+		MaterialCBuff materialData;
 
+		DirectX::XMFLOAT4 baseColor;
+		float metallic;
+		float roughness;
+
+		DX12API::Texture* baseColorTexture = nullptr;
+		DX12API::Texture* metallicTexture = nullptr;
+		DX12API::Texture* roughnessTexture = nullptr;
+		DX12API::Texture* normalTexture = nullptr;
+		DX12API::Texture* occulusionTexture = nullptr;
+
+	private:
 		DX12API::ConstantBuffer* _buffer = nullptr;
 
 	public:
 		void Update(float deltatime) override;
 		void Draw(DX12API::RenderingContext& renderContext) override;
-
-		void SetBaseColor(float r, float g, float b, float a = 1);
-		void SetMetallic(float metallic);
-		void SetRoughness(float roughness);
+		void Build();
 
 		DX12API::ConstantBuffer& GetConstantBuffer();
 	};

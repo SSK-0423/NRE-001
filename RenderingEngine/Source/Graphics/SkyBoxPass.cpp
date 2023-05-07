@@ -62,7 +62,7 @@ namespace NamelessEngine::Graphics
 			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
 		MeshData data = CubeMesh::CreateMeshData();
-		result = _skyBox->Create(device, data);
+		result = _skyBox->CreateCube(device);
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"スカイボックスメッシュ生成失敗", L"エラーメッセージ", MB_OK);
 		}

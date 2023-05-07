@@ -278,7 +278,7 @@ namespace NamelessEngine::DX12API
 	}
 
 	void Texture::SetTextureData(
-		std::vector<Utility::ColorRGBA>& data, const size_t& width, const size_t& height, const DXGI_FORMAT& format)
+		uint8_t* data, const size_t& stride, const size_t& dataNum, const size_t& width, const size_t& height, const DXGI_FORMAT& format)
 	{
 		Utility::SafetyDelete<const DirectX::Image>(_image);
 
@@ -286,9 +286,9 @@ namespace NamelessEngine::DX12API
 		img->width = width;
 		img->height = height;
 		img->format = format;
-		img->rowPitch = sizeof(Utility::ColorRGBA) * width;
-		img->slicePitch = SizeofVector(data);
-		img->pixels = (uint8_t*)&data[0];
+		img->rowPitch = stride * width;
+		img->slicePitch = stride * dataNum;
+		img->pixels = data;
 		_image = img;
 
 		_metaData.width = width;
@@ -332,14 +332,14 @@ namespace NamelessEngine::DX12API
 		return RESULT::SUCCESS;
 	}
 
-	RESULT Texture::CreateTextureFromRGBAData(
-		Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
+	RESULT Texture::CreateTextureFromConstantData(
+		Dx12GraphicsEngine& graphicsEngine, uint8_t* data, const size_t& stride, const size_t& dataNum,
 		const size_t& width, const size_t& height, const DXGI_FORMAT& format)
 	{
 		ID3D12Device& device = graphicsEngine.Device();
 
 		// テクスチャ生成用データ用意
-		SetTextureData(data, width, height, format);
+		SetTextureData(data, stride, dataNum, width, height, format);
 		// バッファー生成
 		if (FAILED(CreateUploadAndTextureBuffer(device))) { return RESULT::FAILED; }
 		// マップ処理
