@@ -17,12 +17,24 @@ sampler smp : register(s0);
 static const int MIP_COUNT = 11;
 static const float EPSILON = 0.0001f;
 
+static const int LIGHTING = 0;
+static const int BASECOLOR = 1;
+static const int METALLIC = 2;
+static const int ROUGHNESS = 3;
+static const int NORMAL = 4;
+static const int EMISSIVECOLOR = 5;
+static const int OCCLUSION = 6;
 
 cbuffer Parameter : register(b0)
 {
     float3 eyePos : packoffset(c0);
     float lightIntensity : packoffset(c0.w);
-    bool isIblOnly : packoffset(c1);
+    bool isIblOnly : packoffset(c1.x);
+};
+
+cbuffer DebugParameter : register(b1)
+{
+    int debugDrawMode;
 };
 
 struct VertexOutput
@@ -89,7 +101,9 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 normal = normalMap.Sample(smp, uv).rgb;
     float3 pos = positionMap.Sample(smp, uv).rgb;
     float metallic = metalRoughReflectMap.Sample(smp, uv).g;
-    float roughness = max(metalRoughReflectMap.Sample(smp, uv).b, EPSILON);
+    float roughness = metalRoughReflectMap.Sample(smp, uv).b;
+    float occlusion = occlusionMap.Sample(smp, uv).r;
+    float3 emissiveColor = emissiveMap.Sample(smp, uv).rgb;
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
@@ -99,17 +113,29 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 kd = color * (1.f - metallic);
     float3 ks = color * metallic;
     
-    //return float4(isIblOnly, isIblOnly, isIblOnly,1.f);
-    
     float3 diffuse = IBLDiffuse(N) * kd;
     // フレネル使った方が良い
     
     float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
     
     float3 outColor = (diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
-    outColor *= occlusionMap.Sample(smp, uv).r;
-    outColor += emissiveMap.Sample(smp, uv).rgb;
+    outColor *= occlusion;
+    outColor += emissiveColor;
+    
+    if (debugDrawMode == LIGHTING)
+        return float4(outColor, 1.f);
+    if (debugDrawMode == BASECOLOR)
+        return float4(color, 1.f);
+    if (debugDrawMode == METALLIC)
+        return float4(metallic, metallic, metallic, 1.f);
+    if (debugDrawMode == ROUGHNESS)
+        return float4(roughness, roughness, roughness, 1.f);
+    if (debugDrawMode == NORMAL)
+        return float4(normal, 1.f);
+    if (debugDrawMode == EMISSIVECOLOR)
+        return float4(emissiveColor, 1.f);
+    if (debugDrawMode == OCCLUSION)
+        return float4(occlusion, occlusion, occlusion, 1.f);
     
     return float4(outColor, 1.f);
-
 }

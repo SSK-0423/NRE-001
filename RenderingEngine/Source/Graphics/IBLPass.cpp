@@ -26,7 +26,7 @@ namespace NamelessEngine::Graphics
 	IBLPass::IBLPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
 		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer()),
-		_renderTarget(new RenderTarget())
+		_debugParamBuffer(new ConstantBuffer()), _renderTarget(new RenderTarget())
 	{
 	}
 	IBLPass::~IBLPass()
@@ -58,6 +58,7 @@ namespace NamelessEngine::Graphics
 			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
 		}
 		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, 0);
+		_descriptorHeap->RegistConstantBuffer(device, *_debugParamBuffer, 1);
 
 		SIZE windowSize = AppWindow::GetWindowSize();
 
@@ -71,7 +72,7 @@ namespace NamelessEngine::Graphics
 	Utility::RESULT IBLPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 1;
+		rootSigData._descRangeData.cbvDescriptorNum = 2;
 		rootSigData._descRangeData.srvDescriptorNum = 10;
 		rootSigData._samplerData.samplerFilter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		rootSigData._samplerData.addressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
@@ -132,17 +133,23 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT IBLPass::CreateParamBuffer(ID3D12Device& device)
 	{
-		return _paramBuffer->Create(device, &_paramData, sizeof(IBLParam));
+		if (_paramBuffer->Create(device, &_paramData, sizeof(IBLParam)) == Utility::RESULT::FAILED) {
+			return Utility::RESULT::FAILED;
+		}
+
+		return _debugParamBuffer->Create(device, &_debugParamData, sizeof(DebugParam));
 	}
 	Utility::RESULT IBLPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		return _descriptorHeap->Create(device);
 	}
 
-	void IBLPass::UpdateParamData(IBLParam& param)
+	void IBLPass::UpdateParamData(IBLParam& param, DebugParam& debugParam)
 	{
 		_paramData = param;
 		_paramBuffer->UpdateData(&_paramData);
+		_debugParamData = debugParam;
+		_debugParamBuffer->UpdateData(&_debugParamData);
 	}
 	void IBLPass::Render()
 	{

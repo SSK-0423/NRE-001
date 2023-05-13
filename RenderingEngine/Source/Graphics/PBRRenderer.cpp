@@ -89,7 +89,6 @@ namespace NamelessEngine::Graphics
 		_skyBoxPass.SetCamera(scene.GetCamera());
 
 		_blendPass.SetLightedTexture(_iblPass.GetOffscreenTexture());
-		//_blendPass.SetLightedTexture(*_DFG);
 		_blendPass.SetRenderedSkyBoxTexture(_skyBoxPass.GetOffscreenTexture());
 		_blendPass.SetDepthTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::DEPTH));
 	}
@@ -101,7 +100,7 @@ namespace NamelessEngine::Graphics
 		_lightingPass.UpdateDirectionalLight(_directionalLight);
 
 		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
-		_iblPass.UpdateParamData(_iblParam);
+		_iblPass.UpdateParamData(_iblParam, _debugParam);
 
 		//Material* material = scene.GetMeshActors()[scene.GetMeshActors().size() - 1]->GetComponent<Material>();
 		//material->baseColor = DirectX::XMFLOAT4(_baseColor[0], _baseColor[1], _baseColor[2], 1.f);
@@ -125,12 +124,29 @@ namespace NamelessEngine::Graphics
 			ImGui::ColorPicker3("LightColor", _directionalLight.color, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
 			ImGui::SliderFloat3("LightDirection", _directionalLight.direction, -1.f, 1.f);
 			ImGui::SliderFloat("LightIntensity", &_directionalLight.intensity, 0.f, 10.f);
-			ImGui::RadioButton("CookTorrance", &_lightingParam.brdfModel, 0);
+			ImGui::RadioButton("CookTorrance", &_lightingParam.brdfModel, static_cast<int>(BRDF_MODEL::COOK_TORRANCE));
 			ImGui::SameLine();
-			ImGui::RadioButton("GGX(Trowbridge-Reitz)", &_lightingParam.brdfModel, 1);
+			ImGui::RadioButton("GGX(Trowbridge-Reitz)", &_lightingParam.brdfModel, static_cast<int>(BRDF_MODEL::GGX));
 			// IBLパス関連
 			ImGui::SliderFloat("IBL_Intensity", &_iblParam.lightIntensity, 0.f, 10.f);
 			ImGui::Checkbox("IBL Only", &_iblParam.isIBLOnly);
+
+			// デバッグ用(IBLパスに実装)
+			ImGui::Text("Debug Menu");
+			ImGui::RadioButton("Lighting", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::LIGHTING));
+			ImGui::SameLine();
+			ImGui::RadioButton("BaseColor", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::BASECOLOR));
+			ImGui::SameLine();
+			ImGui::RadioButton("Metal", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::METALLIC));
+			ImGui::SameLine();
+			ImGui::RadioButton("Rough", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::ROUGHNESS));
+
+			ImGui::RadioButton("Normal", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::NORMAL));
+			ImGui::SameLine();
+			ImGui::RadioButton("EmissiveColor", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::EMISSIVECOLOR));
+			ImGui::SameLine();
+			ImGui::RadioButton("Occlusion", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::OCCLUSION));
+
 			ImGui::End();
 			ImGui::Render();
 		}
