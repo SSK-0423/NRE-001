@@ -80,12 +80,15 @@ Utility::RESULT PBRScene::ImplInit()
 	Actor* glbActor = new Actor();
 	glbActor->AddComponent<Transform>();
 	glbActor->GetComponent<Transform>()->SetPosition(0.f, 0.f, 3.f);
-	glbActor->GetComponent<Transform>()->SetDegreeAngle(90.f, 180.f, 0.f);
-	//glbActor->GetComponent<Transform>()->SetDegreeAngle(0.f, 0.f, 0.f);
+	//glbActor->GetComponent<Transform>()->SetDegreeAngle(90.f, 180.f, 0.f);
+	glbActor->GetComponent<Transform>()->SetDegreeAngle(0.f, 0.f, 0.f);
 	glbActor->GetComponent<Transform>()->SetScalling(1.f, 1.f, 1.f);
 
 	//glbActor->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/gold_coin.glb");
-	glbActor->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
+	//glbActor->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/gold_coin_tangent.glb");
+	//glbActor->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
+	glbActor->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/noTangent/DamagedHelmet.glb");
+	//glbActor->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/noTangent/box.glb");
 
 	glbActor->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
 	glbActor->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(

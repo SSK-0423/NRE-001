@@ -121,7 +121,6 @@ namespace NamelessEngine::Graphics
 				if (tangentAccessor.count != posAccessor.count) {
 					for (size_t i = 0; i < posAccessor.count; i++) {
 						// ポリゴン頂点とUV抽出
-						// 頂点接線ベクトルなので共有面を全てリストアップして平均取る必要ありそう
 						XMFLOAT3 p0;
 						XMFLOAT3 p1;
 						XMFLOAT3 p2;
@@ -129,42 +128,51 @@ namespace NamelessEngine::Graphics
 						XMFLOAT2 uv1;
 						XMFLOAT2 uv2;
 
+						XMFLOAT3 tangent;
+
+						// 頂点接線ベクトルなので共有面を全てリストアップして平均取る必要ありそう
 						for (size_t j = 0; j < indexAccessor.count; j++) {
+
 							// 接線ベクトルを求めたい頂点を含むポリゴンを見つける
-							if (XMVector3Equal(XMLoadFloat3(&submeshData.vertices[i].position), XMLoadFloat3(&submeshData.vertices[j].position))) {
-								switch (j % 3)
+							if (XMVector3Equal(XMLoadFloat3(&submeshData.vertices[i].position), XMLoadFloat3(&submeshData.vertices[submeshData.indices[j]].position))) {
+								size_t index0;
+								size_t index1;
+								size_t index2;
+								
+								switch (submeshData.indices[j] % 3)
 								{
 								case 0:	// ポリゴンの最初の頂点だった場合
-									p0 = submeshData.vertices[j].position;
-									p1 = submeshData.vertices[j + 1].position;
-									p2 = submeshData.vertices[j + 2].position;
-									uv0 = submeshData.vertices[j].uv;
-									uv1 = submeshData.vertices[j + 1].uv;
-									uv2 = submeshData.vertices[j + 2].uv;
+									index0 = submeshData.indices[j];
+									index1 = submeshData.indices[j + 1];
+									index2 = submeshData.indices[j + 2];
 									break;
 								case 1:	// ポリゴンの2番目の頂点だった場合
-									p0 = submeshData.vertices[j - 1].position;
-									p1 = submeshData.vertices[j].position;
-									p2 = submeshData.vertices[j + 1].position;
-									uv0 = submeshData.vertices[j - 1].uv;
-									uv1 = submeshData.vertices[j].uv;
-									uv2 = submeshData.vertices[j + 1].uv;
+									index0 = submeshData.indices[j - 1];
+									index1 = submeshData.indices[j];
+									index2 = submeshData.indices[j + 1];
 									break;
 								case 2:	// ポリゴンの3番目の頂点だった場合
-									p0 = submeshData.vertices[j - 2].position;
-									p1 = submeshData.vertices[j - 1].position;
-									p2 = submeshData.vertices[j].position;
-									uv0 = submeshData.vertices[j - 2].uv;
-									uv1 = submeshData.vertices[j - 1].uv;
-									uv2 = submeshData.vertices[j].uv;
+									index0 = submeshData.indices[j - 2];
+									index1 = submeshData.indices[j - 1];
+									index2 = submeshData.indices[j];
 								default:
 									break;
 								}
+
+								p0 = submeshData.vertices[index0].position;
+								p1 = submeshData.vertices[index1].position;
+								p2 = submeshData.vertices[index2].position;
+								uv0 = submeshData.vertices[index0].uv;
+								uv1 = submeshData.vertices[index1].uv;
+								uv2 = submeshData.vertices[index2].uv;
+								tangent = CalcTangent(p0, p1, p2, uv0, uv1, uv2);
+								if (tangent.x == 0 && tangent.y == 0 && tangent.z == 0) continue;
+
 								break;
 							}
 						}
+						submeshData.vertices[i].tangent = tangent;
 
-						submeshData.vertices[i].tangent = CalcTangent(p0, p1, p2, uv0, uv1, uv2);
 					}
 				}
 				else {
@@ -281,8 +289,46 @@ namespace NamelessEngine::Graphics
 		return Utility::RESULT::SUCCESS;
 	}
 
+	// 参考 http://marupeke296.com/DXPS_No12_CalcTangentVectorSpace.html 
 	XMFLOAT3 GLBLoader::CalcTangent(const XMFLOAT3& p0, const XMFLOAT3& p1, const XMFLOAT3& p2, const XMFLOAT2& uv0, const XMFLOAT2& uv1, const XMFLOAT2& uv2)
 	{
-		return XMFLOAT3();
+		// 5次元⇒3次元頂点に
+		XMFLOAT3 cp0[3] = {
+			XMFLOAT3(p0.x,uv0.x,uv0.y),
+			XMFLOAT3(p0.y,uv0.x,uv0.y),
+			XMFLOAT3(p0.z,uv0.x,uv0.y)
+		};
+		XMFLOAT3 cp1[3] = {
+			XMFLOAT3(p1.x,uv1.x,uv1.y),
+			XMFLOAT3(p1.y,uv1.x,uv1.y),
+			XMFLOAT3(p1.z,uv1.x,uv1.y)
+		};
+		XMFLOAT3 cp2[3] = {
+			XMFLOAT3(p2.x,uv2.x,uv2.y),
+			XMFLOAT3(p2.y,uv2.x,uv2.y),
+			XMFLOAT3(p2.z,uv2.x,uv2.y)
+		};
+
+		// 平面パラメータからUV軸座標算出
+		// ここではu軸(接線ベクトル)のみ計算する
+		float u[3];
+		for (size_t i = 0; i < 3; i++) {
+			XMVECTOR v1 = XMVectorSubtract(XMLoadFloat3(&cp1[i]), XMLoadFloat3(&cp0[i]));
+			XMVECTOR v2 = XMVectorSubtract(XMLoadFloat3(&cp2[i]), XMLoadFloat3(&cp1[i]));
+			XMFLOAT3 abc;
+			XMStoreFloat3(&abc, XMVector3Cross(v1, v2));
+
+			// 頂点もしくはuvが正しくセットされていない
+			if (abc.x == 0.f) {
+				//MessageBox(NULL, L"接線ベクトルの生成に失敗しました。", L"エラーメッセージ", MB_OK);
+				return XMFLOAT3(0.f, 0.f, 0.f);
+			}
+			u[i] = -abc.y / abc.x;
+		}
+
+		XMFLOAT3 tangent = XMFLOAT3(u[0], u[1], u[2]);
+		XMStoreFloat3(&tangent, XMVector3Normalize(XMLoadFloat3(&tangent)));
+
+		return tangent;
 	}
 }

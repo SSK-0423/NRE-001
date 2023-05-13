@@ -110,8 +110,6 @@ float4 PSMain(VertexOutput input) : SV_Target
     outColor *= occlusionMap.Sample(smp, uv).r;
     outColor += emissiveMap.Sample(smp, uv).rgb;
     
-    return float4(normal, 1.f);
-    
     return float4(outColor, 1.f);
 
 }
