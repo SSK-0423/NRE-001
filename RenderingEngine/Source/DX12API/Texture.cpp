@@ -287,7 +287,7 @@ namespace NamelessEngine::DX12API
 		img->height = height;
 		img->format = format;
 		img->rowPitch = stride * width;
-		img->slicePitch = stride * dataNum;
+		img->slicePitch = img->rowPitch * height;
 		img->pixels = data;
 		_image = img;
 

@@ -63,9 +63,9 @@ namespace NamelessEngine::Component
 	{
 		_position = XMFLOAT3(x, y, z);
 	}
-	void Transform::SetEularAngle(float x, float y, float z)
+	void Transform::SetDegreeAngle(float x, float y, float z)
 	{
-		_eularAngle = XMFLOAT3(x, y, z);
+		_eularAngle = XMFLOAT3(DirectX::XMConvertToRadians(x), DirectX::XMConvertToRadians(y), DirectX::XMConvertToRadians(z));
 	}
 	void Transform::SetScalling(float x, float y, float z)
 	{

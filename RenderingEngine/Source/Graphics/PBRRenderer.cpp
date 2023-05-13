@@ -103,11 +103,11 @@ namespace NamelessEngine::Graphics
 		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_iblPass.UpdateParamData(_iblParam);
 
-		Material* material = scene.GetMeshActors()[scene.GetMeshActors().size() - 1]->GetComponent<Material>();
-		material->baseColor = DirectX::XMFLOAT4(_baseColor[0], _baseColor[1], _baseColor[2], 1.f);
-		material->roughness = _roughness;
-		material->metallic = _metallic;
-		material->Build();
+		//Material* material = scene.GetMeshActors()[scene.GetMeshActors().size() - 1]->GetComponent<Material>();
+		//material->baseColor = DirectX::XMFLOAT4(_baseColor[0], _baseColor[1], _baseColor[2], 1.f);
+		//material->roughness = _roughness;
+		//material->metallic = _metallic;
+		//material->Build();
 	}
 	void PBRRenderer::Render(Scene::Scene& scene)
 	{

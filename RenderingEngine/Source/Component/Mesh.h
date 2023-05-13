@@ -1,4 +1,5 @@
 #pragma once
+#include <memory>
 #include <array>
 #include <vector>
 #include <dxgi1_4.h>
@@ -22,22 +23,26 @@ namespace NamelessEngine::Component {
 	struct MeshVertex {
 		DirectX::XMFLOAT3 position;
 		DirectX::XMFLOAT3 normal;
+		DirectX::XMFLOAT3 tangent;
 		DirectX::XMFLOAT2 uv;
 	};
 
 	struct MeshData {
 		std::vector<MeshVertex> vertices;
 		std::vector<unsigned int> indices;
+		int materialIndex;
 	};
 
-	class SubMesh {
+	struct SubMesh {
 	public:
 		SubMesh();
 		~SubMesh();
+
 	private:
 		DX12API::VertexBuffer* _vertexBuffer = nullptr;
 		DX12API::IndexBuffer* _indexBuffer = nullptr;
 		DX12API::DescriptorHeapCBV_SRV_UAV* _descriptorHeap = nullptr;
+		int _materialIndex;
 
 		Utility::RESULT CreateVertexBuffer(ID3D12Device& device, MeshData& data);
 		Utility::RESULT CreateIndexBuffer(ID3D12Device& device, MeshData& data);
@@ -45,9 +50,6 @@ namespace NamelessEngine::Component {
 
 	public:
 		Utility::RESULT Create(ID3D12Device& device, MeshData& data);
-
-		void Update(float deltatime);
-		void Draw(DX12API::RenderingContext& renderContext);
 
 		void SetConstantBuffer(
 			ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer,
@@ -57,10 +59,7 @@ namespace NamelessEngine::Component {
 			DX12API::ShaderResourceViewDesc desc,
 			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
 
-		const DX12API::VertexBuffer& GetVertexBuffer() { return *_vertexBuffer; }
-		const DX12API::IndexBuffer& GetIndexBuffer() { return *_indexBuffer; }
-		DX12API::DescriptorHeapCBV_SRV_UAV* GetDescriptorHeap() { return _descriptorHeap; }
-
+		friend class Mesh;
 	};
 
 	class Mesh : public IComponent {
@@ -80,10 +79,10 @@ namespace NamelessEngine::Component {
 		void Update(float deltatime);
 		void Draw(DX12API::RenderingContext& renderContext);
 
-		void SetConstantBuffer(
+		void SetConstantBufferOnAllSubMeshes(
 			ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer,
 			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);
-		void SetTexture(
+		void SetTextureOnAllSubMeshes(
 			ID3D12Device& device, DX12API::Texture& texture,
 			DX12API::ShaderResourceViewDesc desc,
 			const int& registerNo = DX12API::DescriptorHeapCBV_SRV_UAV::NEXT_REGISTER);

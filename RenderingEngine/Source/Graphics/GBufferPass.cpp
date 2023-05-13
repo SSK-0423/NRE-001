@@ -50,8 +50,8 @@ namespace NamelessEngine::Graphics
 	Utility::RESULT GBufferPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 3;
-		rootSigData._descRangeData.srvDescriptorNum = 3;
+		rootSigData._descRangeData.cbvDescriptorNum = 2;
+		rootSigData._descRangeData.srvDescriptorNum = 5;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
@@ -77,6 +77,8 @@ namespace NamelessEngine::Graphics
 		_renderTargets[GBUFFER_TYPE::NORMAL] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::WORLD_POS] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT] = std::make_unique<DX12API::RenderTarget>();
+		_renderTargets[GBUFFER_TYPE::OCCLUSION] = std::make_unique<DX12API::RenderTarget>();
+		_renderTargets[GBUFFER_TYPE::EMISSIVE] = std::make_unique<DX12API::RenderTarget>();
 
 		RESULT result = _renderTargets[GBUFFER_TYPE::COLOR]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
@@ -89,6 +91,12 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 
 		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data);
+		if (result == RESULT::FAILED) { return result; }
+
+		result = _renderTargets[GBUFFER_TYPE::OCCLUSION]->Create(device, data);
+		if (result == RESULT::FAILED) { return result; }
+
+		result = _renderTargets[GBUFFER_TYPE::EMISSIVE]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
 		return result;
@@ -158,11 +166,13 @@ namespace NamelessEngine::Graphics
 		pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 		// レンダーターゲットの設定
-		pipelineState.NumRenderTargets = 4;
+		pipelineState.NumRenderTargets = 6;
 		pipelineState.RTVFormats[0] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// カラー
 		pipelineState.RTVFormats[1] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// 法線
 		pipelineState.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// ワールド座標
 		pipelineState.RTVFormats[3] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// メタリック/ラフネス/リフレクション
+		pipelineState.RTVFormats[4] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// オクルージョン
+		pipelineState.RTVFormats[5] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// エミッシブ
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1

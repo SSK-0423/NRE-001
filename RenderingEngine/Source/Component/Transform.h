@@ -41,7 +41,7 @@ namespace NamelessEngine::Component
 		DirectX::XMMATRIX GetScallingMatrix();
 
 		void SetPosition(float x, float y, float z);
-		void SetEularAngle(float x, float y, float z);
+		void SetDegreeAngle(float x, float y, float z);
 		void SetScalling(float x, float y, float z);
 
 		void Translation(float x, float y, float z);

@@ -39,19 +39,14 @@ namespace NamelessEngine::Component {
 		float roughness;
 
 		DX12API::Texture* baseColorTexture = nullptr;
-		DX12API::Texture* metallicTexture = nullptr;
-		DX12API::Texture* roughnessTexture = nullptr;
+		DX12API::Texture* metalRoughTexture = nullptr;
 		DX12API::Texture* normalTexture = nullptr;
-		DX12API::Texture* occulusionTexture = nullptr;
-
-	private:
-		DX12API::ConstantBuffer* _buffer = nullptr;
+		DX12API::Texture* occlusionTexture = nullptr;
+		DX12API::Texture* emissiveTexture = nullptr;
 
 	public:
 		void Update(float deltatime) override;
 		void Draw(DX12API::RenderingContext& renderContext) override;
 		void Build();
-
-		DX12API::ConstantBuffer& GetConstantBuffer();
 	};
 }

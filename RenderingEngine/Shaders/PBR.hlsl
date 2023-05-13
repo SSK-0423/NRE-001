@@ -4,7 +4,9 @@ Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
 Texture2D positionMap : register(t2);
 Texture2D metalRoughReflectMap : register(t3);
-Texture2D depthMap : register(t4);
+Texture2D occlusionMap : register(t4);
+Texture2D emissiveMap : register(t5);
+Texture2D depthMap : register(t6);
 
 sampler smp : register(s0);
 
@@ -106,9 +108,9 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 color = colorMap.Sample(smp, uv).rgb;
     float3 normal = normalMap.Sample(smp, uv).rgb;
     float3 pos = positionMap.Sample(smp, uv).rgb;
-    float metallic = metalRoughReflectMap.Sample(smp, uv).r;
-    float roughness = metalRoughReflectMap.Sample(smp, uv).g;
-    float useReflection = metalRoughReflectMap.Sample(smp, uv).b;
+    float metallic = metalRoughReflectMap.Sample(smp, uv).g;
+    float roughness = metalRoughReflectMap.Sample(smp, uv).b;
+    float useReflection = metalRoughReflectMap.Sample(smp, uv).r;
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線

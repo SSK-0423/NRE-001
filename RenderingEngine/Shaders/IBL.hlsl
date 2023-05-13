@@ -4,11 +4,13 @@ Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
 Texture2D positionMap : register(t2);
 Texture2D metalRoughReflectMap : register(t3);
+Texture2D occlusionMap : register(t4);
+Texture2D emissiveMap : register(t5);
 
-Texture2D lightedMap : register(t4);
-Texture2D dfgMap : register(t5);
-TextureCube specularLD : register(t6); // HDR
-TextureCube diffuseLD : register(t7); // HDR
+Texture2D lightedMap : register(t6);
+Texture2D dfgMap : register(t7);
+TextureCube specularLD : register(t8); // HDR
+TextureCube diffuseLD : register(t9); // HDR
 
 sampler smp : register(s0);
 
@@ -86,8 +88,8 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 color = colorMap.Sample(smp, uv).rgb;
     float3 normal = normalMap.Sample(smp, uv).rgb;
     float3 pos = positionMap.Sample(smp, uv).rgb;
-    float metallic = metalRoughReflectMap.Sample(smp, uv).r;
-    float roughness = max(metalRoughReflectMap.Sample(smp, uv).g, EPSILON);
+    float metallic = metalRoughReflectMap.Sample(smp, uv).g;
+    float roughness = max(metalRoughReflectMap.Sample(smp, uv).b, EPSILON);
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
@@ -100,11 +102,15 @@ float4 PSMain(VertexOutput input) : SV_Target
     //return float4(isIblOnly, isIblOnly, isIblOnly,1.f);
     
     float3 diffuse = IBLDiffuse(N) * kd;
-    // フレネル使った邦画良い
+    // フレネル使った方が良い
     
     float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
     
     float3 outColor = (diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
+    outColor *= occlusionMap.Sample(smp, uv).r;
+    outColor += emissiveMap.Sample(smp, uv).rgb;
+    
+    return float4(normal, 1.f);
     
     return float4(outColor, 1.f);
 

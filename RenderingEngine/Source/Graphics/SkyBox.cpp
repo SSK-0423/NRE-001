@@ -32,7 +32,7 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 
 		ShaderResourceViewDesc desc(*_cubeTexture, true);
-		_cubeMesh->SetTexture(graphicsEngine.Device(), *_cubeTexture, desc);
+		_cubeMesh->SetTextureOnAllSubMeshes(graphicsEngine.Device(), *_cubeTexture, desc);
 
 		return result;
 	}

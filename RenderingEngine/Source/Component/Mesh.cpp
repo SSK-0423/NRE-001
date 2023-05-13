@@ -53,15 +53,12 @@ namespace NamelessEngine::Component
 		result = CreateDescriptorHeap(device);
 		if (result == RESULT::FAILED) { return result; }
 
+		_materialIndex = data.materialIndex;
+
+		// マテリアルセット
+
+
 		return RESULT::SUCCESS;
-	}
-
-	void SubMesh::Update(float deltatime)
-	{
-	}
-
-	void SubMesh::Draw(DX12API::RenderingContext& renderContext)
-	{
 	}
 
 	void SubMesh::SetConstantBuffer(ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer, const int& registerNo)
@@ -319,7 +316,31 @@ namespace NamelessEngine::Component
 
 	Utility::RESULT Mesh::CreateFromGLB(ID3D12Device& device, const std::string& path)
 	{
-		return Graphics::GLBLoader::LoadModel(device, path, _submeshes);
+		if (Graphics::GLBLoader::LoadModel(device, path, _submeshes, _materials) == Utility::RESULT::FAILED)
+			return Utility::RESULT::FAILED;
+
+		// メッシュとマテリアルを結びつける
+		for (auto& submesh : _submeshes) {
+			if (submesh._materialIndex >= 0) {
+				Material& material = _materials[submesh._materialIndex];
+				if (material.baseColorTexture != nullptr)
+					submesh.SetTexture(device, *material.baseColorTexture, DX12API::ShaderResourceViewDesc(*material.baseColorTexture), 0);
+
+				if (material.metalRoughTexture != nullptr)
+					submesh.SetTexture(device, *material.metalRoughTexture, DX12API::ShaderResourceViewDesc(*material.metalRoughTexture), 1);
+
+				if (material.normalTexture != nullptr)
+					submesh.SetTexture(device, *material.normalTexture, DX12API::ShaderResourceViewDesc(*material.normalTexture), 2);
+
+				if (material.occlusionTexture != nullptr)
+					submesh.SetTexture(device, *material.occlusionTexture, DX12API::ShaderResourceViewDesc(*material.occlusionTexture), 3);
+
+				if (material.emissiveTexture != nullptr)
+					submesh.SetTexture(device, *material.emissiveTexture, DX12API::ShaderResourceViewDesc(*material.emissiveTexture), 4);
+			}
+		}
+
+		return Utility::RESULT::SUCCESS;
 	}
 
 	void Mesh::Update(float deltatime)
@@ -329,19 +350,23 @@ namespace NamelessEngine::Component
 	void Mesh::Draw(DX12API::RenderingContext& renderContext)
 	{
 		for (auto& submesh : _submeshes) {
-			renderContext.SetDescriptorHeap(*submesh.GetDescriptorHeap());
-			renderContext.SetVertexBuffer(0, submesh.GetVertexBuffer());
-			renderContext.SetIndexBuffer(submesh.GetIndexBuffer());
+			renderContext.SetDescriptorHeap(*submesh._descriptorHeap);
+			renderContext.SetVertexBuffer(0, *submesh._vertexBuffer);
+			renderContext.SetIndexBuffer(*submesh._indexBuffer);
 			renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-			renderContext.DrawIndexedInstanced(submesh.GetIndexBuffer().GetIndexNum(), 1);
+			renderContext.DrawIndexedInstanced(submesh._indexBuffer->GetIndexNum(), 1);
 		}
 	}
-	void Mesh::SetConstantBuffer(ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer, const int& registerNo)
+	void Mesh::SetConstantBufferOnAllSubMeshes(ID3D12Device& device, DX12API::ConstantBuffer& constantBuffer, const int& registerNo)
 	{
-		_submeshes[0].GetDescriptorHeap()->RegistConstantBuffer(device, constantBuffer, registerNo);
+		for (auto& submesh : _submeshes) {
+			submesh._descriptorHeap->RegistConstantBuffer(device, constantBuffer, registerNo);
+		}
 	}
-	void Mesh::SetTexture(ID3D12Device& device, DX12API::Texture& texture, DX12API::ShaderResourceViewDesc desc, const int& registerNo)
+	void Mesh::SetTextureOnAllSubMeshes(ID3D12Device& device, DX12API::Texture& texture, DX12API::ShaderResourceViewDesc desc, const int& registerNo)
 	{
-		_submeshes[0].GetDescriptorHeap()->RegistShaderResource(device, texture, desc, registerNo);
+		for (auto& submesh : _submeshes) {
+			submesh._descriptorHeap->RegistShaderResource(device, texture, desc, registerNo);
+		}
 	}
 }
