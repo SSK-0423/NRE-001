@@ -47,6 +47,6 @@ float4 PSMain(VertexOutput input) : SV_Target
     //{
     //    return float4(0.f, 0.f, 0.f, 1.f);
     //}
-    return float4(Reinhard(skyColor), 1.f);
+    //return float4(Reinhard(skyColor), 1.f);
     return float4(texCube.Sample(smp, input.uv));
 }

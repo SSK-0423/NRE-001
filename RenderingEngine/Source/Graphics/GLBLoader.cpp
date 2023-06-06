@@ -78,7 +78,8 @@ namespace NamelessEngine::Graphics
 				submeshData.vertices.resize(posAccessor.count);
 
 				for (size_t i = 0; i < posAccessor.count; i++) {
-					XMFLOAT3 pos = XMFLOAT3(positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]);
+					// gltfは右手座標系(OpenGL)で定義されているので、Xを反転して左手座標系(DirectX)に変換する
+					XMFLOAT3 pos = XMFLOAT3(-positions[i * 3 + 0], positions[i * 3 + 1], positions[i * 3 + 2]);
 					submeshData.vertices[i].position = pos;
 				}
 
@@ -89,7 +90,7 @@ namespace NamelessEngine::Graphics
 				const float* normals = reinterpret_cast<const float*>(&normalBuffer.data[normalBufferView.byteOffset + normalAccessor.byteOffset]);
 
 				for (size_t i = 0; i < normalAccessor.count; i++) {
-					XMFLOAT3 normal = XMFLOAT3(normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2]);
+					XMFLOAT3 normal = XMFLOAT3(-normals[i * 3 + 0], normals[i * 3 + 1], normals[i * 3 + 2]);
 					submeshData.vertices[i].normal = normal;
 				}
 
@@ -138,7 +139,7 @@ namespace NamelessEngine::Graphics
 								size_t index0;
 								size_t index1;
 								size_t index2;
-								
+
 								switch (submeshData.indices[j] % 3)
 								{
 								case 0:	// ポリゴンの最初の頂点だった場合
@@ -221,6 +222,16 @@ namespace NamelessEngine::Graphics
 					static_cast<size_t>(baseColorImage.width) * baseColorImage.height,
 					baseColorImage.width, baseColorImage.height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 			}
+			else {
+				if (materials[index].baseColorTexture == nullptr)
+					materials[index].baseColorTexture = new DX12API::Texture();
+
+				unsigned char dummyBaseColor[4] = { 128, 128, 128, 255 };
+
+				materials[index].baseColorTexture->CreateTextureFromConstantData(
+					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyBaseColor), sizeof(unsigned char) * 4,
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+			}
 			// メタリックラフネス
 			if (material.pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
 				const tinygltf::Texture& metalRoughTexture = model.textures[material.pbrMetallicRoughness.metallicRoughnessTexture.index];
@@ -237,6 +248,16 @@ namespace NamelessEngine::Graphics
 					metalRoughImage.width, metalRoughImage.height, DXGI_FORMAT_R8G8B8A8_UNORM);
 
 			}
+			else {
+				unsigned char dummyMetalRough[4] = { 0, 0, 255, 255 };
+
+				if (materials[index].metalRoughTexture == nullptr)
+					materials[index].metalRoughTexture = new DX12API::Texture();
+
+				materials[index].metalRoughTexture->CreateTextureFromConstantData(
+					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyMetalRough), sizeof(unsigned char) * 4,
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+			}
 			// ノーマル
 			if (material.normalTexture.index >= 0) {
 				const tinygltf::Texture& normalTexture = model.textures[material.normalTexture.index];
@@ -251,6 +272,16 @@ namespace NamelessEngine::Graphics
 					Core::Dx12GraphicsEngine::Instance(), data, sizeof(unsigned char) * 4,
 					static_cast<size_t>(normalImage.width) * normalImage.height,
 					normalImage.width, normalImage.height, DXGI_FORMAT_R8G8B8A8_UNORM);
+			}
+			else {
+				unsigned char dummyNormal[4] = { 0, 0, 0, 255 };
+
+				if (materials[index].normalTexture == nullptr)
+					materials[index].normalTexture = new DX12API::Texture();
+
+				materials[index].normalTexture->CreateTextureFromConstantData(
+					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyNormal), sizeof(unsigned char) * 4,
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			// アンビエントオクルージョン
 			if (material.occlusionTexture.index >= 0) {
@@ -267,6 +298,16 @@ namespace NamelessEngine::Graphics
 					static_cast<size_t>(occlusionImage.width) * occlusionImage.height,
 					occlusionImage.width, occlusionImage.height, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
+			else {
+				if (materials[index].occlusionTexture == nullptr)
+					materials[index].occlusionTexture = new DX12API::Texture();
+
+				unsigned char dummyOcclusion[4] = { 255, 255, 255, 255 };
+
+				materials[index].occlusionTexture->CreateTextureFromConstantData(
+					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyOcclusion), sizeof(unsigned char) * 4,
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+			}
 			// エミッシブ
 			if (material.emissiveTexture.index >= 0) {
 				const tinygltf::Texture& emissiveTexture = model.textures[material.emissiveTexture.index];
@@ -282,7 +323,16 @@ namespace NamelessEngine::Graphics
 					static_cast<size_t>(emissiveImage.width) * emissiveImage.height,
 					emissiveImage.width, emissiveImage.height, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 			}
+			else {
+				if (materials[index].emissiveTexture == nullptr)
+					materials[index].emissiveTexture = new DX12API::Texture();
 
+				unsigned char dummyEmissive[4] = { 0, 0, 0, 0 };
+
+				materials[index].emissiveTexture->CreateTextureFromConstantData(
+					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyEmissive), sizeof(unsigned char) * 4,
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+			}
 			index++;
 		}
 

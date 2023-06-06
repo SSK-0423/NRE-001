@@ -1,4 +1,5 @@
 #include "ToneMapping.hlsli"
+#include "BRDF.hlsli"
 
 Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
@@ -10,12 +11,12 @@ Texture2D emissiveMap : register(t5);
 Texture2D lightedMap : register(t6);
 Texture2D dfgMap : register(t7);
 TextureCube specularLD : register(t8); // HDR
-TextureCube diffuseLD : register(t9); // HDR
+TextureCube irradiance : register(t9); // HDR
 
 sampler smp : register(s0);
 
-static const int MIP_COUNT = 11;
-static const float EPSILON = 0.0001f;
+static const int MIP_COUNT = 5;
+//static const float EPSILON = 0.0001f;
 
 static const int LIGHTING = 0;
 static const int BASECOLOR = 1;
@@ -61,7 +62,7 @@ float3 GetSpecularDir(float3 N, float3 R, float roughness)
 // ディフューズのIBLを取得
 float3 IBLDiffuse(float3 N)
 {
-    return Reinhard(diffuseLD.Sample(smp, N).rgb);
+    return Reinhard(irradiance.Sample(smp, N).rgb);
 }
 // スペキュラーのIBLを取得
 float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, float mipCount)
@@ -72,10 +73,11 @@ float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, flo
     float mipLevel = RoughnessToMipLeval(roughness, mipCount);
     float3 specLD = Reinhard(specularLD.SampleLevel(smp, specDir, mipLevel).rgb);
     
-    float2 dfgUV = float2(min(roughness, 1.f - EPSILON), NV);
+    float2 dfgUV = float2(NV, min(roughness, 1.f));
     // テクスチャの範囲外参照を防ぐ
     float2 DFG = dfgMap.SampleLevel(smp, dfgUV, 0.f).rg;
     
+    //return specLD * (f0 * DFG.r + DFG.g);
     return specLD * (f0 * DFG.r + DFG.g);
 }
 
@@ -87,8 +89,8 @@ VertexOutput VSMain(uint id : SV_VertexID)
     VertexOutput output;
     output.position = float4(x, y, 0, 1.f);
     
-    float u = (id >> 1);
-    float v = (id & 1);
+    float u = (id >> 1); // 0,0,1,1
+    float v = (id & 1); // 0,1,0,1
     output.uv = float2(u, v);
     
     return output;
@@ -98,27 +100,39 @@ float4 PSMain(VertexOutput input) : SV_Target
 {
     float2 uv = input.uv;
     float3 color = colorMap.Sample(smp, uv).rgb;
-    float3 normal = normalMap.Sample(smp, uv).rgb;
+    float3 normal = normalMap.Sample(smp, uv).rgb * 2.f - 1.f;
     float3 pos = positionMap.Sample(smp, uv).rgb;
-    float metallic = metalRoughReflectMap.Sample(smp, uv).g;
-    float roughness = metalRoughReflectMap.Sample(smp, uv).b;
+    float metallic = metalRoughReflectMap.Sample(smp, uv).b;
+    float roughness = metalRoughReflectMap.Sample(smp, uv).g;
     float occlusion = occlusionMap.Sample(smp, uv).r;
     float3 emissiveColor = emissiveMap.Sample(smp, uv).rgb;
 
     // BRDFの計算に必要な要素計算
-    float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
-    float3 V = normalize(pos - eyePos); // 視線方向
-    float3 R = normalize(reflect(V, N)); // 光の反射方向
+    float3 N = normalize(normal); // 物体上の法線
+    float3 V = normalize(eyePos - pos); // 視線方向
+    float3 R = normalize(reflect(-V, N)); // 光の反射方向
+    float3 H = normalize(V + R);
 
-    float3 kd = color * (1.f - metallic);
-    float3 ks = color * metallic;
+    float3 F0 = lerp(0.04f.xxx, color, metallic);
     
-    float3 diffuse = IBLDiffuse(N) * kd;
+    float3 ks = SchlickFresnelRoughness(F0, saturate(dot(N, V)), roughness);
+    float3 kd = (1.f.xxx - ks) * (1.f - metallic);
+    
+    //float3 kd = lerp(float3(1.f, 1.f, 1.f) - ks, float3(0.f, 0.f, 0.f), metallic); // ここ
+    
+    float3 diffuseIrradiance = irradiance.Sample(smp, N).rgb;
+    float3 diffuse = diffuseIrradiance * color;
+    
+    int mipLevel = roughness * MIP_COUNT;
+    float3 preFilteredSpecular = specularLD.SampleLevel(smp, R, mipLevel);
+    float2 F0ScaleBais = dfgMap.Sample(smp, float2(roughness, saturate(dot(N, V))), 0).rg;
+    //float3 specular = preFilteredSpecular * (ks * F0ScaleBais.x + F0ScaleBais.y);
+    
+    //float3 diffuse = IBLDiffuse(N) * kd * color; // ここ
     // フレネル使った方が良い
-    
     float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
     
-    float3 outColor = (diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
+    float3 outColor = (kd * diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
     outColor *= occlusion;
     outColor += emissiveColor;
     
@@ -131,7 +145,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     if (debugDrawMode == ROUGHNESS)
         return float4(roughness, roughness, roughness, 1.f);
     if (debugDrawMode == NORMAL)
-        return float4(normal, 1.f);
+        return float4((normal + 1.f) / 2.f, 1.f);
     if (debugDrawMode == EMISSIVECOLOR)
         return float4(emissiveColor, 1.f);
     if (debugDrawMode == OCCLUSION)

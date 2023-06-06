@@ -106,14 +106,14 @@ float4 PSMain(VertexOutput input) : SV_Target
     
     float2 uv = input.uv;
     float3 color = colorMap.Sample(smp, uv).rgb;
-    float3 normal = normalMap.Sample(smp, uv).rgb;
+    float3 normal = normalMap.Sample(smp, uv).rgb * 2.f - 1.f;
     float3 pos = positionMap.Sample(smp, uv).rgb;
-    float metallic = metalRoughReflectMap.Sample(smp, uv).g;
-    float roughness = metalRoughReflectMap.Sample(smp, uv).b;
+    float metallic = metalRoughReflectMap.Sample(smp, uv).b;
+    float roughness = metalRoughReflectMap.Sample(smp, uv).g;
     float useReflection = metalRoughReflectMap.Sample(smp, uv).r;
 
     // BRDFの計算に必要な要素計算
-    float3 N = normalize(normalMap.Sample(smp, uv).rgb); // 物体上の法線
+    float3 N = normalize(normal); // 物体上の法線
     float3 L = normalize(normalize(dLightdirection)); // 光の入射方向
     float3 V = normalize(eyePos - pos); // 視線方向
     float3 R = normalize(-reflect(L, N)); // 光の反射方向
@@ -134,6 +134,8 @@ float4 PSMain(VertexOutput input) : SV_Target
     }
     // Li(x,ω) * BRDF * cosθ
     float3 outColor = dLightColor * (diffuseColor + specularColor) * dot(N, L) * dLightintensity;
+    
+    //return float4((normal + 1.f)/2.f, 1.f);
     
     return float4(outColor, 1.f);
 }

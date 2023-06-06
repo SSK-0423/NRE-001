@@ -13,6 +13,18 @@ float3 SchlickFresnel(float3 baseColor, float metallic, float2 uv, float VH)
     return F0 + (1.f - F0) * pow((1 - VH), 5);
 }
 
+float3 SchlickFresnelRoughness(float3 baseColor, float metallic, float2 uv, float VH, float roughness)
+{
+    float3 F0 = lerp(float3(0.04f, 0.04f, 0.04f), baseColor, metallic);
+    
+    return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(1.0 - VH, 5.0);
+}
+
+float3 SchlickFresnelRoughness(float3 F0, float VH, float roughness)
+{
+    
+    return F0 + (max(float3(1.0 - roughness, 1.0 - roughness, 1.0 - roughness), F0) - F0) * pow(1.0 - VH, 5.0);
+}
 // ñ@ê¸ï™ïzä÷êî
 // Beckmanï™ïz
 float Beckman(float roughness, float VH)
@@ -54,11 +66,11 @@ float Smith(float roughness, float NL, float NV)
     float tan2In = (1.f + cos2In) / cos2In;
     float tan2Out = (1.f + cos2Out) / cos2Out;
     
-    float alpha2In = 1.f / (pow(roughness, 2) * tan2In);
-    float alpha2Out = 1.f / (pow(roughness, 2) * tan2Out);
+    float alpha2In = 1.f / (pow(roughness + EPSILON, 2) * tan2In);
+    float alpha2Out = 1.f / (pow(roughness + EPSILON, 2) * tan2Out);
     
-    float lambdaIn = (-1.f + sqrt(1.f + 1.f / alpha2In)) * 0.5f;
-    float lambdaOut = (-1.f + sqrt(1.f + 1.f / alpha2Out)) * 0.5f;
+    float lambdaIn = (-1.f + sqrt(1.f + 1.f / alpha2In + EPSILON)) * 0.5f;
+    float lambdaOut = (-1.f + sqrt(1.f + 1.f / alpha2Out + EPSILON)) * 0.5f;
     
     return 1.f / (1.f + lambdaIn, lambdaOut);
 }

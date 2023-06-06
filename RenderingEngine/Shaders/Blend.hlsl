@@ -1,3 +1,5 @@
+#include "ToneMapping.hlsli"
+
 Texture2D skyMap : register(t0);
 Texture2D lightedMap : register(t1);
 Texture2D depthMap : register(t2);
@@ -34,9 +36,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     //return float4(lightedColor, 1.f);
     
     float3 outColor = skyColor * blend + lightedColor * (1 - blend);
-    if (skyColor.r > 1.f || skyColor.g > 1.f || skyColor.b > 1.f)
-    {
-        return float4(0.f, 0.f, 0.f, 1.f);
-    }
+
     return float4(outColor, 1.f);
+    //return float4(Reinhard(outColor), 1.f);
 }
