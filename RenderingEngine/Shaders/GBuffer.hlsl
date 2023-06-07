@@ -23,7 +23,7 @@ struct VertexInput
 {
     float3 position : POSITION;
     float3 normal : NORMAL;
-    float3 tangent : TANGENT;
+    float4 tangent : TANGENT;
     float2 uv : TEXCOORD;
 };
 
@@ -58,14 +58,12 @@ VertexOutput VSMain(VertexInput input)
     output.worldPosition = mul(world, float4(input.position, 1.f));
     
     float3 normal = input.normal;
-    //normal.y *= -1.f;
-    float3 tangent = input.tangent;
-    //tangent.y *= -1.f;
+    float4 tangent = input.tangent;
     
     // 接線空間からワールド空間への基底変換行列を求める
-    float3 T = normalize(mul(world, float4(tangent, 0.f))); // 接線ベクトル
-    float3 N = normalize(mul(world, float4(normal, 0.f)));; // 法線ベクトル
-    float3 B = normalize(cross(N, T)); // 従接線ベクトル
+    float3 T = normalize(mul(world, float4(tangent.xyz, 0.f))); // 接線ベクトル
+    float3 N = normalize(mul(world, float4(normal, 0.f))); // 法線ベクトル
+    float3 B = cross(N, T) * tangent.w; // 従接線ベクトル
     
     output.tangentBasis = float3x3(T, B, N);
     output.invTangentBasis = transpose(float3x3(T, B, N));
@@ -89,16 +87,11 @@ PixelOutput PSMain(VertexOutput input)
     // -1～1に変換
     texSpaceNormal = texSpaceNormal * 2.f - 1.f;
     
-    texSpaceNormal = normalize(texSpaceNormal);
-
     // テクスチャ空間からワールド空間に変換
-    // 0～1に変換
     output.normal = float4(mul(input.invTangentBasis, texSpaceNormal), 0.f);
-    //output.normal = normalize(mul(world, output.normal));
-    output.normal = float4(texSpaceNormal, 1.f);
+    // 0～1に変換
     output.normal = (output.normal + 1.f) / 2.f;
     output.normal.w = 1.f;
-    
     
     return output;
 }

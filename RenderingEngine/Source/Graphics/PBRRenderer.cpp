@@ -113,7 +113,7 @@ namespace NamelessEngine::Graphics
 		// Imguiレンダー
 		{
 			ImGui::SetNextWindowPos(ImVec2(900, 0));
-			ImGui::Begin("Physically Based Rendering", 0, ImGuiWindowFlags_NoMove);
+			ImGui::Begin("Editor", 0, ImGuiWindowFlags_NoMove);
 			ImGui::SetWindowSize(ImVec2(375, AppWindow::GetWindowSize().cy), ImGuiCond_Once);
 
 			// GBufferパス関連

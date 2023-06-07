@@ -130,10 +130,11 @@ namespace NamelessEngine::Graphics
 						XMFLOAT2 uv2;
 
 						XMFLOAT3 tangent;
+						XMFLOAT3 tangentSum = XMFLOAT3(0.f, 0.f, 0.f);
+						int tangentCount = 0;
 
 						// 頂点接線ベクトルなので共有面を全てリストアップして平均取る必要ありそう
 						for (size_t j = 0; j < indexAccessor.count; j++) {
-
 							// 接線ベクトルを求めたい頂点を含むポリゴンを見つける
 							if (XMVector3Equal(XMLoadFloat3(&submeshData.vertices[i].position), XMLoadFloat3(&submeshData.vertices[submeshData.indices[j]].position))) {
 								size_t index0;
@@ -143,11 +144,13 @@ namespace NamelessEngine::Graphics
 								switch (submeshData.indices[j] % 3)
 								{
 								case 0:	// ポリゴンの最初の頂点だった場合
+									if (j > indexAccessor.count - 3) continue;
 									index0 = submeshData.indices[j];
 									index1 = submeshData.indices[j + 1];
 									index2 = submeshData.indices[j + 2];
 									break;
 								case 1:	// ポリゴンの2番目の頂点だった場合
+									if (j > indexAccessor.count - 2) continue;
 									index0 = submeshData.indices[j - 1];
 									index1 = submeshData.indices[j];
 									index2 = submeshData.indices[j + 1];
@@ -166,14 +169,18 @@ namespace NamelessEngine::Graphics
 								uv0 = submeshData.vertices[index0].uv;
 								uv1 = submeshData.vertices[index1].uv;
 								uv2 = submeshData.vertices[index2].uv;
+
 								tangent = CalcTangent(p0, p1, p2, uv0, uv1, uv2);
 								if (tangent.x == 0 && tangent.y == 0 && tangent.z == 0) continue;
 
+								XMStoreFloat3(&tangentSum, XMVectorAdd(XMLoadFloat3(&tangentSum), XMLoadFloat3(&tangent)));
+								tangentCount++;
 								break;
 							}
 						}
-						submeshData.vertices[i].tangent = tangent;
-
+						XMStoreFloat3(&tangentSum, XMVector3Normalize(XMLoadFloat3(&tangentSum)));
+						submeshData.vertices[i].tangent =
+							XMFLOAT4(tangentSum.x / tangentCount, tangentSum.y / tangentCount, tangentSum.z / tangentCount, 1.f);
 					}
 				}
 				else {
@@ -182,7 +189,7 @@ namespace NamelessEngine::Graphics
 					const float* tangents = reinterpret_cast<const float*>(&tangentBuffer.data[tangentBufferView.byteOffset + tangentAccessor.byteOffset]);
 
 					for (size_t i = 0; i < tangentAccessor.count; i++) {
-						XMFLOAT3 tangent = XMFLOAT3(tangents[i * 3 + 0], tangents[i * 3 + 1], tangents[i * 3 + 2]);
+						XMFLOAT4 tangent = XMFLOAT4(tangents[i * 3 + 0], tangents[i * 3 + 1], tangents[i * 3 + 2], tangents[i * 3 + 3]);
 						submeshData.vertices[i].tangent = tangent;
 					}
 				}
@@ -226,10 +233,10 @@ namespace NamelessEngine::Graphics
 				if (materials[index].baseColorTexture == nullptr)
 					materials[index].baseColorTexture = new DX12API::Texture();
 
-				unsigned char dummyBaseColor[4] = { 128, 128, 128, 255 };
+				std::vector<unsigned char> dummyBaseColor = { 128, 128, 128, 255 };
 
 				materials[index].baseColorTexture->CreateTextureFromConstantData(
-					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyBaseColor), sizeof(unsigned char) * 4,
+					Core::Dx12GraphicsEngine::Instance(), dummyBaseColor.data(), sizeof(unsigned char) * 4,
 					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			// メタリックラフネス
@@ -249,13 +256,13 @@ namespace NamelessEngine::Graphics
 
 			}
 			else {
-				unsigned char dummyMetalRough[4] = { 0, 0, 255, 255 };
+				std::vector<unsigned char> dummyMetalRough = { 0, 0, 255, 255 };
 
 				if (materials[index].metalRoughTexture == nullptr)
 					materials[index].metalRoughTexture = new DX12API::Texture();
 
 				materials[index].metalRoughTexture->CreateTextureFromConstantData(
-					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyMetalRough), sizeof(unsigned char) * 4,
+					Core::Dx12GraphicsEngine::Instance(), dummyMetalRough.data(), sizeof(unsigned char) * 4,
 					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			// ノーマル
@@ -274,13 +281,13 @@ namespace NamelessEngine::Graphics
 					normalImage.width, normalImage.height, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			else {
-				unsigned char dummyNormal[4] = { 0, 0, 0, 255 };
-
 				if (materials[index].normalTexture == nullptr)
 					materials[index].normalTexture = new DX12API::Texture();
+				// シェーダー内で -1～1に変換するので 法線(0,0,1.f)にしたい場合は青紫(0.5,0.5,1.f) とする
+				std::vector<unsigned char> dummyNormal = { 128,128,255,255 };
 
 				materials[index].normalTexture->CreateTextureFromConstantData(
-					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyNormal), sizeof(unsigned char) * 4,
+					Core::Dx12GraphicsEngine::Instance(), dummyNormal.data(), sizeof(unsigned char) * 4,
 					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			// アンビエントオクルージョン
@@ -302,10 +309,10 @@ namespace NamelessEngine::Graphics
 				if (materials[index].occlusionTexture == nullptr)
 					materials[index].occlusionTexture = new DX12API::Texture();
 
-				unsigned char dummyOcclusion[4] = { 255, 255, 255, 255 };
+				std::vector<unsigned char> dummyOcclusion = { 255, 255, 255, 255 };
 
 				materials[index].occlusionTexture->CreateTextureFromConstantData(
-					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyOcclusion), sizeof(unsigned char) * 4,
+					Core::Dx12GraphicsEngine::Instance(), dummyOcclusion.data(), sizeof(unsigned char) * 4,
 					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			// エミッシブ
@@ -327,10 +334,10 @@ namespace NamelessEngine::Graphics
 				if (materials[index].emissiveTexture == nullptr)
 					materials[index].emissiveTexture = new DX12API::Texture();
 
-				unsigned char dummyEmissive[4] = { 0, 0, 0, 0 };
+				std::vector<unsigned char> dummyEmissive = { 0, 0, 0, 0 };
 
 				materials[index].emissiveTexture->CreateTextureFromConstantData(
-					Core::Dx12GraphicsEngine::Instance(), reinterpret_cast<uint8_t*>(dummyEmissive), sizeof(unsigned char) * 4,
+					Core::Dx12GraphicsEngine::Instance(), dummyEmissive.data(), sizeof(unsigned char) * 4,
 					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
 			}
 			index++;

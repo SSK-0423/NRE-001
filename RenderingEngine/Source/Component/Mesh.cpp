@@ -55,9 +55,6 @@ namespace NamelessEngine::Component
 
 		_materialIndex = data.materialIndex;
 
-		// マテリアルセット
-
-
 		return RESULT::SUCCESS;
 	}
 

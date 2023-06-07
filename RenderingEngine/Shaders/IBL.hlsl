@@ -15,8 +15,7 @@ TextureCube irradiance : register(t9); // HDR
 
 sampler smp : register(s0);
 
-static const int MIP_COUNT = 5;
-//static const float EPSILON = 0.0001f;
+static const int MIP_COUNT = 11;
 
 static const int LIGHTING = 0;
 static const int BASECOLOR = 1;
@@ -62,7 +61,7 @@ float3 GetSpecularDir(float3 N, float3 R, float roughness)
 // ディフューズのIBLを取得
 float3 IBLDiffuse(float3 N)
 {
-    return Reinhard(irradiance.Sample(smp, N).rgb);
+    return irradiance.Sample(smp, N).rgb;
 }
 // スペキュラーのIBLを取得
 float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, float mipCount)
@@ -71,13 +70,12 @@ float3 IBLSpecualr(float NV, float3 N, float3 R, float3 f0, float roughness, flo
     float3 specDir = GetSpecularDir(N, R, a);
     
     float mipLevel = RoughnessToMipLeval(roughness, mipCount);
-    float3 specLD = Reinhard(specularLD.SampleLevel(smp, specDir, mipLevel).rgb);
+    float3 specLD = specularLD.SampleLevel(smp, specDir, mipLevel).rgb;
     
     float2 dfgUV = float2(NV, min(roughness, 1.f));
-    // テクスチャの範囲外参照を防ぐ
+    
     float2 DFG = dfgMap.SampleLevel(smp, dfgUV, 0.f).rg;
     
-    //return specLD * (f0 * DFG.r + DFG.g);
     return specLD * (f0 * DFG.r + DFG.g);
 }
 
@@ -118,18 +116,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 ks = SchlickFresnelRoughness(F0, saturate(dot(N, V)), roughness);
     float3 kd = (1.f.xxx - ks) * (1.f - metallic);
     
-    //float3 kd = lerp(float3(1.f, 1.f, 1.f) - ks, float3(0.f, 0.f, 0.f), metallic); // ここ
-    
-    float3 diffuseIrradiance = irradiance.Sample(smp, N).rgb;
-    float3 diffuse = diffuseIrradiance * color;
-    
-    int mipLevel = roughness * MIP_COUNT;
-    float3 preFilteredSpecular = specularLD.SampleLevel(smp, R, mipLevel);
-    float2 F0ScaleBais = dfgMap.Sample(smp, float2(roughness, saturate(dot(N, V))), 0).rg;
-    //float3 specular = preFilteredSpecular * (ks * F0ScaleBais.x + F0ScaleBais.y);
-    
-    //float3 diffuse = IBLDiffuse(N) * kd * color; // ここ
-    // フレネル使った方が良い
+    float3 diffuse = IBLDiffuse(N) * color;
     float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
     
     float3 outColor = (kd * diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
@@ -151,5 +138,5 @@ float4 PSMain(VertexOutput input) : SV_Target
     if (debugDrawMode == OCCLUSION)
         return float4(occlusion, occlusion, occlusion, 1.f);
     
-    return float4(outColor, 1.f);
+    return float4(Reinhard(outColor), 1.f);
 }
