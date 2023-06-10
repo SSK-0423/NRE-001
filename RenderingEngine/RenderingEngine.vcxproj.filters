@@ -40,6 +40,9 @@
     <Filter Include="Shaders\RenderPassShader">
       <UniqueIdentifier>{651debfb-ca41-491e-a195-a71983a89418}</UniqueIdentifier>
     </Filter>
+    <Filter Include="SampleApp">
+      <UniqueIdentifier>{224b7f1d-c2c7-41f5-99d7-e3fc47eb1a7c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Shaders\ShaderCommon.hlsli">
@@ -226,6 +229,21 @@
     <ClCompile Include="Source\Graphics\IBLPass.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
+    <ClCompile Include="Source\Graphics\GLBLoader.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Scene\PBRScene.cpp">
+      <Filter>Scene</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\Dx12Application.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Core\main.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\SampleApp\PBRSample.cpp">
+      <Filter>SampleApp</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Source\DX12API\ConstantBuffer.h">
@@ -324,9 +342,6 @@
     <ClInclude Include="Source\Scene\Scene.h">
       <Filter>Scene</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Component\ECSimage.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Graphics\SkyBox.h">
       <Filter>Graphics</Filter>
     </ClInclude>
@@ -395,6 +410,33 @@
     </ClInclude>
     <ClInclude Include="Source\Graphics\IBLPass.h">
       <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\GLBLoader.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\tiny_gltf.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\json.hpp">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\stb_image.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\stb_image_write.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Scene\PBRScene.h">
+      <Filter>Scene</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Dx12Application.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Core\Dx12ApplicationImpl.h">
+      <Filter>Core</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\SampleApp\PBRSample.h">
+      <Filter>SampleApp</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

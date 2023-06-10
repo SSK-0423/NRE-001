@@ -49,9 +49,10 @@ namespace NamelessEngine::Graphics {
 		DirectionalLight _directionalLight;
 		float _dLightColor[3];
 		float _dLightDirection[3];
-		
-		//
+
+		// IBLパスで使用するバッファの構造体
 		IBLParam _iblParam;
+		DebugParam _debugParam;
 
 	public:
 		Utility::RESULT Init(Scene::Scene& scene) override;

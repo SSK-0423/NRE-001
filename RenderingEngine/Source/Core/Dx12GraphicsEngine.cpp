@@ -4,6 +4,8 @@
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
 
+#include <DirectXMath.h>
+
 #include <vector>
 #include <wrl.h>
 #include <string>
@@ -57,7 +59,7 @@ namespace NamelessEngine::Core
 
 		// Imgui用のディスクリプタヒープ生成
 		if (CreateImguiDescriptorHeap() == Utility::RESULT::FAILED) { return Utility::RESULT::FAILED; }
-		
+
 		// レンダリングコンテキストの初期化
 		_renderContext.Init(*_cmdList.Get());
 
@@ -251,14 +253,14 @@ namespace NamelessEngine::Core
 		_renderContext.SetRenderTarget(&rtvHandle, &dsvHandle);
 
 		// 画面を指定色でクリア
-		Utility::ColorRGBA color(0.f, 1.f, 1.f, 1.f);
+		DirectX::XMFLOAT4 color(0.f, 1.f, 1.f, 1.f);
 		_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
 
 		// デプスステンシルバッファをクリア
 		_renderContext.ClearDepthStencilView(
 			dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
 			depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
-		
+
 		// Imgui描画前準備
 		ImGui_ImplDX12_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -325,7 +327,7 @@ namespace NamelessEngine::Core
 		_renderContext.SetRenderTarget(&rtvHandle, &dsvHandle);
 
 		// 画面を指定色でクリア
-		Utility::ColorRGBA color(0.f, 1.f, 1.f, 1.f);
+		DirectX::XMFLOAT4 color(0.f, 1.f, 1.f, 1.f);
 		_renderContext.ClearRenderTarget(rtvHandle, color, 0, nullptr);
 
 		// デプスステンシルバッファをクリア

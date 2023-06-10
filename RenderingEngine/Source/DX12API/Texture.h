@@ -17,7 +17,7 @@ namespace NamelessEngine::DX12API
 {
 	class RenderTargetBuffer;
 	class DepthStencilBuffer;
-	
+
 	class Texture {
 	public:
 		Texture() = default;
@@ -80,7 +80,7 @@ namespace NamelessEngine::DX12API
 		HRESULT CopyCubeTexture(Core::Dx12GraphicsEngine& graphicsEngine);
 
 		void SetTextureData(
-			std::vector<Utility::ColorRGBA>& data, const size_t& width, const size_t& height, const DXGI_FORMAT& format);
+			uint8_t* data, const size_t& stride, const size_t& dataNum, const size_t& width, const size_t& height, const DXGI_FORMAT& format);
 
 	public:
 		/// <summary>
@@ -107,8 +107,8 @@ namespace NamelessEngine::DX12API
 		/// <param name="width"></param>
 		/// <param name="height"></param>
 		/// <returns></returns>
-		Utility::RESULT CreateTextureFromRGBAData(
-			Core::Dx12GraphicsEngine& graphicsEngine, std::vector<Utility::ColorRGBA>& data,
+		Utility::RESULT CreateTextureFromConstantData(
+			Core::Dx12GraphicsEngine& graphicsEngine, uint8_t* data, const size_t& stride, const size_t& dataNum,
 			const size_t& width, const size_t& height, const DXGI_FORMAT& format);
 
 		/// <summary>

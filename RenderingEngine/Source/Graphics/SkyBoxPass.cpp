@@ -62,13 +62,13 @@ namespace NamelessEngine::Graphics
 			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
 		MeshData data = CubeMesh::CreateMeshData();
-		result = _skyBox->Create(device, data);
+		result = _skyBox->CreateCube(device);
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"スカイボックスメッシュ生成失敗", L"エラーメッセージ", MB_OK);
 		}
 
 		_transform->SetScalling(1000, 1000, 1000);
-		_skyBox->SetConstantBuffer(
+		_skyBox->SetConstantBufferOnAllSubMeshes(
 			Dx12GraphicsEngine::Instance().Device(), _transform->GetConstantBuffer(), TRANSFORM_BUFFER_INDEX);
 
 		SIZE windowSize = AppWindow::GetWindowSize();
@@ -164,7 +164,7 @@ namespace NamelessEngine::Graphics
 	void SkyBoxPass::SetCubeTexture(DX12API::Texture& texture)
 	{
 		ShaderResourceViewDesc desc(texture, true);
-		_skyBox->SetTexture(
+		_skyBox->SetTextureOnAllSubMeshes(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX);
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX
@@ -172,7 +172,7 @@ namespace NamelessEngine::Graphics
 	}
 	void SkyBoxPass::SetCamera(Scene::Camera& camera)
 	{
-		_skyBox->SetConstantBuffer(
+		_skyBox->SetConstantBufferOnAllSubMeshes(
 			Dx12GraphicsEngine::Instance().Device(), camera.GetConstantBuffer(), CAMERA_BUFFER_INDEX);
 		_descriptorHeap->RegistConstantBuffer(
 			Dx12GraphicsEngine::Instance().Device(), camera.GetConstantBuffer(), CAMERA_BUFFER_INDEX);

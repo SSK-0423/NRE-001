@@ -1,5 +1,6 @@
 #pragma once
 #include <d3d12.h>
+#include <DirectXMath.h>
 #include "EngineUtility.h"
 
 namespace NamelessEngine::DX12API
@@ -11,7 +12,7 @@ namespace NamelessEngine::DX12API
 	class IndexBuffer;
 	class RootSignature;
 	class GraphicsPipelineState;
-	
+
 	/// <summary>
 	/// レンダリングコンテキストクラス このクラスを介して描画命令を発行する
 	/// </summary>
@@ -76,7 +77,7 @@ namespace NamelessEngine::DX12API
 		/// <param name="numRects">rectsの要素数</param>
 		/// <param name="rects">D3D12_RECTの配列 nullptrでレンダーターゲットの全範囲初期化</param>
 		void ClearRenderTarget(
-			D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const Utility::ColorRGBA& color,
+			D3D12_CPU_DESCRIPTOR_HANDLE rtvHandle, const DirectX::XMFLOAT4& color,
 			const UINT& numRects, const D3D12_RECT* rects);
 
 		/// <summary>

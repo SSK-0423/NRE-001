@@ -133,8 +133,10 @@
     <ClCompile Include="Source\Component\Mesh.cpp" />
     <ClCompile Include="Source\Component\Transform.cpp" />
     <ClCompile Include="Source\Core\AppWindow.cpp" />
+    <ClCompile Include="Source\Core\Dx12Application.cpp" />
     <ClCompile Include="Source\Core\Dx12GraphicsEngine.cpp" />
     <ClCompile Include="Source\Core\Input.cpp" />
+    <ClCompile Include="Source\Core\main.cpp" />
     <ClCompile Include="Source\DX12API\ConstantBuffer.cpp" />
     <ClCompile Include="Source\DX12API\CubeRenderTarget.cpp" />
     <ClCompile Include="Source\DX12API\DepthStencilBuffer.cpp" />
@@ -155,6 +157,7 @@
     <ClCompile Include="Source\Graphics\BlendPass.cpp" />
     <ClCompile Include="Source\Graphics\CubeMesh.cpp" />
     <ClCompile Include="Source\Graphics\GBufferPass.cpp" />
+    <ClCompile Include="Source\Graphics\GLBLoader.cpp" />
     <ClCompile Include="Source\Graphics\IBLPass.cpp" />
     <ClCompile Include="Source\Graphics\LightingPass.cpp" />
     <ClCompile Include="Source\Graphics\PBRRenderer.cpp" />
@@ -165,7 +168,9 @@
     <ClCompile Include="Source\Graphics\SkySphere.cpp" />
     <ClCompile Include="Source\Graphics\SphereMesh.cpp" />
     <ClCompile Include="Source\Graphics\Sprite.cpp" />
+    <ClCompile Include="Source\SampleApp\PBRSample.cpp" />
     <ClCompile Include="Source\Scene\Camera.cpp" />
+    <ClCompile Include="Source\Scene\PBRScene.cpp" />
     <ClCompile Include="Source\Scene\Scene.cpp" />
     <ClCompile Include="Source\Utility\EngineUtility.cpp" />
   </ItemGroup>
@@ -181,12 +186,13 @@
     <ClInclude Include="Source\Component\AudioSource.h" />
     <ClInclude Include="Source\Component\Colider.h" />
     <ClInclude Include="Source\Component\Actor.h" />
-    <ClInclude Include="Source\Component\ECSimage.h" />
     <ClInclude Include="Source\Component\IComponent.h" />
     <ClInclude Include="Source\Component\Material.h" />
     <ClInclude Include="Source\Component\Mesh.h" />
     <ClInclude Include="Source\Component\Transform.h" />
     <ClInclude Include="Source\Core\AppWindow.h" />
+    <ClInclude Include="Source\Core\Dx12Application.h" />
+    <ClInclude Include="Source\Core\Dx12ApplicationImpl.h" />
     <ClInclude Include="Source\Core\Dx12GraphicsEngine.h" />
     <ClInclude Include="Source\Core\Input.h" />
     <ClInclude Include="Source\DX12API\ConstantBuffer.h" />
@@ -210,8 +216,10 @@
     <ClInclude Include="Source\Graphics\BlendPass.h" />
     <ClInclude Include="Source\Graphics\CubeMesh.h" />
     <ClInclude Include="Source\Graphics\GBufferPass.h" />
+    <ClInclude Include="Source\Graphics\GLBLoader.h" />
     <ClInclude Include="Source\Graphics\IBLPass.h" />
     <ClInclude Include="Source\Graphics\IRenderer.h" />
+    <ClInclude Include="Source\Graphics\json.hpp" />
     <ClInclude Include="Source\Graphics\LightingPass.h" />
     <ClInclude Include="Source\Graphics\RenderPass.h" />
     <ClInclude Include="Source\Graphics\PBRRenderer.h" />
@@ -221,8 +229,13 @@
     <ClInclude Include="Source\Graphics\SkySphere.h" />
     <ClInclude Include="Source\Graphics\SphereMesh.h" />
     <ClInclude Include="Source\Graphics\Sprite.h" />
+    <ClInclude Include="Source\Graphics\stb_image.h" />
+    <ClInclude Include="Source\Graphics\stb_image_write.h" />
+    <ClInclude Include="Source\Graphics\tiny_gltf.h" />
     <ClInclude Include="Source\NamelessEngine.h" />
+    <ClInclude Include="Source\SampleApp\PBRSample.h" />
     <ClInclude Include="Source\Scene\Camera.h" />
+    <ClInclude Include="Source\Scene\PBRScene.h" />
     <ClInclude Include="Source\Scene\Scene.h" />
     <ClInclude Include="Source\Utility\EngineUtility.h" />
     <ClInclude Include="Source\Utility\Singleton.h" />
@@ -236,26 +249,26 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <ConfigurationType>Application</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>v142</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
@@ -295,17 +308,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;$(ProjectDir)Source\SampleApp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>DirectXTex\Bin\Desktop_2019\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)DirectXTex\Bin\Desktop_2019\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -318,7 +332,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -342,17 +356,18 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)imgui;$(ProjectDir)Source\Scene;$(ProjectDir)Source\Utility;$(ProjectDir)Source\Graphics;$(ProjectDir)Source\DX12API;$(ProjectDir)Source\Core;$(ProjectDir)Source\Component;$(ProjectDir)DirectXTex;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\include;$(ProjectDir)Source\SampleApp;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <SubSystem>
       </SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>DirectXTex\Bin\Desktop_2019\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Lib>
       <AdditionalLibraryDirectories>$(ProjectDir)DirectXTex\Bin\Desktop_2019\x64\Debug;C:\Program Files\Autodesk\FBX\FBX SDK\2020.3.1\lib\vs2019\x64\debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -365,7 +380,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions);_CRT_SECURE_NO_WARNINGS</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>

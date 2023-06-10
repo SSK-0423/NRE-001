@@ -16,17 +16,17 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
-constexpr UINT LIGHTED_INDEX = 4;
-constexpr UINT DFG_INDEX = 5;
-constexpr UINT SPECULAR_LD_INDEX = 6;
-constexpr UINT DIFFUSE_LD_INDEX = 7;
+constexpr UINT LIGHTED_INDEX = 6;
+constexpr UINT DFG_INDEX = 7;
+constexpr UINT SPECULAR_LD_INDEX = 8;
+constexpr UINT DIFFUSE_LD_INDEX = 9;
 
 namespace NamelessEngine::Graphics
 {
 	IBLPass::IBLPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
 		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _paramBuffer(new ConstantBuffer()),
-		_renderTarget(new RenderTarget())
+		_debugParamBuffer(new ConstantBuffer()), _renderTarget(new RenderTarget())
 	{
 	}
 	IBLPass::~IBLPass()
@@ -58,6 +58,7 @@ namespace NamelessEngine::Graphics
 			MessageBox(NULL, L"パラメーター用コンスタントバッファー生成失敗", L"エラーメッセージ", MB_OK);
 		}
 		_descriptorHeap->RegistConstantBuffer(device, *_paramBuffer, 0);
+		_descriptorHeap->RegistConstantBuffer(device, *_debugParamBuffer, 1);
 
 		SIZE windowSize = AppWindow::GetWindowSize();
 
@@ -71,8 +72,8 @@ namespace NamelessEngine::Graphics
 	Utility::RESULT IBLPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 1;
-		rootSigData._descRangeData.srvDescriptorNum = 8;
+		rootSigData._descRangeData.cbvDescriptorNum = 2;
+		rootSigData._descRangeData.srvDescriptorNum = 10;
 		rootSigData._samplerData.samplerFilter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		rootSigData._samplerData.addressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		rootSigData._samplerData.addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -109,7 +110,7 @@ namespace NamelessEngine::Graphics
 
 		// レンダーターゲットの設定
 		pipelineState.NumRenderTargets = 1;
-		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1
@@ -124,6 +125,7 @@ namespace NamelessEngine::Graphics
 		RenderTargetData data;
 		data.renderTargetBufferData.width = windowSize.cx;
 		data.renderTargetBufferData.height = windowSize.cy;
+		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		data.depthStencilBufferData.width = windowSize.cx;
 		data.depthStencilBufferData.height = windowSize.cy;
 		data.useDepth = false;
@@ -132,17 +134,23 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT IBLPass::CreateParamBuffer(ID3D12Device& device)
 	{
-		return _paramBuffer->Create(device, &_paramData, sizeof(IBLParam));
+		if (_paramBuffer->Create(device, &_paramData, sizeof(IBLParam)) == Utility::RESULT::FAILED) {
+			return Utility::RESULT::FAILED;
+		}
+
+		return _debugParamBuffer->Create(device, &_debugParamData, sizeof(DebugParam));
 	}
 	Utility::RESULT IBLPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
 		return _descriptorHeap->Create(device);
 	}
 
-	void IBLPass::UpdateParamData(IBLParam& param)
+	void IBLPass::UpdateParamData(IBLParam& param, DebugParam& debugParam)
 	{
 		_paramData = param;
 		_paramBuffer->UpdateData(&_paramData);
+		_debugParamData = debugParam;
+		_debugParamBuffer->UpdateData(&_debugParamData);
 	}
 	void IBLPass::Render()
 	{
@@ -165,7 +173,6 @@ namespace NamelessEngine::Graphics
 		if (type == GBUFFER_TYPE::DEPTH) return;
 
 		ShaderResourceViewDesc desc(texture);
-		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, static_cast<int>(type));
 	}
