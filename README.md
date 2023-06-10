@@ -35,7 +35,7 @@ https://github.com/SSK-0423/NamelessRenderer/assets/83057130/b95e597c-f2ec-4653-
 
 # Future Work
 - [ ] glTF Loader
-- [ ] Specular BRDF like Unreal Engine 4
+- [ ] Editor
 - [ ] Shadow Mapping
 
 # References
