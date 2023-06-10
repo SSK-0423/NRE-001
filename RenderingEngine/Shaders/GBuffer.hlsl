@@ -84,6 +84,9 @@ PixelOutput PSMain(VertexOutput input)
     // gltfのノーマルマップはOpenGL形式なのでyを反転させる
     texSpaceNormal.y = 1.f - texSpaceNormal.y;
     
+    //output.normal = float4(texSpaceNormal, 1.f);
+    //return output;
+    
     // -1～1に変換
     texSpaceNormal = texSpaceNormal * 2.f - 1.f;
     

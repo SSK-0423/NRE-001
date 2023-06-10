@@ -195,7 +195,12 @@ namespace NamelessEngine::Graphics
 				}
 
 				// マテリアルインデックス
-				submeshData.materialIndex = primitive.material;
+				if (primitive.material < 0) {
+					submeshData.materialIndex = 0;
+				}
+				else {
+					submeshData.materialIndex = primitive.material;
+				}
 
 				// サブメッシュ生成
 				Component::SubMesh submesh;
@@ -211,9 +216,14 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT GLBLoader::LoadMaterial(ID3D12Device& device, tinygltf::Model& model, std::vector<Component::Material>& materials)
 	{
+		if (model.materials.size() == 0) {
+			model.materials.resize(1);
+		}
+
 		materials.resize(model.materials.size());
 		size_t index = 0;
 		for (auto& material : model.materials) {
+
 			// ベースカラー
 			if (material.pbrMetallicRoughness.baseColorTexture.index >= 0) {
 				const tinygltf::Texture& baseColorTexture = model.textures[material.pbrMetallicRoughness.baseColorTexture.index];
@@ -237,7 +247,7 @@ namespace NamelessEngine::Graphics
 
 				materials[index].baseColorTexture->CreateTextureFromConstantData(
 					Core::Dx12GraphicsEngine::Instance(), dummyBaseColor.data(), sizeof(unsigned char) * 4,
-					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 			}
 			// メタリックラフネス
 			if (material.pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
@@ -256,7 +266,7 @@ namespace NamelessEngine::Graphics
 
 			}
 			else {
-				std::vector<unsigned char> dummyMetalRough = { 0, 0, 255, 255 };
+				std::vector<unsigned char> dummyMetalRough = { 0, 255, 0, 255 };
 
 				if (materials[index].metalRoughTexture == nullptr)
 					materials[index].metalRoughTexture = new DX12API::Texture();

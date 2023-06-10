@@ -24,19 +24,19 @@ Utility::RESULT PBRScene::ImplInit()
 {
 	ID3D12Device& device = Core::Dx12GraphicsEngine::Instance().Device();
 
-	Actor* metalRoughSpheres = new Actor();
-	metalRoughSpheres->AddComponent<Transform>();
-	metalRoughSpheres->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
-	metalRoughSpheres->GetComponent<Transform>()->SetDegreeAngle(0.f, 180.f, 0.f);
-	metalRoughSpheres->GetComponent<Transform>()->SetScalling(1.f, 1.f, 1.f);
+	//Actor* metalRoughSpheres = new Actor();
+	//metalRoughSpheres->AddComponent<Transform>();
+	//metalRoughSpheres->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+	//metalRoughSpheres->GetComponent<Transform>()->SetDegreeAngle(0.f, 180.f, 0.f);
+	//metalRoughSpheres->GetComponent<Transform>()->SetScalling(1.f, 1.f, 1.f);
 
-	metalRoughSpheres->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/MetalRoughSpheres.glb");
+	//metalRoughSpheres->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/MetalRoughSpheres.glb");
 
-	metalRoughSpheres->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
-	metalRoughSpheres->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
-		device, metalRoughSpheres->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	//metalRoughSpheres->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	//metalRoughSpheres->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
+	//	device, metalRoughSpheres->GetComponent<Transform>()->GetConstantBuffer(), 1);
 
-	_meshActors.push_back(metalRoughSpheres);
+	//_meshActors.push_back(metalRoughSpheres);
 
 	//Actor* sponza = new Actor();
 	//sponza->AddComponent<Transform>();
@@ -49,18 +49,43 @@ Utility::RESULT PBRScene::ImplInit()
 	//	device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	//_meshActors.push_back(sponza);
 
-	//Actor* damagedHelmet = new Actor();
-	//damagedHelmet->AddComponent<Transform>();
-	//damagedHelmet->GetComponent<Transform>()->SetPosition(0.f, 5.f, 0.f);
-	//damagedHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
-	//damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, -90.f, 0.f);
 
-	//damagedHelmet->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/noTangent/DamagedHelmet.glb");
-	//damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
-	//damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
-	//	device, damagedHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	//Actor* bunny = new Actor();
+	//bunny->AddComponent<Transform>();
+	//bunny->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+	//bunny->GetComponent<Transform>()->SetScalling(1.f, 1.f, 1.f);
+	//bunny->GetComponent<Transform>()->SetDegreeAngle(0.f, 0.f, 0.f);
+	//
+	//bunny->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/stanford_bunny_pbr.glb");
+	//bunny->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	//bunny->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, bunny->GetComponent<Transform>()->GetConstantBuffer(), 1);
 
-	//_meshActors.push_back(damagedHelmet);
+	//_meshActors.push_back(bunny);
+
+	Actor* damagedHelmet = new Actor();
+	damagedHelmet->AddComponent<Transform>();
+	damagedHelmet->GetComponent<Transform>()->SetPosition(0.f, 5.f, 0.f);
+	damagedHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
+	damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, -90.f, 0.f);
+
+	damagedHelmet->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
+	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
+		device, damagedHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
+
+	_meshActors.push_back(damagedHelmet);
+
+	Actor* plane = new Actor();
+	plane->AddComponent<Transform>();
+	plane->GetComponent<Transform>()->SetPosition(0, 0, 0);
+	plane->GetComponent<Transform>()->SetScalling(20.f, 1.f, 20.f);
+	plane->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/plane.glb");
+	plane->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	plane->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, plane->GetComponent<Transform>()->GetConstantBuffer(), 1);
+
+	_meshActors.push_back(plane);
+
+	// シャドウテストシーン
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;
 }
