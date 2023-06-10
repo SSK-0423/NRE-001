@@ -7,7 +7,7 @@
 namespace NamelessEngine::DX12API {
 	struct InputLayout {
 		std::vector<D3D12_INPUT_ELEMENT_DESC> inputElementDescs;
-		
+
 		/// <summary>
 		/// D3D12_INPUT_ELEMENT_DESC配列の先頭ポインタ取得
 		/// </summary>
@@ -24,8 +24,8 @@ namespace NamelessEngine::DX12API {
 		}
 
 		void Append(
-			const char* semanticName,UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot, 
-			UINT alignedByteOffset,D3D12_INPUT_CLASSIFICATION inputSlotClass,UINT instanceDataStepRate) {
+			const char* semanticName, UINT semanticIndex, DXGI_FORMAT format, UINT inputSlot,
+			UINT alignedByteOffset, D3D12_INPUT_CLASSIFICATION inputSlotClass, UINT instanceDataStepRate) {
 			D3D12_INPUT_ELEMENT_DESC desc = {
 				semanticName, semanticIndex, format,inputSlot,
 				alignedByteOffset,inputSlotClass, instanceDataStepRate };
@@ -34,7 +34,7 @@ namespace NamelessEngine::DX12API {
 
 		static InputLayout DefaultLayout() {
 			InputLayout layout;
-			layout.inputElementDescs.resize(3);
+			layout.inputElementDescs.resize(4);
 			layout.inputElementDescs[0] = {
 				"POSITION",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 				D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
@@ -42,6 +42,9 @@ namespace NamelessEngine::DX12API {
 				"NORMAL",0,DXGI_FORMAT_R32G32B32_FLOAT,0,
 				D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
 			layout.inputElementDescs[2] = {
+				"TANGENT",0,DXGI_FORMAT_R32G32B32A32_FLOAT,0,
+				D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
+			layout.inputElementDescs[3] = {
 				"TEXCOORD",0,DXGI_FORMAT_R32G32_FLOAT,0,
 				D3D12_APPEND_ALIGNED_ELEMENT,D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA,0 };
 

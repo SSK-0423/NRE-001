@@ -1,6 +1,8 @@
 #include "PBRScene.h"
 #include "Input.h"
 #include "Camera.h"
+#include "GLTFLoader.h"
+#include "tiny_gltf.h"
 #include <iostream>
 
 using namespace NamelessEngine;
@@ -56,23 +58,25 @@ Utility::RESULT PBRScene::ImplInit()
 		}
 	}
 
-	Actor* actor = new Actor();
-	actor->AddComponent<Transform>();
-	actor->AddComponent<Mesh>()->Create(device, sphereData);
-	actor->AddComponent<Material>();
+	//Actor* actor = new Actor();
+	//actor->AddComponent<Transform>();
+	//actor->AddComponent<Mesh>()->Create(device, sphereData);
+	//actor->AddComponent<Material>();
 
-	actor->GetComponent<Mesh>()->SetConstantBuffer(device, _camera->GetConstantBuffer(), 0);
-	actor->GetComponent<Mesh>()->SetConstantBuffer(
-		device, actor->GetComponent<Transform>()->GetConstantBuffer(), 1);
-	actor->GetComponent<Mesh>()->SetConstantBuffer(
-		device, actor->GetComponent<Material>()->GetConstantBuffer(), 2);
+	//actor->GetComponent<Mesh>()->SetConstantBuffer(device, _camera->GetConstantBuffer(), 0);
+	//actor->GetComponent<Mesh>()->SetConstantBuffer(
+	//	device, actor->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	//actor->GetComponent<Mesh>()->SetConstantBuffer(
+	//	device, actor->GetComponent<Material>()->GetConstantBuffer(), 2);
 
-	actor->GetComponent<Material>()->SetBaseColor(0.f, 1.f, 0.f);
-	actor->GetComponent<Material>()->SetRoughness(0.1f);
-	actor->GetComponent<Material>()->SetMetallic(0.5f);
-	actor->GetComponent<Transform>()->SetPosition(0.f, 0.f, 3.f);
+	//actor->GetComponent<Material>()->SetBaseColor(0.f, 1.f, 0.f);
+	//actor->GetComponent<Material>()->SetRoughness(0.1f);
+	//actor->GetComponent<Material>()->SetMetallic(0.5f);
+	//actor->GetComponent<Transform>()->SetPosition(0.f, 0.f, 3.f);
 
-	_meshActors.push_back(actor);
+	//_meshActors.push_back(actor);
+
+	Graphics::GLTFLoader::LoadModel("res/cube.glb");
 
 	return NamelessEngine::Utility::RESULT::SUCCESS;
 }

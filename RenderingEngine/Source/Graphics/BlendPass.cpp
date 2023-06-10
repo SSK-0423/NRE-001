@@ -95,7 +95,7 @@ namespace NamelessEngine::Graphics
 
 		// レンダーターゲットの設定
 		pipelineState.NumRenderTargets = 1;
-		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1
@@ -110,6 +110,7 @@ namespace NamelessEngine::Graphics
 		RenderTargetData data;
 		data.renderTargetBufferData.width = windowSize.cx;
 		data.renderTargetBufferData.height = windowSize.cy;
+		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
 		data.depthStencilBufferData.width = windowSize.cx;
 		data.depthStencilBufferData.height = windowSize.cy;
 		data.useDepth = false;

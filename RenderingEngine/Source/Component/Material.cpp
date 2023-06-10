@@ -1,5 +1,6 @@
 #include "Material.h"
 #include "ConstantBuffer.h"
+#include "Texture.h"
 #include "Dx12GraphicsEngine.h"
 #include "RenderingContext.h"
 #include "EngineUtility.h"
@@ -11,40 +12,37 @@ using namespace NamelessEngine::Utility;
 namespace NamelessEngine::Component
 {
 	Material::Material()
-		: _buffer(new ConstantBuffer())
+		: baseColor(1.f, 1.f, 1.f, 1.f), metallic(0.f), roughness(0.f)
 	{
-		_materialData.baseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
-		_materialData.metallic = 0.f;
-		_materialData.roughness = 0.f;
+		materialData.baseColor = DirectX::XMFLOAT4(1.f, 1.f, 1.f, 1.f);
+		materialData.metallic = 0.f;
+		materialData.roughness = 0.f;
 
-		RESULT result = _buffer->Create(
-			Dx12GraphicsEngine::Instance().Device(), (void*)&_materialData, sizeof(MaterialCBuff));
 	}
 	Material::~Material()
 	{
-		SafetyDelete<ConstantBuffer>(_buffer);
+		SafetyDelete<Texture>(baseColorTexture);
+		SafetyDelete<Texture>(metalRoughTexture);
+		SafetyDelete<Texture>(normalTexture);
+		SafetyDelete<Texture>(occlusionTexture);
 	}
 	void Material::Update(float deltatime)
 	{
-		_buffer->UpdateData(&_materialData);
 	}
 	void Material::Draw(DX12API::RenderingContext& renderContext)
 	{
 	}
-	void Material::SetBaseColor(float r, float g, float b, float a)
+
+	void Material::Build()
 	{
-		_materialData.baseColor = DirectX::XMFLOAT4(r, g, b, a);
-	}
-	void Material::SetMetallic(float metallic)
-	{
-		_materialData.metallic = metallic;
-	}
-	void Material::SetRoughness(float roughness)
-	{
-		_materialData.roughness = roughness;
-	}
-	DX12API::ConstantBuffer& Material::GetConstantBuffer()
-	{
-		return *_buffer;
+		if (baseColorTexture == nullptr)
+			baseColorTexture = new Texture();
+		baseColorTexture->CreateTextureFromConstantData(Dx12GraphicsEngine::Instance(), (uint8_t*)&baseColor, sizeof(DirectX::XMFLOAT4), 1, 1, 1, DXGI_FORMAT_R32G32B32A32_FLOAT);
+
+		if (metalRoughTexture == nullptr)
+			metalRoughTexture = new Texture();
+
+		DirectX::XMFLOAT2 metalRough(metallic, roughness);
+		metalRoughTexture->CreateTextureFromConstantData(Dx12GraphicsEngine::Instance(), (uint8_t*)&metalRough, sizeof(DirectX::XMFLOAT2), 1, 1, 1, DXGI_FORMAT_R32G32_FLOAT);
 	}
 }

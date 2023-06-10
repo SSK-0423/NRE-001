@@ -44,6 +44,8 @@
 #include "Graphics/LightingPass.h"
 #include "Graphics/SkyBoxPass.h"
 
+#include "Graphics/GLBLoader.h"
+
 // Component
 #include "Component/Actor.h"
 #include "Component/IComponent.h"

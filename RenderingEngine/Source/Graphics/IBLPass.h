@@ -17,10 +17,27 @@ namespace NamelessEngine::DX12API {
 namespace NamelessEngine::Graphics {
 	enum class GBUFFER_TYPE;
 
+	//
+	// C++のboolは1バイト, HLSLのboolは4バイト
+	//
 	struct IBLParam {
 		DirectX::XMFLOAT3 eyePosition;
 		float lightIntensity;
-		bool isIBLOnly;
+		bool isIBLOnly = false;
+	};
+
+	enum class DEBUG_DRAW_MODE {
+		LIGHTING,
+		BASECOLOR,
+		METALLIC,
+		ROUGHNESS,
+		NORMAL,
+		EMISSIVECOLOR,
+		OCCLUSION,
+	};
+
+	struct DebugParam {
+		int debugDrawMode = 0;
 	};
 
 	class IBLPass {
@@ -30,6 +47,7 @@ namespace NamelessEngine::Graphics {
 
 	private:
 		IBLParam _paramData;
+		DebugParam _debugParamData;
 
 		CD3DX12_VIEWPORT _viewport;
 		CD3DX12_RECT _scissorRect;
@@ -44,6 +62,7 @@ namespace NamelessEngine::Graphics {
 		std::unordered_map<GBUFFER_TYPE, DX12API::Texture&> _gbuffers;
 
 		std::unique_ptr<DX12API::ConstantBuffer> _paramBuffer;
+		std::unique_ptr<DX12API::ConstantBuffer> _debugParamBuffer;
 		Utility::RESULT CreateParamBuffer(ID3D12Device& device);
 
 		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _descriptorHeap = nullptr;
@@ -51,7 +70,7 @@ namespace NamelessEngine::Graphics {
 
 	public:
 		Utility::RESULT Init();
-		void UpdateParamData(IBLParam& param);
+		void UpdateParamData(IBLParam& param, DebugParam& debugParam);
 		void Render();
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
 		void SetLightedTexture(DX12API::Texture& texture);
