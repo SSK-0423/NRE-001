@@ -94,7 +94,6 @@ namespace NamelessEngine::Graphics
 		_blendPass.SetLightedTexture(_iblPass.GetOffscreenTexture());
 		_blendPass.SetRenderedSkyBoxTexture(_skyBoxPass.GetOffscreenTexture());
 		_blendPass.SetDepthTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::DEPTH));
-		//_blendPass.SetDepthTexture(_shadowMapPass.GetShadowMap());
 
 		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
 		// ライト行列のバッファーをセット
@@ -163,17 +162,17 @@ namespace NamelessEngine::Graphics
 			ImGui::End();
 			ImGui::Render();
 		}
-
+		// 1. シャドウマップ生成パス
 		_shadowMapPass.Render(scene.GetMeshActors());
-		// 1. GBuffer出力パス
+		// 2. GBuffer生成パス
 		_gbufferPass.Render(scene.GetMeshActors());
-		// 2. ライティングパス
+		// 3. ライティングパス
 		_lightingPass.Render();
-		// 3. IBLパス
+		// 4. IBLパス
 		_iblPass.Render();
-		// 4. スカイボックスパス
+		// 5. スカイボックスパス
 		_skyBoxPass.Render();
-		// 5. ライティング結果とスカイボックス描画結果を合成する
+		// 6. ライティング結果とスカイボックス描画結果を合成する
 		_blendPass.Render();
 	}
 }

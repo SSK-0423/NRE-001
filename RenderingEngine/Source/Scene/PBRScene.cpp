@@ -36,15 +36,15 @@ Utility::RESULT PBRScene::ImplInit()
 	//	device, metalRoughSpheres->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	//_meshActors.push_back(metalRoughSpheres);
 
-	//Actor* sponza = new Actor();
-	//sponza->AddComponent<Transform>();
-	//sponza->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
-	//sponza->GetComponent<Transform>()->SetScalling(0.1f, 0.1f, 0.1f);
-	//sponza->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/sponza.glb");
-	//sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
-	//sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
-	//	device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
-	//_meshActors.push_back(sponza);
+	Actor* sponza = new Actor();
+	sponza->AddComponent<Transform>();
+	sponza->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+	sponza->GetComponent<Transform>()->SetScalling(0.1f, 0.1f, 0.1f);
+	sponza->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/sponza.glb");
+	sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
+		device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	_meshActors.push_back(sponza);
 
 	//Actor* bunny = new Actor();
 	//bunny->AddComponent<Transform>();
@@ -70,15 +70,15 @@ Utility::RESULT PBRScene::ImplInit()
 
 	_meshActors.push_back(damagedHelmet);
 
-	Actor* plane = new Actor();
-	plane->AddComponent<Transform>();
-	plane->GetComponent<Transform>()->SetPosition(0, 0, 0);
-	plane->GetComponent<Transform>()->SetScalling(20.f, 1.f, 20.f);
-	plane->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/plane.glb");
-	plane->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
-	plane->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, plane->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	//Actor* plane = new Actor();
+	//plane->AddComponent<Transform>();
+	//plane->GetComponent<Transform>()->SetPosition(0, 0, 0);
+	//plane->GetComponent<Transform>()->SetScalling(20.f, 1.f, 20.f);
+	//plane->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/plane.glb");
+	//plane->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	//plane->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, plane->GetComponent<Transform>()->GetConstantBuffer(), 1);
 
-	_meshActors.push_back(plane);
+	//_meshActors.push_back(plane);
 
 	// シャドウテストシーン
 

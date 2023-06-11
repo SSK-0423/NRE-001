@@ -147,6 +147,9 @@ namespace NamelessEngine::Graphics {
 	{
 		// スカイボックスの大きさ * -ライト方向
 		XMFLOAT3 lightDir = XMFLOAT3(directionalLight.direction);
+		if (XMVector3Equal(XMLoadFloat3(&lightDir), XMVectorZero())) {
+			lightDir.y = 0.00001f;
+		}
 		XMFLOAT3 lightPos = XMFLOAT3();
 		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * camera.cameraFar / 10.f);
 		XMFLOAT3 upDir = XMFLOAT3A(0, 0, 1);

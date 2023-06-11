@@ -173,6 +173,7 @@
     <ClCompile Include="Source\Graphics\LightingPass.cpp" />
     <ClCompile Include="Source\Graphics\PBRRenderer.cpp" />
     <ClCompile Include="Source\Graphics\Polygon.cpp" />
+    <ClCompile Include="Source\Graphics\ShadowingPass.cpp" />
     <ClCompile Include="Source\Graphics\ShadowMapPass.cpp" />
     <ClCompile Include="Source\Graphics\SkyBox.cpp" />
     <ClCompile Include="Source\Graphics\SkyBoxPass.cpp" />
@@ -233,6 +234,7 @@
     <ClInclude Include="Source\Graphics\LightingPass.h" />
     <ClInclude Include="Source\Graphics\PBRRenderer.h" />
     <ClInclude Include="Source\Graphics\Polygon.h" />
+    <ClInclude Include="Source\Graphics\ShadowingPass.h" />
     <ClInclude Include="Source\Graphics\ShadowMapPass.h" />
     <ClInclude Include="Source\Graphics\SkyBox.h" />
     <ClInclude Include="Source\Graphics\SkyBoxPass.h" />

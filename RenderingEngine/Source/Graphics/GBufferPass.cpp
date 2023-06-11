@@ -76,7 +76,7 @@ namespace NamelessEngine::Graphics
 		_renderTargets[GBUFFER_TYPE::COLOR] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::NORMAL] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::WORLD_POS] = std::make_unique<DX12API::RenderTarget>();
-		_renderTargets[GBUFFER_TYPE::OCCLUSION_ROUGH_METAL_SHADOWFACTOR] = std::make_unique<DX12API::RenderTarget>();
+		_renderTargets[GBUFFER_TYPE::OCCLUSION_ROUGH_METAL] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::EMISSIVE] = std::make_unique<DX12API::RenderTarget>();
 
 		RESULT result = _renderTargets[GBUFFER_TYPE::COLOR]->Create(device, data);
@@ -87,7 +87,7 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 		result = _renderTargets[GBUFFER_TYPE::NORMAL]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
-		result = _renderTargets[GBUFFER_TYPE::OCCLUSION_ROUGH_METAL_SHADOWFACTOR]->Create(device, data);
+		result = _renderTargets[GBUFFER_TYPE::OCCLUSION_ROUGH_METAL]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
 		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;

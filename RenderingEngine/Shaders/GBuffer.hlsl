@@ -50,7 +50,7 @@ struct PixelOutput
     float4 color : SV_Target0;
     float4 normal : SV_Target1;
     float4 pos : SV_Target2;
-    float4 occMetalRoughShadowFact : SV_Target3;
+    float4 occMetalRough : SV_Target3;
     float4 emissive : SV_Target4;
 };
 
@@ -86,9 +86,8 @@ PixelOutput PSMain(VertexOutput input)
     float occlusion = occlusionMap.Sample(smp, input.uv).r;
     float roughness = metalRoughMap.Sample(smp, input.uv).g;
     float metallic = metalRoughMap.Sample(smp, input.uv).b;
-    float shadowFactor = 0.5f;
     
-    output.occMetalRoughShadowFact = float4(occlusion, roughness, metallic, shadowFactor);
+    output.occMetalRough = float4(occlusion, roughness, metallic, 1.f);
     output.pos = float4(input.worldPosition, 1.f);
     output.emissive = emissiveMap.Sample(smp, input.uv);
     

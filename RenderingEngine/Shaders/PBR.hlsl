@@ -3,7 +3,7 @@
 Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
 Texture2D positionMap : register(t2);
-Texture2D occMetalRoughShadowFactMap : register(t3);
+Texture2D occMetalRoughMap : register(t3);
 Texture2D emissiveMap : register(t4);
 Texture2D depthMap : register(t5);
 
@@ -50,10 +50,9 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 normal = normalMap.Sample(smp, uv).rgb * 2.f - 1.f;
     float3 pos = positionMap.Sample(smp, uv).rgb;
     
-    float occlusion = occMetalRoughShadowFactMap.Sample(smp, uv).r;
-    float roughness = occMetalRoughShadowFactMap.Sample(smp, uv).g;
-    float metallic = occMetalRoughShadowFactMap.Sample(smp, uv).b;
-    float shadowFactor = occMetalRoughShadowFactMap.Sample(smp, uv).a;
+    float occlusion = occMetalRoughMap.Sample(smp, uv).r;
+    float roughness = occMetalRoughMap.Sample(smp, uv).g;
+    float metallic = occMetalRoughMap.Sample(smp, uv).b;
     
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normal); // 物体上の法線

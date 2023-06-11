@@ -21,7 +21,7 @@ namespace NamelessEngine::Graphics {
 		COLOR = 0,
 		NORMAL,
 		WORLD_POS,
-		OCCLUSION_ROUGH_METAL_SHADOWFACTOR,
+		OCCLUSION_ROUGH_METAL,
 		EMISSIVE,
 		// カラーのレンダーターゲットに深度データが入っているのでそれを扱う
 		DEPTH = 5,
