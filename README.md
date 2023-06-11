@@ -9,9 +9,9 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 ## Trowbridge-Reitz(GGX)
 ![Nameless Renderer 2023_06_11 19_50_28](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/e59e2127-3821-4e28-a7b9-a42728b49329)
 ## Movie
-https://github.com/SSK-0423/NamelessRenderer/assets/83057130/b95e597c-f2ec-4653-be7e-889718d25fd5
+https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-bbd6-4566d0bc0d83
 
-# Feature
+# Features
 - Deferred Rendering
   1. GBuffer
   2. Directional Lighting
