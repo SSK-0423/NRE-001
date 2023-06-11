@@ -34,9 +34,9 @@ https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-
   - Directional Light
 
 # Future Work
-- [✓] glTF Loader
+- [x] glTF Loader
 - [ ] Editor
-- [ ] Shadow Mapping
+- [ ] Shadow Mapping Coming Soon
 
 # References
 - Direct3D 12 ゲームグラフィックス実践ガイド Pocol著 https://gihyo.jp/book/2021/978-4-297-12365-9
@@ -47,6 +47,10 @@ https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-
 - DirectXTex https://github.com/Microsoft/DirectXTex
 - DirectXMath https://github.com/microsoft/DirectXMath
 - Dear ImGUI https://github.com/ocornut/imgui
+- tinygltf https://github.com/syoyo/tinygltf
 
 # Tools Used
 - IBL Baker https://github.com/derkreature/IBLBaker
+
+# Assets
+- glTF Sample Models https://github.com/KhronosGroup/glTF-Sample-Models
