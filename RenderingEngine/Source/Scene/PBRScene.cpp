@@ -31,24 +31,20 @@ Utility::RESULT PBRScene::ImplInit()
 	//metalRoughSpheres->GetComponent<Transform>()->SetScalling(1.f, 1.f, 1.f);
 
 	//metalRoughSpheres->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/MetalRoughSpheres.glb");
-
 	//metalRoughSpheres->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
 	//metalRoughSpheres->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
 	//	device, metalRoughSpheres->GetComponent<Transform>()->GetConstantBuffer(), 1);
-
 	//_meshActors.push_back(metalRoughSpheres);
 
 	//Actor* sponza = new Actor();
 	//sponza->AddComponent<Transform>();
 	//sponza->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
 	//sponza->GetComponent<Transform>()->SetScalling(0.1f, 0.1f, 0.1f);
-
 	//sponza->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/sponza.glb");
 	//sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
 	//sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
 	//	device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	//_meshActors.push_back(sponza);
-
 
 	//Actor* bunny = new Actor();
 	//bunny->AddComponent<Transform>();
@@ -59,14 +55,13 @@ Utility::RESULT PBRScene::ImplInit()
 	//bunny->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/stanford_bunny_pbr.glb");
 	//bunny->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
 	//bunny->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, bunny->GetComponent<Transform>()->GetConstantBuffer(), 1);
-
 	//_meshActors.push_back(bunny);
 
 	Actor* damagedHelmet = new Actor();
 	damagedHelmet->AddComponent<Transform>();
 	damagedHelmet->GetComponent<Transform>()->SetPosition(0.f, 5.f, 0.f);
 	damagedHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
-	damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, -90.f, 0.f);
+	damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, 0.f, 0.f);
 
 	damagedHelmet->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
 	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);

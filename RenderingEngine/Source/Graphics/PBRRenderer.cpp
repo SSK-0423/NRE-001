@@ -17,6 +17,7 @@
 #include "Actor.h"
 
 #include "Material.h"
+#include "Mesh.h"
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
@@ -35,6 +36,8 @@ namespace NamelessEngine::Graphics
 	Utility::RESULT PBRRenderer::Init(Scene::Scene& scene)
 	{
 		RESULT result = _gbufferPass.Init();
+		if (result == RESULT::FAILED) { return result; }
+		result = _shadowMapPass.Init();
 		if (result == RESULT::FAILED) { return result; }
 		result = _lightingPass.Init();
 		if (result == RESULT::FAILED) { return result; }
@@ -91,9 +94,19 @@ namespace NamelessEngine::Graphics
 		_blendPass.SetLightedTexture(_iblPass.GetOffscreenTexture());
 		_blendPass.SetRenderedSkyBoxTexture(_skyBoxPass.GetOffscreenTexture());
 		_blendPass.SetDepthTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::DEPTH));
+		//_blendPass.SetDepthTexture(_shadowMapPass.GetShadowMap());
+
+		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
+		// ライト行列のバッファーをセット
+		for (auto actor : scene.GetMeshActors()) {
+			actor->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
+				device, _shadowMapPass.GetLightViewProjBuffer(), 2);
+		}
 	}
 	void PBRRenderer::Update(float deltatime, Scene::Scene& scene)
 	{
+		_shadowMapPass.UpdateLightViewProj(scene.GetCamera(), _directionalLight);
+
 		_lightingParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_lightingPass.UpdateParamData(_lightingParam);
 
@@ -151,6 +164,7 @@ namespace NamelessEngine::Graphics
 			ImGui::Render();
 		}
 
+		_shadowMapPass.Render(scene.GetMeshActors());
 		// 1. GBuffer出力パス
 		_gbufferPass.Render(scene.GetMeshActors());
 		// 2. ライティングパス

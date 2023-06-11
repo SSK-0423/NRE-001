@@ -21,11 +21,10 @@ namespace NamelessEngine::Graphics {
 		COLOR = 0,
 		NORMAL,
 		WORLD_POS,
-		METAL_ROUGH_REFLECT,
-		OCCLUSION,
+		OCCLUSION_ROUGH_METAL_SHADOWFACTOR,
 		EMISSIVE,
 		// カラーのレンダーターゲットに深度データが入っているのでそれを扱う
-		DEPTH = 6,
+		DEPTH = 5,
 		GBUFFER_TYPE_NUM,
 	};
 

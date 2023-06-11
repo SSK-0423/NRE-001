@@ -24,6 +24,8 @@ namespace NamelessEngine::DX12API
 		RegistShader(L"Blend", "BlendPS", SHADERTYPE::PIXEL, "PSMain");
 		RegistShader(L"IBL", "IBLVS", SHADERTYPE::VERTEX, "VSMain");
 		RegistShader(L"IBL", "IBLPS", SHADERTYPE::PIXEL, "PSMain");
+		RegistShader(L"ShadowMap", "ShadowMapVS", SHADERTYPE::VERTEX, "VSMain");
+		RegistShader(L"ShadowMap", "ShadowMapPS", SHADERTYPE::PIXEL, "PSMain");
 	};
 	ShaderLibrary::~ShaderLibrary()
 	{
@@ -34,7 +36,7 @@ namespace NamelessEngine::DX12API
 		return inst;
 	}
 	void ShaderLibrary::RegistShader(
-		const TCHAR* shaderFileName, const std::string& shaderTag, 
+		const TCHAR* shaderFileName, const std::string& shaderTag,
 		SHADERTYPE shaderType, const char* entryPointName)
 	{
 		TCHAR shaderFilePass[BUFFSIZE];

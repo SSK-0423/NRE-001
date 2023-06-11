@@ -85,6 +85,16 @@
       <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
       <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
     </FxCompile>
+    <FxCompile Include="Shaders\ShadowMap.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Vertex</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Vertex</ShaderType>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">5.0</ShaderModel>
+      <EntryPointName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">VSMain</EntryPointName>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+    </FxCompile>
     <FxCompile Include="Shaders\SkyBox.hlsl">
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Vertex</ShaderType>
       <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Vertex</ShaderType>
@@ -129,6 +139,7 @@
     <ClCompile Include="imgui\imgui_tables.cpp" />
     <ClCompile Include="imgui\imgui_widgets.cpp" />
     <ClCompile Include="Source\Component\Actor.cpp" />
+    <ClCompile Include="Source\Component\LightSource.cpp" />
     <ClCompile Include="Source\Component\Material.cpp" />
     <ClCompile Include="Source\Component\Mesh.cpp" />
     <ClCompile Include="Source\Component\Transform.cpp" />
@@ -162,7 +173,7 @@
     <ClCompile Include="Source\Graphics\LightingPass.cpp" />
     <ClCompile Include="Source\Graphics\PBRRenderer.cpp" />
     <ClCompile Include="Source\Graphics\Polygon.cpp" />
-    <ClCompile Include="Source\Graphics\RenderPass.cpp" />
+    <ClCompile Include="Source\Graphics\ShadowMapPass.cpp" />
     <ClCompile Include="Source\Graphics\SkyBox.cpp" />
     <ClCompile Include="Source\Graphics\SkyBoxPass.cpp" />
     <ClCompile Include="Source\Graphics\SkySphere.cpp" />
@@ -183,10 +194,9 @@
     <ClInclude Include="imgui\imstb_rectpack.h" />
     <ClInclude Include="imgui\imstb_textedit.h" />
     <ClInclude Include="imgui\imstb_truetype.h" />
-    <ClInclude Include="Source\Component\AudioSource.h" />
-    <ClInclude Include="Source\Component\Colider.h" />
     <ClInclude Include="Source\Component\Actor.h" />
     <ClInclude Include="Source\Component\IComponent.h" />
+    <ClInclude Include="Source\Component\LightSource.h" />
     <ClInclude Include="Source\Component\Material.h" />
     <ClInclude Include="Source\Component\Mesh.h" />
     <ClInclude Include="Source\Component\Transform.h" />
@@ -221,9 +231,9 @@
     <ClInclude Include="Source\Graphics\IRenderer.h" />
     <ClInclude Include="Source\Graphics\json.hpp" />
     <ClInclude Include="Source\Graphics\LightingPass.h" />
-    <ClInclude Include="Source\Graphics\RenderPass.h" />
     <ClInclude Include="Source\Graphics\PBRRenderer.h" />
     <ClInclude Include="Source\Graphics\Polygon.h" />
+    <ClInclude Include="Source\Graphics\ShadowMapPass.h" />
     <ClInclude Include="Source\Graphics\SkyBox.h" />
     <ClInclude Include="Source\Graphics\SkyBoxPass.h" />
     <ClInclude Include="Source\Graphics\SkySphere.h" />

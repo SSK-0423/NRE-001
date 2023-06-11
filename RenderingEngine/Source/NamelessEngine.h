@@ -39,7 +39,7 @@
 #include "Graphics/IRenderer.h"
 #include "Graphics/PBRRenderer.h"
 
-#include "Graphics/RenderPass.h"
+#include "Graphics/ShadowMapPass.h"
 #include "Graphics/GBufferPass.h"
 #include "Graphics/LightingPass.h"
 #include "Graphics/SkyBoxPass.h"

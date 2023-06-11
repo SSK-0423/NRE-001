@@ -10,11 +10,14 @@
 #include "ShaderLibrary.h"
 #include "InputLayout.h"
 
+#include "LightSource.h"
+
 #include "Dx12GraphicsEngine.h"
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
+using namespace NamelessEngine::Component;
 
 constexpr UINT LIGHTING_PARAM_INDEX = 0;
 constexpr UINT DIRECTIONAL_LIGHT_INDEX = 1;
@@ -73,7 +76,7 @@ namespace NamelessEngine::Graphics
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 2;
 		// カラー、法線、位置、メタリック・ラフネス、深度
-		rootSigData._descRangeData.srvDescriptorNum = 7;
+		rootSigData._descRangeData.srvDescriptorNum = 6;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
@@ -133,7 +136,7 @@ namespace NamelessEngine::Graphics
 		RESULT result = _paramBuffer->Create(device, &_paramData, sizeof(LightingParam));
 		if (result == RESULT::FAILED) { return result; }
 
-		return _directionalLightBuffer->Create(device, &_directionalLight, sizeof(DirectionalLight));
+		return _directionalLightBuffer->Create(device, nullptr, sizeof(DirectionalLight));
 	}
 	Utility::RESULT LightingPass::CreateDescriptorHeap(ID3D12Device& device)
 	{
@@ -147,8 +150,7 @@ namespace NamelessEngine::Graphics
 	}
 	void LightingPass::UpdateDirectionalLight(DirectionalLight& directionalLight)
 	{
-		_directionalLight = directionalLight;
-		_directionalLightBuffer->UpdateData(&_directionalLight);
+		_directionalLightBuffer->UpdateData(&directionalLight);
 	}
 	void LightingPass::Render()
 	{
@@ -168,7 +170,7 @@ namespace NamelessEngine::Graphics
 	void LightingPass::SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture)
 	{
 		ShaderResourceViewDesc desc(texture);
-		// 0: カラー, 1: 法線, 2: キューブマップUV, 3: メタリック・ラフネス, 6: 深度
+		// 0: カラー, 1: 法線, 2: ワールド座標, 3: オクルージョン・ラフネス・メタリック, 4: エミッション・シャドウファクタ―
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, static_cast<int>(type));
 	}

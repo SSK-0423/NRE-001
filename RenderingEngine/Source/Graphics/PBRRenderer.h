@@ -1,10 +1,12 @@
 #pragma once
 #include "IRenderer.h"
 #include "GBufferPass.h"
+#include "ShadowMapPass.h"
 #include "LightingPass.h"
 #include "SkyBoxPass.h"
 #include "BlendPass.h"
 #include "IBLPass.h"
+#include "LightSource.h"
 
 #include "EngineUtility.h"
 
@@ -28,6 +30,7 @@ namespace NamelessEngine::Graphics {
 		~PBRRenderer();
 
 	private:
+		ShadowMapPass _shadowMapPass;
 		GBufferPass _gbufferPass;
 		LightingPass _lightingPass;
 		IBLPass _iblPass;
@@ -46,7 +49,7 @@ namespace NamelessEngine::Graphics {
 
 		// ライティングパスで使用するバッファの構造体
 		LightingParam _lightingParam;
-		DirectionalLight _directionalLight;
+		Component::DirectionalLight _directionalLight;
 		float _dLightColor[3];
 		float _dLightDirection[3];
 

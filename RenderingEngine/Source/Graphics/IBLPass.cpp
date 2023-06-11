@@ -16,10 +16,10 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
-constexpr UINT LIGHTED_INDEX = 6;
-constexpr UINT DFG_INDEX = 7;
-constexpr UINT SPECULAR_LD_INDEX = 8;
-constexpr UINT DIFFUSE_LD_INDEX = 9;
+constexpr UINT LIGHTED_INDEX = 5;
+constexpr UINT DFG_INDEX = 6;
+constexpr UINT SPECULAR_LD_INDEX = 7;
+constexpr UINT DIFFUSE_LD_INDEX = 8;
 
 namespace NamelessEngine::Graphics
 {
@@ -73,7 +73,7 @@ namespace NamelessEngine::Graphics
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 2;
-		rootSigData._descRangeData.srvDescriptorNum = 10;
+		rootSigData._descRangeData.srvDescriptorNum = 9;
 		rootSigData._samplerData.samplerFilter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		rootSigData._samplerData.addressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		rootSigData._samplerData.addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;

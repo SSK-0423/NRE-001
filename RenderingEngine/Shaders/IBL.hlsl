@@ -4,14 +4,13 @@
 Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
 Texture2D positionMap : register(t2);
-Texture2D metalRoughReflectMap : register(t3);
-Texture2D occlusionMap : register(t4);
-Texture2D emissiveMap : register(t5);
+Texture2D occMetalRoughShadowFactMap : register(t3);
+Texture2D emissiveMap : register(t4);
 
-Texture2D lightedMap : register(t6);
-Texture2D dfgMap : register(t7);
-TextureCube specularLD : register(t8); // HDR
-TextureCube irradiance : register(t9); // HDR
+Texture2D lightedMap : register(t5);
+Texture2D dfgMap : register(t6);
+TextureCube specularLD : register(t7); // HDR
+TextureCube irradiance : register(t8); // HDR
 
 sampler smp : register(s0);
 
@@ -100,9 +99,10 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 color = colorMap.Sample(smp, uv).rgb;
     float3 normal = normalMap.Sample(smp, uv).rgb * 2.f - 1.f;
     float3 pos = positionMap.Sample(smp, uv).rgb;
-    float metallic = metalRoughReflectMap.Sample(smp, uv).b;
-    float roughness = metalRoughReflectMap.Sample(smp, uv).g;
-    float occlusion = occlusionMap.Sample(smp, uv).r;
+    float occlusion = occMetalRoughShadowFactMap.Sample(smp, uv).r;
+    float roughness = occMetalRoughShadowFactMap.Sample(smp, uv).g;
+    float metallic = occMetalRoughShadowFactMap.Sample(smp, uv).b;
+    float shadowFactor = occMetalRoughShadowFactMap.Sample(smp, uv).a;
     float3 emissiveColor = emissiveMap.Sample(smp, uv).rgb;
 
     // BRDF‚ÌŒvŽZ‚É•K—v‚È—v‘fŒvŽZ
