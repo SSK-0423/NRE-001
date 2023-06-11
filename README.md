@@ -34,7 +34,7 @@ https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-
   - Directional Light
 
 # Future Work
-- [ ] glTF Loader
+- [✓] glTF Loader
 - [ ] Editor
 - [ ] Shadow Mapping
 
