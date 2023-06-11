@@ -36,11 +36,12 @@ https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-
 # Future Work
 - [x] glTF Loader
 - [ ] Editor
-- [ ] Shadow Mapping Coming Soon
+- [ ] Shadow Mapping (Coming Soon)
 
 # References
 - Direct3D 12 ゲームグラフィックス実践ガイド Pocol著 https://gihyo.jp/book/2021/978-4-297-12365-9
 - DirectX 12の魔導書 3Dレンダリングの基礎からMMDモデルを踊らせるまで　川野 竜一 著 https://www.shoeisha.co.jp/book/detail/9784798161938
+- HLSLシェーダーの魔導書 シェーディングの基礎からレイトレーシングまで　清原 隆行 著 https://www.shoeisha.co.jp/book/detail/9784798164281
 
 # API & Libraries
 - DirectX12
