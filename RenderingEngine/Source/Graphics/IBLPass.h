@@ -75,6 +75,7 @@ namespace NamelessEngine::Graphics {
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
 		void SetLightedTexture(DX12API::Texture& texture);
 		void SetIBLTextures(DX12API::Texture& specularLD, DX12API::Texture& diffuseLD, DX12API::Texture& dfg);
+		void SetShadowFactorTex(DX12API::Texture& texture);
 		DX12API::Texture& GetOffscreenTexture();
 	};
 }

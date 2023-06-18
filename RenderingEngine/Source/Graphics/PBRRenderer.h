@@ -1,11 +1,14 @@
 #pragma once
 #include "IRenderer.h"
+
 #include "GBufferPass.h"
 #include "ShadowMapPass.h"
+#include "ShadowingPass.h"
 #include "LightingPass.h"
 #include "SkyBoxPass.h"
 #include "BlendPass.h"
 #include "IBLPass.h"
+
 #include "LightSource.h"
 
 #include "EngineUtility.h"
@@ -30,8 +33,9 @@ namespace NamelessEngine::Graphics {
 		~PBRRenderer();
 
 	private:
-		ShadowMapPass _shadowMapPass;
 		GBufferPass _gbufferPass;
+		ShadowMapPass _shadowMapPass;
+		ShadowingPass _shadowingPass;
 		LightingPass _lightingPass;
 		IBLPass _iblPass;
 		SkyBoxPass _skyBoxPass;

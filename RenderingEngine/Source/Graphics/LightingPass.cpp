@@ -22,6 +22,8 @@ using namespace NamelessEngine::Component;
 constexpr UINT LIGHTING_PARAM_INDEX = 0;
 constexpr UINT DIRECTIONAL_LIGHT_INDEX = 1;
 
+constexpr UINT SHADOWFACT_INDEX = 6;
+
 namespace NamelessEngine::Graphics
 {
 	LightingPass::LightingPass()
@@ -76,7 +78,7 @@ namespace NamelessEngine::Graphics
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 2;
 		// カラー、法線、位置、メタリック・ラフネス、深度
-		rootSigData._descRangeData.srvDescriptorNum = 6;
+		rootSigData._descRangeData.srvDescriptorNum = 7;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }

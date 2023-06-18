@@ -39,6 +39,8 @@ namespace NamelessEngine::Graphics
 		if (result == RESULT::FAILED) { return result; }
 		result = _shadowMapPass.Init();
 		if (result == RESULT::FAILED) { return result; }
+		result = _shadowingPass.Init();
+		if (result == RESULT::FAILED) { return result; }
 		result = _lightingPass.Init();
 		if (result == RESULT::FAILED) { return result; }
 		result = _iblPass.Init();
@@ -50,43 +52,38 @@ namespace NamelessEngine::Graphics
 
 		// キューブテクスチャ生成
 		_environment = std::make_unique<DX12API::Texture>();
-		//result = _environment->CreateCubeTextureFromDDS(
-		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01EnvHDR.dds");
 		result = _environment->CreateCubeTextureFromDDS(
 			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblEnvHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		_specularLD = std::make_unique<DX12API::Texture>();
-		//result = _specularLD->CreateCubeTextureFromDDS(
-		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01SpecularHDR.dds");
 		result = _specularLD->CreateCubeTextureFromDDS(
 			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblSpecularHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		_diffuseLD = std::make_unique<DX12API::Texture>();
-		//result = _diffuseLD->CreateCubeTextureFromDDS(
-		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01DiffuseHDR.dds");
 		result = _diffuseLD->CreateCubeTextureFromDDS(
 			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblDiffuseHDR.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		_DFG = std::make_unique<DX12API::Texture>();
-		//result = _DFG->CreateTextureFromDDS(
-		//	Dx12GraphicsEngine::Instance(), L"res/clarens_night_01/clarens_night_01Brdf.dds");
 		result = _DFG->CreateTextureFromDDS(
 			Dx12GraphicsEngine::Instance(), L"Assets/IBL/iblBrdf.dds");
 		if (result == RESULT::FAILED) { return result; }
 
 		// 各レンダリングパスに必要なリソースをセット
 		for (size_t index = 0; index < static_cast<size_t>(GBUFFER_TYPE::GBUFFER_TYPE_NUM); index++) {
-
 			Texture& gbuffer = _gbufferPass.GetGBuffer(static_cast<GBUFFER_TYPE>(index));
 			_lightingPass.SetGBuffer(static_cast<GBUFFER_TYPE>(index), gbuffer);
 			_iblPass.SetGBuffer(static_cast<GBUFFER_TYPE>(index), gbuffer);
 		}
-
 		_iblPass.SetIBLTextures(*_specularLD, *_diffuseLD, *_DFG);
 		_iblPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
+		_iblPass.SetShadowFactorTex(_shadowingPass.GetShadowFactorTexture());
+
+		_shadowingPass.SetWorldPosTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::WORLD_POS));
+		_shadowingPass.SetShadowMap(_shadowMapPass.GetShadowMap());
+		_shadowingPass.SetLightViewProjBuffer(_shadowMapPass.GetLightViewProjBuffer());
 
 		_skyBoxPass.SetCubeTexture(*_environment);
 		_skyBoxPass.SetCamera(scene.GetCamera());
@@ -166,13 +163,15 @@ namespace NamelessEngine::Graphics
 		_shadowMapPass.Render(scene.GetMeshActors());
 		// 2. GBuffer生成パス
 		_gbufferPass.Render(scene.GetMeshActors());
-		// 3. ライティングパス
+		// 3. シャドウイングパス
+		_shadowingPass.Render();
+		// 4. ライティングパス
 		_lightingPass.Render();
-		// 4. IBLパス
+		// 5. IBLパス
 		_iblPass.Render();
-		// 5. スカイボックスパス
+		// 6. スカイボックスパス
 		_skyBoxPass.Render();
-		// 6. ライティング結果とスカイボックス描画結果を合成する
+		// 7. ライティング結果とスカイボックス描画結果を合成する
 		_blendPass.Render();
 	}
 }

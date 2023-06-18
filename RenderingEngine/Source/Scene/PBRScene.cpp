@@ -39,6 +39,7 @@ Utility::RESULT PBRScene::ImplInit()
 	Actor* sponza = new Actor();
 	sponza->AddComponent<Transform>();
 	sponza->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+	sponza->GetComponent<Transform>()->SetDegreeAngle(0.f, -90.f, 0.f);
 	sponza->GetComponent<Transform>()->SetScalling(0.1f, 0.1f, 0.1f);
 	sponza->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/sponza.glb");
 	sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
@@ -69,6 +70,15 @@ Utility::RESULT PBRScene::ImplInit()
 		device, damagedHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
 
 	_meshActors.push_back(damagedHelmet);
+
+	//Actor* cube = new Actor();
+	//cube->AddComponent<Transform>();
+	//cube->GetComponent<Transform>()->SetPosition(0, 5, 0);
+	//cube->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
+	//cube->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/cube.glb");
+	//cube->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	//cube->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, cube->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	//_meshActors.push_back(cube);
 
 	//Actor* plane = new Actor();
 	//plane->AddComponent<Transform>();

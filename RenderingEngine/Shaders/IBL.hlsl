@@ -12,6 +12,8 @@ Texture2D dfgMap : register(t6);
 TextureCube specularLD : register(t7); // HDR
 TextureCube irradiance : register(t8); // HDR
 
+Texture2D shadowFactorMap : register(t9);
+
 sampler smp : register(s0);
 
 static const int MIP_COUNT = 11;
@@ -103,6 +105,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float roughness = occMetalRoughMap.Sample(smp, uv).g;
     float metallic = occMetalRoughMap.Sample(smp, uv).b;
     float3 emissiveColor = emissiveMap.Sample(smp, uv).rgb;
+    float shadowFactor = shadowFactorMap.Sample(smp, uv).r;
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normal); // 物体上の法線
@@ -119,7 +122,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
     
     float3 outColor = (kd * diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
-    outColor *= occlusion;
+    outColor *= shadowFactor * occlusion;
     outColor += emissiveColor;
     
     if (debugDrawMode == LIGHTING)

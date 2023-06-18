@@ -77,11 +77,6 @@ float4 PSMain(VertexOutput input) : SV_Target
     // Li(x,É÷) * BRDF * cosÉ∆
     float3 outColor = dLightColor.rgb * (diffuseColor + specularColor) * dot(N, L) * dLightintensity * occlusion;
     
-    //return float4((normal + 1.f)/2.f, 1.f);
-    
-    //float depth = depthMap.Sample(smp, uv).r;
-    //return float4(depth, depth, depth, 1.f);
-    
     return float4(outColor, 1.f);
 }
     //float NH = saturate(dot(N, H)); //   

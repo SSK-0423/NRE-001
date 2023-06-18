@@ -20,6 +20,7 @@ constexpr UINT LIGHTED_INDEX = 5;
 constexpr UINT DFG_INDEX = 6;
 constexpr UINT SPECULAR_LD_INDEX = 7;
 constexpr UINT DIFFUSE_LD_INDEX = 8;
+constexpr UINT SHADOWFACT_INDEX = 9;
 
 namespace NamelessEngine::Graphics
 {
@@ -73,7 +74,7 @@ namespace NamelessEngine::Graphics
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 2;
-		rootSigData._descRangeData.srvDescriptorNum = 9;
+		rootSigData._descRangeData.srvDescriptorNum = 10;
 		rootSigData._samplerData.samplerFilter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
 		rootSigData._samplerData.addressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
 		rootSigData._samplerData.addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
@@ -196,6 +197,12 @@ namespace NamelessEngine::Graphics
 		ShaderResourceViewDesc dfgDesc(dfg, false);
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), dfg, dfgDesc, DFG_INDEX);
+	}
+	void IBLPass::SetShadowFactorTex(DX12API::Texture& texture)
+	{
+		ShaderResourceViewDesc desc(texture);
+		_descriptorHeap->RegistShaderResource(
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, SHADOWFACT_INDEX);
 	}
 	DX12API::Texture& IBLPass::GetOffscreenTexture()
 	{

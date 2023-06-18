@@ -89,6 +89,9 @@
     <FxCompile Include="Shaders\ShadowMap.hlsl">
       <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
+    <FxCompile Include="Shaders\Shadowing.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Source\DX12API\ConstantBuffer.cpp">
@@ -251,7 +254,7 @@
       <Filter>Component</Filter>
     </ClCompile>
     <ClCompile Include="Source\Graphics\ShadowingPass.cpp">
-      <Filter>ソース ファイル</Filter>
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

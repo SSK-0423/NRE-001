@@ -145,17 +145,23 @@ namespace NamelessEngine::Graphics {
 	}
 	void ShadowMapPass::UpdateLightViewProj(Scene::Camera& camera, const Component::DirectionalLight& directionalLight)
 	{
-		// スカイボックスの大きさ * -ライト方向
 		XMFLOAT3 lightDir = XMFLOAT3(directionalLight.direction);
+		XMStoreFloat3(&lightDir, XMVector3Normalize(XMLoadFloat3(&lightDir)));
 		if (XMVector3Equal(XMLoadFloat3(&lightDir), XMVectorZero())) {
 			lightDir.y = 0.00001f;
 		}
+
+		XMFLOAT3 pos = camera.GetTransform().Position();
+		float length = 0;
+		XMStoreFloat(&length, XMVector3Length(XMLoadFloat3(&pos)));
+
 		XMFLOAT3 lightPos = XMFLOAT3();
-		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * camera.cameraFar / 10.f);
-		XMFLOAT3 upDir = XMFLOAT3A(0, 0, 1);
+		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * 100.f);
+
+		XMFLOAT3 upDir = XMFLOAT3A(1, 0, 0);
 		XMMATRIX view =
 			XMMatrixLookToLH(XMLoadFloat3(&lightPos), -1.f * XMLoadFloat3(&lightDir), XMLoadFloat3(&upDir));
-		XMMATRIX lightViewProj = view * XMMatrixOrthographicLH(100.f, 100.f, 1.f, camera.cameraFar / 10.f);
+		XMMATRIX lightViewProj = view * XMMatrixOrthographicLH(200.f, 200.f, camera.cameraNear, camera.cameraFar);
 
 		_lightViewProjBuffer->UpdateData(&lightViewProj);
 	}

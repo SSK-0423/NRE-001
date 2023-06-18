@@ -26,6 +26,8 @@ namespace NamelessEngine::DX12API
 		RegistShader(L"IBL", "IBLPS", SHADERTYPE::PIXEL, "PSMain");
 		RegistShader(L"ShadowMap", "ShadowMapVS", SHADERTYPE::VERTEX, "VSMain");
 		RegistShader(L"ShadowMap", "ShadowMapPS", SHADERTYPE::PIXEL, "PSMain");
+		RegistShader(L"Shadowing", "ShadowVS", SHADERTYPE::VERTEX, "VSMain");
+		RegistShader(L"Shadowing", "ShadowPS", SHADERTYPE::PIXEL, "PSMain");
 	};
 	ShaderLibrary::~ShaderLibrary()
 	{

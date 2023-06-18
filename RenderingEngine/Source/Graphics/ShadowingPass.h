@@ -28,6 +28,7 @@ namespace NamelessEngine::Graphics {
 		std::unique_ptr<DX12API::RenderTarget> _renderTarget = nullptr;
 		std::unique_ptr<DX12API::RootSignature> _rootSignature = nullptr;
 		std::unique_ptr<DX12API::GraphicsPipelineState> _pipelineState = nullptr;
+		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _descriptorHeap = nullptr;
 
 		Utility::RESULT CreateRenderTarget(ID3D12Device& device);
 		Utility::RESULT CreateRootSignature(ID3D12Device& device);
@@ -36,6 +37,9 @@ namespace NamelessEngine::Graphics {
 	public:
 		Utility::RESULT Init();
 		void Render();
-
+		void SetWorldPosTexture(DX12API::Texture& texture);
+		void SetShadowMap(DX12API::Texture& texture);
+		void SetLightViewProjBuffer(DX12API::ConstantBuffer& buffer);
+		DX12API::Texture& GetShadowFactorTexture();
 	};
 }
