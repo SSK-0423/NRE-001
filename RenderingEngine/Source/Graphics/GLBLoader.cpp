@@ -111,9 +111,13 @@ namespace NamelessEngine::Graphics
 				const tinygltf::Buffer& indexBuffer = model.buffers[indexBufferView.buffer];
 				const unsigned short* indi = reinterpret_cast<const unsigned short*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
 
+				// glbはOpenGL系なので半時計周りが表面となる
+				// DirectXは時計回りが表面なので、頂点インデックスを逆順で取得する必要がある
 				submeshData.indices.resize(indexAccessor.count);
-				for (size_t i = 0; i < indexAccessor.count; i++) {
-					submeshData.indices[i] = indi[i];
+				for (size_t i = 0; i < indexAccessor.count; i += 3) {
+					submeshData.indices[i] = indi[i + 2];
+					submeshData.indices[i + 1] = indi[i + 1];
+					submeshData.indices[i + 2] = indi[i];
 				}
 
 				// 接線データ(存在しない場合がある)
@@ -135,6 +139,7 @@ namespace NamelessEngine::Graphics
 
 						// 頂点接線ベクトルなので共有面を全てリストアップして平均取る必要ありそう
 						for (size_t j = 0; j < indexAccessor.count; j++) {
+							
 							// 接線ベクトルを求めたい頂点を含むポリゴンを見つける
 							if (XMVector3Equal(XMLoadFloat3(&submeshData.vertices[i].position), XMLoadFloat3(&submeshData.vertices[submeshData.indices[j]].position))) {
 								size_t index0;
@@ -144,10 +149,9 @@ namespace NamelessEngine::Graphics
 								switch (submeshData.indices[j] % 3)
 								{
 								case 0:	// ポリゴンの最初の頂点だった場合
-									if (j > indexAccessor.count - 3) continue;
-									index0 = submeshData.indices[j];
-									index1 = submeshData.indices[j + 1];
-									index2 = submeshData.indices[j + 2];
+									index0 = submeshData.indices[j - 2];
+									index1 = submeshData.indices[j - 1];
+									index2 = submeshData.indices[j];
 									break;
 								case 1:	// ポリゴンの2番目の頂点だった場合
 									if (j > indexAccessor.count - 2) continue;
@@ -156,9 +160,11 @@ namespace NamelessEngine::Graphics
 									index2 = submeshData.indices[j + 1];
 									break;
 								case 2:	// ポリゴンの3番目の頂点だった場合
-									index0 = submeshData.indices[j - 2];
-									index1 = submeshData.indices[j - 1];
-									index2 = submeshData.indices[j];
+									if (j > indexAccessor.count - 3) continue;
+									index0 = submeshData.indices[j];
+									index1 = submeshData.indices[j + 1];
+									index2 = submeshData.indices[j + 2];
+									break;
 								default:
 									break;
 								}

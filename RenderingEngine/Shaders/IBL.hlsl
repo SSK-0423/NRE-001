@@ -139,6 +139,7 @@ float4 PSMain(VertexOutput input) : SV_Target
         return float4(emissiveColor, 1.f);
     if (debugDrawMode == OCCLUSION)
         return float4(occlusion, occlusion, occlusion, 1.f);
+        //return float4(shadowFactor, shadowFactor, shadowFactor, 1.f);
     
     return float4(Reinhard(outColor), 1.f);
 }

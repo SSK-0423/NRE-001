@@ -45,7 +45,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float4 depth = lightDepthMap.Sample(smp, shadowUV);
     float bias = 0.0001f;
     
-    if (posDepth > depth.r + bias)
+    if (posDepth - bias > depth.r)
     {
         return float4(0.5f, 0.5f, 0.5f, 1.f);
     }

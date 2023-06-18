@@ -49,7 +49,7 @@ namespace NamelessEngine::Graphics {
 
 		// ラスタライズ設定
 		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 
 		// インプットレイアウトの設定
 		InputLayout layout = InputLayout::DefaultLayout();
@@ -155,13 +155,14 @@ namespace NamelessEngine::Graphics {
 		float length = 0;
 		XMStoreFloat(&length, XMVector3Length(XMLoadFloat3(&pos)));
 
-		XMFLOAT3 lightPos = XMFLOAT3();
-		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * 100.f);
+		XMFLOAT3 lightPos = XMFLOAT3(0, 0, 0);
+		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * 150.f);
 
-		XMFLOAT3 upDir = XMFLOAT3A(1, 0, 0);
+		XMFLOAT3 upDir = XMFLOAT3A(0, 0, 1);
 		XMMATRIX view =
 			XMMatrixLookToLH(XMLoadFloat3(&lightPos), -1.f * XMLoadFloat3(&lightDir), XMLoadFloat3(&upDir));
-		XMMATRIX lightViewProj = view * XMMatrixOrthographicLH(200.f, 200.f, camera.cameraNear, camera.cameraFar);
+		XMMATRIX proj = XMMatrixOrthographicLH(300.f, 300.f, camera.cameraNear, 500.f);
+		XMMATRIX lightViewProj = view * proj;
 
 		_lightViewProjBuffer->UpdateData(&lightViewProj);
 	}
