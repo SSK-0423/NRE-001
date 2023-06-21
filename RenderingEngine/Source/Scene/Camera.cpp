@@ -10,7 +10,7 @@ float NamelessEngine::Scene::Camera::_aspect = 1.f;
 namespace NamelessEngine::Scene
 {
 	Scene::Camera::Camera() :
-		_fov(XM_PIDIV2), _near(0.1f), _far(1000.f)
+		cameraFov(XM_PIDIV2), cameraNear(0.1f), cameraFar(1000.f)
 	{
 	}
 
@@ -20,7 +20,7 @@ namespace NamelessEngine::Scene
 
 	XMMATRIX NamelessEngine::Scene::Camera::ProjectionMatrix()
 	{
-		return XMMatrixPerspectiveFovLH(_fov, _aspect, _near, _far);
+		return XMMatrixPerspectiveFovLH(cameraFov, _aspect, cameraNear, cameraFar);
 	}
 
 	XMMATRIX NamelessEngine::Scene::Camera::ViewMatrix()

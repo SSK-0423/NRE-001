@@ -41,7 +41,7 @@ VertexOutput VSMain(VertexInput input)
 {
     VertexOutput output;
     
-    matrix worldViewProj = mul(viewProj, world);
+    matrix worldViewProj = mul(lightViewProj, world);
     output.position = mul(worldViewProj, float4(input.position, 1.f));
     output.uv = input.uv;
     

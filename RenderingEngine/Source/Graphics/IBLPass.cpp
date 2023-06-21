@@ -16,10 +16,11 @@ using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
 
-constexpr UINT LIGHTED_INDEX = 6;
-constexpr UINT DFG_INDEX = 7;
-constexpr UINT SPECULAR_LD_INDEX = 8;
-constexpr UINT DIFFUSE_LD_INDEX = 9;
+constexpr UINT LIGHTED_INDEX = 5;
+constexpr UINT DFG_INDEX = 6;
+constexpr UINT SPECULAR_LD_INDEX = 7;
+constexpr UINT DIFFUSE_LD_INDEX = 8;
+constexpr UINT SHADOWFACT_INDEX = 9;
 
 namespace NamelessEngine::Graphics
 {
@@ -196,6 +197,12 @@ namespace NamelessEngine::Graphics
 		ShaderResourceViewDesc dfgDesc(dfg, false);
 		_descriptorHeap->RegistShaderResource(
 			Dx12GraphicsEngine::Instance().Device(), dfg, dfgDesc, DFG_INDEX);
+	}
+	void IBLPass::SetShadowFactorTex(DX12API::Texture& texture)
+	{
+		ShaderResourceViewDesc desc(texture);
+		_descriptorHeap->RegistShaderResource(
+			Dx12GraphicsEngine::Instance().Device(), texture, desc, SHADOWFACT_INDEX);
 	}
 	DX12API::Texture& IBLPass::GetOffscreenTexture()
 	{

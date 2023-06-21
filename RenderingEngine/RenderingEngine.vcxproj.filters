@@ -45,12 +45,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\ShaderCommon.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\SkyBoxHeader.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\BRDF.hlsli">
       <Filter>Shaders\RenderPassShader</Filter>
     </None>
@@ -59,18 +53,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\GeometryPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\GeometryVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\GBuffer.hlsl">
       <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
@@ -84,6 +66,12 @@
       <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
     <FxCompile Include="Shaders\IBL.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\ShadowMap.hlsl">
+      <Filter>Shaders\RenderPassShader</Filter>
+    </FxCompile>
+    <FxCompile Include="Shaders\Shadowing.hlsl">
       <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
   </ItemGroup>
@@ -187,9 +175,6 @@
     <ClCompile Include="Source\Component\Material.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\RenderPass.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\Graphics\GBufferPass.cpp">
       <Filter>Graphics</Filter>
     </ClCompile>
@@ -243,6 +228,15 @@
     </ClCompile>
     <ClCompile Include="Source\SampleApp\PBRSample.cpp">
       <Filter>SampleApp</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ShadowMapPass.cpp">
+      <Filter>Graphics</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Component\LightSource.cpp">
+      <Filter>Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Source\Graphics\ShadowingPass.cpp">
+      <Filter>Graphics</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -327,12 +321,6 @@
     <ClInclude Include="Source\Component\Transform.h">
       <Filter>Component</Filter>
     </ClInclude>
-    <ClInclude Include="Source\Component\Colider.h">
-      <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Component\AudioSource.h">
-      <Filter>Component</Filter>
-    </ClInclude>
     <ClInclude Include="Source\Component\Actor.h">
       <Filter>Component</Filter>
     </ClInclude>
@@ -365,9 +353,6 @@
     </ClInclude>
     <ClInclude Include="Source\Component\Material.h">
       <Filter>Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\RenderPass.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\Graphics\GBufferPass.h">
       <Filter>Graphics</Filter>
@@ -437,6 +422,15 @@
     </ClInclude>
     <ClInclude Include="Source\SampleApp\PBRSample.h">
       <Filter>SampleApp</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\ShadowMapPass.h">
+      <Filter>Graphics</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Component\LightSource.h">
+      <Filter>Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Source\Graphics\ShadowingPass.h">
+      <Filter>Graphics</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

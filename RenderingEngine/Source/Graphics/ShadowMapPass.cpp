@@ -49,7 +49,7 @@ namespace NamelessEngine::Graphics {
 
 		// ラスタライズ設定
 		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 
 		// インプットレイアウトの設定
 		InputLayout layout = InputLayout::DefaultLayout();
@@ -135,18 +135,34 @@ namespace NamelessEngine::Graphics {
 			MessageBox(NULL, L"バッファー生成失敗", L"エラーメッセージ", MB_OK);
 		}
 
+		SIZE windowSize = AppWindow::GetWindowSize();
+
+		_viewport = CD3DX12_VIEWPORT(
+			0.f, 0.f, static_cast<float>(windowSize.cx), static_cast<float>(windowSize.cy));
+		_scissorRect = CD3DX12_RECT(0, 0, windowSize.cx, windowSize.cy);
+
 		return result;
 	}
 	void ShadowMapPass::UpdateLightViewProj(Scene::Camera& camera, const Component::DirectionalLight& directionalLight)
 	{
-		// スカイボックスの大きさ * -ライト方向
 		XMFLOAT3 lightDir = XMFLOAT3(directionalLight.direction);
-		XMFLOAT3 lightPos = XMFLOAT3();
-		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * 100);
-		XMFLOAT3 upDir = camera.GetTransform().Up();
+		XMStoreFloat3(&lightDir, XMVector3Normalize(XMLoadFloat3(&lightDir)));
+		if (XMVector3Equal(XMLoadFloat3(&lightDir), XMVectorZero())) {
+			lightDir.y = 0.00001f;
+		}
+
+		XMFLOAT3 pos = camera.GetTransform().Position();
+		float length = 0;
+		XMStoreFloat(&length, XMVector3Length(XMLoadFloat3(&pos)));
+
+		XMFLOAT3 lightPos = XMFLOAT3(0, 0, 0);
+		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * 150.f);
+
+		XMFLOAT3 upDir = XMFLOAT3A(0, 0, 1);
 		XMMATRIX view =
 			XMMatrixLookToLH(XMLoadFloat3(&lightPos), -1.f * XMLoadFloat3(&lightDir), XMLoadFloat3(&upDir));
-		XMMATRIX lightViewProj = view * XMMatrixOrthographicLH(20.f, 20.f, 1, 100);
+		XMMATRIX proj = XMMatrixOrthographicLH(300.f, 300.f, camera.cameraNear, 500.f);
+		XMMATRIX lightViewProj = view * proj;
 
 		_lightViewProjBuffer->UpdateData(&lightViewProj);
 	}
@@ -168,8 +184,7 @@ namespace NamelessEngine::Graphics {
 	}
 	DX12API::Texture& ShadowMapPass::GetShadowMap()
 	{
-		return _renderTarget->GetRenderTargetTexture();
-		//return _renderTarget->GetDepthStencilTexture();
+		return _renderTarget->GetDepthStencilTexture();
 	}
 	DX12API::ConstantBuffer& ShadowMapPass::GetLightViewProjBuffer()
 	{
