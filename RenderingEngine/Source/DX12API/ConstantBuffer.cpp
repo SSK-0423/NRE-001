@@ -30,7 +30,8 @@ namespace NamelessEngine::DX12API
 		HRESULT result = _constantBuffer->Map(0, nullptr, (void**)&_mappedData);
 		if (FAILED(result)) { return result; }
 
-		std::memcpy((void*)_mappedData, data, static_cast<size_t>(bufferSize));
+		if (data != nullptr)
+			std::memcpy((void*)_mappedData, data, static_cast<size_t>(bufferSize));
 
 		return result;
 	}

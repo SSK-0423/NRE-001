@@ -5,13 +5,20 @@
 #include <DirectXMath.h>
 #include "EngineUtility.h"
 
-namespace NamelessEngine::DX12API {
-	class RenderTarget;
-	class RootSignature;
-	class GraphicsPipelineState;
-	class Texture;
-	class ConstantBuffer;
-	class DescriptorHeapCBV_SRV_UAV;
+namespace NamelessEngine {
+	namespace DX12API {
+		class RenderTarget;
+		class RootSignature;
+		class GraphicsPipelineState;
+		class Texture;
+		class ConstantBuffer;
+		class DescriptorHeapCBV_SRV_UAV;
+	}
+	namespace Component {
+		struct DirectionalLight;
+		struct PointLight;
+		struct SpotLight;
+	}
 }
 
 namespace NamelessEngine::Graphics {
@@ -25,12 +32,6 @@ namespace NamelessEngine::Graphics {
 		DirectX::XMFLOAT3 eyePosition;
 		int brdfModel;
 	};
-	struct DirectionalLight {
-		// Imgui側から値を変更したいのでfloat配列を用いる
-		float color[3];
-		float intensity;
-		float direction[3];
-	};
 
 	class LightingPass {
 	public:
@@ -39,7 +40,6 @@ namespace NamelessEngine::Graphics {
 
 	private:
 		LightingParam _paramData;
-		DirectionalLight _directionalLight;
 
 		CD3DX12_VIEWPORT _viewport;
 		CD3DX12_RECT _scissorRect;
@@ -48,7 +48,7 @@ namespace NamelessEngine::Graphics {
 		Utility::RESULT CreateRootSignature(ID3D12Device& device);
 		std::unique_ptr<DX12API::GraphicsPipelineState> _pipelineState = nullptr;
 		Utility::RESULT CreateGraphicsPipelineState(ID3D12Device& device);
-		std::unique_ptr<DX12API::RenderTarget> _renderTarget;
+		std::unique_ptr<DX12API::RenderTarget> _renderTarget = nullptr;
 		Utility::RESULT CreateRenderTarget(ID3D12Device& device);
 
 		std::unordered_map<GBUFFER_TYPE, DX12API::Texture&> _gbuffers;
@@ -63,7 +63,7 @@ namespace NamelessEngine::Graphics {
 	public:
 		Utility::RESULT Init();
 		void UpdateParamData(LightingParam& param);
-		void UpdateDirectionalLight(DirectionalLight& directionalLight);
+		void UpdateDirectionalLight(Component::DirectionalLight& directionalLight);
 		void Render();
 		void SetGBuffer(GBUFFER_TYPE type, DX12API::Texture& texture);
 		DX12API::Texture& GetOffscreenTexture();

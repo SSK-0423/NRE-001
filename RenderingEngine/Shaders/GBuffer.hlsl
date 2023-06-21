@@ -19,6 +19,11 @@ cbuffer Transform : register(b1)
     matrix world;
 };
 
+cbuffer LightUniform : register(b2)
+{
+    matrix lightViewProj;
+};
+
 struct VertexInput
 {
     float3 position : POSITION;
@@ -32,6 +37,7 @@ struct VertexOutput
     float4 position : SV_POSITION;
     float2 uv : TEXCOORD;
     float3 worldPosition : POSITION;
+    float3 lightViewPosition : POSITION1;
     
     float3x3 tangentBasis : TANGENT_BASIS;
     
@@ -44,18 +50,19 @@ struct PixelOutput
     float4 color : SV_Target0;
     float4 normal : SV_Target1;
     float4 pos : SV_Target2;
-    float4 metalRough : SV_Target3;
-    float4 occlusion : SV_Target4;
-    float4 emissive : SV_Target5;
+    float4 occMetalRough : SV_Target3;
+    float4 emissive : SV_Target4;
 };
 
 VertexOutput VSMain(VertexInput input)
 {
     VertexOutput output;
     matrix worldViewProj = mul(viewProj, world);
+    matrix worldLightViewProj = mul(lightViewProj, world);
     output.position = mul(worldViewProj, float4(input.position, 1.f));
     output.uv = input.uv;
     output.worldPosition = mul(world, float4(input.position, 1.f));
+    output.lightViewPosition = mul(lightViewProj, float4(input.position, 1.f));
     
     float3 normal = input.normal;
     float4 tangent = input.tangent;
@@ -75,9 +82,13 @@ PixelOutput PSMain(VertexOutput input)
 {
     PixelOutput output;
     output.color = baseColorMap.Sample(smp, input.uv);
-    output.metalRough = float4(0.f, metalRoughMap.Sample(smp, input.uv).g, metalRoughMap.Sample(smp, input.uv).b, 0.f);
+    
+    float occlusion = occlusionMap.Sample(smp, input.uv).r;
+    float roughness = metalRoughMap.Sample(smp, input.uv).g;
+    float metallic = metalRoughMap.Sample(smp, input.uv).b;
+    
+    output.occMetalRough = float4(occlusion, roughness, metallic, 1.f);
     output.pos = float4(input.worldPosition, 1.f);
-    output.occlusion = occlusionMap.Sample(smp, input.uv);
     output.emissive = emissiveMap.Sample(smp, input.uv);
     
     float3 texSpaceNormal = normalMap.Sample(smp, input.uv).xyz;
