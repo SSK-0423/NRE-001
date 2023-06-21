@@ -31,19 +31,19 @@ namespace NamelessEngine::Core
 		return input;
 	}
 
-	RESULT Input::Init(AppWindow& window)
+	RESULT Input::Init(HWND hwnd)
 	{
-		_hwnd = window.GetHwnd();
+		_hwnd = hwnd;
 
 		// IDirectInputインターフェース生成
 		HRESULT result = DirectInput8Create(
 			GetModuleHandle(0), DIRECTINPUT_VERSION, IID_IDirectInput8, (void**)&_directInputInterface, NULL);
 		if (FAILED(result)) { return RESULT::FAILED; }
 
-		result = SetupKeyboard(window.GetHwnd());
+		result = SetupKeyboard(hwnd);
 		if (FAILED(result)) { return RESULT::FAILED; }
 
-		result = SetupMouse(window.GetHwnd());
+		result = SetupMouse(hwnd);
 		if (FAILED(result)) { return RESULT::FAILED; }
 
 		return RESULT::SUCCESS;
@@ -98,7 +98,10 @@ namespace NamelessEngine::Core
 		memcpy_s(_prevKeys, sizeof(_prevKeys), _currentKeys, sizeof(_currentKeys));
 		// 最新のキーの押下状態を取得する
 		HRESULT result = _keyboard->GetDeviceState(sizeof(_currentKeys), _currentKeys);
-		if (FAILED(result)) { return; }
+		if (FAILED(result)) {
+			//_keyboard->Acquire();
+			//_keyboard->GetDeviceState(sizeof(_currentKeys), _currentKeys);
+		}
 
 		// キーの状態更新
 		for (UINT index = 0; index < sizeof(_currentKeys); index++) {

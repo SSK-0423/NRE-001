@@ -34,9 +34,9 @@ RESULT Dx12Application::Init()
 	// アプリケーション本体の初期化
 	result = _applicationImpl.Init(_graphicsEngine, *_window);
 	if (result == RESULT::FAILED) { return result; }
-	
+
 	// 入力システム初期化
-	result = _input.Init(*_window);
+	result = _input.Init(_window->GetHwnd());
 	if (result == RESULT::FAILED) { return result; }
 
 	// Imgui初期化
@@ -63,7 +63,7 @@ void Dx12Application::Run()
 {
 	// ウィンドウが作成されていないならその時点で終了
 	if (_window == nullptr) { return; }
-	
+
 	// ゲームループ
 	while (_window->DispatchWindowMessage())
 	{

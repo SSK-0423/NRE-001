@@ -4,7 +4,7 @@ using namespace NamelessEngine::Utility;
 
 namespace NamelessEngine::DX12API
 {
-	static const TCHAR* SHADER_FOLDER_PASS = L"../RenderingEngine/Shaders/";
+	static const TCHAR* SHADER_FOLDER_PASS = L"Shaders/";
 	static const UINT BUFFSIZE = 128;
 
 	ShaderLibrary::ShaderLibrary()
@@ -12,8 +12,6 @@ namespace NamelessEngine::DX12API
 		_shaderTypeMap[SHADERTYPE::VERTEX] = "vs_5_0";
 		_shaderTypeMap[SHADERTYPE::PIXEL] = "ps_5_0";
 
-		RegistShader(L"GeometryVS", "GeometryVS", SHADERTYPE::VERTEX);
-		RegistShader(L"GeometryPS", "GeometryPS", SHADERTYPE::PIXEL);
 		RegistShader(L"GBuffer", "GBufferVS", SHADERTYPE::VERTEX, "VSMain");
 		RegistShader(L"GBuffer", "GBufferPS", SHADERTYPE::PIXEL, "PSMain");
 		RegistShader(L"PBR", "PBRVS", SHADERTYPE::VERTEX, "VSMain");

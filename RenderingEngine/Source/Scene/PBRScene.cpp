@@ -36,29 +36,29 @@ Utility::RESULT PBRScene::ImplInit()
 	//	device, metalRoughSpheres->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	//_meshActors.push_back(metalRoughSpheres);
 
-	//Actor* sponza = new Actor();
-	//sponza->AddComponent<Transform>();
-	//sponza->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
-	//sponza->GetComponent<Transform>()->SetDegreeAngle(0.f, -90.f, 0.f);
-	//sponza->GetComponent<Transform>()->SetScalling(0.1f, 0.1f, 0.1f);
-	//sponza->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/sponza.glb");
-	//sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
-	//sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
-	//	device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
-	//_meshActors.push_back(sponza);
+	Actor* sponza = new Actor();
+	sponza->AddComponent<Transform>();
+	sponza->GetComponent<Transform>()->SetPosition(0.f, 0.f, 0.f);
+	sponza->GetComponent<Transform>()->SetDegreeAngle(0.f, -90.f, 0.f);
+	sponza->GetComponent<Transform>()->SetScalling(0.1f, 0.1f, 0.1f);
+	sponza->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/sponza.glb");
+	sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	sponza->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
+		device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	_meshActors.push_back(sponza);
 
-	Actor* damagedHelmet = new Actor();
-	damagedHelmet->AddComponent<Transform>();
-	damagedHelmet->GetComponent<Transform>()->SetPosition(0.f, 5.f, 0.f);
-	damagedHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
-	damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, 0.f, 0.f);
+	//Actor* damagedHelmet = new Actor();
+	//damagedHelmet->AddComponent<Transform>();
+	//damagedHelmet->GetComponent<Transform>()->SetPosition(0.f, 5.f, 0.f);
+	//damagedHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
+	//damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, 0.f, 0.f);
 
-	damagedHelmet->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
-	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
-	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
-		device, damagedHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
+	//damagedHelmet->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
+	//damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
+	//damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
+	//	device, damagedHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
 
-	_meshActors.push_back(damagedHelmet);
+	//_meshActors.push_back(damagedHelmet);
 
 	// シャドウテストシーン
 	//Actor* cube = new Actor();

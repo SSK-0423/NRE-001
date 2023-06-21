@@ -45,12 +45,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Shaders\ShaderCommon.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="Shaders\SkyBoxHeader.hlsli">
-      <Filter>Shaders</Filter>
-    </None>
     <None Include="Shaders\BRDF.hlsli">
       <Filter>Shaders\RenderPassShader</Filter>
     </None>
@@ -59,18 +53,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <FxCompile Include="Shaders\GeometryPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\GeometryVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SkyBoxPS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
-    <FxCompile Include="Shaders\SkyBoxVS.hlsl">
-      <Filter>Shaders</Filter>
-    </FxCompile>
     <FxCompile Include="Shaders\GBuffer.hlsl">
       <Filter>Shaders\RenderPassShader</Filter>
     </FxCompile>
