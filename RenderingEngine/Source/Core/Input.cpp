@@ -99,8 +99,8 @@ namespace NamelessEngine::Core
 		// 最新のキーの押下状態を取得する
 		HRESULT result = _keyboard->GetDeviceState(sizeof(_currentKeys), _currentKeys);
 		if (FAILED(result)) {
-			//_keyboard->Acquire();
-			//_keyboard->GetDeviceState(sizeof(_currentKeys), _currentKeys);
+			_keyboard->Acquire();
+			_keyboard->GetDeviceState(sizeof(_currentKeys), _currentKeys);
 		}
 
 		// キーの状態更新
