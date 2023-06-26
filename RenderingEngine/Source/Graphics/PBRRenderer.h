@@ -46,11 +46,6 @@ namespace NamelessEngine::Graphics {
 		std::unique_ptr<DX12API::Texture> _diffuseLD;
 		std::unique_ptr<DX12API::Texture> _DFG;
 
-		// ImGuiパラメータ
-		float _baseColor[3];
-		float _roughness;
-		float _metallic;
-
 		// ライティングパスで使用するバッファの構造体
 		LightingParam _lightingParam;
 		Component::DirectionalLight _directionalLight;

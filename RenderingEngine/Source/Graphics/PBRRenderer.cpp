@@ -110,25 +110,14 @@ namespace NamelessEngine::Graphics
 
 		_iblParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_iblPass.UpdateParamData(_iblParam, _debugParam);
-
-		//Material* material = scene.GetMeshActors()[scene.GetMeshActors().size() - 1]->GetComponent<Material>();
-		//material->baseColor = DirectX::XMFLOAT4(_baseColor[0], _baseColor[1], _baseColor[2], 1.f);
-		//material->roughness = _roughness;
-		//material->metallic = _metallic;
-		//material->Build();
 	}
 	void PBRRenderer::Render(Scene::Scene& scene)
 	{
 		// Imguiレンダー
 		{
+			// ライティング用エディタ
 			ImGui::SetNextWindowPos(ImVec2(900, 0));
-			ImGui::Begin("Editor", 0, ImGuiWindowFlags_NoMove);
-			ImGui::SetWindowSize(ImVec2(375, AppWindow::GetWindowSize().cy), ImGuiCond_Once);
-
-			// GBufferパス関連
-			ImGui::ColorPicker3("BaseColor", _baseColor, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
-			ImGui::SliderFloat("Roughness", &_roughness, 0.f, 1.f);
-			ImGui::SliderFloat("Metallic", &_metallic, 0.f, 1.f);
+			ImGui::Begin("Lighting", 0, ImGuiWindowFlags_NoMove);
 			// ライティングパス関連
 			ImGui::ColorPicker3("LightColor", _directionalLight.color, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
 			ImGui::SliderFloat3("LightDirection", _directionalLight.direction, -1.f, 1.f);
@@ -139,9 +128,11 @@ namespace NamelessEngine::Graphics
 			// IBLパス関連
 			ImGui::SliderFloat("IBL_Intensity", &_iblParam.lightIntensity, 0.f, 10.f);
 			ImGui::Checkbox("IBL Only", &_iblParam.isIBLOnly);
+			ImGui::End();
 
-			// デバッグ用(IBLパスに実装)
-			ImGui::Text("Debug Menu");
+			// デバッグ用エディタ
+			ImGui::SetNextWindowPos(ImVec2(0, 0));
+			ImGui::Begin("G-Buffer", 0, ImGuiWindowFlags_NoMove);
 			ImGui::RadioButton("Lighting", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::LIGHTING));
 			ImGui::SameLine();
 			ImGui::RadioButton("BaseColor", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::BASECOLOR));
@@ -149,14 +140,14 @@ namespace NamelessEngine::Graphics
 			ImGui::RadioButton("Metal", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::METALLIC));
 			ImGui::SameLine();
 			ImGui::RadioButton("Rough", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::ROUGHNESS));
-
+			
 			ImGui::RadioButton("Normal", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::NORMAL));
 			ImGui::SameLine();
 			ImGui::RadioButton("EmissiveColor", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::EMISSIVECOLOR));
 			ImGui::SameLine();
 			ImGui::RadioButton("Occlusion", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::OCCLUSION));
-
 			ImGui::End();
+
 			ImGui::Render();
 		}
 		// 1. シャドウマップ生成パス
