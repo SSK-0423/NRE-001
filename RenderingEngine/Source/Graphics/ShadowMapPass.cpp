@@ -49,7 +49,8 @@ namespace NamelessEngine::Graphics {
 
 		// ラスタライズ設定
 		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
+		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
+		//pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 
 		// インプットレイアウトの設定
 		InputLayout layout = InputLayout::DefaultLayout();

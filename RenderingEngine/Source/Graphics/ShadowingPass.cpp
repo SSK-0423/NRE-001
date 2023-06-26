@@ -16,8 +16,6 @@
 
 constexpr UINT WORLDPOS_INDEX = 0;
 constexpr UINT SHADOWMAP_INDEX = 1;
-constexpr UINT LIGHTEDMAP_INDEX = 2;
-
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
@@ -154,7 +152,7 @@ namespace NamelessEngine::Graphics {
 	}
 	const SIZE_T ShadowingPass::GetShadowMapHandlePtr()
 	{
-		return _descriptorHeap->GetSRVHandle(0).ptr;
+		return _descriptorHeap->GetSRVHandle(SHADOWMAP_INDEX).ptr;
 	}
 	DX12API::Texture& ShadowingPass::GetShadowFactorTexture()
 	{

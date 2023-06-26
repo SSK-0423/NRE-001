@@ -3,8 +3,8 @@
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
 
-const LONG WINDOW_WIDTH = 1280;
-const LONG WINDOW_HEIGHT = 800;
+const LONG WINDOW_WIDTH = 1980;
+const LONG WINDOW_HEIGHT = 1080;
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Utility;

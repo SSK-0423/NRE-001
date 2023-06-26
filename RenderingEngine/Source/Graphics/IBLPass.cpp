@@ -76,8 +76,6 @@ namespace NamelessEngine::Graphics
 		rootSigData._descRangeData.cbvDescriptorNum = 2;
 		rootSigData._descRangeData.srvDescriptorNum = 10;
 		rootSigData._samplerData.samplerFilter = D3D12_FILTER_MIN_MAG_MIP_LINEAR;
-		rootSigData._samplerData.addressU = D3D12_TEXTURE_ADDRESS_MODE_CLAMP;
-		rootSigData._samplerData.addressV = D3D12_TEXTURE_ADDRESS_MODE_WRAP;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }

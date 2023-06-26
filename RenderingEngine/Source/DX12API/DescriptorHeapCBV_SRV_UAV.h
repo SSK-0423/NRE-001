@@ -66,13 +66,6 @@ namespace NamelessEngine::DX12API
 			return _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
 		}
 
-		D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle(int index) {
-			auto handle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
-			handle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
-			handle.ptr += _handleIncrimentSize * index;
-			return handle;
-		}
-
 		/// <summary>
 		/// GPUのCBV部分のディスクリプタヒープの先頭ハンドルを取得
 		/// </summary>
@@ -89,6 +82,13 @@ namespace NamelessEngine::DX12API
 			auto handle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 			handle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
 
+			return handle;
+		}
+
+		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandle(int index) {
+			auto handle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+			handle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			handle.ptr += _handleIncrimentSize * index;
 			return handle;
 		}
 

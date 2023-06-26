@@ -134,6 +134,7 @@ namespace NamelessEngine::Graphics
 		{
 			// ライティング用エディタ
 			ImGui::SetNextWindowPos(ImVec2(AppWindow::GetWindowSize().cx - ImGui::GetWindowWidth(), 0));
+			ImGui::SetNextWindowSize(ImVec2(400, 475));
 			ImGui::Begin("Lighting", 0, ImGuiWindowFlags_NoMove);
 			// ライティングパス関連
 			ImGui::ColorPicker3("LightColor", _directionalLight.color, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
@@ -167,20 +168,21 @@ namespace NamelessEngine::Graphics
 
 			// シャドウイング用エディタ
 			ImGui::SetNextWindowPos(ImVec2(0, AppWindow::GetWindowSize().cy - ImGui::GetWindowHeight()));
-			ImGui::Begin("Shadow", 0, ImGuiWindowFlags_NoMove);
+			ImGui::SetNextWindowSize(ImVec2(350, 150));
+			ImGui::Begin("Shadow");
 			ImGui::SliderFloat("LightDistance", &_shadowMapParam.lightDistance, 1.f, scene.GetCamera().cameraFar);
 			ImGui::SliderFloat("Near", &_shadowMapParam.nearZ, 0.1f, 10.f);
 			ImGui::SliderFloat("Far", &_shadowMapParam.farZ, 1.f, scene.GetCamera().cameraFar);
 			ImGui::SliderFloat("ViewWidth", &_shadowMapParam.viewWidth, 1.f, 1000.f);
 			ImGui::SliderFloat("ViewHeight", &_shadowMapParam.viewHeight, 1.f, 1000.f);
-
 			// TODO: シャドウマップを表示する
-			//ImGui::Image((ImTextureID)_shadowMapPass.GetShadowMap().GetImage().pixels, ImVec2(60, 60));
-			//ImGui::Image((ImTextureID)_shadowingPass.GetShadowMapHandlePtr(), ImVec2(60, 60));
-			
+			//ImGui::Image((ImTextureID)_shadowingPass.GetShadowMapHandlePtr(), ImVec2(100, 100), ImVec2(0.f, 0.f), ImVec2(1.f, 1.f));
+
 			ImGui::End();
 
+			// パフォーマンス
 			ImGui::SetNextWindowPos(ImVec2(0, 0));
+			ImGui::SetNextWindowSize(ImVec2(200, 50));
 			ImGui::Begin("Performance", 0, ImGuiWindowFlags_None);
 			ImGui::Text("FrameRate %.2f", ImGui::GetIO().Framerate);
 			ImGui::End();
