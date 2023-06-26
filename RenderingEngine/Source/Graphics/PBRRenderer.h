@@ -56,6 +56,10 @@ namespace NamelessEngine::Graphics {
 		IBLParam _iblParam;
 		DebugParam _debugParam;
 
+		// シャドウマップパスのバッファ
+		ShadowMapParam _shadowMapParam;
+
+
 	public:
 		Utility::RESULT Init(Scene::Scene& scene) override;
 		void Update(float deltatime, Scene::Scene& scene) override;

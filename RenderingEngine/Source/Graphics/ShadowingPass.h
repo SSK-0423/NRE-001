@@ -40,6 +40,7 @@ namespace NamelessEngine::Graphics {
 		void SetWorldPosTexture(DX12API::Texture& texture);
 		void SetShadowMap(DX12API::Texture& texture);
 		void SetLightViewProjBuffer(DX12API::ConstantBuffer& buffer);
+		const SIZE_T GetShadowMapHandlePtr();
 		DX12API::Texture& GetShadowFactorTexture();
 	};
 }

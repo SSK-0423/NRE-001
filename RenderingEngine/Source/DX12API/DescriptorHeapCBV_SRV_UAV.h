@@ -15,7 +15,7 @@ namespace NamelessEngine::DX12API
 	class UnorderedAccessResource;
 
 	struct ShaderResourceViewDesc;
-	
+
 	class DescriptorHeapCBV_SRV_UAV
 	{
 	public:
@@ -64,6 +64,13 @@ namespace NamelessEngine::DX12API
 		/// <returns></returns>
 		D3D12_CPU_DESCRIPTOR_HANDLE GetCPUDescriptorHandleForHeapStart() {
 			return _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		}
+
+		D3D12_CPU_DESCRIPTOR_HANDLE GetSRVHandle(int index) {
+			auto handle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+			handle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			handle.ptr += _handleIncrimentSize * index;
+			return handle;
 		}
 
 		/// <summary>

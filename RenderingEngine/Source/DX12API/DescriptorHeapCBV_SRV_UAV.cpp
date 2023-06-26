@@ -50,12 +50,6 @@ namespace NamelessEngine::DX12API
 		else                                // 指定されたレジスタ
 			handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
 
-		//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		//srvDesc.Format = texture.GetImage().format;
-		//srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		//srvDesc.Texture2D.MipLevels = texture.GetTexMetadata().mipLevels;
-
 		device.CreateShaderResourceView(&texture.GetBuffer(), &desc.desc, handle);
 
 		_registedSRVNum++;
@@ -73,7 +67,6 @@ namespace NamelessEngine::DX12API
 		else                                // 指定されたレジスタ
 			handle.ptr += _handleIncrimentSize * registerNo;
 
-		// Todo:後で実装
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 		cbvDesc.BufferLocation = constantBuffer.GetGPUVirtualAddress();
 		cbvDesc.SizeInBytes = constantBuffer.GetBufferSize();

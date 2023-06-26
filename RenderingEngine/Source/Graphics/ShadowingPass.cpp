@@ -152,6 +152,10 @@ namespace NamelessEngine::Graphics {
 	{
 		_descriptorHeap->RegistConstantBuffer(Dx12GraphicsEngine::Instance().Device(), buffer, 0);
 	}
+	const SIZE_T ShadowingPass::GetShadowMapHandlePtr()
+	{
+		return _descriptorHeap->GetSRVHandle(0).ptr;
+	}
 	DX12API::Texture& ShadowingPass::GetShadowFactorTexture()
 	{
 		return _renderTarget->GetRenderTargetTexture();
