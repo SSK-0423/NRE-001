@@ -3,11 +3,14 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 
 ## Gallery
 ### IBL
-![Nameless Renderer 2023_06_11 19_49_32](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/ab051d17-f2f5-4fc2-b804-2f3e5c3736de)
+![Nameless Renderer 2023_06_28 1_50_44](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/a8913e53-eeb4-4a9d-a4f5-78502130e8ef)
+
 ### Cook-Torrance
-![Nameless Renderer 2023_06_11 19_50_14](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/d2492d8f-26df-44c1-9c31-bef9b24b560e)
+![Nameless Renderer 2023_06_28 1_53_11](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/a8e389c4-476c-4db0-9eb0-730a0b8a418d)
+
 ### Trowbridge-Reitz(GGX)
-![Nameless Renderer 2023_06_11 19_50_28](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/e59e2127-3821-4e28-a7b9-a42728b49329)
+![Nameless Renderer 2023_06_28 1_53_19](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/19251bdc-d5a3-4255-b6fa-c158f0cb022a)
+
 ### Movie
 https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-bbd6-4566d0bc0d83
 
