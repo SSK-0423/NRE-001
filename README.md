@@ -1,4 +1,4 @@
-# Nameless Renderer
+![Nameless Renderer 2023_06_28 2_02_33](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/d46056bb-f429-4c7e-9f5c-61e5dd7b9109)# Nameless Renderer
 Physically Based Renderer with DirectX12 made for learning and trying rendering techniques
 
 ## Gallery
@@ -10,6 +10,8 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 
 ### Trowbridge-Reitz(GGX)
 ![Nameless Renderer 2023_06_28 1_53_19](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/19251bdc-d5a3-4255-b6fa-c158f0cb022a)
+### GLB Model/Shadow Mapping
+![Nameless Renderer 2023_06_28 2_02_33](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/e7b1e7c9-0382-4fd1-a84a-62f3c0c2ab56)
 
 ### Movie
 https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-bbd6-4566d0bc0d83
