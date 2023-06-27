@@ -109,19 +109,33 @@ namespace NamelessEngine::Graphics
 				const tinygltf::Accessor& indexAccessor = model.accessors[primitive.indices];
 				const tinygltf::BufferView& indexBufferView = model.bufferViews[indexAccessor.bufferView];
 				const tinygltf::Buffer& indexBuffer = model.buffers[indexBufferView.buffer];
-				const unsigned short* indi = reinterpret_cast<const unsigned short*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
 
-				// glbはOpenGL系なので半時計周りが表面となる
-				// DirectXは時計回りが表面なので、頂点インデックスを逆順で取得する必要がある
-				submeshData.indices.resize(indexAccessor.count);
-				for (size_t i = 0; i < indexAccessor.count; i += 3) {
-					submeshData.indices[i] = indi[i + 2];
-					submeshData.indices[i + 1] = indi[i + 1];
-					submeshData.indices[i + 2] = indi[i];
+				if (indexAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+					const unsigned short* indi = reinterpret_cast<const unsigned short*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
+					// glbはOpenGL系なので半時計周りが表面となる
+					// DirectXは時計回りが表面なので、頂点インデックスを逆順で取得する必要がある
+					submeshData.indices.resize(indexAccessor.count);
+					for (size_t i = 0; i < indexAccessor.count; i += 3) {
+						submeshData.indices[i] = indi[i + 2];
+						submeshData.indices[i + 1] = indi[i + 1];
+						submeshData.indices[i + 2] = indi[i];
+					}
+				}
+				else if (indexAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
+					const unsigned int* indi = reinterpret_cast<const unsigned int*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
+					// glbはOpenGL系なので半時計周りが表面となる
+					// DirectXは時計回りが表面なので、頂点インデックスを逆順で取得する必要がある
+					submeshData.indices.resize(indexAccessor.count);
+					for (size_t i = 0; i < indexAccessor.count; i += 3) {
+						submeshData.indices[i] = indi[i + 2];
+						submeshData.indices[i + 1] = indi[i + 1];
+						submeshData.indices[i + 2] = indi[i];
+					}
 				}
 
 				// 接線データ(存在しない場合がある)
 				// 存在しない場合は他のAccessorとcount変数の値が異なる
+				// TODO: 一部の接線ベクトルが正しく計算されないバグの修正
 				const tinygltf::Accessor& tangentAccessor = model.accessors[primitive.attributes["TANGENT"]];
 				if (tangentAccessor.count != posAccessor.count) {
 					for (size_t i = 0; i < posAccessor.count; i++) {
@@ -139,7 +153,7 @@ namespace NamelessEngine::Graphics
 
 						// 頂点接線ベクトルなので共有面を全てリストアップして平均取る必要ありそう
 						for (size_t j = 0; j < indexAccessor.count; j++) {
-							
+
 							// 接線ベクトルを求めたい頂点を含むポリゴンを見つける
 							if (XMVector3Equal(XMLoadFloat3(&submeshData.vertices[i].position), XMLoadFloat3(&submeshData.vertices[submeshData.indices[j]].position))) {
 								size_t index0;

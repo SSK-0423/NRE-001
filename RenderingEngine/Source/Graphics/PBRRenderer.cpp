@@ -105,6 +105,8 @@ namespace NamelessEngine::Graphics
 	{
 		_shadowMapPass.UpdateLightViewProj(scene.GetCamera(), _shadowMapParam, _directionalLight);
 
+		_shadowingPass.UpdateBias(_bias);
+
 		_lightingParam.eyePosition = scene.GetCamera().GetTransform().Position();
 		_lightingPass.UpdateParamData(_lightingParam);
 
@@ -126,7 +128,7 @@ namespace NamelessEngine::Graphics
 		// 5. IBLパス
 		_iblPass.Render();
 		// 6. スカイボックスパス
-		_skyBoxPass.Render();
+		_skyBoxPass.Render(scene.GetCamera());
 		// 7. ライティング結果とスカイボックス描画結果を合成する
 		_blendPass.Render();
 
@@ -168,13 +170,14 @@ namespace NamelessEngine::Graphics
 
 			// シャドウイング用エディタ
 			ImGui::SetNextWindowPos(ImVec2(0, AppWindow::GetWindowSize().cy - ImGui::GetWindowHeight()));
-			ImGui::SetNextWindowSize(ImVec2(350, 150));
+			ImGui::SetNextWindowSize(ImVec2(350, 200));
 			ImGui::Begin("Shadow");
 			ImGui::SliderFloat("LightDistance", &_shadowMapParam.lightDistance, 1.f, scene.GetCamera().cameraFar);
 			ImGui::SliderFloat("Near", &_shadowMapParam.nearZ, 0.1f, 10.f);
 			ImGui::SliderFloat("Far", &_shadowMapParam.farZ, 1.f, scene.GetCamera().cameraFar);
 			ImGui::SliderFloat("ViewWidth", &_shadowMapParam.viewWidth, 1.f, 1000.f);
 			ImGui::SliderFloat("ViewHeight", &_shadowMapParam.viewHeight, 1.f, 1000.f);
+			ImGui::SliderFloat("Bias", &_bias, 0.f, 0.1f);
 			// TODO: シャドウマップを表示する
 			//ImGui::Image((ImTextureID)_shadowingPass.GetShadowMapHandlePtr(), ImVec2(100, 100), ImVec2(0.f, 0.f), ImVec2(1.f, 1.f));
 

@@ -13,6 +13,7 @@
 
 #include "CubeMesh.h"
 
+#include "Scene.h"
 #include "Camera.h"
 
 #include "Dx12GraphicsEngine.h"
@@ -33,8 +34,7 @@ namespace NamelessEngine::Graphics
 {
 	SkyBoxPass::SkyBoxPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
-		_renderTarget(new RenderTarget()), _descriptorHeap(new DescriptorHeapCBV_SRV_UAV()),
-		_skyBox(new Mesh()), _transform(new Transform())
+		_renderTarget(new RenderTarget()), _skyBox(new Mesh()), _transform(new Transform())
 	{
 	}
 	SkyBoxPass::~SkyBoxPass()
@@ -56,10 +56,6 @@ namespace NamelessEngine::Graphics
 		result = CreateRenderTarget(device);
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"レンダーターゲット生成失敗", L"エラーメッセージ", MB_OK);
-		}
-		result = CreateDescriptorHeap(device);
-		if (result == RESULT::FAILED) {
-			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
 		MeshData data = CubeMesh::CreateMeshData();
 		result = _skyBox->CreateCube(device);
@@ -122,8 +118,8 @@ namespace NamelessEngine::Graphics
 	{
 		RootSignatureData rootSigData;
 		rootSigData._descRangeData.cbvDescriptorNum = 2;
-		// キューブテクスチャ、ライティング済みテクスチャ
-		rootSigData._descRangeData.srvDescriptorNum = 2;
+		// キューブテクスチャ
+		rootSigData._descRangeData.srvDescriptorNum = 1;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
 		if (result == Utility::RESULT::FAILED) { return result; }
@@ -142,14 +138,12 @@ namespace NamelessEngine::Graphics
 
 		return _renderTarget->Create(device, data);
 	}
-	Utility::RESULT SkyBoxPass::CreateDescriptorHeap(ID3D12Device& device)
-	{
-		return _descriptorHeap->Create(device);
-	}
 
-	void SkyBoxPass::Render()
+	void SkyBoxPass::Render(Scene::Camera& camera)
 	{
 		_transform->Update(0.f);
+		//DirectX::XMFLOAT3 cameraPos = camera.GetTransform().Position();
+		//_transform->SetPosition(cameraPos.x, cameraPos.y, cameraPos.z);
 
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
 		renderContext.SetPipelineState(*_pipelineState);
@@ -166,15 +160,10 @@ namespace NamelessEngine::Graphics
 		ShaderResourceViewDesc desc(texture, true);
 		_skyBox->SetTextureOnAllSubMeshes(
 			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX);
-		_descriptorHeap->RegistShaderResource(
-			Dx12GraphicsEngine::Instance().Device(), texture, desc, CUBETEX_INDEX
-		);
 	}
 	void SkyBoxPass::SetCamera(Scene::Camera& camera)
 	{
 		_skyBox->SetConstantBufferOnAllSubMeshes(
-			Dx12GraphicsEngine::Instance().Device(), camera.GetConstantBuffer(), CAMERA_BUFFER_INDEX);
-		_descriptorHeap->RegistConstantBuffer(
 			Dx12GraphicsEngine::Instance().Device(), camera.GetConstantBuffer(), CAMERA_BUFFER_INDEX);
 	}
 	DX12API::Texture& SkyBoxPass::GetOffscreenTexture()

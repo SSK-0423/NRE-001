@@ -59,6 +59,8 @@ namespace NamelessEngine::Graphics {
 		// シャドウマップパスのバッファ
 		ShadowMapParam _shadowMapParam;
 
+		// シャドウイングパスのバッファ
+		float _bias;
 
 	public:
 		Utility::RESULT Init(Scene::Scene& scene) override;

@@ -102,7 +102,7 @@ PixelOutput PSMain(VertexOutput input)
     output.normal = float4(mul(input.invTangentBasis, texSpaceNormal), 0.f);
     // 0Å`1Ç…ïœä∑
     output.normal = (output.normal + 1.f) / 2.f;
-    output.normal.w = 1.f;
+    output.normal.w = 0.f;
     
     return output;
 }

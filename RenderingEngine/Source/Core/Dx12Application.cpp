@@ -84,5 +84,6 @@ void Dx12Application::Run()
 
 void Dx12Application::End()
 {
+	ImGui_ImplDX12_Shutdown();
 	_applicationImpl.Final();
 }

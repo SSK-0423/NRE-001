@@ -33,7 +33,6 @@
 #include "Graphics/CubeMesh.h"
 #include "Graphics/SphereMesh.h"
 #include "Graphics/SkySphere.h"
-#include "Graphics/SkyBox.h"
 #include "Graphics/Polygon.h"
 #include "Graphics/Sprite.h"
 #include "Graphics/IRenderer.h"

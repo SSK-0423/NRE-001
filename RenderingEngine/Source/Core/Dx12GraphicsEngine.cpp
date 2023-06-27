@@ -386,14 +386,3 @@ namespace NamelessEngine::Core
 		return _imguiHeap;
 	}
 }
-
-/// メモ
-/// returnする場合としない場合がある→引数でリターンの有無を指定する？
-/// 無理にインライン化して可読性下がる可能性もある→この処理は生成処理以外呼ぶことが少ないので、
-/// インライン化するメリットが小さい
-//inline HRESULT CheckFailed(const HRESULT& result, const char* message, const HWND& hwnd) {
-//	if (FAILED(result)) {
-//		MessageBoxA(hwnd, message, "エラー", MB_OK | MB_ICONERROR);
-//		return result;
-//	}
-//}

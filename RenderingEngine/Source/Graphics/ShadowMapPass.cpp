@@ -49,8 +49,7 @@ namespace NamelessEngine::Graphics {
 
 		// ラスタライズ設定
 		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
-		//pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
+		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_FRONT;
 
 		// インプットレイアウトの設定
 		InputLayout layout = InputLayout::DefaultLayout();
@@ -160,8 +159,9 @@ namespace NamelessEngine::Graphics {
 		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * param.lightDistance);
 
 		XMFLOAT3 upDir = XMFLOAT3A(0, 0, 1);
+		XMFLOAT3 forcusPos = XMFLOAT3(0.f, 0.f, 0.f);
 		XMMATRIX view =
-			XMMatrixLookToLH(XMLoadFloat3(&lightPos), -1.f * XMLoadFloat3(&lightDir), XMLoadFloat3(&upDir));
+			XMMatrixLookAtLH(XMLoadFloat3(&lightPos), XMLoadFloat3(&forcusPos), XMLoadFloat3(&upDir));
 		XMMATRIX proj = XMMatrixOrthographicLH(param.viewWidth, param.viewHeight, param.nearZ, param.farZ);
 		XMMATRIX lightViewProj = view * proj;
 

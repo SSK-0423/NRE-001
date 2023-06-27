@@ -16,6 +16,9 @@
 
 constexpr UINT WORLDPOS_INDEX = 0;
 constexpr UINT SHADOWMAP_INDEX = 1;
+constexpr UINT LIGHTVIEWPROJ_INDEX = 0;
+constexpr UINT BIAS_INDEX = 1;
+
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::DX12API;
 using namespace NamelessEngine::Utility;
@@ -23,7 +26,8 @@ using namespace NamelessEngine::Utility;
 namespace NamelessEngine::Graphics {
 	ShadowingPass::ShadowingPass()
 		: _rootSignature(new RootSignature()), _pipelineState(new GraphicsPipelineState()),
-		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _renderTarget(new RenderTarget())
+		_descriptorHeap(new DescriptorHeapCBV_SRV_UAV()), _renderTarget(new RenderTarget()),
+		_biasBuffer(new ConstantBuffer())
 	{
 	}
 	ShadowingPass::~ShadowingPass()
@@ -45,7 +49,7 @@ namespace NamelessEngine::Graphics {
 	Utility::RESULT ShadowingPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 1;
+		rootSigData._descRangeData.cbvDescriptorNum = 2;
 		rootSigData._descRangeData.srvDescriptorNum = 2;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
@@ -92,6 +96,10 @@ namespace NamelessEngine::Graphics {
 	{
 		return _descriptorHeap->Create(device);
 	}
+	Utility::RESULT ShadowingPass::CreateBuffer(ID3D12Device& device)
+	{
+		return _biasBuffer->Create(device, nullptr, sizeof(float));
+	}
 	Utility::RESULT ShadowingPass::Init()
 	{
 		ID3D12Device& device = Dx12GraphicsEngine::Instance().Device();
@@ -112,6 +120,12 @@ namespace NamelessEngine::Graphics {
 		if (result == RESULT::FAILED) {
 			MessageBox(NULL, L"ディスクリプタヒープ生成失敗", L"エラーメッセージ", MB_OK);
 		}
+		result = CreateBuffer(device);
+		if (result == RESULT::FAILED) {
+			MessageBox(NULL, L"バッファー生成失敗", L"エラーメッセージ", MB_OK);
+		}
+
+		_descriptorHeap->RegistConstantBuffer(device, *_biasBuffer.get(), BIAS_INDEX);
 
 		SIZE windowSize = AppWindow::GetWindowSize();
 
@@ -149,6 +163,10 @@ namespace NamelessEngine::Graphics {
 	void ShadowingPass::SetLightViewProjBuffer(DX12API::ConstantBuffer& buffer)
 	{
 		_descriptorHeap->RegistConstantBuffer(Dx12GraphicsEngine::Instance().Device(), buffer, 0);
+	}
+	void ShadowingPass::UpdateBias(float bias)
+	{
+		_biasBuffer->UpdateData(&bias);
 	}
 	const SIZE_T ShadowingPass::GetShadowMapHandlePtr()
 	{

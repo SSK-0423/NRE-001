@@ -167,7 +167,6 @@
     <ClCompile Include="Source\Graphics\Polygon.cpp" />
     <ClCompile Include="Source\Graphics\ShadowingPass.cpp" />
     <ClCompile Include="Source\Graphics\ShadowMapPass.cpp" />
-    <ClCompile Include="Source\Graphics\SkyBox.cpp" />
     <ClCompile Include="Source\Graphics\SkyBoxPass.cpp" />
     <ClCompile Include="Source\Graphics\SkySphere.cpp" />
     <ClCompile Include="Source\Graphics\SphereMesh.cpp" />
@@ -228,7 +227,6 @@
     <ClInclude Include="Source\Graphics\Polygon.h" />
     <ClInclude Include="Source\Graphics\ShadowingPass.h" />
     <ClInclude Include="Source\Graphics\ShadowMapPass.h" />
-    <ClInclude Include="Source\Graphics\SkyBox.h" />
     <ClInclude Include="Source\Graphics\SkyBoxPass.h" />
     <ClInclude Include="Source\Graphics\SkySphere.h" />
     <ClInclude Include="Source\Graphics\SphereMesh.h" />

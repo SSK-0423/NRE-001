@@ -110,7 +110,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normal); // 物体上の法線
     float3 V = normalize(eyePos - pos); // 視線方向
-    float3 R = normalize(reflect(-V, N)); // 光の反射方向
+    float3 R = normalize(-reflect(V, N)); // 光の反射方向
     float3 H = normalize(V + R);
 
     float3 F0 = lerp(0.04f.xxx, color, metallic);
