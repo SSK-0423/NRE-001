@@ -75,7 +75,9 @@ Utility::RESULT PBRScene::ImplInit()
 void PBRScene::Update(float deltaTime)
 {
 	float speed = 0.1f;
+	float rotateSpeed = 0.025f;
 	Input& input = Input::Instance();
+
 	if (input.GetKeyboradState(DIK_W) == BUTTON_STATE::HOLD) {
 		_camera->GetTransform().MoveForward(speed);
 	}
@@ -95,23 +97,17 @@ void PBRScene::Update(float deltaTime)
 		_camera->GetTransform().MoveUp(-speed);
 	}
 	if (input.GetKeyboradState(DIK_UPARROW) == BUTTON_STATE::HOLD) {
-		_camera->GetTransform().Rotation(-speed, 0.f, 0.f);
+		_camera->GetTransform().Rotation(-rotateSpeed, 0.f, 0.f);
 	}
 	if (input.GetKeyboradState(DIK_DOWNARROW) == BUTTON_STATE::HOLD) {
-		_camera->GetTransform().Rotation(speed, 0.f, 0.f);
+		_camera->GetTransform().Rotation(rotateSpeed, 0.f, 0.f);
 	}
 	if (input.GetKeyboradState(DIK_RIGHTARROW) == BUTTON_STATE::HOLD) {
-		_camera->GetTransform().Rotation(0.f, speed / 4.f, 0.f);
+		_camera->GetTransform().Rotation(0.f, rotateSpeed, 0.f);
 	}
 	if (input.GetKeyboradState(DIK_LEFTARROW) == BUTTON_STATE::HOLD) {
-		_camera->GetTransform().Rotation(0.f, -speed / 4.f, 0.f);
+		_camera->GetTransform().Rotation(0.f, -rotateSpeed, 0.f);
 	}
-
-	float sensitive = 0.001f;
-	float moveX = input.GetMouseXMovement() * sensitive;
-	float moveY = input.GetMouseYMovement() * sensitive;
-
-	_camera->GetTransform().Rotation(moveY, moveX, 0);
 
 	// ƒRƒCƒ“‚Ì‰ñ“]
 	auto coin = _meshActors[3];
