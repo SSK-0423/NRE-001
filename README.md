@@ -1,5 +1,4 @@
-![Nameless Renderer 2023_06_28 2_02_33](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/d46056bb-f429-4c7e-9f5c-61e5dd7b9109)# Nameless Renderer
-Physically Based Renderer with DirectX12 made for learning and trying rendering techniques
+# Nameless Renderer Physically Based Renderer with DirectX12 made for learning and trying rendering techniques
 
 ## Gallery
 ### IBL
