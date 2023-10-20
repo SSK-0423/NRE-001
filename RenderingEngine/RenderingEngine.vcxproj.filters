@@ -154,9 +154,6 @@
     <ClCompile Include="Source\Component\Transform.cpp">
       <Filter>Component</Filter>
     </ClCompile>
-    <ClCompile Include="Source\Graphics\SkyBox.cpp">
-      <Filter>Graphics</Filter>
-    </ClCompile>
     <ClCompile Include="Source\DX12API\ShaderLibrary.cpp">
       <Filter>DX12API</Filter>
     </ClCompile>
@@ -329,9 +326,6 @@
     </ClInclude>
     <ClInclude Include="Source\Scene\Scene.h">
       <Filter>Scene</Filter>
-    </ClInclude>
-    <ClInclude Include="Source\Graphics\SkyBox.h">
-      <Filter>Graphics</Filter>
     </ClInclude>
     <ClInclude Include="Source\DX12API\ShaderLibrary.h">
       <Filter>DX12API</Filter>

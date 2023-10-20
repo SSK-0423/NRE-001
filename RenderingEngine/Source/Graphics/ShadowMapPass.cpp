@@ -143,7 +143,7 @@ namespace NamelessEngine::Graphics {
 
 		return result;
 	}
-	void ShadowMapPass::UpdateLightViewProj(Scene::Camera& camera, const Component::DirectionalLight& directionalLight)
+	void ShadowMapPass::UpdateLightViewProj(Scene::Camera& camera, const ShadowMapParam& param, const Component::DirectionalLight& directionalLight)
 	{
 		XMFLOAT3 lightDir = XMFLOAT3(directionalLight.direction);
 		XMStoreFloat3(&lightDir, XMVector3Normalize(XMLoadFloat3(&lightDir)));
@@ -156,12 +156,13 @@ namespace NamelessEngine::Graphics {
 		XMStoreFloat(&length, XMVector3Length(XMLoadFloat3(&pos)));
 
 		XMFLOAT3 lightPos = XMFLOAT3(0, 0, 0);
-		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * 150.f);
+		XMStoreFloat3(&lightPos, XMVector3Normalize(XMLoadFloat3(&lightDir)) * param.lightDistance);
 
 		XMFLOAT3 upDir = XMFLOAT3A(0, 0, 1);
+		XMFLOAT3 forcusPos = XMFLOAT3(0.f, 0.f, 0.f);
 		XMMATRIX view =
-			XMMatrixLookToLH(XMLoadFloat3(&lightPos), -1.f * XMLoadFloat3(&lightDir), XMLoadFloat3(&upDir));
-		XMMATRIX proj = XMMatrixOrthographicLH(300.f, 300.f, camera.cameraNear, 500.f);
+			XMMatrixLookAtLH(XMLoadFloat3(&lightPos), XMLoadFloat3(&forcusPos), XMLoadFloat3(&upDir));
+		XMMATRIX proj = XMMatrixOrthographicLH(param.viewWidth, param.viewHeight, param.nearZ, param.farZ);
 		XMMATRIX lightViewProj = view * proj;
 
 		_lightViewProjBuffer->UpdateData(&lightViewProj);

@@ -24,6 +24,15 @@ namespace NamelessEngine {
 }
 
 namespace NamelessEngine::Graphics {
+	struct ShadowMapParam
+	{
+		float lightDistance = 100.f;
+		float nearZ = 0.1f;
+		float farZ = 100.f;
+		float viewWidth = 100.f;
+		float viewHeight = 100.f;
+	};
+
 	class ShadowMapPass {
 	public:
 		ShadowMapPass();
@@ -44,7 +53,7 @@ namespace NamelessEngine::Graphics {
 
 	public:
 		Utility::RESULT Init();
-		void UpdateLightViewProj(Scene::Camera& camera, const Component::DirectionalLight& directionalLight);
+		void UpdateLightViewProj(Scene::Camera& camera, const ShadowMapParam& param, const Component::DirectionalLight& directionalLight);
 		void Render(std::vector<Actor*>& actors);
 		DX12API::Texture& GetShadowMap();
 		DX12API::ConstantBuffer& GetLightViewProjBuffer();

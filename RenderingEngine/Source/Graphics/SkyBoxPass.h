@@ -41,15 +41,12 @@ namespace NamelessEngine::Graphics {
 		std::unique_ptr<DX12API::RenderTarget> _renderTarget = nullptr;
 		Utility::RESULT CreateRenderTarget(ID3D12Device& device);
 
-		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _descriptorHeap = nullptr;
-		Utility::RESULT CreateDescriptorHeap(ID3D12Device& deivce);
-
 		std::unique_ptr<Component::Transform> _transform = nullptr;
 		std::unique_ptr<Component::Mesh> _skyBox = nullptr;
 
 	public:
 		Utility::RESULT Init();
-		void Render();
+		void Render(Scene::Camera& camera);
 		void SetCubeTexture(DX12API::Texture& texture);
 		void SetCamera(Scene::Camera& camera);
 		DX12API::Texture& GetOffscreenTexture();

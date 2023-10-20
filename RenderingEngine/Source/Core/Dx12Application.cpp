@@ -3,8 +3,8 @@
 #include "imgui_impl_dx12.h"
 #include "imgui_impl_win32.h"
 
-const LONG WINDOW_WIDTH = 1280;
-const LONG WINDOW_HEIGHT = 800;
+const LONG WINDOW_WIDTH = 1980;
+const LONG WINDOW_HEIGHT = 1080;
 
 using namespace NamelessEngine::Core;
 using namespace NamelessEngine::Utility;
@@ -49,7 +49,7 @@ RESULT Dx12Application::Init()
 	ImGui_ImplDX12_Init(
 		&_graphicsEngine.Device(),
 		3,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		*_graphicsEngine.GetImguiDescriptorHeap().GetDescriptorHeapAddress(),
 		_graphicsEngine.GetImguiDescriptorHeap().GetCPUDescriptorHandleForHeapStart(),
 		_graphicsEngine.GetImguiDescriptorHeap().GetGPUDescriptorHandleForHeapStart());
@@ -84,5 +84,6 @@ void Dx12Application::Run()
 
 void Dx12Application::End()
 {
+	ImGui_ImplDX12_Shutdown();
 	_applicationImpl.Final();
 }

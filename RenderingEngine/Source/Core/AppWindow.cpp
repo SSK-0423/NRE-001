@@ -61,7 +61,7 @@ namespace NamelessEngine::Core
 		//ウィンドウオブジェクトの生成
 		_hwnd = CreateWindow(_wndClassEx.lpszClassName,
 			initData.windowName,	// タイトルバーの文字
-			WS_OVERLAPPEDWINDOW,	// タイトルバーと境界線があるウィンドウ
+			WS_OVERLAPPEDWINDOW | WS_MAXIMIZE,	// タイトルバーと境界線があるウィンドウ
 			CW_USEDEFAULT,			// 表示X座標はOSにお任せ
 			CW_USEDEFAULT,			// 表示Y座標はOSにお任せ
 			rect.right - rect.left,	// ウィンドウ幅

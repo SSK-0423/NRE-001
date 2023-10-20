@@ -13,6 +13,7 @@ TextureCube specularLD : register(t7); // HDR
 TextureCube irradiance : register(t8); // HDR
 
 Texture2D shadowFactorMap : register(t9);
+Texture2D shadowMap : register(t10);
 
 sampler smp : register(s0);
 
@@ -25,6 +26,7 @@ static const int ROUGHNESS = 3;
 static const int NORMAL = 4;
 static const int EMISSIVECOLOR = 5;
 static const int OCCLUSION = 6;
+static const int SHADOWMAP = 7;
 
 cbuffer Parameter : register(b0)
 {
@@ -106,11 +108,12 @@ float4 PSMain(VertexOutput input) : SV_Target
     float metallic = occMetalRoughMap.Sample(smp, uv).b;
     float3 emissiveColor = emissiveMap.Sample(smp, uv).rgb;
     float shadowFactor = shadowFactorMap.Sample(smp, uv).r;
+    float shadow = shadowMap.Sample(smp, uv).r;
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normal); // 物体上の法線
     float3 V = normalize(eyePos - pos); // 視線方向
-    float3 R = normalize(reflect(-V, N)); // 光の反射方向
+    float3 R = normalize(-reflect(V, N)); // 光の反射方向
     float3 H = normalize(V + R);
 
     float3 F0 = lerp(0.04f.xxx, color, metallic);
@@ -139,7 +142,8 @@ float4 PSMain(VertexOutput input) : SV_Target
         return float4(emissiveColor, 1.f);
     if (debugDrawMode == OCCLUSION)
         return float4(occlusion, occlusion, occlusion, 1.f);
-        //return float4(shadowFactor, shadowFactor, shadowFactor, 1.f);
+    if (debugDrawMode == SHADOWMAP)
+        return float4(shadow, shadow, shadow, 1.f);
     
     return float4(Reinhard(outColor), 1.f);
 }

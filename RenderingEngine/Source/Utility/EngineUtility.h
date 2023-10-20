@@ -7,8 +7,8 @@
 namespace NamelessEngine::Utility
 {
 	/// <summary>
-/// ŠÖ”‚Ì¬Œ÷/¸”s
-/// </summary>
+	/// ŠÖ”‚Ì¬Œ÷/¸”s
+	/// </summary>
 	enum class RESULT
 	{
 		SUCCESS,	//¬Œ÷

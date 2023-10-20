@@ -1,6 +1,7 @@
 #pragma once
 
 #include <d3d12.h>
+#include <d3dx12.h>
 #include <wrl.h>
 
 #pragma comment(lib,"d3d12.lib")
@@ -15,7 +16,7 @@ namespace NamelessEngine::DX12API
 	class UnorderedAccessResource;
 
 	struct ShaderResourceViewDesc;
-	
+
 	class DescriptorHeapCBV_SRV_UAV
 	{
 	public:
@@ -79,10 +80,32 @@ namespace NamelessEngine::DX12API
 		/// </summary>
 		/// <returns>GPUのSRV部分のディスクリプタヒープの先頭ハンドル</returns>
 		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandleForHeapStartSRV() {
-			auto handle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
-			handle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			auto gpuHandle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+			gpuHandle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			auto cpuHandle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+			cpuHandle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
 
-			return handle;
+			return std::move(gpuHandle);
+		}
+
+		D3D12_GPU_DESCRIPTOR_HANDLE GetSRVHandle(int index) {
+			auto gpuHandle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+			gpuHandle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			gpuHandle.ptr += _handleIncrimentSize * index;
+			auto cpuHandle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+			cpuHandle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			cpuHandle.ptr += _handleIncrimentSize * index;
+
+			return std::move(gpuHandle);
+		}
+
+		CD3DX12_GPU_DESCRIPTOR_HANDLE GetGPUHandle() {
+			auto gpuHandle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+			gpuHandle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+			auto cpuHandle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+			cpuHandle.ptr += _handleIncrimentSize * _MAX_CBV_DESCRIPTOR_NUM;
+
+			return CD3DX12_GPU_DESCRIPTOR_HANDLE(gpuHandle, _MAX_CBV_DESCRIPTOR_NUM, _handleIncrimentSize);
 		}
 
 		/// <summary>

@@ -34,6 +34,7 @@ namespace NamelessEngine::Graphics {
 		NORMAL,
 		EMISSIVECOLOR,
 		OCCLUSION,
+		SHADOWMAP,
 	};
 
 	struct DebugParam {
@@ -76,6 +77,7 @@ namespace NamelessEngine::Graphics {
 		void SetLightedTexture(DX12API::Texture& texture);
 		void SetIBLTextures(DX12API::Texture& specularLD, DX12API::Texture& diffuseLD, DX12API::Texture& dfg);
 		void SetShadowFactorTex(DX12API::Texture& texture);
+		void SetShadowMap(DX12API::Texture& texture);
 		DX12API::Texture& GetOffscreenTexture();
 	};
 }

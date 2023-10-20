@@ -83,7 +83,6 @@ namespace NamelessEngine::Component
 	}
 	void Transform::Scalling(float x, float y, float z)
 	{
-
 		XMFLOAT3 move(x, y, z);
 		XMStoreFloat3(&_scale, XMVectorAdd(XMLoadFloat3(&_scale), XMLoadFloat3(&move)));
 	}
@@ -109,9 +108,14 @@ namespace NamelessEngine::Component
 	{
 		return _position;
 	}
-	DirectX::XMFLOAT3 Transform::EularAngle()
+	DirectX::XMFLOAT3 Transform::DegreeAngle()
 	{
-		return _eularAngle;
+		XMFLOAT3 degreeAngle = XMFLOAT3(
+			DirectX::XMConvertToDegrees(_eularAngle.x), 
+			DirectX::XMConvertToDegrees(_eularAngle.y), 
+			DirectX::XMConvertToRadians(_eularAngle.z));
+
+		return degreeAngle;
 	}
 	DirectX::XMFLOAT3 Transform::Scale()
 	{

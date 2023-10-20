@@ -8,6 +8,11 @@ cbuffer Light : register(b0)
     matrix lightViewProj;
 };
 
+cbuffer Bias : register(b1)
+{
+    float bias;
+}
+
 struct VertexOutput
 {
     float4 position : SV_POSITION;
@@ -43,7 +48,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float posDepth = posFromLight.z;
     
     float4 depth = lightDepthMap.Sample(smp, shadowUV);
-    float bias = 0.005f;
+    //float bias = 0.005f;
     
     if (posDepth - bias > depth.r)
     {

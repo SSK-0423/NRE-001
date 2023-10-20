@@ -53,7 +53,7 @@ namespace NamelessEngine::Component
 		void MoveUp(float distance);
 
 		DirectX::XMFLOAT3 Position();
-		DirectX::XMFLOAT3 EularAngle();
+		DirectX::XMFLOAT3 DegreeAngle();
 		DirectX::XMFLOAT3 Scale();
 
 		DirectX::XMFLOAT3 Forward();
