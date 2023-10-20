@@ -261,6 +261,7 @@ namespace NamelessEngine::Core
 			dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
 			depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
 
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		// Imgui描画前準備
 		ImGui_ImplDX12_NewFrame();
 		ImGui_ImplWin32_NewFrame();
@@ -386,14 +387,3 @@ namespace NamelessEngine::Core
 		return _imguiHeap;
 	}
 }
-
-/// メモ
-/// returnする場合としない場合がある→引数でリターンの有無を指定する？
-/// 無理にインライン化して可読性下がる可能性もある→この処理は生成処理以外呼ぶことが少ないので、
-/// インライン化するメリットが小さい
-//inline HRESULT CheckFailed(const HRESULT& result, const char* message, const HWND& hwnd) {
-//	if (FAILED(result)) {
-//		MessageBoxA(hwnd, message, "エラー", MB_OK | MB_ICONERROR);
-//		return result;
-//	}
-//}

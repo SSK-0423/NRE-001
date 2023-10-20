@@ -2,7 +2,7 @@
 
 namespace NamelessEngine
 {
-	Actor::Actor()
+	Actor::Actor(const std::string& name) : _actorName(name)
 	{
 	}
 	Actor::~Actor()

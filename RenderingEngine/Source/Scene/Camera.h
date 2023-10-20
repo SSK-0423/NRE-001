@@ -12,10 +12,7 @@ namespace NamelessEngine::Scene {
 	private:
 		DirectX::XMMATRIX ViewMatrix();
 
-		float _fov;
 		static float _aspect;
-		float _near;
-		float _far;
 		DirectX::XMMATRIX ProjectionMatrix();
 
 		struct CameraCBuff {
@@ -30,6 +27,10 @@ namespace NamelessEngine::Scene {
 		Component::Transform _transform;
 
 	public:
+		float cameraNear;
+		float cameraFar;
+		float cameraFov;
+
 		Utility::RESULT Init();
 		void Update(float deltaTime);
 		DX12API::ConstantBuffer& GetConstantBuffer();

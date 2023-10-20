@@ -4,14 +4,16 @@
 Texture2D colorMap : register(t0);
 Texture2D normalMap : register(t1);
 Texture2D positionMap : register(t2);
-Texture2D metalRoughReflectMap : register(t3);
-Texture2D occlusionMap : register(t4);
-Texture2D emissiveMap : register(t5);
+Texture2D occMetalRoughMap : register(t3);
+Texture2D emissiveMap : register(t4);
 
-Texture2D lightedMap : register(t6);
-Texture2D dfgMap : register(t7);
-TextureCube specularLD : register(t8); // HDR
-TextureCube irradiance : register(t9); // HDR
+Texture2D lightedMap : register(t5);
+Texture2D dfgMap : register(t6);
+TextureCube specularLD : register(t7); // HDR
+TextureCube irradiance : register(t8); // HDR
+
+Texture2D shadowFactorMap : register(t9);
+Texture2D shadowMap : register(t10);
 
 sampler smp : register(s0);
 
@@ -24,6 +26,7 @@ static const int ROUGHNESS = 3;
 static const int NORMAL = 4;
 static const int EMISSIVECOLOR = 5;
 static const int OCCLUSION = 6;
+static const int SHADOWMAP = 7;
 
 cbuffer Parameter : register(b0)
 {
@@ -100,15 +103,17 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 color = colorMap.Sample(smp, uv).rgb;
     float3 normal = normalMap.Sample(smp, uv).rgb * 2.f - 1.f;
     float3 pos = positionMap.Sample(smp, uv).rgb;
-    float metallic = metalRoughReflectMap.Sample(smp, uv).b;
-    float roughness = metalRoughReflectMap.Sample(smp, uv).g;
-    float occlusion = occlusionMap.Sample(smp, uv).r;
+    float occlusion = occMetalRoughMap.Sample(smp, uv).r;
+    float roughness = occMetalRoughMap.Sample(smp, uv).g;
+    float metallic = occMetalRoughMap.Sample(smp, uv).b;
     float3 emissiveColor = emissiveMap.Sample(smp, uv).rgb;
+    float shadowFactor = shadowFactorMap.Sample(smp, uv).r;
+    float shadow = shadowMap.Sample(smp, uv).r;
 
     // BRDFの計算に必要な要素計算
     float3 N = normalize(normal); // 物体上の法線
     float3 V = normalize(eyePos - pos); // 視線方向
-    float3 R = normalize(reflect(-V, N)); // 光の反射方向
+    float3 R = normalize(-reflect(V, N)); // 光の反射方向
     float3 H = normalize(V + R);
 
     float3 F0 = lerp(0.04f.xxx, color, metallic);
@@ -120,7 +125,7 @@ float4 PSMain(VertexOutput input) : SV_Target
     float3 specular = IBLSpecualr(saturate(dot(N, V)), N, R, ks, roughness, MIP_COUNT);
     
     float3 outColor = (kd * diffuse + specular) * lightIntensity + lightedMap.Sample(smp, input.uv).rgb * (1.f - isIblOnly);
-    outColor *= occlusion;
+    outColor *= shadowFactor * occlusion;
     outColor += emissiveColor;
     
     if (debugDrawMode == LIGHTING)
@@ -137,6 +142,8 @@ float4 PSMain(VertexOutput input) : SV_Target
         return float4(emissiveColor, 1.f);
     if (debugDrawMode == OCCLUSION)
         return float4(occlusion, occlusion, occlusion, 1.f);
+    if (debugDrawMode == SHADOWMAP)
+        return float4(shadow, shadow, shadow, 1.f);
     
     return float4(Reinhard(outColor), 1.f);
 }

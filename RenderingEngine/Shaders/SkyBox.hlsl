@@ -32,6 +32,17 @@ struct VertexOutput
 
 VertexOutput VSMain(VertexInput input)
 {
+    matrix v =
+    {
+        //float4(view._11_12_13, 0.f),
+        //float4(view._21_22_23, 0.f),
+        //float4(view._31_32_33, 0.f),
+        float4(view._11_21_31, 0.f),
+        float4(view._12_22_32, 0.f),
+        float4(view._13_23_33, 0.f),
+        float4(0.f, 0.f, 0.f, 1.f)
+    };
+    
     matrix worldViewProj = mul(viewProj, world);
     VertexOutput output;
     output.position = mul(worldViewProj, float4(input.position, 1.f));
@@ -42,11 +53,11 @@ VertexOutput VSMain(VertexInput input)
 
 float4 PSMain(VertexOutput input) : SV_Target
 {
-    float3 skyColor = texCube.SampleLevel(smp, input.uv, 0).rgb;
+    //float3 skyColor = texCube.SampleLevel(smp, input.uv, 0).rgb;
     //if (skyColor.r > 1.f || skyColor.g > 1.f || skyColor.b > 1.f)
     //{
     //    return float4(0.f, 0.f, 0.f, 1.f);
     //}
     //return float4(Reinhard(skyColor), 1.f);
-    return float4(texCube.Sample(smp, input.uv));
+    return float4(Reinhard(texCube.Sample(smp, input.uv).rgb), 1.f);
 }

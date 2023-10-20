@@ -5,7 +5,6 @@
 #pragma comment(lib, "dinput8.lib")
 #pragma comment(lib, "dxguid.lib")
 
-#include "AppWindow.h"
 #include "EngineUtility.h"
 
 namespace NamelessEngine::Core {
@@ -38,7 +37,7 @@ namespace NamelessEngine::Core {
 	public:
 		static Input& Instance();
 
-		Utility::RESULT Init(AppWindow& window);
+		Utility::RESULT Init(HWND hwnd);
 
 		void Update();
 

@@ -35,6 +35,9 @@ float4 PSMain(VertexOutput input) : SV_Target
     
     //return float4(lightedColor, 1.f);
     
+    //float depth = depthMap.Sample(smp, input.uv).r;
+    //return float4(depth, depth, depth, 1.f);
+    
     float3 outColor = skyColor * blend + lightedColor * (1 - blend);
 
     return float4(outColor, 1.f);

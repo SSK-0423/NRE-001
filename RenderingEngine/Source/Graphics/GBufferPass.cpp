@@ -50,7 +50,7 @@ namespace NamelessEngine::Graphics
 	Utility::RESULT GBufferPass::CreateRootSignature(ID3D12Device& device)
 	{
 		RootSignatureData rootSigData;
-		rootSigData._descRangeData.cbvDescriptorNum = 2;
+		rootSigData._descRangeData.cbvDescriptorNum = 3;
 		rootSigData._descRangeData.srvDescriptorNum = 5;
 
 		Utility::RESULT result = _rootSignature->Create(device, rootSigData);
@@ -76,8 +76,7 @@ namespace NamelessEngine::Graphics
 		_renderTargets[GBUFFER_TYPE::COLOR] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::NORMAL] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::WORLD_POS] = std::make_unique<DX12API::RenderTarget>();
-		_renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT] = std::make_unique<DX12API::RenderTarget>();
-		_renderTargets[GBUFFER_TYPE::OCCLUSION] = std::make_unique<DX12API::RenderTarget>();
+		_renderTargets[GBUFFER_TYPE::OCCLUSION_ROUGH_METAL] = std::make_unique<DX12API::RenderTarget>();
 		_renderTargets[GBUFFER_TYPE::EMISSIVE] = std::make_unique<DX12API::RenderTarget>();
 
 		RESULT result = _renderTargets[GBUFFER_TYPE::COLOR]->Create(device, data);
@@ -86,14 +85,9 @@ namespace NamelessEngine::Graphics
 		data.useDepth = false;
 		result = _renderTargets[GBUFFER_TYPE::EMISSIVE]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
-
-
-		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		result = _renderTargets[GBUFFER_TYPE::NORMAL]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
-		result = _renderTargets[GBUFFER_TYPE::METAL_ROUGH_REFLECT]->Create(device, data);
-		if (result == RESULT::FAILED) { return result; }
-		result = _renderTargets[GBUFFER_TYPE::OCCLUSION]->Create(device, data);
+		result = _renderTargets[GBUFFER_TYPE::OCCLUSION_ROUGH_METAL]->Create(device, data);
 		if (result == RESULT::FAILED) { return result; }
 
 		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R32G32B32A32_FLOAT;
@@ -150,7 +144,7 @@ namespace NamelessEngine::Graphics
 
 		// ラスタライズ設定
 		pipelineState.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
-		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_NONE;
+		pipelineState.RasterizerState.CullMode = D3D12_CULL_MODE_BACK;
 
 		// インプットレイアウトの設定
 		InputLayout layout = InputLayout::DefaultLayout();
@@ -167,13 +161,12 @@ namespace NamelessEngine::Graphics
 		pipelineState.DSVFormat = DXGI_FORMAT_D32_FLOAT;
 
 		// レンダーターゲットの設定
-		pipelineState.NumRenderTargets = 6;
+		pipelineState.NumRenderTargets = 5;
 		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;	// カラー
 		pipelineState.RTVFormats[1] = DXGI_FORMAT_R8G8B8A8_UNORM;	// 法線
 		pipelineState.RTVFormats[2] = DXGI_FORMAT_R32G32B32A32_FLOAT;	// ワールド座標
-		pipelineState.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;		// メタリック/ラフネス
-		pipelineState.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;		// オクルージョン
-		pipelineState.RTVFormats[5] = DXGI_FORMAT_R8G8B8A8_UNORM;	// エミッシブ
+		pipelineState.RTVFormats[3] = DXGI_FORMAT_R8G8B8A8_UNORM;		// オクルージョン/メタリック/ラフネス/シャドウファクタ―
+		pipelineState.RTVFormats[4] = DXGI_FORMAT_R8G8B8A8_UNORM;	// エミッシブ
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1

@@ -1,10 +1,15 @@
 #pragma once
 #include "IRenderer.h"
+
 #include "GBufferPass.h"
+#include "ShadowMapPass.h"
+#include "ShadowingPass.h"
 #include "LightingPass.h"
 #include "SkyBoxPass.h"
 #include "BlendPass.h"
 #include "IBLPass.h"
+
+#include "LightSource.h"
 
 #include "EngineUtility.h"
 
@@ -14,6 +19,7 @@
 namespace NamelessEngine {
 	namespace DX12API {
 		class Texture;
+		class DescriptorHeapCBV_SRV_UAV;
 	}
 	namespace Scene {
 		class Camera;
@@ -29,6 +35,8 @@ namespace NamelessEngine::Graphics {
 
 	private:
 		GBufferPass _gbufferPass;
+		ShadowMapPass _shadowMapPass;
+		ShadowingPass _shadowingPass;
 		LightingPass _lightingPass;
 		IBLPass _iblPass;
 		SkyBoxPass _skyBoxPass;
@@ -39,20 +47,25 @@ namespace NamelessEngine::Graphics {
 		std::unique_ptr<DX12API::Texture> _diffuseLD;
 		std::unique_ptr<DX12API::Texture> _DFG;
 
-		// ImGuiパラメータ
-		float _baseColor[3];
-		float _roughness;
-		float _metallic;
-
 		// ライティングパスで使用するバッファの構造体
 		LightingParam _lightingParam;
-		DirectionalLight _directionalLight;
+		Component::DirectionalLight _directionalLight;
 		float _dLightColor[3];
 		float _dLightDirection[3];
 
 		// IBLパスで使用するバッファの構造体
 		IBLParam _iblParam;
 		DebugParam _debugParam;
+
+		// シャドウマップパスのバッファ
+		ShadowMapParam _shadowMapParam;
+
+		// シャドウイングパスのバッファ
+		float _bias;
+
+		// テスト用
+		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _heap;
+		std::unique_ptr<DX12API::Texture> _testImage;
 
 	public:
 		Utility::RESULT Init(Scene::Scene& scene) override;

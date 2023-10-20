@@ -109,15 +109,33 @@ namespace NamelessEngine::Graphics
 				const tinygltf::Accessor& indexAccessor = model.accessors[primitive.indices];
 				const tinygltf::BufferView& indexBufferView = model.bufferViews[indexAccessor.bufferView];
 				const tinygltf::Buffer& indexBuffer = model.buffers[indexBufferView.buffer];
-				const unsigned short* indi = reinterpret_cast<const unsigned short*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
 
-				submeshData.indices.resize(indexAccessor.count);
-				for (size_t i = 0; i < indexAccessor.count; i++) {
-					submeshData.indices[i] = indi[i];
+				if (indexAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_SHORT) {
+					const unsigned short* indi = reinterpret_cast<const unsigned short*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
+					// glbはOpenGL系なので半時計周りが表面となる
+					// DirectXは時計回りが表面なので、頂点インデックスを逆順で取得する必要がある
+					submeshData.indices.resize(indexAccessor.count);
+					for (size_t i = 0; i < indexAccessor.count; i += 3) {
+						submeshData.indices[i] = indi[i + 2];
+						submeshData.indices[i + 1] = indi[i + 1];
+						submeshData.indices[i + 2] = indi[i];
+					}
+				}
+				else if (indexAccessor.componentType == TINYGLTF_COMPONENT_TYPE_UNSIGNED_INT) {
+					const unsigned int* indi = reinterpret_cast<const unsigned int*>(&indexBuffer.data[indexBufferView.byteOffset + indexAccessor.byteOffset]);
+					// glbはOpenGL系なので半時計周りが表面となる
+					// DirectXは時計回りが表面なので、頂点インデックスを逆順で取得する必要がある
+					submeshData.indices.resize(indexAccessor.count);
+					for (size_t i = 0; i < indexAccessor.count; i += 3) {
+						submeshData.indices[i] = indi[i + 2];
+						submeshData.indices[i + 1] = indi[i + 1];
+						submeshData.indices[i + 2] = indi[i];
+					}
 				}
 
 				// 接線データ(存在しない場合がある)
 				// 存在しない場合は他のAccessorとcount変数の値が異なる
+				// TODO: 一部の接線ベクトルが正しく計算されないバグの修正
 				const tinygltf::Accessor& tangentAccessor = model.accessors[primitive.attributes["TANGENT"]];
 				if (tangentAccessor.count != posAccessor.count) {
 					for (size_t i = 0; i < posAccessor.count; i++) {
@@ -135,6 +153,7 @@ namespace NamelessEngine::Graphics
 
 						// 頂点接線ベクトルなので共有面を全てリストアップして平均取る必要ありそう
 						for (size_t j = 0; j < indexAccessor.count; j++) {
+
 							// 接線ベクトルを求めたい頂点を含むポリゴンを見つける
 							if (XMVector3Equal(XMLoadFloat3(&submeshData.vertices[i].position), XMLoadFloat3(&submeshData.vertices[submeshData.indices[j]].position))) {
 								size_t index0;
@@ -144,10 +163,9 @@ namespace NamelessEngine::Graphics
 								switch (submeshData.indices[j] % 3)
 								{
 								case 0:	// ポリゴンの最初の頂点だった場合
-									if (j > indexAccessor.count - 3) continue;
-									index0 = submeshData.indices[j];
-									index1 = submeshData.indices[j + 1];
-									index2 = submeshData.indices[j + 2];
+									index0 = submeshData.indices[j - 2];
+									index1 = submeshData.indices[j - 1];
+									index2 = submeshData.indices[j];
 									break;
 								case 1:	// ポリゴンの2番目の頂点だった場合
 									if (j > indexAccessor.count - 2) continue;
@@ -156,9 +174,11 @@ namespace NamelessEngine::Graphics
 									index2 = submeshData.indices[j + 1];
 									break;
 								case 2:	// ポリゴンの3番目の頂点だった場合
-									index0 = submeshData.indices[j - 2];
-									index1 = submeshData.indices[j - 1];
-									index2 = submeshData.indices[j];
+									if (j > indexAccessor.count - 3) continue;
+									index0 = submeshData.indices[j];
+									index1 = submeshData.indices[j + 1];
+									index2 = submeshData.indices[j + 2];
+									break;
 								default:
 									break;
 								}
@@ -195,7 +215,12 @@ namespace NamelessEngine::Graphics
 				}
 
 				// マテリアルインデックス
-				submeshData.materialIndex = primitive.material;
+				if (primitive.material < 0) {
+					submeshData.materialIndex = 0;
+				}
+				else {
+					submeshData.materialIndex = primitive.material;
+				}
 
 				// サブメッシュ生成
 				Component::SubMesh submesh;
@@ -211,9 +236,14 @@ namespace NamelessEngine::Graphics
 	}
 	Utility::RESULT GLBLoader::LoadMaterial(ID3D12Device& device, tinygltf::Model& model, std::vector<Component::Material>& materials)
 	{
+		if (model.materials.size() == 0) {
+			model.materials.resize(1);
+		}
+
 		materials.resize(model.materials.size());
 		size_t index = 0;
 		for (auto& material : model.materials) {
+
 			// ベースカラー
 			if (material.pbrMetallicRoughness.baseColorTexture.index >= 0) {
 				const tinygltf::Texture& baseColorTexture = model.textures[material.pbrMetallicRoughness.baseColorTexture.index];
@@ -237,7 +267,7 @@ namespace NamelessEngine::Graphics
 
 				materials[index].baseColorTexture->CreateTextureFromConstantData(
 					Core::Dx12GraphicsEngine::Instance(), dummyBaseColor.data(), sizeof(unsigned char) * 4,
-					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM);
+					1, 1, 1, DXGI_FORMAT_R8G8B8A8_UNORM_SRGB);
 			}
 			// メタリックラフネス
 			if (material.pbrMetallicRoughness.metallicRoughnessTexture.index >= 0) {
@@ -256,7 +286,7 @@ namespace NamelessEngine::Graphics
 
 			}
 			else {
-				std::vector<unsigned char> dummyMetalRough = { 0, 0, 255, 255 };
+				std::vector<unsigned char> dummyMetalRough = { 0, 255, 0, 255 };
 
 				if (materials[index].metalRoughTexture == nullptr)
 					materials[index].metalRoughTexture = new DX12API::Texture();

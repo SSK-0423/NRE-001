@@ -43,20 +43,23 @@ namespace NamelessEngine::DX12API
 	{
 		assert(registerNo < static_cast<int>(_MAX_SRV_DESCRIPTOR_NUM) && registerNo >= NEXT_REGISTER);
 
-		auto handle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		auto cpuHandle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		auto gpuHandle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+
+		// GPUDescriptorHandleも一緒にインクリメントする必要ある？？
 
 		if (registerNo == NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
-			handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(_registedSRVNum) + _MAX_CBV_DESCRIPTOR_NUM);
+		{
+			cpuHandle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(_registedSRVNum) + _MAX_CBV_DESCRIPTOR_NUM);
+			gpuHandle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(_registedSRVNum) + _MAX_CBV_DESCRIPTOR_NUM);
+		}
 		else                                // 指定されたレジスタ
-			handle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
+		{
+			cpuHandle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
+			gpuHandle.ptr += _handleIncrimentSize * (static_cast<SIZE_T>(registerNo) + _MAX_CBV_DESCRIPTOR_NUM);
+		}
 
-		//D3D12_SHADER_RESOURCE_VIEW_DESC srvDesc = {};
-		//srvDesc.Format = texture.GetImage().format;
-		//srvDesc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
-		//srvDesc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
-		//srvDesc.Texture2D.MipLevels = texture.GetTexMetadata().mipLevels;
-
-		device.CreateShaderResourceView(&texture.GetBuffer(), &desc.desc, handle);
+		device.CreateShaderResourceView(&texture.GetBuffer(), &desc.desc, cpuHandle);
 
 		_registedSRVNum++;
 	}
@@ -66,19 +69,25 @@ namespace NamelessEngine::DX12API
 	{
 		assert(registerNo < static_cast<int>(_MAX_CBV_DESCRIPTOR_NUM) && registerNo >= NEXT_REGISTER);
 
-		auto handle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		auto cpuHandle = _descriptorHeap->GetCPUDescriptorHandleForHeapStart();
+		auto gpuHandle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
 
 		if (registerNo == NEXT_REGISTER)	// 登録されているリソース数の次のレジスタ
-			handle.ptr += _handleIncrimentSize * _registedCBVNum;
+		{
+			cpuHandle.ptr += _handleIncrimentSize * _registedCBVNum;
+			gpuHandle.ptr += _handleIncrimentSize * _registedCBVNum;
+		}
 		else                                // 指定されたレジスタ
-			handle.ptr += _handleIncrimentSize * registerNo;
+		{
+			cpuHandle.ptr += _handleIncrimentSize * registerNo;
+			gpuHandle.ptr += _handleIncrimentSize * registerNo;
+		}
 
-		// Todo:後で実装
 		D3D12_CONSTANT_BUFFER_VIEW_DESC cbvDesc = {};
 		cbvDesc.BufferLocation = constantBuffer.GetGPUVirtualAddress();
 		cbvDesc.SizeInBytes = constantBuffer.GetBufferSize();
 
-		device.CreateConstantBufferView(&cbvDesc, handle);
+		device.CreateConstantBufferView(&cbvDesc, cpuHandle);
 
 		_registedCBVNum++;
 	}
