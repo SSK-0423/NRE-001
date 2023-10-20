@@ -261,6 +261,7 @@ namespace NamelessEngine::Core
 			dsvHandle, D3D12_CLEAR_FLAG_DEPTH,
 			depthStencilBufferData.clearDepth, depthStencilBufferData.clearStencil, 0, nullptr);
 
+		ImGui::GetIO().ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 		// Imgui•`‰æ‘O€”õ
 		ImGui_ImplDX12_NewFrame();
 		ImGui_ImplWin32_NewFrame();

@@ -61,6 +61,11 @@ namespace NamelessEngine::DX12API
 		/// <returns></returns>
 		D3D12_CPU_DESCRIPTOR_HANDLE GetNextCPUDescriptorHandle();
 
+		D3D12_GPU_DESCRIPTOR_HANDLE GetGPUDescriptorHandleForHeapStart() {
+			_nextHandleLocation = 1;
+			return _rtvHeap->GetGPUDescriptorHandleForHeapStart();
+		}
+
 		/// <summary>
 		/// ディスクリプタヒープハンドルのインクリメントサイズ取得
 		/// </summary>

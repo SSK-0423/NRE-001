@@ -95,7 +95,7 @@ namespace NamelessEngine::Graphics
 
 		// レンダーターゲットの設定
 		pipelineState.NumRenderTargets = 1;
-		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		pipelineState.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
 
 		// アンチエイリアシングのためのサンプル数設定
 		pipelineState.SampleDesc.Count = 1;			// サンプリングは1ピクセルにつき1
@@ -110,7 +110,7 @@ namespace NamelessEngine::Graphics
 		RenderTargetData data;
 		data.renderTargetBufferData.width = windowSize.cx;
 		data.renderTargetBufferData.height = windowSize.cy;
-		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
+		data.renderTargetBufferData.colorFormat = DXGI_FORMAT_R8G8B8A8_UNORM;
 		data.depthStencilBufferData.width = windowSize.cx;
 		data.depthStencilBufferData.height = windowSize.cy;
 		data.useDepth = false;
@@ -128,12 +128,15 @@ namespace NamelessEngine::Graphics
 		renderContext.SetPipelineState(*_pipelineState);
 		renderContext.SetGraphicsRootSignature(*_rootSignature);
 
-		Dx12GraphicsEngine::Instance().SetFrameRenderTarget(_viewport, _scissorRect);
+		_renderTarget->BeginRendering(renderContext, _viewport, _scissorRect);
 		{
 			renderContext.SetDescriptorHeap(*_descriptorHeap);
 			renderContext.SetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP);
 			renderContext.DrawInstanced(4, 1, 0, 0);
 		}
+		_renderTarget->EndRendering(renderContext);
+
+		Dx12GraphicsEngine::Instance().SetFrameRenderTarget(_viewport, _scissorRect);
 	}
 	void BlendPass::SetRenderedSkyBoxTexture(DX12API::Texture& texture)
 	{

@@ -7,14 +7,16 @@
 namespace NamelessEngine {
 	class Actor {
 	public:
-		Actor();
+		Actor(const std::string& name);
 		~Actor();
 	private:
 		std::vector<Component::IComponent*> _components;
+		std::string _actorName;
 
 	public:
 		void Update(float deltaTime);
 		void Draw(DX12API::RenderingContext& renderContext);
+		std::string GetActorName() { return _actorName; }
 
 		template<class T>
 		T* GetComponent()

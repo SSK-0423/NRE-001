@@ -24,7 +24,7 @@ Utility::RESULT PBRScene::ImplInit()
 {
 	ID3D12Device& device = Core::Dx12GraphicsEngine::Instance().Device();
 
-	Actor* sponza = new Actor();
+	Actor* sponza = new Actor("Sponza");
 	sponza->AddComponent<Transform>();
 	sponza->GetComponent<Transform>()->SetPosition(0.f, -5.f, 0.f);
 	sponza->GetComponent<Transform>()->SetDegreeAngle(0.f, -90.f, 0.f);
@@ -35,19 +35,18 @@ Utility::RESULT PBRScene::ImplInit()
 		device, sponza->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	_meshActors.push_back(sponza);
 
-	Actor* damagedHelmet = new Actor();
+	Actor* damagedHelmet = new Actor("Damaged Helmet");
 	damagedHelmet->AddComponent<Transform>();
 	damagedHelmet->GetComponent<Transform>()->SetPosition(0.f, 0.f, 10.f);
 	damagedHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
 	damagedHelmet->GetComponent<Transform>()->SetDegreeAngle(90.f, 90.f, 0.f);
-
 	damagedHelmet->AddComponent<Mesh>()->CreateFromGLB(device, "Assets/DamagedHelmet.glb");
 	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(device, _camera->GetConstantBuffer(), 0);
 	damagedHelmet->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
 		device, damagedHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	_meshActors.push_back(damagedHelmet);
 
-	Actor* sciFiHelmet = new Actor();
+	Actor* sciFiHelmet = new Actor("SciFiHelmet");
 	sciFiHelmet->AddComponent<Transform>();
 	sciFiHelmet->GetComponent<Transform>()->SetPosition(0.f, 1.f, -10.f);
 	sciFiHelmet->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);
@@ -58,7 +57,7 @@ Utility::RESULT PBRScene::ImplInit()
 		device, sciFiHelmet->GetComponent<Transform>()->GetConstantBuffer(), 1);
 	_meshActors.push_back(sciFiHelmet);
 
-	Actor* goldCoin = new Actor();
+	Actor* goldCoin = new Actor("Gold Coin");
 	goldCoin->AddComponent<Transform>();
 	goldCoin->GetComponent<Transform>()->SetPosition(0.f, 10.f, -30.f);
 	goldCoin->GetComponent<Transform>()->SetScalling(5.f, 5.f, 5.f);

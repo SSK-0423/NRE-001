@@ -166,6 +166,8 @@ namespace NamelessEngine::Core
 		DX12API::RenderingContext& GetRenderingContext();
 
 		DX12API::DescriptorHeapCBV_SRV_UAV& GetImguiDescriptorHeap();
+
+		DX12API::DescriptorHeapRTV& GetFrameBufferDescriptorHeap() { return _frameHeap; }
 	};
 }
 

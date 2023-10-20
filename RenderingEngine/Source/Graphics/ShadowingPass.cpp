@@ -170,7 +170,12 @@ namespace NamelessEngine::Graphics {
 	}
 	const SIZE_T ShadowingPass::GetShadowMapHandlePtr()
 	{
-		return _descriptorHeap->GetSRVHandle(SHADOWMAP_INDEX).ptr;
+		auto gpuHandle = _descriptorHeap->GetGPUDescriptorHandleForHeapStart();
+		gpuHandle.ptr += _descriptorHeap->GetHandleIncrimentSize();
+
+		return _descriptorHeap->GetGPUHandle().ptr;
+		//return _descriptorHeap->GetGPUDescriptorHandleForHeapStartSRV().ptr;
+		//return _descriptorHeap->GetSRVHandle(SHADOWMAP_INDEX).ptr;
 	}
 	DX12API::Texture& ShadowingPass::GetShadowFactorTexture()
 	{

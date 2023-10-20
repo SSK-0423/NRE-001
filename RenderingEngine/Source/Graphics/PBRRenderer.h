@@ -19,6 +19,7 @@
 namespace NamelessEngine {
 	namespace DX12API {
 		class Texture;
+		class DescriptorHeapCBV_SRV_UAV;
 	}
 	namespace Scene {
 		class Camera;
@@ -61,6 +62,10 @@ namespace NamelessEngine::Graphics {
 
 		// シャドウイングパスのバッファ
 		float _bias;
+
+		// テスト用
+		std::unique_ptr<DX12API::DescriptorHeapCBV_SRV_UAV> _heap;
+		std::unique_ptr<DX12API::Texture> _testImage;
 
 	public:
 		Utility::RESULT Init(Scene::Scene& scene) override;

@@ -7,6 +7,7 @@
 #include "ShaderLibrary.h"
 #include "Texture.h"
 #include "ShaderResourceViewDesc.h"
+#include "DescriptorHeapCBV_SRV_UAV.h"
 
 #include "Scene.h"
 #include "Camera.h"
@@ -81,6 +82,7 @@ namespace NamelessEngine::Graphics
 		_iblPass.SetIBLTextures(*_specularLD, *_diffuseLD, *_DFG);
 		_iblPass.SetLightedTexture(_lightingPass.GetOffscreenTexture());
 		_iblPass.SetShadowFactorTex(_shadowingPass.GetShadowFactorTexture());
+		_iblPass.SetShadowMap(_shadowMapPass.GetShadowMap());
 
 		_shadowingPass.SetWorldPosTexture(_gbufferPass.GetGBuffer(GBUFFER_TYPE::WORLD_POS));
 		_shadowingPass.SetShadowMap(_shadowMapPass.GetShadowMap());
@@ -100,6 +102,14 @@ namespace NamelessEngine::Graphics
 			actor->GetComponent<Mesh>()->SetConstantBufferOnAllSubMeshes(
 				device, _shadowMapPass.GetLightViewProjBuffer(), 2);
 		}
+
+		auto heap = Dx12GraphicsEngine::Instance().GetImguiDescriptorHeap();
+		ShaderResourceViewDesc finalRenderDesc(_blendPass.GetOffscreenTexture());
+		heap.RegistShaderResource(device, _blendPass.GetOffscreenTexture(), finalRenderDesc);
+		ShaderResourceViewDesc shadowMapDesc(_shadowMapPass.GetShadowMap());
+		heap.RegistShaderResource(device, _shadowMapPass.GetShadowMap(), shadowMapDesc);
+
+		return result;
 	}
 	void PBRRenderer::Update(float deltatime, Scene::Scene& scene)
 	{
@@ -134,10 +144,14 @@ namespace NamelessEngine::Graphics
 
 		// Imguiレンダー
 		{
+			ImGui::DockSpaceOverViewport(ImGui::GetWindowViewport(), ImGuiDockNodeFlags_PassthruCentralNode);
+
 			// ライティング用エディタ
-			ImGui::SetNextWindowPos(ImVec2(AppWindow::GetWindowSize().cx - ImGui::GetWindowWidth(), 0));
-			ImGui::SetNextWindowSize(ImVec2(400, 475));
-			ImGui::Begin("Lighting", 0, ImGuiWindowFlags_NoMove);
+			//ImGui::SetNextWindowPos(ImVec2(AppWindow::GetWindowSize().cx - ImGui::GetWindowWidth(), 0));
+			//ImGui::SetNextWindowSize(ImVec2(400, 475));
+			ImGui::PushStyleColor(ImGuiCol_TitleBgActive, ImVec4(0.0f, 0.1f, 0.71f, 1.f));
+			ImGui::PushStyleColor(ImGuiCol_TitleBg, ImVec4(0.0f, 0.1f, 0.91f, 1.f));
+			ImGui::Begin("Light Property", 0);
 			// ライティングパス関連
 			ImGui::ColorPicker3("LightColor", _directionalLight.color, ImGuiColorEditFlags_::ImGuiColorEditFlags_InputRGB);
 			ImGui::SliderFloat3("LightDirection", _directionalLight.direction, -1.f, 1.f);
@@ -151,8 +165,8 @@ namespace NamelessEngine::Graphics
 			ImGui::End();
 
 			// デバッグ用エディタ
-			ImGui::SetNextWindowPos(ImVec2(AppWindow::GetWindowSize().cx - ImGui::GetWindowWidth(), AppWindow::GetWindowSize().cy / 4 * 3));
-			ImGui::Begin("G-Buffer", 0, ImGuiWindowFlags_NoMove);
+			//ImGui::SetNextWindowPos(ImVec2(AppWindow::GetWindowSize().cx - ImGui::GetWindowWidth(), AppWindow::GetWindowSize().cy / 4 * 3));
+			ImGui::Begin("G-Buffer", 0);
 			ImGui::RadioButton("Lighting", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::LIGHTING));
 			ImGui::SameLine();
 			ImGui::RadioButton("BaseColor", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::BASECOLOR));
@@ -169,26 +183,62 @@ namespace NamelessEngine::Graphics
 			ImGui::End();
 
 			// シャドウイング用エディタ
-			ImGui::SetNextWindowPos(ImVec2(0, AppWindow::GetWindowSize().cy - ImGui::GetWindowHeight()));
-			ImGui::SetNextWindowSize(ImVec2(350, 200));
-			ImGui::Begin("Shadow");
+			//ImGui::SetNextWindowPos(ImVec2(0, AppWindow::GetWindowSize().cy - ImGui::GetWindowHeight()));
+			//ImGui::SetNextWindowSize(ImVec2(1980, 1080));
+			ImGui::Begin("Shadow Property");
 			ImGui::SliderFloat("LightDistance", &_shadowMapParam.lightDistance, 1.f, scene.GetCamera().cameraFar);
 			ImGui::SliderFloat("Near", &_shadowMapParam.nearZ, 0.1f, 10.f);
 			ImGui::SliderFloat("Far", &_shadowMapParam.farZ, 1.f, scene.GetCamera().cameraFar);
 			ImGui::SliderFloat("ViewWidth", &_shadowMapParam.viewWidth, 1.f, 1000.f);
 			ImGui::SliderFloat("ViewHeight", &_shadowMapParam.viewHeight, 1.f, 1000.f);
 			ImGui::SliderFloat("Bias", &_bias, 0.f, 0.1f);
-			// TODO: シャドウマップを表示する
-			//ImGui::Image((ImTextureID)_shadowingPass.GetShadowMapHandlePtr(), ImVec2(100, 100), ImVec2(0.f, 0.f), ImVec2(1.f, 1.f));
+			//ImGui::RadioButton("ShadowMap", &_debugParam.debugDrawMode, static_cast<int>(DEBUG_DRAW_MODE::SHADOWMAP));
 
+			auto imguiHeap = Dx12GraphicsEngine::Instance().GetImguiDescriptorHeap();
+			// TODO: シャドウマップを表示する
+			ImGui::Image((ImTextureID)imguiHeap.GetSRVHandle(1).ptr, ImGui::GetWindowSize());
 			ImGui::End();
 
+			// Viewport
+			ImGui::Begin("Viewport");
+			ImGui::Image((ImTextureID)imguiHeap.GetSRVHandle(0).ptr, ImGui::GetWindowViewport()->WorkSize);
+			ImGui::End();
+
+			ImGui::ShowMetricsWindow();
+
 			// パフォーマンス
-			ImGui::SetNextWindowPos(ImVec2(0, 0));
-			ImGui::SetNextWindowSize(ImVec2(200, 50));
+			//ImGui::SetNextWindowSize(ImVec2(200, 50));
 			ImGui::Begin("Performance", 0, ImGuiWindowFlags_None);
 			ImGui::Text("FrameRate %.2f", ImGui::GetIO().Framerate);
 			ImGui::End();
+
+			ImGui::Begin("SceneHierarchy", 0, ImGuiWindowFlags_None);
+			for (auto& actor : scene.GetMeshActors())
+			{
+				Transform* transform = actor->GetComponent<Transform>();
+				DirectX::XMFLOAT3 position = transform->Position();
+				DirectX::XMFLOAT3 rotation = transform->DegreeAngle();
+				DirectX::XMFLOAT3 scale = transform->Scale();
+
+				if (ImGui::TreeNode(actor->GetActorName().c_str())) {
+
+					ImGui::PushItemWidth(200);
+					ImGui::InputFloat3("Position", &position.x);
+
+					ImGui::InputFloat3("Rotation", &rotation.x);
+
+					ImGui::InputFloat3("Scale   ", &scale.x);
+
+					ImGui::TreePop();
+				}
+				transform->SetPosition(position.x,position.y,position.z);
+				transform->SetDegreeAngle(rotation.x, rotation.y, rotation.z);
+				transform->SetScalling(scale.x, scale.y, scale.z);
+			}
+			ImGui::End();
+
+			ImGui::PopStyleColor();
+			ImGui::PopStyleColor();
 
 			ImGui::Render();
 		}

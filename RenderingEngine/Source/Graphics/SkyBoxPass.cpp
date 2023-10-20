@@ -141,9 +141,9 @@ namespace NamelessEngine::Graphics
 
 	void SkyBoxPass::Render(Scene::Camera& camera)
 	{
-		_transform->Update(0.f);
 		//DirectX::XMFLOAT3 cameraPos = camera.GetTransform().Position();
 		//_transform->SetPosition(cameraPos.x, cameraPos.y, cameraPos.z);
+		_transform->Update(0.f);
 
 		RenderingContext& renderContext = Dx12GraphicsEngine::Instance().GetRenderingContext();
 		renderContext.SetPipelineState(*_pipelineState);

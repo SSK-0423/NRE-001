@@ -49,7 +49,7 @@ RESULT Dx12Application::Init()
 	ImGui_ImplDX12_Init(
 		&_graphicsEngine.Device(),
 		3,
-		DXGI_FORMAT_R8G8B8A8_UNORM,
+		DXGI_FORMAT_R8G8B8A8_UNORM_SRGB,
 		*_graphicsEngine.GetImguiDescriptorHeap().GetDescriptorHeapAddress(),
 		_graphicsEngine.GetImguiDescriptorHeap().GetCPUDescriptorHandleForHeapStart(),
 		_graphicsEngine.GetImguiDescriptorHeap().GetGPUDescriptorHandleForHeapStart());
