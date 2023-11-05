@@ -3,15 +3,16 @@ Physically Based Renderer with DirectX12 made for learning and trying rendering 
 
 ## Gallery
 ### IBL
-![Nameless Renderer 2023_06_28 1_50_44](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/a8913e53-eeb4-4a9d-a4f5-78502130e8ef)
+![IBL](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/6f065ffe-38f2-40be-8f9c-cc6fbb813a31)
 
 ### Cook-Torrance
-![Nameless Renderer 2023_06_28 1_53_11](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/a8e389c4-476c-4db0-9eb0-730a0b8a418d)
+![Cook-Torrance](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/16845d9a-9981-4a12-b181-ff69a8a46448)
 
 ### Trowbridge-Reitz(GGX)
-![Nameless Renderer 2023_06_28 1_53_19](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/19251bdc-d5a3-4255-b6fa-c158f0cb022a)
+![GGX](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/b1f66254-2c69-4df3-8fe4-9c95cf7aaba3)
+
 ### GLB Model/Shadow Mapping
-![Nameless Renderer 2023_06_28 2_02_33](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/e7b1e7c9-0382-4fd1-a84a-62f3c0c2ab56)
+![Shadow](https://github.com/SSK-0423/NamelessRenderer/assets/83057130/20273e4c-feb3-44e4-829e-338aec2c6335)
 
 ### Movie
 https://github.com/SSK-0423/NamelessRenderer/assets/83057130/5726e31b-040d-4b33-bbd6-4566d0bc0d83
